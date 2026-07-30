@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.5
+Stable tag: 3.3.7
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,12 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.7 - 2026-07-30 =
+* Fix: search_capabilities could report a real, already-active bundled agent as "not found" because the remote capabilities index it queries does not reflect this site's actual install/activation state, and the prompt-level guidance alone wasn't reliable enough to keep smaller models from picking it over get_agent_list for a named local agent. The tool itself now cross-checks the local agent registry (matching on name/slug/description, with common connector words filtered out) and merges any local match into the results — with locally-confirmed install/active state always taking priority over the remote index — so this can no longer produce a false negative regardless of which tool gets called.
+
+= 3.3.6 - 2026-07-30 =
+* Fix: WordPress Assistant's system prompt told it that search_capabilities and get_agent_list were interchangeable for checking whether a specific bundled agent is installed/active on this site. search_capabilities queries a remote bundled+marketplace agent index and does not reflect local install state, so the model sometimes picked it for a named, already-active agent and reported a false "not found". Clarified routing: get_agent_list is now the sole source of truth for local status; search_capabilities is reserved for capability/keyword discovery when no specific agent was named.
 
 = 3.3.5 - 2026-07-30 =
 * Fix: delegate_to_agent always failed with a false "Delegation cycle blocked" error, even on the very first delegation. Agent_Proposals::approve() (the resume path for any medium-risk confirm-gated tool) calls Tool_Loader directly, bypassing Tool_Executor's Tool_Base::set_calling_agent() call, so the calling agent slug was empty at execution time — Agent_Run then fell back to using the target agent as its own root, making the cycle check trivially true. Now set explicitly from the proposal's stored agent_id before execution.
