@@ -316,7 +316,6 @@ This plugin lets you connect to third-party services to process and execute task
 * New: React **Tools**, **Approvals**, and **Knowledge** hubs (Wiki, Instructions, Memory, Vector).
 * Improve: clearer admin navigation, policy footers, and Documentation links on every surface.
 * Providers: Kimi (Moonshot AI) and DeepSeek listed alongside existing LLMs.
-* Compat: works with Agent Builder Pro 3.2.0 (License tab inside Settings; React Pro hubs).
 
 = 3.2.4 - 2026-07-25 =
 * New: Model_Capabilities matrix — ordered rules (exact/prefix/regex/provider) replace ad-hoc model-name regexes for tools + reasoning.
