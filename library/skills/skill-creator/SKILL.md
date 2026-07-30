@@ -80,7 +80,7 @@ When the skill fires when it shouldn't:
 - **Lead with the workflow, not the background.** Agents need what to do, not why skills exist.
 - **Be explicit about tool call order.** "Always call `read_pdf` before `create_pdf`" is better than "use the tools appropriately."
 - **Use tables for tool lists.** Easier to scan than prose.
-- **Avoid vague verbs.** "Handle", "process", "manage" mean nothing. "Call `git_status` first", "pass `staged: true`", "cap at 50 rows" are actionable.
+- **Avoid vague verbs.** "Handle", "process", "manage" mean nothing. "Call `list_posts` first", "pass `limit: 50`", "cap at 50 rows" are actionable.
 - **One skill, one domain.** Don't combine spreadsheet and PDF workflows in a single skill — create two.
 
 ## Example Minimal Skill

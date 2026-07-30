@@ -16,7 +16,6 @@
     "get_user_activity_summary",
     "get_user_last_login",
     "get_author_list",
-    "send_email",
     "lock_user_account",
     "force_password_reset"
   ],

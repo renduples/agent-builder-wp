@@ -9,10 +9,11 @@ description: "Review WordPress theme or plugin PHP, JavaScript, or CSS code for 
 
 | Tool | When to use |
 |---|---|
-| `git_diff` | Get the changed code for a pending commit or between two commits. |
-| `git_log` | Review recent commit history for context. |
-| `fetch_url` | Fetch a public GitHub file or raw code URL for review. |
-| `get_post_content` | Read a plugin or theme file stored as a post (rare). |
+| `fetch_url` | Fetch a public GitHub file, gist, or raw code URL for review. |
+| `get_post_content` | Read content stored as a WordPress post when the user points at a post ID. |
+| `list_code_snippets` | List code snippets on the site when reviewing snippet-based customizations. |
+
+If the user pastes code directly into chat, review that paste — no tool call needed.
 
 ## What to Check
 

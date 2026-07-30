@@ -22,10 +22,6 @@
     "get_author_list": {
       "risk": "none"
     },
-    "send_email": {
-      "risk": "medium",
-      "reason": "Sends an email from your site"
-    },
     "lock_user_account": {
       "risk": "high",
       "reason": "Blocks a user from signing in"
