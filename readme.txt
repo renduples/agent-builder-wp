@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.10
+Stable tag: 3.3.11
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,11 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.11 - 2026-07-30 =
+* Fix: the in-chat "Proposed Change" confirmation card (Allow Once / Allow this Session / Always Allow / Deny, shown for medium-risk actions) was completely non-functional for every user except full administrators. Its REST route (agentic/v1/proposals/{id}) required manage_options regardless of who the proposal was for, so any non-admin role — including Editor, Author, Contributor, and Subscriber, all of which get frontend chat access by default — would see the card in their own conversation but every button on it would fail with a permission error. Fixed by opening the route to anyone who can chat (matching the chat endpoint's own access check) and adding a same-user ownership check inside the handler, so a proposal can only be resolved by the user it was created for, or by an administrator — this also closes a latent cross-user risk the old blanket admin-only gate happened to mask.
+* Fix: the admin Approval Queue's actual approve/reject REST endpoints (agentic/v1/approvals and agentic/v1/approvals/{id}), plus the React admin page's equivalent POST actions, all required manage_options regardless of the granular `agentic_manage_agents` capability already used to gate the Approvals page itself and fixed in 3.3.9 for page access — so a role granted "Manage Agents" could see the queue but never actually approve or reject anything. Now accepts either capability, consistently with the page-level gate.
+* Verified live: created a real queued high-risk tool call and a real in-chat proposal, confirmed reject genuinely prevents execution (audit trail shows queued → rejected, no side effects ran) for an admin, for a role granted only agentic_manage_agents, and for the proposal's own non-admin creator; confirmed a second, non-owning non-admin user is correctly blocked from resolving someone else's proposal; confirmed an administrator can still override and resolve any proposal.
 
 = 3.3.10 - 2026-07-30 =
 * Fix: turning off Emergency Stop (Disable All Agents) always reported success even when an agent or LLM provider connection failed to come back — `Emergency_Stop::disable()` computed and logged each restore failure to the Activity Log, but every caller (Dashboard, Interface Settings, and the classic Settings page) discarded that information and always returned a plain success response. An admin toggling the switch off had no way to know from the response whether everything actually came back online. `disable()` now returns the failures as a `warnings` list, and all three REST endpoints include it in their response instead of silently dropping it. Found while live-testing Emergency Stop end-to-end: an orphaned agent reference (a previously-deleted custom agent slug left behind in the active-agents list) failed to reactivate during restore, and the response reported full success regardless.

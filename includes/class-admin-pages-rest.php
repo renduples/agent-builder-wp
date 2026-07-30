@@ -818,7 +818,7 @@ class Admin_Pages_REST {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	private static function save_approval_prefs( \WP_REST_Request $request ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'agentic_manage_agents' ) ) {
 			return new \WP_Error( 'forbidden', __( 'Permission denied.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
 
@@ -907,7 +907,7 @@ class Admin_Pages_REST {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	private static function approval_decide( \WP_REST_Request $request ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'agentic_manage_agents' ) ) {
 			return new \WP_Error( 'forbidden', __( 'Permission denied.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
 		$id     = absint( $request->get_param( 'id' ) );

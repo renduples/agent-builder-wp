@@ -240,14 +240,14 @@ class REST_API {
 			)
 		);
 
-		// Get pending approvals (admin only).
+		// Get pending approvals — same capability as the Approvals admin page.
 		register_rest_route(
 			'agentic/v1',
 			'/approvals',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_approvals' ),
-				'permission_callback' => array( $this, 'check_admin' ),
+				'permission_callback' => array( $this, 'check_manage_agents' ),
 			)
 		);
 
@@ -261,7 +261,7 @@ class REST_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'handle_approval' ),
-				'permission_callback' => array( $this, 'check_admin' ),
+				'permission_callback' => array( $this, 'check_manage_agents' ),
 				'args'                => array(
 					'action' => array(
 						'required' => true,
@@ -272,14 +272,17 @@ class REST_API {
 			)
 		);
 
-		// Approve or reject a user-space proposal.
+		// Approve or reject a user-space proposal. This is a personal in-chat
+		// confirmation card (not the admin approval queue), so anyone who can
+		// chat may reach it — handle_proposal() itself enforces that only the
+		// proposal's own creator (or an admin) can resolve it.
 		register_rest_route(
 			'agentic/v1',
 			'/proposals/(?P<id>[a-f0-9-]+)',
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'handle_proposal' ),
-				'permission_callback' => array( $this, 'check_admin' ),
+				'permission_callback' => array( $this, 'check_logged_in' ),
 				'args'                => array(
 					'action'     => array(
 						'required' => true,
@@ -1108,6 +1111,18 @@ class REST_API {
 		$action      = $request->get_param( 'action' );
 		$session_id  = sanitize_text_field( (string) $request->get_param( 'session_id' ) );
 
+		// A proposal is a personal in-chat confirmation, not an admin queue item —
+		// only the user it was created for (or an administrator) may act on it.
+		// The route itself is open to anyone who can chat, so this ownership check
+		// is what stops one logged-in user from resolving another user's proposal.
+		$owned_proposal = Agent_Proposals::get( $proposal_id );
+		if ( $owned_proposal
+			&& (int) ( $owned_proposal['created_by'] ?? 0 ) !== get_current_user_id()
+			&& ! current_user_can( 'manage_options' )
+		) {
+			return new \WP_REST_Response( array( 'error' => 'Insufficient permissions.' ), 403 );
+		}
+
 		if ( 'reject' === $action ) {
 			$result = Agent_Proposals::reject( $proposal_id );
 			if ( ! empty( $result['error'] ) ) {
@@ -1525,6 +1540,19 @@ class REST_API {
 		}
 		return \Agentic\User_Roles::current_user_can( 'chat_frontend' )
 			|| \Agentic\User_Roles::current_user_can( 'chat_admin_bar' );
+	}
+
+	/**
+	 * Check if the user can manage the admin approval queue.
+	 *
+	 * Same capability the Approvals admin page is registered under
+	 * (agentic_manage_agents), so a role granted that privilege via
+	 * Settings > Users can actually act on it, not just view the page.
+	 *
+	 * @return bool
+	 */
+	public function check_manage_agents(): bool {
+		return current_user_can( 'manage_options' ) || current_user_can( 'agentic_manage_agents' );
 	}
 
 	/**
