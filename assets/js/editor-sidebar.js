@@ -325,8 +325,8 @@
 					},
 					'📝 Insert paragraph at end'
 				),
-				// If there is an active selection from the editor, offer replace too.
-				selectedText && el(
+				// If this message was generated against a selection, offer replace too.
+				replCtx && el(
 					'button',
 					{
 						onClick: function () {

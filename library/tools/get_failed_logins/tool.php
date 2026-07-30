@@ -86,7 +86,7 @@ class Get_Failed_Logins extends \Agentic\Tool_Base {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom plugin table.
 			$rows = $wpdb->get_results(
 				$wpdb->prepare(
-					'SELECT event_type, ip_address, data, created_at FROM %i WHERE event_type = %s AND created_at >= %s ORDER BY created_at DESC LIMIT %d',
+					'SELECT event_type, ip_address, message, created_at FROM %i WHERE event_type = %s AND created_at >= %s ORDER BY created_at DESC LIMIT %d',
 					$table,
 					'failed_login',
 					$since,
@@ -120,7 +120,7 @@ class Get_Failed_Logins extends \Agentic\Tool_Base {
 						fn( $r ) => array(
 							'ip'        => $r['ip_address'],
 							'timestamp' => $r['created_at'],
-							'data'      => json_decode( $r['data'], true ),
+							'data'      => $r['message'],
 						),
 						$rows
 					),
