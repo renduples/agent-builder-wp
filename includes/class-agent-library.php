@@ -69,6 +69,22 @@ final class Agent_Library {
 		return $wpdb->prefix . 'agentic_agent_library';
 	}
 
+	/**
+	 * Whether the backing table exists on this connection.
+	 *
+	 * Guards against environments where the table was never created (e.g. a
+	 * schema-cloning test sandbox) so reads degrade to empty instead of a
+	 * DB error on every request.
+	 *
+	 * @param string $table Fully-qualified table name.
+	 * @return bool
+	 */
+	private static function table_exists( string $table ): bool {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-off existence check.
+		return (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+	}
+
 	// ── Read ──────────────────────────────────────────────────────────────
 
 	/**
@@ -89,6 +105,11 @@ final class Agent_Library {
 
 		global $wpdb;
 		$table = self::table();
+
+		if ( ! self::table_exists( $table ) ) {
+			self::$cache = array();
+			return self::$cache;
+		}
 
 		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, manual cache.
 		$rows = $wpdb->get_results( "SELECT * FROM {$table} ORDER BY name ASC", ARRAY_A );

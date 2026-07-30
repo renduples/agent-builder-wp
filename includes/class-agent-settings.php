@@ -71,19 +71,23 @@ class Agent_Settings {
 		}
 
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT meta_key, meta_value FROM {$wpdb->prefix}agentic_agent_settings WHERE agent_slug = %s",
-				$slug
-			),
-			ARRAY_A
-		);
 
 		$result = array();
-		if ( is_array( $rows ) ) {
-			foreach ( $rows as $row ) {
-				$result[ $row['meta_key'] ] = $row['meta_value'];
+
+		if ( self::table_exists() ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$rows = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT meta_key, meta_value FROM {$wpdb->prefix}agentic_agent_settings WHERE agent_slug = %s",
+					$slug
+				),
+				ARRAY_A
+			);
+
+			if ( is_array( $rows ) ) {
+				foreach ( $rows as $row ) {
+					$result[ $row['meta_key'] ] = $row['meta_value'];
+				}
 			}
 		}
 
@@ -101,6 +105,13 @@ class Agent_Settings {
 	 */
 	public static function get_all_agents_key( string $key ): array {
 		global $wpdb;
+
+		$result = array();
+
+		if ( ! self::table_exists() ) {
+			return $result;
+		}
+
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
@@ -110,7 +121,6 @@ class Agent_Settings {
 			ARRAY_A
 		);
 
-		$result = array();
 		if ( is_array( $rows ) ) {
 			foreach ( $rows as $row ) {
 				$result[ $row['agent_slug'] ] = $row['meta_value'];
@@ -216,6 +226,10 @@ class Agent_Settings {
 	public static function preload_all( array $slugs = array() ): void {
 		global $wpdb;
 
+		if ( ! self::table_exists() ) {
+			return;
+		}
+
 		if ( ! empty( $slugs ) ) {
 			$placeholders = implode( ', ', array_fill( 0, count( $slugs ), '%s' ) );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -284,5 +298,25 @@ class Agent_Settings {
 		} else {
 			unset( self::$cache[ $slug ] );
 		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Internal
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Whether the backing table exists on this connection.
+	 *
+	 * Guards against environments where the table was never created (e.g. a
+	 * schema-cloning test sandbox) so reads degrade to empty instead of a
+	 * DB error on every request.
+	 *
+	 * @return bool
+	 */
+	private static function table_exists(): bool {
+		global $wpdb;
+		$table = $wpdb->prefix . 'agentic_agent_settings';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-off existence check.
+		return (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
 	}
 }

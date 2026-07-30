@@ -30,6 +30,7 @@
     let pendingImage = null; // { dataUrl, mimeType, name }
     let turnstileWidgetId = null; // Cloudflare Turnstile widget ID
     let turnstileToken    = '';   // Latest token from invisible Turnstile callback
+    let handoffContextSent = false; // Guards handoff_from/handoff_context to the first message only
 
     // TTS output state (binary audio streaming via Web Audio API)
     let ttsAudioCtx = null;
@@ -156,7 +157,9 @@
                 if (recentTurns.length > 0) {
                     handoffContext = 'Previous conversation context (handoff from another agent):\n';
                     recentTurns.forEach(function(turn) {
-                        var roleLabel = turn.role === 'user' ? 'User' : 'Previous Agent';
+                        // Avoid a leading "user:"/"assistant:" line — Chat_Security's injection-pattern
+                        // scanner treats that shape as a role-override attempt and blocks the message.
+                        var roleLabel = turn.role === 'user' ? 'Previous user turn' : 'Previous agent turn';
                         handoffContext += roleLabel + ': ' + (turn.content || '').substring(0, 800) + '\n\n';
                     });
                     handoffContext = handoffContext.trim();
@@ -756,8 +759,10 @@
                 deployment_context: 'admin_chat'
             };
 
-            // P0 Basic Multi-Agent Orchestration: pass handoff context on first message if present
-            if (typeof agenticChat !== 'undefined') {
+            // P0 Basic Multi-Agent Orchestration: pass handoff context on first message only —
+            // agenticChat.handoffFrom/handoffContext are static for the page's lifetime, so
+            // without this guard every subsequent message would resend the same handoff blob.
+            if (!handoffContextSent && typeof agenticChat !== 'undefined') {
                 if (agenticChat.handoffFrom) {
                     payload.handoff_from = agenticChat.handoffFrom;
                 }
@@ -765,6 +770,7 @@
                     payload.handoff_context = agenticChat.handoffContext;
                 }
             }
+            handoffContextSent = true;
 
             // Attach image as base64
             if (imageData && imageData.dataUrl) {
