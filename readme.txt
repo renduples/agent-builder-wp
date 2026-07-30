@@ -13,9 +13,7 @@ Orchestrate role-based AI agents and teams with simple job descriptions.
 
 == Description ==
 
-**Agent Builder** lets you orchestrate AI agents and teams directly in WordPress using plain job descriptions.
-
-No coding. No complex prompts. Just describe the role you need, and your AI employee starts working.
+**Agent Builder** lets you create and manage role-based AI agents inside WordPress using plain job descriptions. You choose the LLM provider (your own API key, Agentic AI, or a local model such as Ollama). Higher-risk tool actions can require human approval before they run.
 
 = Eight agents included free =
 
@@ -30,23 +28,20 @@ The free plugin ships **8 role-based agents** ready to activate:
 * **User Assistant** — helps manage registrations, accounts, and member outreach
 * **WordPress Assistant** — guide to WordPress and Agent Builder for new users
 
-Discover more on [Community Agents](https://agentic-plugin.com/community-agents/).
+Additional community agents are listed on the product site (install separately if you choose).
 
 = Key Features =
 
-* Create unlimited role-based AI agents using natural language
-* Multi-LLM support (OpenAI, Anthropic, xAI, Google, Kimi, local models via Ollama, and more)
-* 250+ built-in tools and skills let your agents take real actions inside WordPress
-* **Tools hub** with category tabs, risk levels, filters, and Basic ability profiles (Pro: site-local custom tools)
-* Secure sandboxed execution with **Approvals** (comfort preferences, email alerts, progress feedback) and full audit logs
-* Modern **Settings** (React): Interface · Agents · Providers · Users · Security — plus Advanced APIs/Endpoints
-* Shortcodes, Gutenberg blocks, WordPress Abilities API support
-* **Knowledge** hub — free OKF wiki, per-assistant Instructions, optional Memory, and Pro Vector Store path
-* Optional **Agent Builder Pro** add-on for hosted Vector Store / RAG (semantic search over PDFs and large site content)
+* Role-based AI agents from natural language job descriptions
+* Multi-LLM support (OpenAI, Anthropic, xAI, Google, Kimi, DeepSeek, Mistral, Meta Llama, Cohere, Ollama, and custom OpenAI-compatible endpoints)
+* Large library of tools and skills agents can use **inside WordPress**, with risk levels and an **Approvals** queue for supervised operation
+* **Tools hub** — categories, risk filters, Basic ability profiles
+* **Settings** (React): Interface · Agents · Providers · Users · Security (Advanced: APIs / Endpoints)
+* Shortcodes, Gutenberg blocks, WordPress Abilities API support (WP 6.9+)
+* **Knowledge** hub — free local OKF wiki, per-assistant Instructions, optional Memory
+* Hosted Vector Store / RAG is available with the separate **Agent Builder Pro** plugin when you need it
 
-Agent Builder turns WordPress into a smarter, autonomous platform — perfect for bloggers, agencies, and business owners who want to scale without hiring more staff.
-
-Visit [agentic-plugin.com](https://agentic-plugin.com/) for premium extensions, community agents, and additional templates.
+Documentation: [agentic-plugin.com/documentation](https://agentic-plugin.com/documentation/)
 
 == Installation ==
 
@@ -64,45 +59,35 @@ In the search field type “Agent Builder,” then click “Search Plugins.” O
 
 = Manual installation =
 
-Manual installation method requires [downloading Agent Builder](https://agentic-plugin.com/download/) and then uploading it to your web server. The WordPress codex contains [instructions on how to do this here](https://wordpress.org/support/article/managing-plugins/#manual-plugin-installation).
+Download the plugin ZIP (from WordPress.org or your distribution package), then upload it under Plugins → Add New → Upload Plugin. See the [WordPress handbook on managing plugins](https://wordpress.org/documentation/article/manage-plugins/).
 
 = Activation =
-1. Find Agent Builder and click **Activate** at the WordPress Plugins page.
-2. **Agent Builder → Quick Start.** Connect Agentic AI as your default LLM Provider with free daily credits.
-3. Once connected you land directly on the **Agent Builder → Chat** page — ready to go.
+1. Activate **Agent Builder** under Plugins.
+2. Open **Agent Builder → Quick Start** (or Settings → Providers) and connect an LLM provider — bring your own API key, use a local Ollama endpoint, or choose Agentic AI if you prefer that service.
+3. Open **Agent Builder → Chat** and select an agent.
 
-Navigate to **Agent Builder → Settings** for Interface (theme), Providers, Users, and Security.
-Navigate to **Agent Builder → Knowledge** for the wiki, per-assistant instructions, and memory.
-Navigate to **Agent Builder → Agents** to activate or deactivate your AI agents.
+Also useful: **Settings** (Interface, Providers, Users, Security), **Knowledge**, and **Agents** (activate or deactivate assistants).
 
 = Updating =
 
-Plugin updates works smoothly, but we recommend you always backup your website.
+Back up your site before major updates. Keep WordPress, PHP, and the plugin current.
 
-= You Choose your own LLM provider =
+= Supported LLM providers =
 
-Works with popular AI services you already know:
-- OpenAI
-- Anthropic
-- Cohere  
-- xAI
-- Google
-- Kimi (Moonshot AI)
-- Meta Llama
-- Mistral
-- DeepSeek
-- Ollama
-- Your provider not in the list? You can add as many LLM providers as you like. 
+- OpenAI, Anthropic, xAI, Google, Kimi (Moonshot AI), Meta Llama, Mistral, Cohere, DeepSeek
+- Ollama (local)
+- Custom OpenAI-compatible endpoints
 
-= AI Provider Costs =
-You are billed directly for API usage by your selected LLM provider(s) according to their pricing.
+= AI provider costs =
 
-= Your Data Stays Secure =
+Cloud LLM and optional Agentic services are billed by those providers according to their pricing. Local Ollama usage stays on your server.
 
-- Full control of Agent tools, skills and abilities.
-- Automated file and database backup and restore.
-- Supervised mode shows you exactly what agents will change before they do. 
-- Complete audit log of every conversation and action performed by your users and agents.
+= Safety controls =
+
+- Per-tool risk levels and an Approvals queue for higher-risk actions
+- Supervised mode can require review before changes apply
+- Audit log of conversations and agent actions
+- You control which tools and agents are enabled
 
 == Frequently Asked Questions ==
 
@@ -120,36 +105,34 @@ This regenerates `build/` from `src/`.
 
 = What is Agent Builder? =
 
-Agent Builder lets you create, train and manage AI agents directly inside your WordPress site.
+Agent Builder lets you create, train, and manage AI agents inside WordPress. Agents use tools you enable (with risk levels and optional human approval) to work with content, site settings, and other WordPress features.
 
-Your AI agents have access to over 250 powerful tools in a managed environment. 
+= How is Agent Builder different from a simple chatbot plugin? =
 
-= How is Agent Builder different from other plugins? =
+Many AI plugins only chat with an external API. Agent Builder also:
 
-Most AI plugins are just chat interfaces that send every request to a LLM provider.
+- Runs in WordPress admin and front-end surfaces (shortcodes, blocks, optional admin chat)
+- Exposes tools that can read or change WordPress data **when enabled** — publish content, manage media, etc., typically behind Approvals for higher risk
+- Lets you run multiple specialized agents (the eight bundled roles, plus any you train or install yourself)
+- Keeps an audit trail of conversations and tool use
 
-Agent Builder is different:
-
-- Everything runs inside WordPress (deep integration with core functions, hooks, REST API, user roles, capabilities)
-- Agents can take real actions (publish posts, edit pages, run WP-CLI, send emails, update plugins on schedule…)
-- You can create an unlimited number of specialized agents for various jobs (Content Writer, SEO Optimizer, Security Guardian, Support Agent…) and orchestrate them together with shared tools.
-- Built-in approval and backup workflows with audit logs that keep everything safe and under your control.
-
-Unlike external frameworks (OpenClaw, LangChain-based tools, etc.) that treat WordPress as just another API, Agent Builder treats WordPress as the primary runtime — faster, more secure, and dramatically simpler to maintain.
+LLM replies still come from the provider you configure (cloud API or local Ollama). WordPress is the control plane and tool runtime; the model is not “embedded” in core PHP.
 
 = Is Agent Builder free? =
 
-The core plugin lets you deploy an unlimited number of AI agents with hundreds of tools and skills - completely free. 
+Yes. The free plugin includes the eight bundled agents, tools/skills library, Approvals, Knowledge wiki (OKF), and multi-provider LLM support using **your** keys or a local model.
 
-You can also switch to [Agent Builder Pro](https://agentic-plugin.com/download/) any time.
+A separate **Agent Builder Pro** plugin is optional for hosted Vector Store / RAG and other Pro-only features. The free plugin remains fully usable without Pro.
 
 = Where does Agent Builder send my data? =
 
-Data is sent to your LLM providers such as Agentic AI, xAI, OpenAI, Anthropic, Google, Kimi, or others you configure.
+**No chat or document content is sent to an external LLM until you configure a provider and use chat (or another feature that calls that service).**
 
-You can also use local models via Ollama / LM Studio (fully private — nothing leaves your server)
+When you use a cloud provider, the plugin sends conversation messages, system context, and tool-related payloads to that provider’s API (see **External Services**). With Ollama (or similar local endpoints), traffic stays on the host you configure.
 
-Extensive [Documentation](https://agentic-plugin.com/documentation/) is available.
+Optional Agentic product services (if you enable them) are also listed under External Services.
+
+Documentation: [agentic-plugin.com/documentation](https://agentic-plugin.com/documentation/)
 
 = What is the WordPress Abilities API? =
 
@@ -171,9 +154,7 @@ Each registered ability includes risk-level metadata, permission checks, and MCP
 
 = Where can I report bugs or request features? =
 
-Use the official support forum on WordPress.org or [report an issue](https://agentic-plugin.com/support/) at https://agentic-plugin.com/
-
-We respond to support tickets within 24–48 hours (faster for confirmed bugs).
+Use the WordPress.org support forum for this plugin, or the contact options on [agentic-plugin.com/support](https://agentic-plugin.com/support/).
 
 == Screenshots ==
 
@@ -187,15 +168,13 @@ We respond to support tickets within 24–48 hours (faster for confirmed bugs).
 
 == Community Agents ==
 
-The free plugin does **not** phone home to check for agent updates, and it does not download or install agent packages from remote servers.
+The free WordPress.org build does not download or install agent packages from remote servers. Bundled agents update when you update this plugin from WordPress.org.
 
-To discover more assistants, open **Agent Builder → Agents → Community Agents**, or visit [Community Agents](https://agentic-plugin.com/community-agents/) (marketplace). Bundled agents update when you update the plugin from WordPress.org.
-
-Agent Builder Pro can offer in-dashboard update notices for marketplace packages after you opt in.
+To browse additional community-built agents, visit [Community Agents](https://agentic-plugin.com/community-agents/) (optional, off-site).
 
 == External Services ==
 
-This plugin lets you connect to third-party services to process and execute tasks. **No data is transmitted unless you configure a cloud-based provider.** The plugin sends conversation messages (user input and system context) to your selected LLM provider's API to receive AI-generated responses.
+This plugin can connect to third-party LLM and optional Agentic product APIs. **No LLM or Agentic service request is made until you configure that provider or enable the feature and use it.** When a cloud service is used, conversation or media payloads described below are sent to that service.
 
 = OpenAI =
 * **Endpoint:** `https://api.openai.com/v1/chat/completions`
@@ -253,6 +232,13 @@ This plugin lets you connect to third-party services to process and execute task
 * **Terms of Service:** [https://platform.moonshot.ai/docs/agreement/modeluse](https://platform.moonshot.ai/docs/agreement/modeluse)
 * **Privacy Policy:** [https://platform.moonshot.ai/docs/agreement/privacy](https://platform.moonshot.ai/docs/agreement/privacy)
 
+= DeepSeek =
+* **Endpoint:** `https://api.deepseek.com/chat/completions`
+* **When used:** When DeepSeek is selected as the AI provider in Settings.
+* **Data sent:** Chat messages, system prompts, tool definitions, and tool call results.
+* **Terms of Service:** [https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html](https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html)
+* **Privacy Policy:** [https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
+
 = Ollama (Local) =
 * **Endpoint:** User-configured local URL (default: `http://localhost:11434`)
 * **When used:** When Ollama is selected as the AI provider in Settings.
@@ -274,38 +260,30 @@ This plugin lets you connect to third-party services to process and execute task
 
 = Agentic AI (Image Gen) =
 * **Endpoint:** `https://imagegen.agentic-plugin.com`
-* **When used:** When an agent generates or edits images. Only active if the Media Assistant agent is installed and a user requests image generation.
-* **Data sent:** Site URL, license key, text prompts, and optionally a source image (for edit operations). No user-identifying information beyond the license key.
+* **When used:** When image generation/edit tools are enabled and a user requests them (may require Agentic credits / Pro depending on your plan).
+* **Data sent:** Site URL, license or API credentials if configured, text prompts, and optionally a source image for edits.
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 = Agentic AI (TTS) =
 * **Endpoint:** `https://tts.agentic-plugin.com`
-* **When used:** When Text to Speech is enabled and an agent reads a chat response aloud, or when `wp agent chat` / `wp agent prompt` is run with TTS active.
-* **Data sent:** Site URL, license key, and the text content to be synthesized. No user-identifying information beyond the license key.
+* **When used:** When Text-to-Speech is enabled and a response is spoken, or CLI chat is run with TTS active.
+* **Data sent:** Site URL, license or API credentials if configured, and text to synthesize.
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 = Agentic AI (Video Gen) =
-* **Endpoints:** `https://videogen.agentic-plugin.com` (video generation, stitching, trimming, captions, analysis, add audio)
-* **When used:** When an agent generates video clips, stitches or edits videos, searches for background music, or adds an audio track.
-* **Data sent:** Site URL, license key, text prompts, image data (for image-to-video), video URLs (for editing operations), and audio URLs (for audio mixing).
+* **Endpoint:** `https://videogen.agentic-plugin.com`
+* **When used:** When video generation or editing tools are enabled and a user requests them.
+* **Data sent:** Site URL, license or API credentials if configured, prompts, and media URLs/data required for the operation.
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
-= Agent Update Checks (Opt In) =
-* **Endpoint:** `https://agentic-plugin.com/wp-json/agentic/v1/agents/check-updates`
-* **When used:** Only when the administrator has explicitly opted in for update checks on AI agents.
-* **Data sent:** Installed agent slugs and version numbers.
-* **How to disable:** Decline the opt-in prompt, or deactivate/reactivate the plugin to reset your choice.
-* **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
-* **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
-
-= Site Deregistration (Opt In) =
+= Site deregistration (optional, Pro) =
 * **Endpoint:** `https://agentic-plugin.com/wp-json/agentic/v1/deregister`
-* **When used:** Only on plugin deletion, and only if you have explicitly opted in (the `agentic_allow_deregister_on_uninstall` option is enabled) and an Agentic AI API key is configured. Applies to Agent Builder Pro installs.
-* **Data sent:** Your Agentic AI API key and site URL, so the license seat tied to this site can be released.
-* **How to disable:** Leave the deregister-on-uninstall option disabled (the default). No request is made unless you opt in.
+* **When used:** Only on plugin deletion when the separate Pro install has opted in to release a license seat (`agentic_allow_deregister_on_uninstall`) and an API key is present. Off by default.
+* **Data sent:** API key and site URL.
+* **How to disable:** Leave deregister-on-uninstall disabled (default).
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
