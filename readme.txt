@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.1
+Stable tag: 3.3.3
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,12 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.3 - 2026-07-30 =
+* Fix: editor sidebar's "Insert paragraph at end" success callback referenced setMessages, a variable scoped to a different top-level function (MessageBubble is a sibling of EditorSidebarInner, not nested inside it — the same class of bug fixed in 3.3.1's editor sidebar crash). Threw a ReferenceError on every successful insert, even though the insert itself succeeded.
+
+= 3.3.2 - 2026-07-30 =
+* Fix: editor sidebar error messages ("Connection error", quota/API errors) offered the same "Insert paragraph at end" / "Replace selection" buttons as real AI responses, letting a stray click insert literal error text into post content.
 
 = 3.3.1 - 2026-07-30 =
 * Fix: editor sidebar crash (ReferenceError on an out-of-scope variable in MessageBubble's replace-selection button).

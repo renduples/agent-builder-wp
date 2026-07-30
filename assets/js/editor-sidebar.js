@@ -230,11 +230,13 @@
 	/**
 	 * Render a single chat message bubble.
 	 *
-	 * @param {Object} msg  Message object { role, content, replaceContext? }.
-	 * @param {number} idx  Array index (used as key).
+	 * @param {Object}   msg          Message object { role, content, replaceContext? }.
+	 * @param {number}   idx          Array index (used as key).
+	 * @param {Function} setMessages State setter from EditorSidebarInner, passed in because
+	 *                               MessageBubble is a sibling function and cannot close over it.
 	 * @return {*}          React element.
 	 */
-	function MessageBubble( msg, idx ) {
+	function MessageBubble( msg, idx, setMessages ) {
 		var isUser  = msg.role === 'user';
 		var replCtx = ( ! isUser && msg.replaceContext ) ? msg.replaceContext : null;
 
@@ -284,7 +286,7 @@
 		// on assistant responses when we have post context. This prevents the agent from
 		// falling back to backend "approve action" flows that the sidebar cannot render.
 		var applyButtons = null;
-		if ( ! isUser && config.injectContext ) {
+		if ( ! isUser && config.injectContext && ! msg.isError ) {
 			var suggestionText = ( msg.content || '' ).trim();
 			applyButtons = el(
 				'div',
@@ -622,7 +624,7 @@
 					var errContent = data.response || 'Unknown error.';
 					var isQuota = response.status === 429 || response.status === 402;
 					setMessages( function ( prev ) {
-						return prev.concat( { role: 'assistant', content: isQuota ? errContent : 'Error: ' + errContent, quota_error: isQuota } );
+						return prev.concat( { role: 'assistant', content: isQuota ? errContent : 'Error: ' + errContent, quota_error: isQuota, isError: true } );
 					} );
 				} else {
 					var assistantEntry = { role: 'assistant', content: data.response, replaceContext: replaceContext || null };
@@ -639,7 +641,7 @@
 				}
 			} catch ( err ) {
 				setMessages( function ( prev ) {
-					return prev.concat( { role: 'assistant', content: 'Connection error. Please try again.' } );
+					return prev.concat( { role: 'assistant', content: 'Connection error. Please try again.', isError: true } );
 				} );
 			} finally {
 				setIsSending( false );
@@ -983,7 +985,7 @@
 							el( 'div', { style: { fontSize: '22px', marginBottom: '6px' } }, '\uD83D\uDCAC' ),
 							emptyLabel
 						)
-						: messages.map( MessageBubble ),
+						: messages.map( function ( msg, idx ) { return MessageBubble( msg, idx, setMessages ); } ),
 
 					// Typing indicator.
 					isSending
