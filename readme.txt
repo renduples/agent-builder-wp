@@ -458,6 +458,6 @@ SSE streaming, 42 new tools, agent delegation, and TTS improvements. No breaking
 = 2.9.38 =
 Privacy improvement: LLM connection only makes external request with explicit user consent.
 
-== Legal ==
+== Privacy ==
 
-By using this plugin you agree to our [Terms of Service](https://agentic-plugin.com/terms-of-service/) and [Privacy Policy](https://agentic-plugin.com/privacy-policy/)
+See **External Services** for what is sent when you enable a cloud LLM or optional Agentic API. For Agentic product services, also see the [Agentic Privacy Policy](https://agentic-plugin.com/privacy-policy/) and [Terms of Service](https://agentic-plugin.com/terms-of-service/).
