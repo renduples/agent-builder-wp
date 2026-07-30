@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.11
+Stable tag: 3.3.12
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.12 - 2026-07-30 =
+* Fix: the "Trust more (higher risk)" approval comfort profile (Settings > Approvals) produced identical enforcement to "Auto-approve low risk" — both auto-approved only none/low risk tools and still paused medium-risk (content-changing) actions for confirmation. "Trust more" requires an explicit extra risk acknowledgment reading "I understand assistants may change my site with less waiting" and is described as letting assistants "work with less interruption," but its `auto_max` was set to `low`, identical to the "balanced" profile, so it never actually auto-approved anything the safer profile didn't already. Changed its ceiling to `medium` so it genuinely auto-approves content-changing writes (send_email, add_custom_css, cleanup/purge tools, etc.) as its own consent text describes; high-risk actions still queue for admin approval and extreme actions stay blocked either way. Verified live by computing the full risk-tier enforcement matrix for all three profiles before and after the fix, then confirming a real medium-risk tool call executes immediately under "Trust more" and correctly pauses for confirmation again after reverting to "Always ask me."
 
 = 3.3.11 - 2026-07-30 =
 * Fix: the in-chat "Proposed Change" confirmation card (Allow Once / Allow this Session / Always Allow / Deny, shown for medium-risk actions) was completely non-functional for every user except full administrators. Its REST route (agentic/v1/proposals/{id}) required manage_options regardless of who the proposal was for, so any non-admin role — including Editor, Author, Contributor, and Subscriber, all of which get frontend chat access by default — would see the card in their own conversation but every button on it would fail with a permission error. Fixed by opening the route to anyone who can chat (matching the chat endpoint's own access check) and adding a same-user ownership check inside the handler, so a proposal can only be resolved by the user it was created for, or by an administrator — this also closes a latent cross-user risk the old blanket admin-only gate happened to mask.

@@ -779,7 +779,7 @@ class Admin_Pages_REST {
 				'summary'  => __( 'Faster — use with care', 'agent-builder' ),
 				'detail'   => __( 'Assistants work with less interruption (autonomous mode). You can still review history. Extreme tools stay blocked.', 'agent-builder' ),
 				'risk_note'=> __( 'I understand assistants may change content without waiting in this queue, and I accept that increased risk.', 'agent-builder' ),
-				'auto_max' => 'low',
+				'auto_max' => 'medium',
 				'mode'     => 'autonomous',
 				'needs_ack'=> true,
 			),
