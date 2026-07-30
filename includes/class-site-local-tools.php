@@ -1080,7 +1080,9 @@ class Site_Local_Tools {
 			'handlers'         => $handlers,
 			'site_tools'       => self::all(),
 			'agents'           => $agents,
-			'upgrade_url'      => admin_url( 'admin.php?page=agentic-upgrade' ),
+			'upgrade_url'      => class_exists( Distribution::class )
+				? Distribution::free_pro_promo_url()
+				: 'https://agentic-plugin.com/licensing-and-pricing/',
 			'docs_url'         => 'https://agentic-plugin.com/agent-tools/',
 		);
 	}

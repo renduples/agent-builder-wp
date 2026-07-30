@@ -27,9 +27,16 @@ function AdminPageFooter( { footer } ) {
 	const f = footer || bootConfig().footer || {};
 	const docUrl = f.doc_url || 'https://agentic-plugin.com/agent-tools/';
 	const supportUrl = f.support_url || 'https://agentic-plugin.com/support/';
-	const promoUrl = f.promo_url || 'admin.php?page=agentic-upgrade-pro';
+	// Default off-site pricing — never a missing admin.php?page=agentic-upgrade-pro.
+	const promoUrl =
+		f.promo_url ||
+		'https://agentic-plugin.com/licensing-and-pricing/';
 	const promoLabel =
 		f.promo_label || __( 'Upgrade to Pro', 'agent-builder' );
+	const promoExternal =
+		typeof f.promo_external === 'boolean'
+			? f.promo_external
+			: /^https?:\/\//i.test( promoUrl );
 	const policy =
 		f.policy ||
 		__(
@@ -56,8 +63,14 @@ function AdminPageFooter( { footer } ) {
 				{ ' | ' }
 				<a
 					href={ promoUrl }
-					target={ f.is_pro ? '_blank' : undefined }
-					rel={ f.is_pro ? 'noopener noreferrer' : undefined }
+					target={
+						promoExternal || f.is_pro ? '_blank' : undefined
+					}
+					rel={
+						promoExternal || f.is_pro
+							? 'noopener noreferrer'
+							: undefined
+					}
 				>
 					{ promoLabel }
 				</a>

@@ -779,19 +779,7 @@ class Admin_Menu_Handler {
 			$tab = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
 		}
 
-		$doc_url     = $this->get_page_doc_url( $page, $tab );
-		$support_url = 'https://agentic-plugin.com/support/';
-
-		// Free: Upgrade to Pro; Pro installed: Agent Marketplace (community agents).
-		$is_pro = class_exists( '\Agentic\License_Client' ) && License_Client::get_instance()->is_pro();
-		if ( $is_pro ) {
-			$promo_url   = 'https://agentic-plugin.com/community-agents/';
-			$promo_label = __( 'Agent Marketplace', 'agent-builder' );
-		} else {
-			$promo_url   = admin_url( 'admin.php?page=agentic-upgrade-pro' );
-			$promo_label = __( 'Upgrade to Pro', 'agent-builder' );
-		}
-
+		// Footer markup (promo URL is channel-aware: external on WPorg free).
 		$footer_html = $this->build_admin_footer_html( $page, $tab );
 		?>
 		<script>
@@ -840,11 +828,13 @@ class Admin_Menu_Handler {
 		$support_url = 'https://agentic-plugin.com/support/';
 		$is_pro      = class_exists( '\Agentic\License_Client' ) && License_Client::get_instance()->is_pro();
 		if ( $is_pro ) {
-			$promo_url   = 'https://agentic-plugin.com/community-agents/';
-			$promo_label = __( 'Agent Marketplace', 'agent-builder' );
+			$promo_url      = Distribution::COMMUNITY_AGENTS_URL;
+			$promo_label    = __( 'Agent Marketplace', 'agent-builder' );
+			$promo_external = true;
 		} else {
-			$promo_url   = admin_url( 'admin.php?page=agentic-upgrade-pro' );
-			$promo_label = __( 'Upgrade to Pro', 'agent-builder' );
+			$promo_url      = Distribution::free_pro_promo_url();
+			$promo_label    = __( 'Upgrade to Pro', 'agent-builder' );
+			$promo_external = Distribution::free_pro_promo_is_external();
 		}
 
 		// Short policy blurb — contextual by page/tab.
@@ -876,15 +866,16 @@ class Admin_Menu_Handler {
 		}
 
 		return array(
-			'doc_url'     => $doc_url,
-			'support_url' => $support_url,
-			'promo_url'   => $promo_url,
-			'promo_label' => $promo_label,
-			'is_pro'      => $is_pro,
-			'policy'      => $policy,
-			'terms_url'   => 'https://agentic-plugin.com/terms-of-service/',
-			'privacy_url' => 'https://agentic-plugin.com/privacy-policy/',
-			'gdpr_url'    => 'https://agentic-plugin.com/gdpr-policy/',
+			'doc_url'         => $doc_url,
+			'support_url'     => $support_url,
+			'promo_url'       => $promo_url,
+			'promo_label'     => $promo_label,
+			'promo_external'  => $promo_external,
+			'is_pro'          => $is_pro,
+			'policy'          => $policy,
+			'terms_url'       => 'https://agentic-plugin.com/terms-of-service/',
+			'privacy_url'     => 'https://agentic-plugin.com/privacy-policy/',
+			'gdpr_url'         => 'https://agentic-plugin.com/gdpr-policy/',
 		);
 	}
 
@@ -908,7 +899,8 @@ class Admin_Menu_Handler {
 		$html .= ' | ';
 		$html .= '<a href="' . esc_url( (string) $f['doc_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Documentation', 'agent-builder' ) . '</a>';
 		$html .= ' | ';
-		$html .= '<a href="' . esc_url( (string) $f['promo_url'] ) . '"' . ( ! empty( $f['is_pro'] ) ? ' target="_blank" rel="noopener"' : '' ) . '>' . esc_html( (string) $f['promo_label'] ) . '</a>';
+		$promo_blank = ! empty( $f['promo_external'] ) || ! empty( $f['is_pro'] );
+		$html       .= '<a href="' . esc_url( (string) $f['promo_url'] ) . '"' . ( $promo_blank ? ' target="_blank" rel="noopener noreferrer"' : '' ) . '>' . esc_html( (string) $f['promo_label'] ) . '</a>';
 		$html .= '</span>';
 		$html .= '<span class="agentic-page-footer-right">';
 		$html .= '<a href="' . esc_url( (string) $f['terms_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Terms of Service', 'agent-builder' ) . '</a>';

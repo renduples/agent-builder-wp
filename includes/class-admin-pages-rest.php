@@ -1340,6 +1340,9 @@ class Admin_Pages_REST {
 	 */
 	private static function upgrade_payload(): array {
 		$is_pro = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
+		$pricing = class_exists( Distribution::class )
+			? Distribution::PRICING_URL
+			: 'https://agentic-plugin.com/licensing-and-pricing/';
 		return array(
 			'page'        => 'upgrade-pro',
 			'title'       => $is_pro ? __( 'Pro', 'agent-builder' ) : __( 'Upgrade to Pro', 'agent-builder' ),
@@ -1347,7 +1350,7 @@ class Admin_Pages_REST {
 				? __( 'Pro is active on this site.', 'agent-builder' )
 				: __( 'Unlock vector RAG, connectors, channels, and advanced metering.', 'agent-builder' ),
 			'is_pro'      => $is_pro,
-			'pricing_url' => 'https://agentic-plugin.com/pricing/',
+			'pricing_url' => $pricing,
 			'features'    => array(
 				__( 'Hosted vector store / RAG', 'agent-builder' ),
 				__( 'MCP connectors & channels', 'agent-builder' ),

@@ -60,4 +60,47 @@ final class Distribution {
 	public static function is_wporg(): bool {
 		return 'wporg' === self::channel();
 	}
+
+	/**
+	 * Public pricing / licensing page (off-site). Used for free → Pro promo when
+	 * the in-plugin Upgrade screen is not available (WPorg free, or stripped build).
+	 */
+	public const PRICING_URL = 'https://agentic-plugin.com/licensing-and-pricing/';
+
+	/**
+	 * Community agents marketplace (browse only on free / WPorg — no remote install).
+	 */
+	public const COMMUNITY_AGENTS_URL = 'https://agentic-plugin.com/community-agents/';
+
+	/**
+	 * Whether the self-hosted in-admin "Upgrade to Pro" screen is available.
+	 *
+	 * False on WordPress.org builds (page is physically stripped) and whenever
+	 * the upgrade template is missing.
+	 */
+	public static function has_in_admin_pro_upgrade(): bool {
+		return self::is_self_hosted()
+			&& defined( 'AGENT_BUILDER_DIR' )
+			&& file_exists( AGENT_BUILDER_DIR . 'admin/upgrade-pro.php' );
+	}
+
+	/**
+	 * URL for free-tier "Upgrade to Pro" links.
+	 *
+	 * Self-hosted free: admin screen (one-click installer when Pro zip is sold).
+	 * WordPress.org free: external pricing page (no dead admin.php?page=… links).
+	 */
+	public static function free_pro_promo_url(): string {
+		if ( self::has_in_admin_pro_upgrade() ) {
+			return admin_url( 'admin.php?page=agentic-upgrade-pro' );
+		}
+		return self::PRICING_URL;
+	}
+
+	/**
+	 * Whether {@see free_pro_promo_url()} opens off-site (use target=_blank).
+	 */
+	public static function free_pro_promo_is_external(): bool {
+		return ! self::has_in_admin_pro_upgrade();
+	}
 }
