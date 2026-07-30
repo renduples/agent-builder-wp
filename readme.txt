@@ -17,16 +17,20 @@ Orchestrate role-based AI agents and teams with simple job descriptions.
 
 No coding. No complex prompts. Just describe the role you need, and your AI employee starts working.
 
-= Your First AI Team – 3 Powerful Agents Included Free =
+= Eight agents included free =
 
-🏗️ **Assistant Trainer**
-A meta-agent that helps you expand your AI team instantly by training new agents with simple job descriptions.
+The free plugin ships **8 role-based agents** ready to activate:
 
-✍️ **Content Writer**
-Writes, edits, and publishes high-quality posts and pages. Give it a topic and tone — it delivers ready-to-publish drafts.
+* **Assistant Trainer** — trains new AI assistants from plain job descriptions
+* **Content Writer** — creates, edits, and publishes posts and pages
+* **Editorial Director** — plans content work and coordinates specialist agents
+* **SEO Optimizer** — audits on-page SEO and proposes concrete improvements
+* **Site Health Sentinel** — read-only site health, performance, and security signals
+* **Support Triage** — triages comments and form submissions, drafts replies
+* **User Assistant** — helps manage registrations, accounts, and member outreach
+* **WordPress Assistant** — guide to WordPress and Agent Builder for new users
 
-🧭 **WordPress Assistant**
-Your always-available guide to WordPress. Ask questions about settings, plugins, code, or get recommendations for the right AI agent for the task.
+Discover more on [Community Agents](https://agentic-plugin.com/community-agents/).
 
 = Key Features =
 
@@ -102,11 +106,15 @@ You are billed directly for API usage by your selected LLM provider(s) according
 
 = How do I build the JavaScript assets from source? =
 
-The admin interface includes React components built with @wordpress/scripts. The compiled output ships in the `build/` directory, and the human-readable source lives in `src/`. To rebuild from source, run from the plugin directory:
+The admin interface includes React components built with @wordpress/scripts. The compiled output ships in the `build/` directory, and the human-readable source lives in `src/`.
 
-`npm install && npm run build`
+Public development source (WordPress.org free edition): [github.com/renduples/agent-builder-wp](https://github.com/renduples/agent-builder-wp)
 
-This regenerates `build/` from `src/` using the configuration in `package.json` and `webpack.config.js`.
+To rebuild from source, clone that repository (or use a plugin tree that includes `package.json` and `webpack.config.js`) and run:
+
+`npm ci && npm run build`
+
+This regenerates `build/` from `src/`.
 
 = What is Agent Builder? =
 

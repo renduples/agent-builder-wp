@@ -8,9 +8,24 @@ Free [Agent Builder](https://agentic-plugin.com/) WordPress plugin.
 - **License:** GPL-2.0-or-later
 - **Requires:** WordPress 6.4+, PHP 8.1+
 - **Docs / product site:** https://agentic-plugin.com/documentation/
-- **AI agents by Wordpress community:** https://agentic-plugin.com/community-agents/
+- **Community agents:** https://agentic-plugin.com/community-agents/
 
-Deploy AI Agents and Teams in Wordpress. Create role-based agents with simple job descriptions.
+Deploy AI agents and teams in WordPress. Create role-based agents with simple job descriptions.
+
+## Eight agents included free
+
+| Agent | Role |
+|-------|------|
+| **Assistant Trainer** | Train new assistants from plain job descriptions |
+| **Content Writer** | Create, edit, and publish posts and pages |
+| **Editorial Director** | Plan content work and coordinate specialists |
+| **SEO Optimizer** | Audit on-page SEO and propose improvements |
+| **Site Health Sentinel** | Site health, performance, and security signals |
+| **Support Triage** | Triage comments/forms; draft replies |
+| **User Assistant** | Registrations, accounts, and member outreach |
+| **WordPress Assistant** | Guide to WordPress and Agent Builder |
+
+More on [Community Agents](https://agentic-plugin.com/community-agents/).
 
 ## Install from source
 
