@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,13 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.1 - 2026-07-30 =
+* Fix: editor sidebar crash (ReferenceError on an out-of-scope variable in MessageBubble's replace-selection button).
+* Fix: get_failed_logins tool queried a non-existent database column, throwing a DB error on every call.
+* New: failed login attempts are now recorded to the security log (previously nothing wrote them, so the tool always reported zero).
+* Fix: Agent_Library and Agent_Settings threw DB errors when their tables were absent (e.g. under Plugin Check's sandbox) instead of degrading gracefully.
+* Fix: multi-agent handoff re-sent its context on every message instead of once, and its "User:"/"Previous Agent:" labels falsely tripped the chat security filter, blocking the first message of every handoff.
 
 = 3.3.0 - 2026-07-29 =
 * New: React **Settings** app (Interface, Agents, Providers, Users, Security; Advanced APIs/Endpoints).
