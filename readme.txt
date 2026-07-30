@@ -158,13 +158,13 @@ Use the WordPress.org support forum for this plugin, or the contact options on [
 
 == Screenshots ==
 
-1. Setup Wizard – choose your AI provider with pricing comparison and recommendations
-2. Setup Wizard – step-by-step API key entry with screenshots for each provider
-3. Setup Wizard – connection test and first chat with an AI agent
-4. Chat interface – talk to any AI agent with quick actions, markdown support, and file uploads
-5. Agents overview – manage all your installed agents in one place - just like plugins
-6. Agent configuration – set provider, model, mode, capabilities, and channel permissions per agent
-7. Audit log – review every AI action, tool call, and decision with full transparency
+1. Dashboard — overview, connected providers, and quick actions
+2. Chat — talk to any agent with tools and conversation history
+3. Agents — activate and manage the eight bundled assistants
+4. Settings — Interface, Agents, Providers, Users, and Security (React)
+5. Providers — connect OpenAI, Anthropic, xAI, Kimi, Ollama, and more
+6. Tools — categories, risk levels, and ability profiles
+7. Activity — audit log of conversations and tool use
 
 == Community Agents ==
 
