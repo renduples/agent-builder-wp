@@ -698,10 +698,20 @@ require_once AGENT_BUILDER_DIR . 'includes/class-ui-settings-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-dashboard-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-agent-wizard-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-security-log.php';
-require_once AGENT_BUILDER_DIR . 'includes/class-cloudflare-client.php';
-require_once AGENT_BUILDER_DIR . 'includes/class-email-provider-registry.php';
-require_once AGENT_BUILDER_DIR . 'includes/email-providers/interface-email-provider.php';
-require_once AGENT_BUILDER_DIR . 'includes/email-providers/class-cloudflare-email-provider.php';
+// Cloudflare Email stack is Agent Builder Pro (not shipped in free / WPorg builds).
+// Load only when present so free packages that strip these files do not fatally require them.
+if ( file_exists( AGENT_BUILDER_DIR . 'includes/class-cloudflare-client.php' ) ) {
+	require_once AGENT_BUILDER_DIR . 'includes/class-cloudflare-client.php';
+}
+if ( file_exists( AGENT_BUILDER_DIR . 'includes/class-email-provider-registry.php' ) ) {
+	require_once AGENT_BUILDER_DIR . 'includes/class-email-provider-registry.php';
+}
+if ( file_exists( AGENT_BUILDER_DIR . 'includes/email-providers/interface-email-provider.php' ) ) {
+	require_once AGENT_BUILDER_DIR . 'includes/email-providers/interface-email-provider.php';
+}
+if ( file_exists( AGENT_BUILDER_DIR . 'includes/email-providers/class-cloudflare-email-provider.php' ) ) {
+	require_once AGENT_BUILDER_DIR . 'includes/email-providers/class-cloudflare-email-provider.php';
+}
 
 // WP 7.0+ AI Client adapter layer (the bridge).
 // We always load the detection + registry + both adapters so that
