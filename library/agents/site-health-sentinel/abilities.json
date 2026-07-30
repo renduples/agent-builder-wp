@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "site-health-sentinel",
+  "description": "Read-only diagnostic tools the Site Health Sentinel uses to assess site health",
+  "abilities": {
+    "get_site_overview": { "risk": "none" },
+    "run_health_check": { "risk": "none" },
+    "get_database_health": { "risk": "none" },
+    "get_php_errors": { "risk": "none" },
+    "check_plugin_updates": { "risk": "none" },
+    "check_core_web_vitals": { "risk": "none" },
+    "get_cron_jobs": { "risk": "none" },
+    "get_security_overview": { "risk": "none" }
+  }
+}

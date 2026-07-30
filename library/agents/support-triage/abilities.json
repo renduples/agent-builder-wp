@@ -1,0 +1,45 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "support-triage",
+  "description": "Tools the Support Triage agent uses to read and respond to comments and form submissions",
+  "abilities": {
+    "list_comments": {
+      "risk": "none"
+    },
+    "get_post_content": {
+      "risk": "none"
+    },
+    "search_content": {
+      "risk": "none"
+    },
+    "list_native_forms": {
+      "risk": "none"
+    },
+    "get_native_form_submissions": {
+      "risk": "low",
+      "reason": "Form submissions can contain personal data"
+    },
+    "get_form_entries": {
+      "risk": "low",
+      "reason": "Form entries can contain personal data"
+    },
+    "moderate_comment": {
+      "risk": "medium",
+      "reason": "Approves, holds, spams or trashes a comment"
+    },
+    "reply_to_comment": {
+      "risk": "medium",
+      "reason": "Publishes a public reply to a comment"
+    },
+    "list_okf_concepts": {
+      "risk": "none"
+    },
+    "read_okf_concept": {
+      "risk": "none"
+    },
+    "search_okf": {
+      "risk": "none"
+    }
+  }
+}

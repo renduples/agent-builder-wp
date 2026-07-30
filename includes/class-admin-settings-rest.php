@@ -1,0 +1,806 @@
+<?php
+/**
+ * Admin Settings REST — backs the React settings app.
+ *
+ * @package    Agent_Builder
+ * @subpackage Includes
+ * @since      3.3.0
+ *
+ * php version 8.1
+ */
+
+declare(strict_types=1);
+
+namespace Agentic;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Bootstrap + get/update per settings tab.
+ */
+class Admin_Settings_REST {
+
+	/**
+	 * Register routes.
+	 */
+	public static function init(): void {
+		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
+	}
+
+	/**
+	 * Routes.
+	 */
+	public static function register_routes(): void {
+		register_rest_route(
+			'agentic/v1',
+			'/admin-settings',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( __CLASS__, 'get_bootstrap' ),
+					'permission_callback' => array( __CLASS__, 'can_manage' ),
+				),
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( __CLASS__, 'update_tab' ),
+					'permission_callback' => array( __CLASS__, 'can_manage' ),
+				),
+			)
+		);
+
+		// Pro (and other add-ons) can render classic PHP tab bodies inside the React shell.
+		register_rest_route(
+			'agentic/v1',
+			'/admin-settings/classic-tab',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'get_classic_tab_html' ),
+				'permission_callback' => array( __CLASS__, 'can_manage' ),
+				'args'                => array(
+					'tab' => array(
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_key',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Permission.
+	 */
+	public static function can_manage(): bool {
+		return current_user_can( 'agentic_manage_settings' ) || current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Full bootstrap for the settings SPA.
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public static function get_bootstrap(): \WP_REST_Response {
+		$is_advanced = Admin_Menu_Handler::is_advanced_mode();
+		$is_pro      = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
+
+		$tabs = array(
+			'interface' => __( 'Interface', 'agent-builder' ),
+			'agents'    => __( 'Agents', 'agent-builder' ),
+			'providers' => __( 'Providers', 'agent-builder' ),
+			'users'     => __( 'Users', 'agent-builder' ),
+			'security'  => __( 'Security', 'agent-builder' ),
+			'apis'      => __( 'APIs', 'agent-builder' ),
+			'endpoints' => __( 'Endpoints', 'agent-builder' ),
+		);
+		if ( $is_pro ) {
+			$tabs['license'] = __( 'License', 'agent-builder' );
+		}
+		$tabs = apply_filters( 'agentic_settings_tabs', $tabs );
+
+		$groups = array(
+			array(
+				'id'    => 'basic',
+				'label' => __( 'Basic', 'agent-builder' ),
+				'slugs' => array( 'interface', 'agents', 'providers', 'license', 'users', 'security' ),
+			),
+			array(
+				'id'            => 'advanced',
+				'label'         => __( 'Advanced', 'agent-builder' ),
+				'slugs'         => array( 'apis', 'endpoints' ),
+				'advanced_only' => true,
+			),
+		);
+
+		// Pro plugin present (even before key activation) owns License HTML.
+		$pro_present = $is_pro || defined( 'AGENT_BUILDER_PRO_VERSION' ) || defined( 'AGENT_BUILDER_PRO_FILE' );
+		/**
+		 * Tabs whose body is rendered by PHP (Pro License, etc.) and injected into React.
+		 *
+		 * @param string[] $classic_tabs Tab slugs.
+		 */
+		$classic_tabs = apply_filters(
+			'agentic_settings_classic_html_tabs',
+			$pro_present ? array( 'license' ) : array()
+		);
+		$classic_tabs = array_values(
+			array_unique(
+				array_filter(
+					array_map( 'sanitize_key', (array) $classic_tabs )
+				)
+			)
+		);
+		// Always list License in nav when Pro is present (key may still be free).
+		if ( $pro_present && empty( $tabs['license'] ) ) {
+			$tabs['license'] = __( 'License', 'agent-builder' );
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'tabs'         => $tabs,
+				'groups'       => $groups,
+				'is_advanced'  => $is_advanced,
+				'is_pro'       => $is_pro,
+				'classic_tabs' => $classic_tabs,
+				'admin_url'    => admin_url(),
+				'rest_url'     => rest_url( 'agentic/v1/' ),
+				'data'         => array(
+					'interface'    => self::data_interface(),
+					'providers'    => self::data_providers(),
+					'agents'       => self::data_agents(),
+					// Still exposed for Knowledge page embed (settings REST).
+					'instructions' => self::data_instructions(),
+					'memory'       => self::data_memory(),
+					'security'     => self::data_security(),
+					'users'        => self::data_users(),
+					'apis'         => self::data_apis(),
+					'endpoints'    => self::data_endpoints(),
+				),
+			),
+			200
+		);
+	}
+
+	/**
+	 * HTML body for a classic settings tab (Pro License, etc.).
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function get_classic_tab_html( \WP_REST_Request $request ) {
+		$tab = sanitize_key( (string) $request->get_param( 'tab' ) );
+		if ( '' === $tab ) {
+			return new \WP_Error( 'agentic_invalid_tab', __( 'Invalid settings tab.', 'agent-builder' ), array( 'status' => 400 ) );
+		}
+
+		$is_pro       = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
+		$pro_present  = $is_pro || defined( 'AGENT_BUILDER_PRO_VERSION' ) || defined( 'AGENT_BUILDER_PRO_FILE' );
+		$classic_tabs = apply_filters(
+			'agentic_settings_classic_html_tabs',
+			$pro_present ? array( 'license' ) : array()
+		);
+		$classic_tabs = array_map( 'sanitize_key', (array) $classic_tabs );
+
+		if ( ! in_array( $tab, $classic_tabs, true ) ) {
+			return new \WP_Error(
+				'agentic_not_classic_tab',
+				__( 'This tab is not available as classic HTML.', 'agent-builder' ),
+				array( 'status' => 404 )
+			);
+		}
+
+		/**
+		 * Fires before capturing classic settings tab HTML for the React shell.
+		 *
+		 * @param string $tab Tab slug.
+		 */
+		do_action( 'agentic_before_classic_settings_tab', $tab );
+
+		ob_start();
+		/**
+		 * Render classic settings tab body (Pro registers License here).
+		 *
+		 * @param string $tab Tab slug.
+		 */
+		do_action( 'agentic_render_settings_tab', $tab );
+		$html = (string) ob_get_clean();
+
+		return new \WP_REST_Response(
+			array(
+				'tab'  => $tab,
+				'html' => $html,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Update one tab.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function update_tab( \WP_REST_Request $request ) {
+		$tab  = sanitize_key( (string) $request->get_param( 'tab' ) );
+		$data = $request->get_param( 'data' );
+		if ( ! is_array( $data ) ) {
+			$data = array();
+		}
+
+		// Removed tabs → current homes.
+		if ( 'general' === $tab ) {
+			$tab = 'interface';
+		}
+		if ( 'global' === $tab ) {
+			$tab = 'agents';
+		}
+
+		switch ( $tab ) {
+			case 'interface':
+				self::save_interface( $data );
+				break;
+			case 'security':
+				self::save_security( $data );
+				break;
+			case 'users':
+				self::save_users( $data );
+				break;
+			case 'memory':
+				self::save_memory( $data );
+				break;
+			case 'agents':
+				self::save_agents( $data );
+				break;
+			case 'instructions':
+				self::save_instructions( $data );
+				break;
+			default:
+				return new \WP_Error( 'invalid_tab', __( 'Unknown settings tab.', 'agent-builder' ), array( 'status' => 400 ) );
+		}
+
+		Security_Log::log_system(
+			'settings_changed',
+			$tab . '_settings',
+			array( 'tab' => $tab, 'via' => 'react_rest' )
+		);
+		if ( class_exists( Audit_Log::class ) ) {
+			Audit_Log::log_admin(
+				'settings_changed',
+				'settings',
+				array(
+					'id'  => $tab,
+					'tab' => $tab,
+					'via' => 'react_rest',
+				)
+			);
+		}
+
+		$method = 'data_' . $tab;
+		$out    = method_exists( __CLASS__, $method ) ? self::$method() : array();
+
+		return new \WP_REST_Response(
+			array(
+				'ok'   => true,
+				'tab'  => $tab,
+				'data' => $out,
+			),
+			200
+		);
+	}
+
+	// ── Data builders ─────────────────────────────────────────────────────
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_interface(): array {
+		return array(
+			'ui_mode'            => 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) ? 'advanced' : 'basic',
+			'show_onboarding'    => '0' !== get_option( 'agentic_show_onboarding', '1' ),
+			'admin_address'      => (string) get_option( 'agentic_admin_address', '' ),
+			'frontend_address'   => (string) get_option( 'agentic_frontend_address', '' ),
+			'global_font'        => (string) get_option( 'agentic_global_font', '' ),
+			'global_accent'      => (string) get_option( 'agentic_global_accent', '' ),
+			'chat_theme'         => (string) get_option( 'agentic_chat_theme', 'light' ),
+			'chat_themes'        => self::chat_theme_presets(),
+			'font_options'       => array(
+				array(
+					'label' => __( 'Theme default', 'agent-builder' ),
+					'value' => '',
+				),
+				array(
+					'label' => __( 'System UI', 'agent-builder' ),
+					'value' => 'system-ui, sans-serif',
+				),
+				array(
+					'label' => 'Arial / Helvetica',
+					'value' => 'Arial, Helvetica, sans-serif',
+				),
+				array(
+					'label' => 'Georgia',
+					'value' => 'Georgia, serif',
+				),
+				array(
+					'label' => 'Times New Roman',
+					'value' => '"Times New Roman", Times, serif',
+				),
+				array(
+					'label' => 'Courier New (monospace)',
+					'value' => '"Courier New", Courier, monospace',
+				),
+				array(
+					'label' => 'Verdana',
+					'value' => 'Verdana, Geneva, sans-serif',
+				),
+			),
+		);
+	}
+
+	/**
+	 * Chat theme presets (preview swatches + labels).
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	private static function chat_theme_presets(): array {
+		return array(
+			array(
+				'value'  => 'light',
+				'label'  => __( 'Light', 'agent-builder' ),
+				'desc'   => __( 'Clean white with WordPress blue accents — the default.', 'agent-builder' ),
+				'bg'     => '#ffffff',
+				'accent' => '#2271b1',
+				'text'   => '#1d2327',
+				'msg'    => '#f0f0f1',
+			),
+			array(
+				'value'  => 'dark',
+				'label'  => __( 'Dark', 'agent-builder' ),
+				'desc'   => __( 'Deep purple dark theme.', 'agent-builder' ),
+				'bg'     => '#1a1a2e',
+				'accent' => '#8b5cf6',
+				'text'   => '#f0f0f0',
+				'msg'    => 'rgba(139,92,246,0.15)',
+			),
+			array(
+				'value'  => 'midnight',
+				'label'  => __( 'Midnight', 'agent-builder' ),
+				'desc'   => __( 'Pure dark with emerald green accents.', 'agent-builder' ),
+				'bg'     => '#0f172a',
+				'accent' => '#10b981',
+				'text'   => '#e2e8f0',
+				'msg'    => 'rgba(16,185,129,0.12)',
+			),
+			array(
+				'value'  => 'ocean',
+				'label'  => __( 'Ocean', 'agent-builder' ),
+				'desc'   => __( 'Deep blue with teal highlights.', 'agent-builder' ),
+				'bg'     => '#0c1222',
+				'accent' => '#06b6d4',
+				'text'   => '#e0f2fe',
+				'msg'    => 'rgba(6,182,212,0.12)',
+			),
+		);
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_providers(): array {
+		$default = (string) get_option( 'agentic_llm_provider', 'agentic' );
+		$rows    = array();
+		foreach ( Provider_Registry::get_all() as $p ) {
+			$connected = Admin_Menu_Handler::provider_is_connected( $p );
+			$rows[]    = array(
+				'slug'          => (string) ( $p['slug'] ?? '' ),
+				'name'          => (string) ( $p['name'] ?? '' ),
+				'default_model' => (string) ( $p['default_model'] ?? '' ),
+				'auth_type'     => (string) ( $p['auth_type'] ?? '' ),
+				'req_format'    => (string) ( $p['req_format'] ?? '' ),
+				'is_builtin'    => ! empty( $p['is_builtin'] ),
+				'connected'     => $connected,
+				'is_default'    => ( (string) ( $p['slug'] ?? '' ) === $default ),
+				'icon'          => (string) ( $p['icon'] ?? '' ),
+				'edit_url'      => admin_url( 'admin.php?page=agentic-settings&tab=providers&edit_provider=' . rawurlencode( (string) ( $p['slug'] ?? '' ) ) ),
+			);
+		}
+		return array(
+			'providers'          => $rows,
+			'default'            => $default,
+			'add_url'            => admin_url( 'admin.php?page=agentic-settings&tab=providers&add_provider=1' ),
+			'form_action'        => admin_url( 'admin.php?page=agentic-settings&tab=providers' ),
+			'provider_nonce'     => wp_create_nonce( 'agentic_provider_nonce' ),
+			'set_default_action' => 'agentic_provider_action',
+		);
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_agents(): array {
+		$registry   = \Agentic_Agent_Registry::get_instance();
+		$installed  = $registry->get_installed_agents();
+		$active     = $registry->get_active_agents();
+		$providers  = array();
+		foreach ( Provider_Registry::get_all() as $p ) {
+			$providers[] = array(
+				'slug'          => $p['slug'],
+				'name'          => $p['name'],
+				'default_model' => $p['default_model'] ?? '',
+				'models'        => $p['models'] ?? array(),
+				'connected'     => Admin_Menu_Handler::provider_is_connected( $p ),
+			);
+		}
+
+		$agents = array();
+		foreach ( $active as $slug ) {
+			if ( ! isset( $installed[ $slug ] ) ) {
+				continue;
+			}
+			$agents[] = array(
+				'slug'             => $slug,
+				'name'             => (string) ( $installed[ $slug ]['name'] ?? $slug ),
+				'override_provider'=> (string) Agent_Settings::get( $slug, 'override_provider' ),
+				'override_model'   => (string) Agent_Settings::get( $slug, 'override_model' ),
+				'override_mode'    => (string) Agent_Settings::get( $slug, 'override_mode' ),
+				'override_audio'   => (string) Agent_Settings::get( $slug, 'override_audio' ),
+				'override_tts'     => (string) Agent_Settings::get( $slug, 'override_tts' ),
+				'override_vision'  => (string) Agent_Settings::get( $slug, 'override_vision' ),
+			);
+		}
+
+		return array(
+			'global_provider'    => (string) get_option( 'agentic_llm_provider', 'agentic' ),
+			'global_model'       => (string) get_option( 'agentic_model', '' ),
+			'providers'          => $providers,
+			'agents'             => $agents,
+			'disable_all_agents' => Emergency_Stop::is_active(),
+			// Chat capabilities (moved from Global tab).
+			'chat_audio'         => '1' === (string) get_option( 'agentic_chat_audio', '0' ) || true === get_option( 'agentic_chat_audio', false ),
+			'chat_tts'           => '0' !== (string) get_option( 'agentic_chat_tts', '1' ),
+			'chat_vision'        => '1' === (string) get_option( 'agentic_chat_vision', '0' ) || true === get_option( 'agentic_chat_vision', false ),
+			'chat_whitelabel'    => '1' === (string) get_option( 'agentic_chat_whitelabel', '0' ),
+		);
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_instructions(): array {
+		$registry  = \Agentic_Agent_Registry::get_instance();
+		$installed = $registry->get_installed_agents();
+		$list      = array();
+		foreach ( $installed as $slug => $info ) {
+			$list[] = array(
+				'slug'            => $slug,
+				'name'            => (string) ( $info['name'] ?? $slug ),
+				'welcome_message' => (string) Agent_Settings::get( $slug, 'persona_welcome_message' ),
+				'notes'           => (string) Agent_Settings::get( $slug, 'persona_notes' ),
+				'response_style'  => (string) Agent_Settings::get( $slug, 'persona_response_style' ),
+			);
+		}
+		return array( 'agents' => $list );
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_security(): array {
+		return array(
+			'default_agent_mode'         => (string) get_option( 'agentic_default_agent_mode', 'supervised' ),
+			'message_scanning'           => (bool) get_option( 'agentic_message_scanning', true ),
+			'chat_consent_enabled'       => (bool) get_option( 'agentic_chat_consent_enabled', false ),
+			'chat_consent_text'          => (string) get_option( 'agentic_chat_consent_text', '' ),
+			'retention_conversations'    => (int) get_option( 'agentic_retention_conversations', 30 ),
+			'retention_audit_log'        => (int) get_option( 'agentic_retention_audit_log', 30 ),
+			'rate_limit_authenticated'   => (int) get_option( 'agentic_rate_limit_authenticated', 30 ),
+			'rate_limit_anonymous'       => (int) get_option( 'agentic_rate_limit_anonymous', 10 ),
+		);
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_users(): array {
+		$roles_out = array();
+		if ( class_exists( User_Roles::class ) ) {
+			foreach ( User_Roles::get_all_wp_roles() as $slug => $role_data ) {
+				$roles_out[] = array(
+					'slug' => (string) $slug,
+					'name' => translate_user_role( (string) ( $role_data['name'] ?? $slug ) ),
+				);
+			}
+		}
+
+		$plugin_privs = array();
+		$agent_privs  = array();
+		$settings     = array(
+			'plugin' => array(),
+			'agents' => array(),
+		);
+		if ( class_exists( User_Roles::class ) ) {
+			$settings = User_Roles::get_settings();
+			foreach ( User_Roles::get_plugin_privileges() as $key => $info ) {
+				$plugin_privs[] = array(
+					'key'         => (string) $key,
+					'label'       => (string) ( $info['label'] ?? $key ),
+					'description' => (string) ( $info['description'] ?? '' ),
+					'roles'       => array_values( (array) ( $settings['plugin'][ $key ] ?? array() ) ),
+				);
+			}
+			foreach ( User_Roles::get_agent_privileges() as $key => $info ) {
+				$agent_privs[] = array(
+					'key'         => (string) $key,
+					'label'       => (string) ( $info['label'] ?? $key ),
+					'description' => (string) ( $info['description'] ?? '' ),
+					'roles'       => array_values( (array) ( $settings['agents'][ $key ] ?? array() ) ),
+				);
+			}
+		}
+
+		$limits = class_exists( Usage_Limits::class )
+			? Usage_Limits::get_limits()
+			: array();
+
+		return array(
+			'allow_anonymous_chat' => (bool) get_option( 'agentic_allow_anonymous_chat', false ),
+			'roles'                => $roles_out,
+			'plugin_privileges'    => $plugin_privs,
+			'agent_privileges'     => $agent_privs,
+			'usage_limits'         => $limits,
+		);
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_memory(): array {
+		return array(
+			'ttl_days'              => (int) get_option( 'agentic_memory_ttl_days', 30 ),
+			'local_memory_enabled'  => '1' === (string) get_option( 'agentic_local_memory_enabled', '0' ),
+		);
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_apis(): array {
+		$psi = (string) get_option( 'agentic_psi_api_key', '' );
+		return array(
+			'services' => array(
+				array(
+					'slug'       => 'google_psi',
+					'name'       => 'Google PageSpeed Insights',
+					'configured' => '' !== $psi,
+					'hint'       => '' !== $psi ? '••••' . substr( $psi, -4 ) : '',
+					'key_url'    => 'https://developers.google.com/speed/docs/insights/v5/get-started',
+				),
+			),
+		);
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private static function data_endpoints(): array {
+		return array(
+			'rest_namespace' => 'agentic/v1',
+			'rest_url'       => rest_url( 'agentic/v1/' ),
+			'note'           => __( 'REST and webhook endpoints for integrations. Full editor remains available via Advanced tools.', 'agent-builder' ),
+		);
+	}
+
+	// ── Savers ────────────────────────────────────────────────────────────
+
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	private static function save_interface( array $data ): void {
+		$address_changed = false;
+		if ( isset( $data['admin_address'] ) ) {
+			update_option( 'agentic_admin_address', mb_substr( sanitize_text_field( (string) $data['admin_address'] ), 0, 60 ) );
+			$address_changed = true;
+		}
+		if ( isset( $data['frontend_address'] ) ) {
+			update_option( 'agentic_frontend_address', mb_substr( sanitize_text_field( (string) $data['frontend_address'] ), 0, 60 ) );
+			$address_changed = true;
+		}
+
+		if ( isset( $data['ui_mode'] ) && in_array( $data['ui_mode'], array( 'basic', 'advanced' ), true ) ) {
+			$prev = (string) get_option( 'agentic_ui_mode', 'basic' );
+			$mode = (string) $data['ui_mode'];
+			update_option( 'agentic_ui_mode', $mode, false );
+			if ( $prev !== $mode && class_exists( Audit_Log::class ) ) {
+				Audit_Log::log_admin(
+					'ui_mode_changed',
+					'settings',
+					array(
+						'id'   => $mode,
+						'from' => $prev,
+						'to'   => $mode,
+					)
+				);
+			}
+		}
+		if ( array_key_exists( 'show_onboarding', $data ) ) {
+			update_option( 'agentic_show_onboarding', ! empty( $data['show_onboarding'] ) ? '1' : '0', false );
+		}
+		if ( isset( $data['global_font'] ) ) {
+			$allow = Chat_Assets::global_font_allowlist();
+			$font  = sanitize_text_field( (string) $data['global_font'] );
+			if ( in_array( $font, $allow, true ) ) {
+				update_option( 'agentic_global_font', $font, false );
+			}
+		}
+		if ( ! empty( $data['use_theme_accent'] ) || ( isset( $data['global_accent'] ) && '' === $data['global_accent'] ) ) {
+			update_option( 'agentic_global_accent', '', false );
+		} elseif ( isset( $data['global_accent'] ) ) {
+			$accent = sanitize_hex_color( (string) $data['global_accent'] );
+			if ( $accent ) {
+				update_option( 'agentic_global_accent', $accent, false );
+			}
+		}
+
+		if ( isset( $data['chat_theme'] ) ) {
+			$theme   = sanitize_key( (string) $data['chat_theme'] );
+			$allowed = array( 'dark', 'light', 'midnight', 'ocean', 'auto' );
+			if ( in_array( $theme, $allowed, true ) ) {
+				update_option( 'agentic_chat_theme', $theme );
+			}
+		}
+
+		// Addressing fields change system prompts — drop response cache.
+		if ( $address_changed && class_exists( Response_Cache::class ) ) {
+			Response_Cache::clear_all();
+		}
+	}
+
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	private static function save_security( array $data ): void {
+		if ( isset( $data['default_agent_mode'] ) ) {
+			$mode = sanitize_key( (string) $data['default_agent_mode'] );
+			if ( in_array( $mode, array( 'autonomous', 'supervised', 'readonly' ), true ) ) {
+				$prev = (string) get_option( 'agentic_default_agent_mode', 'supervised' );
+				update_option( 'agentic_default_agent_mode', $mode );
+				if ( $prev !== $mode && class_exists( Audit_Log::class ) ) {
+					Audit_Log::log_admin(
+						'default_agent_mode_changed',
+						'settings',
+						array(
+							'id'   => $mode,
+							'from' => $prev,
+							'to'   => $mode,
+						)
+					);
+				}
+			}
+		}
+		if ( array_key_exists( 'message_scanning', $data ) ) {
+			update_option( 'agentic_message_scanning', ! empty( $data['message_scanning'] ) );
+		}
+		if ( array_key_exists( 'chat_consent_enabled', $data ) ) {
+			update_option( 'agentic_chat_consent_enabled', ! empty( $data['chat_consent_enabled'] ) );
+		}
+		if ( isset( $data['chat_consent_text'] ) ) {
+			update_option( 'agentic_chat_consent_text', sanitize_textarea_field( (string) $data['chat_consent_text'] ) );
+		}
+		if ( isset( $data['retention_conversations'] ) ) {
+			update_option( 'agentic_retention_conversations', max( 0, absint( $data['retention_conversations'] ) ) );
+		}
+		if ( isset( $data['retention_audit_log'] ) ) {
+			update_option( 'agentic_retention_audit_log', max( 0, absint( $data['retention_audit_log'] ) ) );
+		}
+		if ( isset( $data['rate_limit_authenticated'] ) ) {
+			update_option( 'agentic_rate_limit_authenticated', max( 1, absint( $data['rate_limit_authenticated'] ) ) );
+		}
+		if ( isset( $data['rate_limit_anonymous'] ) ) {
+			update_option( 'agentic_rate_limit_anonymous', max( 1, absint( $data['rate_limit_anonymous'] ) ) );
+		}
+	}
+
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	private static function save_users( array $data ): void {
+		if ( array_key_exists( 'allow_anonymous_chat', $data ) ) {
+			update_option( 'agentic_allow_anonymous_chat', ! empty( $data['allow_anonymous_chat'] ) ? 1 : 0 );
+		}
+		if ( ! empty( $data['role_settings'] ) && is_array( $data['role_settings'] ) && class_exists( User_Roles::class ) ) {
+			User_Roles::save_settings( $data['role_settings'] );
+		}
+		if ( ! empty( $data['usage_limits'] ) && is_array( $data['usage_limits'] ) && class_exists( Usage_Limits::class ) ) {
+			Usage_Limits::save_limits( $data['usage_limits'] );
+		}
+	}
+
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	private static function save_memory( array $data ): void {
+		if ( isset( $data['ttl_days'] ) ) {
+			update_option( 'agentic_memory_ttl_days', max( 0, absint( $data['ttl_days'] ) ) );
+		}
+		if ( array_key_exists( 'local_memory_enabled', $data ) ) {
+			update_option( 'agentic_local_memory_enabled', ! empty( $data['local_memory_enabled'] ) ? '1' : '0' );
+		}
+	}
+
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	private static function save_agents( array $data ): void {
+		if ( isset( $data['global_provider'] ) ) {
+			$slug = sanitize_key( (string) $data['global_provider'] );
+			if ( Provider_Registry::is_valid( $slug ) ) {
+				update_option( 'agentic_llm_provider', $slug );
+			}
+		}
+		if ( isset( $data['global_model'] ) ) {
+			update_option( 'agentic_model', sanitize_text_field( (string) $data['global_model'] ) );
+		}
+		if ( ! empty( $data['agents'] ) && is_array( $data['agents'] ) ) {
+			foreach ( $data['agents'] as $row ) {
+				if ( ! is_array( $row ) || empty( $row['slug'] ) ) {
+					continue;
+				}
+				$slug = sanitize_key( (string) $row['slug'] );
+				foreach ( array( 'override_provider', 'override_model', 'override_mode', 'override_audio', 'override_tts', 'override_vision' ) as $key ) {
+					if ( array_key_exists( $key, $row ) ) {
+						Agent_Settings::update( $slug, $key, sanitize_text_field( (string) $row[ $key ] ) );
+					}
+				}
+			}
+		}
+		if ( array_key_exists( 'disable_all_agents', $data ) ) {
+			$want = ! empty( $data['disable_all_agents'] );
+			if ( $want && ! Emergency_Stop::is_active() ) {
+				Emergency_Stop::enable();
+			} elseif ( ! $want && Emergency_Stop::is_active() ) {
+				Emergency_Stop::disable();
+			}
+		}
+		foreach ( array( 'chat_audio', 'chat_tts', 'chat_vision', 'chat_whitelabel' ) as $key ) {
+			if ( array_key_exists( $key, $data ) ) {
+				update_option( 'agentic_' . $key, ! empty( $data[ $key ] ) ? '1' : '0' );
+			}
+		}
+	}
+
+	/**
+	 * @param array<string,mixed> $data Data.
+	 */
+	private static function save_instructions( array $data ): void {
+		if ( empty( $data['agents'] ) || ! is_array( $data['agents'] ) ) {
+			return;
+		}
+		foreach ( $data['agents'] as $row ) {
+			if ( ! is_array( $row ) || empty( $row['slug'] ) ) {
+				continue;
+			}
+			$slug = sanitize_key( (string) $row['slug'] );
+			if ( isset( $row['welcome_message'] ) ) {
+				Agent_Settings::update( $slug, 'persona_welcome_message', sanitize_textarea_field( (string) $row['welcome_message'] ) );
+			}
+			if ( isset( $row['notes'] ) ) {
+				Agent_Settings::update( $slug, 'persona_notes', sanitize_textarea_field( (string) $row['notes'] ) );
+			}
+			if ( isset( $row['response_style'] ) ) {
+				Agent_Settings::update( $slug, 'persona_response_style', sanitize_text_field( (string) $row['response_style'] ) );
+			}
+		}
+	}
+}

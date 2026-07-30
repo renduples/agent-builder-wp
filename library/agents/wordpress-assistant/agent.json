@@ -1,0 +1,53 @@
+{
+    "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+    "slug": "wordpress-assistant",
+    "name": "WordPress Assistant",
+    "description": "Your guide to WordPress and the AI ecosystem. Answers questions about the plugin and helps new users get started.",
+    "category": "starter",
+    "icon": "🧭",
+    "version": "1.2.1",
+    "author": "Agentic Community",
+    "author_uri": "https://agentic-plugin.com/developer/agentic-community/",
+    "capabilities": [
+        "read"
+    ],
+    "tools": [
+        "get_agent_list",
+        "get_site_overview",
+        "get_site_context",
+        "run_health_check",
+        "get_file_structure_summary",
+        "get_custom_post_types_summary",
+        "analyze_search_intent",
+        "suggest_intent_alignment",
+        "list_posts",
+        "get_post_content",
+        "agents_available",
+        "search_capabilities",
+        "check_plugin_status",
+        "check_plugin_updates",
+        "get_plugin_maintenance_status",
+        "get_abandoned_plugins",
+        "scan_media_library",
+        "search_media_library",
+        "find_oversized_images",
+        "find_unused_media",
+        "get_media_storage_report",
+        "update_attachment_alt_text",
+        "list_privileged_users",
+        "get_recent_registrations",
+        "find_inactive_users",
+        "get_user_last_login",
+        "list_comments",
+        "moderate_comment",
+        "reply_to_comment"
+    ],
+    "suggested_prompts": [
+        "What can Agent Builder do?",
+        "Which agent should I use for [task]?",
+        "Can AI search engines find my website?",
+        "How do I schedule an agent to run automatically?",
+        "How do Ask AI launchers on Users/Plugins work?"
+    ],
+    "welcome_message": "Hello! Ask me anything about WordPress or Agent Builder.\n\n**Your AI team:**\n{{active_agents}}\n\n[Download more Agents](https://agentic-plugin.com/community-agents/)"
+}

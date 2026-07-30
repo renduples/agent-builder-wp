@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "editorial-director",
+  "description": "Planning and coordination tools for the Editorial Director team lead",
+  "abilities": {
+    "get_content_stats": { "risk": "none" },
+    "get_site_writing_stats": { "risk": "none" },
+    "list_posts": { "risk": "none" },
+    "search_content": { "risk": "none" },
+    "delegate_to_agent": { "risk": "medium", "reason": "Runs another active agent autonomously to complete a subtask" }
+  }
+}

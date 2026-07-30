@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "seo-optimizer",
+  "description": "Tools the SEO Optimizer uses to audit content and propose on-page SEO improvements",
+  "abilities": {
+    "get_seo_overview": { "risk": "none" },
+    "list_posts_needing_seo": { "risk": "none" },
+    "analyze_post_seo": { "risk": "none" },
+    "analyze_content_quality": { "risk": "none" },
+    "analyze_internal_links": { "risk": "none" },
+    "get_link_suggestions": { "risk": "none" },
+    "optimize_post_title": { "risk": "medium", "reason": "Changes a post's title" },
+    "update_post_seo": { "risk": "medium", "reason": "Updates SEO metadata on a post" }
+  }
+}

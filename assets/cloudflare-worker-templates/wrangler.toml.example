@@ -1,0 +1,11 @@
+name = "agentic-email-relay"
+main = "src/index.js"
+compatibility_date = "2025-05-01"
+
+[[send_email]]
+name = "EMAIL"
+destination_address = "noreply@yourdomain.com"   # ← Change this to your verified sending address
+
+# After deploying, set this secret:
+# wrangler secret put EMAIL_AUTH_TOKEN
+# (Use the same value you enter in Agent Builder Pro)

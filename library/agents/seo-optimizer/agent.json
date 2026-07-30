@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+  "slug": "seo-optimizer",
+  "name": "SEO Optimizer",
+  "description": "Audits posts and pages for on-page SEO, finds content that needs attention, and proposes concrete improvements to titles, metadata, and internal links.",
+  "category": "seo",
+  "icon": "📈",
+  "version": "1.0.0",
+  "author": "Agent Builder",
+  "author_uri": "https://agentic-plugin.com",
+  "capabilities": [ "edit_posts" ],
+  "tools": [
+    "get_seo_overview",
+    "list_posts_needing_seo",
+    "analyze_post_seo",
+    "analyze_content_quality",
+    "analyze_internal_links",
+    "get_link_suggestions",
+    "optimize_post_title",
+    "update_post_seo"
+  ],
+  "suggested_prompts": [
+    "Give me an SEO overview of the site and the top issues to fix first.",
+    "Audit my latest post and suggest title and meta improvements.",
+    "Which posts are missing SEO metadata, and what should I add?"
+  ],
+  "welcome_message": "Hi! I'm your SEO Optimizer. I can audit posts for on-page SEO, find pages that need attention, and propose specific fixes for titles, metadata, and internal links. I'll show you each change before it's applied."
+}

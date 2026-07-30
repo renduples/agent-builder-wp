@@ -1,0 +1,47 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "user-assistant",
+  "description": "Tools the User Assistant uses to review accounts, communicate with members, and perform approved account-security actions",
+  "abilities": {
+    "list_privileged_users": {
+      "risk": "none"
+    },
+    "get_recent_registrations": {
+      "risk": "none"
+    },
+    "find_inactive_users": {
+      "risk": "none"
+    },
+    "get_user_activity_summary": {
+      "risk": "none"
+    },
+    "get_user_last_login": {
+      "risk": "none"
+    },
+    "get_author_list": {
+      "risk": "none"
+    },
+    "send_email": {
+      "risk": "medium",
+      "reason": "Sends an email from your site"
+    },
+    "lock_user_account": {
+      "risk": "high",
+      "reason": "Blocks a user from signing in"
+    },
+    "force_password_reset": {
+      "risk": "high",
+      "reason": "Forces a user to reset their password"
+    },
+    "list_okf_concepts": {
+      "risk": "none"
+    },
+    "read_okf_concept": {
+      "risk": "none"
+    },
+    "search_okf": {
+      "risk": "none"
+    }
+  }
+}

@@ -1,0 +1,197 @@
+/**
+ * Agentic Modal Widget
+ *
+ * Floating chat button + slide-up chat panel for public-facing pages.
+ * Works with the shared agentic-chat-frontend styles.
+ *
+ * @since 2.8.3
+ */
+
+/* ── Trigger button ─────────────────────────────────────── */
+
+.agentic-modal-trigger {
+	position: fixed;
+	bottom: 24px;
+	z-index: 999998;
+	width: 56px;
+	height: 56px;
+	border: none;
+	border-radius: 50%;
+	background: var(--agentic-primary, #2271b1);
+	color: #fff;
+	cursor: pointer;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.agentic-modal-trigger:hover {
+	transform: scale(1.08);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.agentic-modal-trigger.agentic-modal-bottom-right {
+	right: 24px;
+}
+
+.agentic-modal-trigger.agentic-modal-bottom-left {
+	left: 24px;
+}
+
+/* ── Chat panel ─────────────────────────────────────────── */
+
+.agentic-modal-widget {
+	position: fixed;
+	bottom: 96px;
+	z-index: 999999;
+	width: 400px;
+	max-height: 600px;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+	animation: agenticModalSlideUp 0.25s ease-out;
+}
+
+.agentic-modal-widget.agentic-modal-bottom-right {
+	right: 24px;
+}
+
+.agentic-modal-widget.agentic-modal-bottom-left {
+	left: 24px;
+}
+
+.agentic-modal-widget .agentic-chat-container {
+	border-radius: 12px;
+	height: 500px;
+	max-height: 70vh;
+}
+
+/* ── Agent picker ───────────────────────────────────────── */
+
+.agentic-modal-picker {
+	position: fixed;
+	bottom: 96px;
+	z-index: 999999;
+	width: 280px;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+	overflow: hidden;
+	animation: agenticModalSlideUp 0.2s ease-out;
+}
+
+.agentic-modal-picker.agentic-modal-bottom-right {
+	right: 24px;
+}
+
+.agentic-modal-picker.agentic-modal-bottom-left {
+	left: 24px;
+}
+
+.agentic-modal-picker-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 16px;
+	border-bottom: 1px solid #e0e0e0;
+	font-size: 14px;
+}
+
+.agentic-modal-picker-close {
+	background: none;
+	border: none;
+	font-size: 20px;
+	cursor: pointer;
+	color: #666;
+	line-height: 1;
+	padding: 0 4px;
+}
+
+.agentic-modal-picker-item {
+	display: block;
+	width: 100%;
+	padding: 12px 16px;
+	border: none;
+	background: none;
+	text-align: left;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+
+.agentic-modal-picker-item:hover {
+	background: #f0f0f1;
+}
+
+/* ── Animation ──────────────────────────────────────────── */
+
+@keyframes agenticModalSlideUp {
+	from {
+		opacity: 0;
+		transform: translateY(16px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ── Mobile responsive ──────────────────────────────────── */
+
+@media (max-width: 480px) {
+	.agentic-modal-widget {
+		width: calc(100% - 16px);
+		left: 8px !important;
+		right: 8px !important;
+		bottom: 80px;
+		max-height: calc(100vh - 100px);
+	}
+
+	.agentic-modal-picker {
+		width: calc(100% - 16px);
+		left: 8px !important;
+		right: 8px !important;
+		bottom: 80px;
+	}
+
+	.agentic-modal-trigger {
+		bottom: 16px;
+	}
+
+	.agentic-modal-trigger.agentic-modal-bottom-right {
+		right: 16px;
+	}
+
+	.agentic-modal-trigger.agentic-modal-bottom-left {
+		left: 16px;
+	}
+}
+
+/* Consent Banner */
+.agentic-consent-banner {
+    padding: 12px 16px;
+    background: var(--ac-bg-secondary, #f0f0f1);
+    border-top: 1px solid var(--ac-border, #dcdcde);
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.agentic-consent-banner p {
+    margin: 0 0 8px;
+    color: var(--ac-text-secondary, #50575e);
+}
+.agentic-consent-accept {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 4px;
+    background: var(--ac-accent, #2271b1);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+}
+.agentic-consent-accept:hover {
+    opacity: 0.9;
+}

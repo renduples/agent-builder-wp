@@ -1,0 +1,51 @@
+---
+name: plugin-manager
+description: "Use when user wants to check if a plugin is abandoned or outdated, read a plugin's changelog, install a plugin from a URL, check WordPress.org plugin status, or manage plugin auto-updates."
+---
+
+# Plugin Manager Skill
+
+## Available Tools
+
+| Tool | When to use |
+|------|-------------|
+| `get_abandoned_plugins` | Scan all installed plugins and flag those not updated in N months. |
+| `get_plugin_changelog` | Fetch the changelog for a plugin from WordPress.org. |
+| `get_plugin_maintenance_status` | Get full maintenance stats for a single plugin: last updated, tested-up-to, active installs, support threads. |
+| `install_plugin_from_url` | Install a plugin from a ZIP file URL (must be HTTPS). |
+| `toggle_plugin_auto_update` | Enable or disable WordPress auto-updates for a specific plugin. |
+
+## Workflows
+
+### Plugin health audit
+
+1. Call `get_abandoned_plugins` with the default `months_threshold: 12`.
+2. For each flagged plugin, optionally call `get_plugin_maintenance_status` for full detail.
+3. Present the findings: plugin name, last updated date, months since update.
+4. Recommend the user consider replacing or removing plugins not updated in over 2 years.
+
+### Read a plugin's recent changes
+
+1. Identify the WordPress.org slug (e.g. "woocommerce", not the plugin filename).
+2. Call `get_plugin_changelog` with the slug.
+3. Present the changelog in a readable format.
+
+### Install a plugin
+
+1. Confirm the ZIP URL with the user (must be HTTPS).
+2. Ask whether to activate after installation.
+3. Call `install_plugin_from_url`.
+4. Report whether installation and optional activation succeeded.
+
+### Manage auto-updates
+
+1. Identify the plugin's file path (e.g. "woocommerce/woocommerce.php").
+2. Call `toggle_plugin_auto_update` with `enabled: true` or `false`.
+3. Confirm the new state.
+
+## Rules
+
+- Plugin slugs for WordPress.org tools are the folder name only (e.g. "woocommerce"), not the full file path.
+- `install_plugin_from_url` requires filesystem write access — it may fail on hosts with strict permissions.
+- Never install plugins from untrusted sources. Confirm the source URL with the user before calling `install_plugin_from_url`.
+- `get_abandoned_plugins` makes one HTTP request per installed plugin (cached 12h) — it may take a moment on sites with many plugins.

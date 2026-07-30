@@ -1,0 +1,53 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "1.1",
+  "agent": "assistant-trainer",
+  "description": "Tools required by the Assistant Trainer for building and managing agents",
+  "knowledge_files": [
+    "platform-knowledge.txt"
+  ],
+  "abilities": {
+    "search_capabilities": {
+      "risk": "none"
+    },
+    "analyze_requirements": {
+      "risk": "none"
+    },
+    "validate_agent_code": {
+      "risk": "none"
+    },
+    "list_library_agents": {
+      "risk": "none"
+    },
+    "read_agent_source": {
+      "risk": "none"
+    },
+    "get_agent_template": {
+      "risk": "none"
+    },
+    "generate_tool_schema": {
+      "risk": "none"
+    },
+    "generate_system_prompt": {
+      "risk": "none"
+    },
+    "detect_agent_duplicates": {
+      "risk": "none"
+    },
+    "generate_agent_documentation": {
+      "risk": "low",
+      "reason": "Writes README to agent's own directory"
+    },
+    "generate_agent": {
+      "risk": "none"
+    },
+    "create_agent_files": {
+      "risk": "low",
+      "reason": "Writes files to plugin's own library directory"
+    },
+    "delete_agent": {
+      "risk": "medium",
+      "reason": "Deletes an agent directory and all its files"
+    }
+  }
+}

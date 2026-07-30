@@ -1,0 +1,36 @@
+{
+    "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+    "slug": "assistant-trainer",
+    "name": "Assistant Trainer",
+    "description": "Meta-agent that trains new AI assistants from natural language descriptions.",
+    "category": "developer",
+    "icon": "🏗️",
+    "version": "1.1.0",
+    "author": "Agentic Community",
+    "author_uri": "https://agentic-plugin.com/developer/agentic-community/",
+    "capabilities": [
+        "manage_options"
+    ],
+    "tools": [
+        "search_capabilities",
+        "analyze_requirements",
+        "validate_agent_code",
+        "list_library_agents",
+        "read_agent_source",
+        "get_agent_template",
+        "generate_tool_schema",
+        "generate_system_prompt",
+        "detect_agent_duplicates",
+        "generate_agent_documentation",
+        "generate_agent",
+        "create_agent_files",
+        "delete_agent"
+    ],
+    "suggested_prompts": [
+        "Create an assistant that manages WordPress backups",
+        "Build an image optimization assistant for media library",
+        "Design an assistant for managing redirects",
+        "Show me the existing assistants in the library"
+    ],
+    "welcome_message": "I train new AI assistants for WordPress!\n\nTell me what kind of assistant you need and I'll:\n- Generate compliant code\n- Design its tools and capabilities\n- Help test and write documentation\n\nWhat assistant would you like to build?"
+}

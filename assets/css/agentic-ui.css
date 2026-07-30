@@ -1,0 +1,164 @@
+/**
+ * Agent Builder — shared UI primitives (toasts + confirm/alert modals).
+ *
+ * All selectors are namespaced under `.agentic-ui-*` and avoid styling bare
+ * element selectors so the components are safe to load on the frontend
+ * alongside arbitrary themes.
+ *
+ * @package Agent_Builder
+ */
+
+/* ── Toasts ── */
+.agentic-ui-toasts {
+	position: fixed;
+	top: 48px;
+	right: 16px;
+	z-index: 100001;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-width: 360px;
+	pointer-events: none;
+}
+
+.agentic-ui-toast {
+	pointer-events: auto;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 12px 14px;
+	border-radius: 6px;
+	background: #1e1e1e;
+	color: #fff;
+	box-shadow: 0 4px 16px rgba( 0, 0, 0, 0.18 );
+	font-size: 13px;
+	line-height: 1.5;
+	border-left: 4px solid #2271b1;
+	opacity: 0;
+	transform: translateX( 16px );
+	transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.agentic-ui-toast--in {
+	opacity: 1;
+	transform: translateX( 0 );
+}
+
+.agentic-ui-toast--leaving {
+	opacity: 0;
+	transform: translateX( 16px );
+}
+
+.agentic-ui-toast--success {
+	border-left-color: #00a32a;
+}
+
+.agentic-ui-toast--error {
+	border-left-color: #d63638;
+}
+
+.agentic-ui-toast--warning {
+	border-left-color: #dba617;
+}
+
+.agentic-ui-toast--info {
+	border-left-color: #2271b1;
+}
+
+.agentic-ui-toast__msg {
+	flex: 1 1 auto;
+	word-break: break-word;
+}
+
+.agentic-ui-toast__close {
+	flex: 0 0 auto;
+	background: transparent;
+	border: 0;
+	color: inherit;
+	font-size: 18px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 2px;
+	opacity: 0.7;
+}
+
+.agentic-ui-toast__close:hover,
+.agentic-ui-toast__close:focus {
+	opacity: 1;
+}
+
+/* ── Modal ── */
+.agentic-ui-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100002;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	background: rgba( 0, 0, 0, 0.5 );
+	opacity: 0;
+	transition: opacity 0.15s ease;
+}
+
+.agentic-ui-overlay--in {
+	opacity: 1;
+}
+
+.agentic-ui-modal {
+	background: #fff;
+	color: #1e1e1e;
+	border-radius: 8px;
+	box-shadow: 0 8px 40px rgba( 0, 0, 0, 0.25 );
+	width: 100%;
+	max-width: 440px;
+	padding: 22px 24px 18px;
+	box-sizing: border-box;
+}
+
+.agentic-ui-modal__title {
+	margin: 0 0 10px;
+	font-size: 17px;
+	line-height: 1.4;
+	font-weight: 600;
+}
+
+.agentic-ui-modal__body {
+	margin: 0 0 18px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #3c434a;
+	word-break: break-word;
+}
+
+.agentic-ui-modal__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+.agentic-ui-modal__btn {
+	min-width: 84px;
+}
+
+.agentic-ui-modal__btn--danger.button-primary {
+	background: #d63638;
+	border-color: #d63638;
+}
+
+.agentic-ui-modal__btn--danger.button-primary:hover,
+.agentic-ui-modal__btn--danger.button-primary:focus {
+	background: #b32d2e;
+	border-color: #b32d2e;
+}
+
+body.agentic-ui-modal-open {
+	overflow: hidden;
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	.agentic-ui-toast,
+	.agentic-ui-overlay {
+		transition: none;
+	}
+}

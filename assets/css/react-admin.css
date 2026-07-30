@@ -1,0 +1,1018 @@
+/**
+ * Shared styles for React admin surfaces (settings + list pages).
+ * Complements @wordpress/components Card look.
+ */
+
+.agentic-react-admin {
+	max-width: 1100px;
+}
+
+.agentic-react-admin__page-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+	margin: 0 0 16px;
+}
+
+.agentic-react-admin__title {
+	margin: 0 0 4px;
+	font-size: 23px;
+	font-weight: 400;
+	line-height: 1.3;
+	color: #1d2327;
+}
+
+.agentic-react-admin__desc {
+	margin: 0;
+	color: #646970;
+	font-size: 13px;
+}
+
+.agentic-react-admin__actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.agentic-react-panel.components-card {
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.agentic-react-panel .components-card-header {
+	padding: 16px 24px;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.agentic-react-panel__title {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #1e1e1e;
+}
+
+.agentic-react-panel .components-card-body {
+	padding: 20px 24px 24px;
+}
+
+.agentic-react-panel .components-card-footer {
+	padding: 12px 24px 16px;
+	border-top: 1px solid #f0f0f1;
+}
+
+.agentic-react-section {
+	margin: 0 0 24px;
+}
+
+.agentic-react-section:last-child {
+	margin-bottom: 0;
+}
+
+.agentic-react-section__title {
+	margin: 0 0 12px;
+	padding: 0 0 10px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #1e1e1e;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.agentic-react-lead {
+	margin: 0 0 16px;
+	font-size: 13px;
+	line-height: 1.55;
+	color: #646970;
+}
+
+.agentic-react-table-wrap {
+	overflow-x: auto;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+}
+
+.agentic-react-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.agentic-react-table th {
+	text-align: left;
+	background: #f6f7f7;
+	padding: 10px 14px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #50575e;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.agentic-react-table td {
+	padding: 12px 14px;
+	border-bottom: 1px solid #f0f0f1;
+	vertical-align: middle;
+}
+
+.agentic-react-table tr:last-child td {
+	border-bottom: 0;
+}
+
+.agentic-react-table tr:hover td {
+	background: #f9fafb;
+}
+
+.agentic-react-led {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #c3c4c7;
+}
+
+.agentic-react-led.is-on {
+	background: #00a32a;
+	box-shadow: 0 0 0 1px rgba(0, 163, 42, 0.25), 0 0 6px rgba(0, 163, 42, 0.45);
+}
+
+.agentic-react-badge {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 600;
+	padding: 2px 8px;
+	border-radius: 10px;
+	background: #00a32a;
+	color: #fff;
+}
+
+.agentic-react-muted {
+	color: #646970;
+	font-size: 12px;
+}
+
+/* Shared page footer (policy + docs) inside React admin surfaces */
+.agentic-page-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	gap: 12px 24px;
+	width: 100%;
+	box-sizing: border-box;
+	margin: 32px 0 8px;
+	font-size: 12px;
+	color: #787c82;
+	border-top: 1px solid #dcdcde;
+	padding-top: 16px;
+}
+.agentic-page-footer-left {
+	flex: 1 1 auto;
+}
+.agentic-page-footer-right {
+	flex: 0 0 auto;
+}
+.agentic-page-footer a {
+	color: #787c82;
+	text-decoration: none;
+}
+.agentic-page-footer a:hover {
+	color: #2271b1;
+	text-decoration: underline;
+}
+.agentic-page-footer-policy {
+	display: block;
+	margin: 0 0 8px;
+	max-width: 52rem;
+	line-height: 1.45;
+	color: #646970;
+}
+
+/* Horizontal section tabs (tools categories, logs, etc.) */
+.agentic-react-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0 0 16px;
+	padding: 0 0 14px;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.agentic-react-tabs__tab {
+	display: inline-flex;
+	align-items: center;
+	padding: 5px 12px;
+	border-radius: 999px;
+	border: 1px solid #dcdcde;
+	background: #fff;
+	color: #2c3338;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.4;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.agentic-react-tabs__tab:hover {
+	background: #f6f7f7;
+	border-color: #c3c4c7;
+	color: #1d2327;
+}
+
+.agentic-react-tabs__tab.is-active {
+	background: #2271b1;
+	border-color: #2271b1;
+	color: #fff;
+}
+
+.agentic-react-tabs__tab.is-active:hover {
+	background: #135e96;
+	border-color: #135e96;
+	color: #fff;
+}
+
+.agentic-react-tabs--tools {
+	max-height: 120px;
+	overflow-y: auto;
+}
+
+.agentic-react-tools-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin: 0 0 14px;
+}
+
+.agentic-react-tools-toolbar .components-search-control {
+	flex: 1 1 220px;
+	max-width: 360px;
+}
+
+.agentic-react-site-local {
+	margin: 0 0 20px;
+}
+.agentic-react-site-local h3 {
+	margin: 16px 0 8px;
+	font-size: 14px;
+}
+.agentic-react-form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px 16px;
+	margin: 12px 0 16px;
+}
+.agentic-react-form-grid label {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #1d2327;
+}
+.agentic-react-form-grid label span {
+	font-weight: 600;
+}
+.agentic-react-form-grid input,
+.agentic-react-form-grid select,
+.agentic-react-form-grid textarea {
+	font-weight: 400;
+	font-size: 13px;
+	padding: 6px 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	width: 100%;
+	box-sizing: border-box;
+}
+.agentic-react-form-full {
+	grid-column: 1 / -1;
+}
+.agentic-react-chip-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 6px;
+}
+.agentic-react-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	font-weight: 500;
+	padding: 4px 10px;
+	border: 1px solid #dcdcde;
+	border-radius: 999px;
+	background: #fff;
+}
+.agentic-react-test-out {
+	background: #1d2327;
+	color: #f0f0f1;
+	padding: 12px;
+	border-radius: 6px;
+	font-size: 12px;
+	overflow: auto;
+	max-height: 280px;
+}
+.agentic-react-site-local-upsell {
+	margin: 0 0 16px;
+}
+
+/* Users role privilege matrix */
+.agentic-users-matrix {
+	overflow-x: auto;
+}
+.agentic-users-matrix__role {
+	text-align: center !important;
+	min-width: 88px;
+	font-size: 12px;
+	vertical-align: bottom !important;
+}
+.agentic-users-matrix__cell {
+	text-align: center !important;
+	vertical-align: middle !important;
+}
+.agentic-users-matrix__num {
+	width: 80px;
+	max-width: 100%;
+	padding: 4px 6px;
+	font-size: 13px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+}
+.agentic-users-matrix__section td {
+	background: #f0f6fc;
+	padding-top: 12px !important;
+	padding-bottom: 12px !important;
+}
+.agentic-users-matrix__perm {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+.agentic-users-matrix__help {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	border: 1px solid #c3c4c7;
+	background: #f6f7f7;
+	color: #646970;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1;
+	cursor: help;
+	flex-shrink: 0;
+}
+.agentic-users-matrix__help:hover {
+	border-color: #2271b1;
+	color: #2271b1;
+	background: #f0f6fc;
+}
+
+/* Providers tab: inline Set Default form */
+.agentic-providers-actions .agentic-form-inline {
+	display: inline;
+	margin: 0;
+}
+.agentic-providers-actions .agentic-provider-setdefault-btn {
+	background: none;
+	border: 0;
+	padding: 0;
+	color: #2271b1;
+	cursor: pointer;
+	text-decoration: underline;
+	font-size: inherit;
+	line-height: inherit;
+}
+.agentic-providers-actions .agentic-provider-setdefault-btn:hover {
+	color: #135e96;
+}
+
+/* Compact agent provider/model overrides */
+.agentic-agents-overrides__table {
+	width: 100%;
+}
+.agentic-agents-overrides__table th,
+.agentic-agents-overrides__table td {
+	vertical-align: middle;
+	padding: 8px 10px;
+}
+.agentic-agents-overrides__name {
+	min-width: 140px;
+	max-width: 200px;
+}
+.agentic-agents-overrides__name strong {
+	display: block;
+	font-size: 13px;
+	line-height: 1.3;
+}
+.agentic-agents-overrides__select {
+	width: 100%;
+	max-width: 220px;
+	min-width: 140px;
+	font-size: 13px;
+	padding: 4px 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #fff;
+	line-height: 1.4;
+}
+@media (max-width: 782px) {
+	.agentic-agents-overrides__table thead {
+		display: none;
+	}
+	.agentic-agents-overrides__table,
+	.agentic-agents-overrides__table tbody,
+	.agentic-agents-overrides__table tr,
+	.agentic-agents-overrides__table td {
+		display: block;
+		width: 100%;
+	}
+	.agentic-agents-overrides__table tr {
+		padding: 10px 0;
+		border-bottom: 1px solid #f0f0f1;
+	}
+	.agentic-agents-overrides__select {
+		max-width: none;
+	}
+}
+
+/* Chat theme preview grid (Interface settings) */
+.agentic-theme-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 14px;
+	margin: 12px 0 8px;
+}
+.agentic-theme-card:hover {
+	border-color: #2271b1 !important;
+}
+.agentic-theme-card.is-selected {
+	box-shadow: 0 0 0 1px #2271b1;
+}
+.agentic-theme-card-footer {
+	padding: 10px 14px;
+	background: #f9f9f9;
+	border-top: 1px solid #eee;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.agentic-theme-label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+}
+.agentic-text-xs {
+	font-size: 12px;
+}
+.agentic-text-muted {
+	color: #646970;
+}
+
+/* Activity timeline */
+.agentic-react-activity-stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 0 0 16px;
+}
+.agentic-react-activity-stat {
+	min-width: 100px;
+	padding: 12px 14px;
+	border: 1px solid #dcdcde;
+	border-radius: 10px;
+	background: #fff;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.agentic-react-activity-stat__val {
+	font-size: 20px;
+	font-weight: 700;
+	color: #1d2327;
+	line-height: 1.2;
+}
+.agentic-react-activity-stat__lbl {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #646970;
+}
+.agentic-react-activity-timeline {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	border: 1px solid #dcdcde;
+	border-radius: 10px;
+	background: #fff;
+	overflow: hidden;
+}
+.agentic-react-activity-item {
+	display: flex;
+	gap: 12px;
+	padding: 14px 16px;
+	border-bottom: 1px solid #f0f0f1;
+	align-items: flex-start;
+}
+.agentic-react-activity-item:last-child {
+	border-bottom: 0;
+}
+.agentic-react-activity-item__icon {
+	font-size: 20px;
+	line-height: 1.2;
+	width: 28px;
+	text-align: center;
+	flex-shrink: 0;
+}
+.agentic-react-activity-item__body {
+	flex: 1;
+	min-width: 0;
+}
+.agentic-react-activity-item__title {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 2px;
+}
+.agentic-react-activity-item__detail {
+	margin: 6px 0 0;
+	font-size: 13px;
+	color: #50575e;
+	line-height: 1.4;
+}
+.agentic-react-activity-item__raw {
+	display: inline-block;
+	margin-top: 6px;
+	font-size: 11px;
+	color: #646970;
+	background: #f6f7f7;
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+.agentic-react-activity-kind {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	padding: 2px 7px;
+	border-radius: 999px;
+	background: #f0f0f1;
+	color: #50575e;
+}
+.agentic-react-activity-kind--tool {
+	background: rgba(34, 113, 177, 0.1);
+	color: #135e96;
+}
+.agentic-react-activity-kind--approval {
+	background: rgba(0, 163, 42, 0.1);
+	color: #007a20;
+}
+.agentic-react-activity-kind--chat {
+	background: rgba(168, 85, 247, 0.12);
+	color: #6b21a8;
+}
+.agentic-react-activity-kind--security {
+	background: rgba(214, 54, 56, 0.1);
+	color: #b32d2e;
+}
+.agentic-react-activity-kind--settings {
+	background: rgba(214, 158, 46, 0.12);
+	color: #8a6d1b;
+}
+
+/* Approvals preferences + queue cards */
+.agentic-react-approvals-prefs {
+	margin: 0 0 28px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #f0f0f1;
+}
+.agentic-react-approvals-prefs h3 {
+	margin: 0 0 6px;
+	font-size: 14px;
+}
+.agentic-react-profile-grid--approvals {
+	margin-top: 12px;
+}
+.agentic-react-ack {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin: 12px 0;
+	font-size: 13px;
+	line-height: 1.45;
+	color: #1d2327;
+}
+.agentic-react-ack input {
+	margin-top: 3px;
+}
+.agentic-react-email-prefs {
+	margin-top: 16px;
+	padding: 14px 16px;
+	background: #f6f7f7;
+	border-radius: 8px;
+	border: 1px solid #e0e0e0;
+}
+.agentic-react-email-prefs label.agentic-react-form-full {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin: 10px 0;
+	font-size: 12px;
+	font-weight: 600;
+}
+.agentic-react-email-prefs input[type='email'] {
+	font-weight: 400;
+	padding: 6px 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	max-width: 360px;
+}
+.agentic-react-approvals-empty {
+	padding: 24px;
+	text-align: center;
+	background: #f6f7f7;
+	border-radius: 10px;
+	border: 1px solid #e0e0e0;
+}
+.agentic-react-approval-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.agentic-react-approval-card {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 12px 16px;
+	padding: 14px 16px;
+	border: 1px solid #dcdcde;
+	border-radius: 10px;
+	background: #fff;
+}
+.agentic-react-approval-card__main {
+	flex: 1 1 220px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+}
+.agentic-react-approval-card__summary {
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: #50575e;
+	line-height: 1.4;
+}
+.agentic-react-approval-card__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+}
+
+/* Approve/reject progress indicator */
+.agentic-react-approval-progress {
+	margin: 0 0 16px;
+	padding: 14px 16px;
+	border-radius: 10px;
+	border: 1px solid #dcdcde;
+	background: #f6f7f7;
+}
+.agentic-react-approval-progress.is-running {
+	border-color: #c3c4c7;
+	background: #f0f6fc;
+}
+.agentic-react-approval-progress.is-success {
+	border-color: rgba(0, 163, 42, 0.4);
+	background: rgba(0, 163, 42, 0.08);
+}
+.agentic-react-approval-progress.is-error {
+	border-color: rgba(214, 54, 56, 0.4);
+	background: rgba(214, 54, 56, 0.08);
+}
+.agentic-react-approval-progress__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-bottom: 10px;
+}
+.agentic-react-approval-progress__head .button-link {
+	margin-left: auto;
+}
+.agentic-react-approval-progress__steps {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.agentic-react-approval-progress__step {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	font-size: 13px;
+	line-height: 1.4;
+	color: #646970;
+	padding: 4px 0;
+}
+.agentic-react-approval-progress__dot {
+	width: 10px;
+	height: 10px;
+	margin-top: 4px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	background: #c3c4c7;
+}
+.agentic-react-approval-progress__step.is-active {
+	color: #1d2327;
+	font-weight: 600;
+}
+.agentic-react-approval-progress__step.is-active .agentic-react-approval-progress__dot {
+	background: #2271b1;
+	box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.2);
+}
+.agentic-react-approval-progress__step.is-done {
+	color: #1d2327;
+}
+.agentic-react-approval-progress__step.is-done .agentic-react-approval-progress__dot {
+	background: #00a32a;
+}
+.agentic-react-approval-progress__step.is-error {
+	color: #b32d2e;
+}
+.agentic-react-approval-progress__step.is-error .agentic-react-approval-progress__dot {
+	background: #d63638;
+}
+.agentic-react-approval-progress__step.is-pending {
+	opacity: 0.65;
+}
+.agentic-react-approval-progress__msg {
+	margin: 10px 0 0;
+	font-size: 13px;
+	line-height: 1.45;
+	color: #1d2327;
+}
+
+/* Basic Tools — ability profile cards */
+.agentic-react-tools-basic {
+	max-width: 920px;
+}
+.agentic-react-tools-basic__stats {
+	margin-top: 18px;
+}
+.agentic-react-profile-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 14px;
+	margin: 16px 0 8px;
+}
+.agentic-react-profile-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+	text-align: left;
+	padding: 18px 16px 16px;
+	border: 1px solid #dcdcde;
+	border-radius: 12px;
+	background: #fff;
+	cursor: pointer;
+	transition: border-color 0.12s ease, box-shadow 0.12s ease,
+		background 0.12s ease;
+	min-height: 200px;
+}
+.agentic-react-profile-card:hover:not(:disabled) {
+	border-color: #2271b1;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.agentic-react-profile-card.is-active {
+	border-color: #2271b1;
+	background: #f0f6fc;
+	box-shadow: 0 0 0 1px #2271b1;
+}
+.agentic-react-profile-card:disabled {
+	opacity: 0.7;
+	cursor: wait;
+}
+.agentic-react-profile-card__icon {
+	font-size: 28px;
+	line-height: 1;
+}
+.agentic-react-profile-card__label {
+	font-size: 16px;
+	font-weight: 650;
+	color: #1d2327;
+}
+.agentic-react-profile-card__summary {
+	font-size: 13px;
+	font-weight: 600;
+	color: #2271b1;
+}
+.agentic-react-profile-card__detail {
+	font-size: 13px;
+	line-height: 1.45;
+	color: #50575e;
+	flex: 1;
+}
+.agentic-react-profile-card__risk {
+	margin-top: 4px;
+}
+.agentic-react-profile-card__badge {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #fff;
+	background: #2271b1;
+	padding: 2px 8px;
+	border-radius: 999px;
+}
+
+/* Risk filter chips (tools list) */
+.agentic-react-risk-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0 0 14px;
+}
+.agentic-react-risk-filters__btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 12px;
+	border-radius: 999px;
+	border: 1px solid #dcdcde;
+	background: #fff;
+	color: #2c3338;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.4;
+	cursor: pointer;
+}
+.agentic-react-risk-filters__btn:hover {
+	background: #f6f7f7;
+	border-color: #c3c4c7;
+}
+.agentic-react-risk-filters__btn.is-active {
+	box-shadow: 0 0 0 1px currentColor;
+	font-weight: 600;
+}
+.agentic-react-risk-filters__btn.is-active:not([class*='agentic-react-risk--']) {
+	background: #2271b1;
+	border-color: #2271b1;
+	color: #fff;
+	box-shadow: none;
+}
+.agentic-react-risk-filters__count {
+	font-size: 11px;
+	opacity: 0.75;
+	font-weight: 600;
+}
+
+/* Risk level badges in tools table */
+.agentic-react-risk {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: lowercase;
+	letter-spacing: 0.02em;
+	border: 1px solid #dcdcde;
+	background: #f6f7f7;
+	color: #50575e;
+}
+.agentic-react-risk--none {
+	background: #f0f0f1;
+	color: #646970;
+	border-color: #dcdcde;
+}
+.agentic-react-risk--low {
+	background: rgba(0, 163, 42, 0.1);
+	color: #007a20;
+	border-color: rgba(0, 163, 42, 0.35);
+}
+.agentic-react-risk--medium {
+	background: rgba(214, 158, 46, 0.12);
+	color: #8a6d1b;
+	border-color: rgba(214, 158, 46, 0.4);
+}
+.agentic-react-risk--high {
+	background: rgba(214, 54, 56, 0.1);
+	color: #b32d2e;
+	border-color: rgba(214, 54, 56, 0.35);
+}
+.agentic-react-risk--extreme {
+	background: rgba(114, 0, 140, 0.12);
+	color: #6b1b7a;
+	border-color: rgba(114, 0, 140, 0.35);
+}
+@media (max-width: 782px) {
+	.agentic-react-form-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.agentic-emergency-stop-hint {
+	color: #646970;
+	font-size: 12px;
+}
+.agentic-emergency-stop-text {
+	color: #d63638;
+	font-weight: 600;
+}
+
+/* Settings app two-pane */
+.agentic-settings-app {
+	display: flex;
+	gap: 28px;
+	align-items: flex-start;
+	margin-top: 8px;
+}
+
+.agentic-settings-app__nav {
+	flex: 0 0 220px;
+	position: sticky;
+	top: 46px;
+}
+
+.agentic-settings-app__nav-group {
+	margin-bottom: 14px;
+}
+
+.agentic-settings-app__nav-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #646970;
+	margin: 0 0 4px 8px;
+}
+
+.agentic-settings-app__nav-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.agentic-settings-app__nav-item {
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 8px 12px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: #1d2327;
+	font-size: 13px;
+	line-height: 1.4;
+	cursor: pointer;
+	border-left: 2px solid transparent;
+}
+
+.agentic-settings-app__nav-item:hover {
+	background: #f0f0f1;
+	color: #135e96;
+}
+
+.agentic-settings-app__nav-item.is-active {
+	background: #f0f6fc;
+	color: #0a4b78;
+	font-weight: 600;
+	border-left-color: #2271b1;
+}
+
+.agentic-settings-app__main {
+	flex: 1 1 auto;
+	min-width: 0;
+	max-width: 920px;
+}
+
+.agentic-settings-app__search {
+	width: 100%;
+	margin-bottom: 12px;
+	border-radius: 6px;
+}
+
+@media screen and (max-width: 782px) {
+	.agentic-settings-app {
+		flex-direction: column;
+	}
+	.agentic-settings-app__nav {
+		position: static;
+		width: 100%;
+	}
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "content-writer",
+  "description": "Tools required by the Content Writer for creating and editing posts",
+  "abilities": {
+    "list_posts": {
+      "risk": "none"
+    },
+    "get_post_content": {
+      "risk": "none"
+    },
+    "get_site_context": {
+      "risk": "none"
+    },
+    "get_author_list": {
+      "risk": "low",
+      "reason": "Exposes user login names which are sensitive identifiers"
+    },
+    "analyze_post": {
+      "risk": "none"
+    },
+    "search_media_library": {
+      "risk": "none"
+    },
+    "set_featured_image": {
+      "risk": "medium",
+      "reason": "Sets the featured image on a post"
+    },
+    "get_post_performance": {
+      "risk": "none"
+    },
+    "create_post_content": {
+      "risk": "medium",
+      "reason": "Creates a new post or page with content"
+    },
+    "update_post_content": {
+      "risk": "medium",
+      "reason": "Modifies existing post content"
+    },
+    "manage_categories": {
+      "risk": "medium",
+      "reason": "Creates, renames, or deletes categories"
+    },
+    "manage_tags": {
+      "risk": "medium",
+      "reason": "Creates, renames, or deletes tags"
+    },
+    "rewrite_for_readability": {
+      "risk": "none"
+    },
+    "list_okf_concepts": {
+      "risk": "none"
+    },
+    "read_okf_concept": {
+      "risk": "none"
+    },
+    "search_okf": {
+      "risk": "none"
+    }
+  }
+}

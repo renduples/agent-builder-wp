@@ -1,0 +1,26 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+  "slug": "editorial-director",
+  "name": "Editorial Director",
+  "description": "A team lead for content operations. Plans the work, then delegates writing and SEO subtasks to your specialist agents and pulls their results into one coherent plan.",
+  "category": "content",
+  "icon": "🎬",
+  "version": "1.0.0",
+  "author": "Agent Builder",
+  "author_uri": "https://agentic-plugin.com",
+  "team": true,
+  "capabilities": [ "edit_posts" ],
+  "tools": [
+    "get_content_stats",
+    "get_site_writing_stats",
+    "list_posts",
+    "search_content",
+    "delegate_to_agent"
+  ],
+  "suggested_prompts": [
+    "Plan this week's content and delegate drafting to the Content Writer.",
+    "Audit our top posts and have the SEO Optimizer propose fixes.",
+    "Find thin posts, then coordinate rewriting and SEO improvements."
+  ],
+  "welcome_message": "Hi! I'm your Editorial Director. Tell me a content goal and I'll plan it, then delegate the writing and SEO work to your specialist agents (activate them first), and bring the results back together. I coordinate — your specialists do the hands-on work."
+}

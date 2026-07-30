@@ -1,0 +1,114 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "1.2",
+  "agent": "wordpress-assistant",
+  "description": "Tools required by the WordPress Assistant — general helper with site overview capabilities",
+  "knowledge_files": [
+    "platform-knowledge.txt"
+  ],
+  "abilities": {
+    "get_agent_list": {
+      "risk": "none"
+    },
+    "get_site_overview": {
+      "risk": "none"
+    },
+    "get_site_context": {
+      "risk": "none"
+    },
+    "run_health_check": {
+      "risk": "none"
+    },
+    "get_file_structure_summary": {
+      "risk": "none"
+    },
+    "get_custom_post_types_summary": {
+      "risk": "none"
+    },
+    "analyze_search_intent": {
+      "risk": "none"
+    },
+    "suggest_intent_alignment": {
+      "risk": "none"
+    },
+    "list_posts": {
+      "risk": "none"
+    },
+    "get_post_content": {
+      "risk": "none"
+    },
+    "agents_available": {
+      "risk": "none"
+    },
+    "search_capabilities": {
+      "risk": "none"
+    },
+    "check_plugin_status": {
+      "risk": "none"
+    },
+    "check_plugin_updates": {
+      "risk": "none"
+    },
+    "get_plugin_maintenance_status": {
+      "risk": "none"
+    },
+    "get_abandoned_plugins": {
+      "risk": "none"
+    },
+    "scan_media_library": {
+      "risk": "none"
+    },
+    "search_media_library": {
+      "risk": "none"
+    },
+    "find_oversized_images": {
+      "risk": "none"
+    },
+    "find_unused_media": {
+      "risk": "none"
+    },
+    "get_media_storage_report": {
+      "risk": "none"
+    },
+    "update_attachment_alt_text": {
+      "risk": "medium",
+      "reason": "Updates the alt text on a media attachment"
+    },
+    "list_privileged_users": {
+      "risk": "none"
+    },
+    "get_recent_registrations": {
+      "risk": "none"
+    },
+    "find_inactive_users": {
+      "risk": "none"
+    },
+    "get_user_last_login": {
+      "risk": "none"
+    },
+    "list_comments": {
+      "risk": "none"
+    },
+    "moderate_comment": {
+      "risk": "medium",
+      "reason": "Changes a comment's moderation status"
+    },
+    "reply_to_comment": {
+      "risk": "medium",
+      "reason": "Posts a reply to a comment"
+    },
+    "request_human_help": {
+      "risk": "low",
+      "reason": "Notifies the site team on their configured channels that a person is needed"
+    },
+    "list_okf_concepts": {
+      "risk": "none"
+    },
+    "read_okf_concept": {
+      "risk": "none"
+    },
+    "search_okf": {
+      "risk": "none"
+    }
+  }
+}

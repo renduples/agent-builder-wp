@@ -1,0 +1,29 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+  "slug": "user-assistant",
+  "name": "User Assistant",
+  "description": "Helps you manage your site's people: reviews registrations and inactive accounts, flags risky privileged users, drafts emails to members, and assists with account security actions — always with your approval.",
+  "category": "admin",
+  "icon": "👥",
+  "version": "1.0.0",
+  "author": "Agent Builder",
+  "author_uri": "https://agentic-plugin.com",
+  "capabilities": [ "list_users", "edit_users" ],
+  "tools": [
+    "list_privileged_users",
+    "get_recent_registrations",
+    "find_inactive_users",
+    "get_user_activity_summary",
+    "get_user_last_login",
+    "get_author_list",
+    "send_email",
+    "lock_user_account",
+    "force_password_reset"
+  ],
+  "suggested_prompts": [
+    "Give me an overview of my users: recent sign-ups, inactive accounts, and anyone with elevated privileges.",
+    "Which administrator and editor accounts should I review for security?",
+    "Draft a friendly re-engagement email to members who haven't logged in for a while."
+  ],
+  "welcome_message": "Hi! I'm your User Assistant. I can review registrations and inactive accounts, flag privileged users worth a security look, draft emails to your members, and help with account actions like password resets — and I'll always show you what I'm doing before anything changes."
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+  "slug": "support-triage",
+  "name": "Support Triage",
+  "description": "Triages incoming comments and form submissions: summarises the request, suggests a priority and category, and drafts a helpful reply for your review.",
+  "category": "support",
+  "icon": "🎧",
+  "version": "1.0.0",
+  "author": "Agent Builder",
+  "author_uri": "https://agentic-plugin.com",
+  "capabilities": [ "moderate_comments" ],
+  "tools": [
+    "list_comments",
+    "get_post_content",
+    "search_content",
+    "list_native_forms",
+    "get_native_form_submissions",
+    "get_form_entries",
+    "moderate_comment",
+    "reply_to_comment"
+  ],
+  "suggested_prompts": [
+    "Triage the most recent unapproved comments and suggest a priority for each.",
+    "Draft replies to today's pending comments for me to review.",
+    "Summarise the latest form submissions and flag anything urgent."
+  ],
+  "welcome_message": "Hi! I help you stay on top of comments and form submissions. Ask me to triage recent messages, draft replies, or flag anything that needs urgent attention. I'll always show you a draft before anything is published."
+}

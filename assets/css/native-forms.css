@@ -1,0 +1,206 @@
+/* Agentic Native Forms — front-end styles */
+
+.agentic-form-wrap {
+	max-width: 580px;
+}
+
+.agentic-form .agentic-form-field {
+	margin-bottom: 18px;
+}
+
+.agentic-form label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 5px;
+	font-size: 0.9em;
+}
+
+.agentic-required {
+	color: #d63638;
+	margin-left: 2px;
+}
+
+.agentic-form input[type="text"],
+.agentic-form input[type="email"],
+.agentic-form input[type="tel"],
+.agentic-form input[type="number"],
+.agentic-form input[type="date"],
+.agentic-form input[type="url"],
+.agentic-form select,
+.agentic-form textarea {
+	width: 100%;
+	padding: 9px 12px;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	font-size: 1em;
+	box-sizing: border-box;
+	transition: border-color 0.15s;
+}
+
+.agentic-form input:focus,
+.agentic-form select:focus,
+.agentic-form textarea:focus {
+	outline: none;
+	border-color: #2271b1;
+	box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.15);
+}
+
+.agentic-form textarea {
+	resize: vertical;
+	min-height: 90px;
+}
+
+.agentic-form .agentic-option-label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: normal;
+	margin-bottom: 6px;
+	cursor: pointer;
+}
+
+.agentic-form fieldset {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+.agentic-form-btn {
+	background: #2271b1;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 10px 22px;
+	font-size: 1em;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+
+.agentic-form-btn:hover {
+	background: #135e96;
+}
+
+.agentic-form-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.agentic-form-spinner {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border: 2px solid rgba(0,0,0,.15);
+	border-top-color: #2271b1;
+	border-radius: 50%;
+	animation: agentic-spin 0.7s linear infinite;
+	vertical-align: middle;
+	margin-left: 8px;
+}
+
+@keyframes agentic-spin {
+	to { transform: rotate(360deg); }
+}
+
+.agentic-form-success {
+	padding: 14px 18px;
+	background: #edfaef;
+	border-left: 4px solid #00a32a;
+	border-radius: 3px;
+	font-size: 1em;
+	color: #1d2327;
+}
+
+.agentic-form-errors {
+	padding: 14px 18px;
+	background: #fdf0f0;
+	border-left: 4px solid #d63638;
+	border-radius: 3px;
+	font-size: 0.9em;
+	white-space: pre-line;
+}
+
+/* ── Honeypot (invisible to humans) ───────────────────────── */
+
+.agentic-hp-wrap {
+	position: absolute;
+	left: -9999px;
+	top: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* ── Conditional logic (hidden fields) ────────────────────── */
+
+.agentic-form-field[data-condition-hidden="true"] {
+	display: none;
+}
+
+/* ── File upload field ────────────────────────────────────── */
+
+.agentic-form input[type="file"] {
+	padding: 8px 0;
+	border: none;
+	font-size: 0.9em;
+}
+
+/* ── Entries table ─────────────────────────────────────────── */
+
+.agentic-entries-wrap {
+	margin: 0;
+}
+
+.agentic-entries-title {
+	margin: 0 0 12px;
+	font-size: 1.1em;
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+
+.agentic-entries-count {
+	font-weight: normal;
+	font-size: 0.85em;
+	color: #646970;
+}
+
+.agentic-entries-empty {
+	color: #646970;
+	font-style: italic;
+}
+
+.agentic-entries-table-wrap {
+	overflow-x: auto;
+}
+
+.agentic-entries-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9em;
+}
+
+.agentic-entries-table th,
+.agentic-entries-table td {
+	text-align: left;
+	padding: 8px 12px;
+	border-bottom: 1px solid #e0e0e0;
+	vertical-align: top;
+}
+
+.agentic-entries-table thead th {
+	background: #f6f7f7;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.agentic-entries-table tbody tr:hover td {
+	background: #f9f9f9;
+}
+
+.agentic-entry-date {
+	white-space: nowrap;
+	color: #646970;
+	font-size: 0.85em;
+}

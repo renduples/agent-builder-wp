@@ -1,0 +1,838 @@
+<?php
+/**
+ * Installed Agents Admin Page
+ *
+ * Manage AI agents just like WordPress Plugins
+ *
+ * @package    Agent_Builder
+ * @subpackage Admin
+ * @author     Agent Builder Team <support@agentic-plugin.com>
+ * @license    GPL-2.0-or-later https://www.gnu.org/licenses/gpl-2.0.html
+ * @link       https://agentic-plugin.com
+ * @since      0.2.0
+ *
+ * php version 8.1
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! current_user_can( 'manage_options' ) ) {
+	wp_die( esc_html__( 'You do not have permission to access this page.', 'agent-builder' ) );
+}
+
+// Pro-only: optional consent wall for in-dashboard agent update checks.
+// Free / WordPress.org builds never show this — they use the Community Agents
+// marketplace link instead (no phone-home for update checks).
+if ( class_exists( 'Agentic\Agent_Updates' ) && \Agentic\Agent_Updates::needs_consent() ) {
+	?>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'AI Assistants', 'agent-builder' ); ?></h1>
+
+		<div style="max-width:680px;margin:48px auto;background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:40px 48px;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+			<div style="text-align:center;margin-bottom:32px;">
+				<span style="font-size:48px;line-height:1;" aria-hidden="true">🔄</span>
+				<h2 style="font-size:22px;font-weight:600;margin:16px 0 8px;"><?php esc_html_e( 'Enable Automatic Agent Updates?', 'agent-builder' ); ?></h2>
+				<p style="color:#646970;font-size:14px;margin:0;"><?php esc_html_e( 'Agent Builder can check agentic-plugin.com for newer versions of your installed AI agents.', 'agent-builder' ); ?></p>
+			</div>
+
+			<ul style="margin:0 0 28px 0;padding:0;list-style:none;">
+				<li style="display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;">
+					<span style="color:#00a32a;font-size:18px;flex-shrink:0;line-height:1.4;" aria-hidden="true">✓</span>
+					<span><strong><?php esc_html_e( 'Security patches delivered fast', 'agent-builder' ); ?></strong><br>
+					<span style="color:#646970;font-size:13px;"><?php esc_html_e( 'Agent vulnerabilities can be exploited silently. Updates close those gaps before bad actors find them.', 'agent-builder' ); ?></span></span>
+				</li>
+				<li style="display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;">
+					<span style="color:#00a32a;font-size:18px;flex-shrink:0;line-height:1.4;" aria-hidden="true">✓</span>
+					<span><strong><?php esc_html_e( 'Better agent performance', 'agent-builder' ); ?></strong><br>
+					<span style="color:#646970;font-size:13px;"><?php esc_html_e( 'Agent logic, prompts, and tool integrations are continuously improved. Updates mean your agents work smarter.', 'agent-builder' ); ?></span></span>
+				</li>
+				<li style="display:flex;gap:12px;align-items:flex-start;">
+					<span style="color:#00a32a;font-size:18px;flex-shrink:0;line-height:1.4;" aria-hidden="true">✓</span>
+					<span><strong><?php esc_html_e( 'You stay in control', 'agent-builder' ); ?></strong><br>
+					<span style="color:#646970;font-size:13px;"><?php esc_html_e( 'Updates are never applied automatically — you review and install each one yourself, exactly like WordPress plugins.', 'agent-builder' ); ?></span></span>
+				</li>
+			</ul>
+
+			<div style="background:#f6f7f7;border-radius:3px;padding:14px 18px;margin-bottom:28px;font-size:13px;color:#646970;">
+				<?php
+				printf(
+					wp_kses(
+						/* translators: %1$s: agentic-plugin.com URL, %2$s: Privacy Policy URL */
+						__( 'When enabled, your installed agent slugs and version numbers are sent to <a href="%1$s" target="_blank" rel="noopener">agentic-plugin.com</a> to check for updates. No personal data, passwords, or site content are included. See our <a href="%2$s" target="_blank" rel="noopener">Privacy Policy</a>.', 'agent-builder' ),
+						array(
+							'a' => array(
+								'href'   => array(),
+								'target' => array(),
+								'rel'    => array(),
+							),
+						)
+					),
+					'https://agentic-plugin.com/',
+					'https://agentic-plugin.com/privacy-policy/'
+				);
+				?>
+			</div>
+
+			<form method="post" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+				<?php wp_nonce_field( 'agentic_updates_consent', '_wpnonce_updates_consent' ); ?>
+				<button type="submit" name="agentic_updates_consent" value="enable" class="button button-primary button-large">
+					<?php esc_html_e( 'Enable Agent Updates', 'agent-builder' ); ?>
+				</button>
+				<button type="submit" name="agentic_updates_consent" value="disable" class="button button-large">
+					<?php esc_html_e( 'No Thanks', 'agent-builder' ); ?>
+				</button>
+			</form>
+
+			<p style="text-align:center;margin:20px 0 0;font-size:12px;color:#a7aaad;">
+				<?php esc_html_e( 'This preference resets if you deactivate and reactivate the plugin.', 'agent-builder' ); ?>
+			</p>
+		</div>
+	</div>
+	<?php
+	return;
+}
+
+$agentic_marketplace_url = class_exists( '\Agentic\Agent_Updates' )
+	? \Agentic\Agent_Updates::MARKETPLACE_URL
+	: 'https://agentic-plugin.com/community-agents/';
+
+$agentic_agent_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+$agentic_slug         = isset( $_GET['agent'] ) ? sanitize_text_field( wp_unslash( $_GET['agent'] ) ) : '';
+$agentic_message      = '';
+$agentic_agent_error  = '';
+
+if ( $agentic_agent_action && $agentic_slug && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'agentic_agent_action' ) ) {
+	$agentic_registry = Agentic_Agent_Registry::get_instance();
+
+	switch ( $agentic_agent_action ) {
+		case 'activate':
+			$agentic_result = $agentic_registry->activate_agent( $agentic_slug );
+			if ( is_wp_error( $agentic_result ) ) {
+					$agentic_agent_error = $agentic_result->get_error_message();
+			} else {
+				$agentic_agents_data = $agentic_registry->get_installed_agents( true );
+				$agentic_agent_name  = $agentic_agents_data[ $agentic_slug ]['name'] ?? $agentic_slug;
+				$agentic_page_slug   = 'assistant-trainer' === $agentic_slug ? 'agent-builder' : 'agentic-chat';
+				$agentic_chat_url    = admin_url( 'admin.php?page=' . $agentic_page_slug . '&agent=' . $agentic_slug );
+				$agentic_message     = sprintf(
+				/* translators: 1: agent name, 2: chat URL */
+					__( '%1$s activated. <a href="%2$s">Chat with this assistant now →</a>', 'agent-builder' ),
+					esc_html( $agentic_agent_name ),
+					esc_url( $agentic_chat_url )
+				);
+			}
+			break;
+
+		case 'deactivate':
+			$agentic_result = $agentic_registry->deactivate_agent( $agentic_slug );
+			if ( is_wp_error( $agentic_result ) ) {
+				$agentic_agent_error = $result->get_error_message();
+			} else {
+				$agentic_message = __( 'Assistant deactivated.', 'agent-builder' );
+			}
+			break;
+
+		case 'delete':
+			$agentic_result = $agentic_registry->delete_agent( $agentic_slug );
+			if ( is_wp_error( $agentic_result ) ) {
+				$agentic_agent_error = $agentic_result->get_error_message();
+			} else {
+				$agentic_message = __( 'Assistant deleted.', 'agent-builder' );
+			}
+			break;
+	}
+}
+
+// Handle bulk actions.
+if (
+	isset( $_POST['bulk_action'], $_POST['checked'], $_POST['_wpnonce_bulk'] ) &&
+	wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_bulk'] ) ), 'agentic_bulk_action' ) &&
+	current_user_can( 'manage_options' )
+) {
+	$agentic_bulk_action   = sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) );
+	$agentic_bulk_slugs    = array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['checked'] ) );
+	$agentic_bulk_registry = Agentic_Agent_Registry::get_instance();
+	$agentic_bulk_done     = 0;
+
+	foreach ( $agentic_bulk_slugs as $agentic_bulk_slug ) {
+		switch ( $agentic_bulk_action ) {
+			case 'activate':
+				if ( ! is_wp_error( $agentic_bulk_registry->activate_agent( $agentic_bulk_slug ) ) ) {
+					++$agentic_bulk_done;
+				}
+				break;
+			case 'deactivate':
+				if ( ! is_wp_error( $agentic_bulk_registry->deactivate_agent( $agentic_bulk_slug ) ) ) {
+					++$agentic_bulk_done;
+				}
+				break;
+			case 'delete':
+				if ( ! is_wp_error( $agentic_bulk_registry->delete_agent( $agentic_bulk_slug ) ) ) {
+					++$agentic_bulk_done;
+				}
+				break;
+		}
+	}
+
+	if ( $agentic_bulk_done ) {
+		$agentic_message = sprintf(
+			/* translators: 1: number of agents, 2: action label */
+			_n( '%1$d assistant %2$s.', '%1$d assistants %2$s.', $agentic_bulk_done, 'agent-builder' ),
+			$agentic_bulk_done,
+			$agentic_bulk_action . 'd'
+		);
+	}
+}
+
+// Handle agent zip upload.
+$agentic_upload_message = '';
+$agentic_upload_error   = '';
+
+// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified immediately below inside the conditional.
+if ( isset( $_FILES['agentzip'] ) && ! empty( $_FILES['agentzip']['name'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'agentic-agent-upload' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		$agentic_upload_error = __( 'You do not have permission to upload assistants.', 'agent-builder' );
+	} elseif ( ! class_exists( '\Agentic\License_Client' ) || ! \Agentic\License_Client::get_instance()->is_pro() ) {
+		// Installing third-party agent packages is an Agent Builder Pro feature.
+		// The free plugin only creates declarative agents via the Assistant
+		// Trainer, so it never installs executable code from an uploaded archive
+		// (WordPress.org Guideline 8).
+		$agentic_upload_error = __( 'Uploading assistant packages requires Agent Builder Pro. In the free plugin, create assistants with the Assistant Trainer. Learn more at agentic-plugin.com', 'agent-builder' );
+	} elseif ( ! str_ends_with( strtolower( sanitize_file_name( $_FILES['agentzip']['name'] ) ), '.zip' ) ) {
+		$agentic_upload_error = __( 'The uploaded file is not a valid .zip archive.', 'agent-builder' );
+	} else {
+		// Ensure filesystem functions are available.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+
+		$agentic_agents_dir = AGENTIC_AGENTS_DIR;
+		if ( ! is_dir( $agentic_agents_dir ) ) {
+			wp_mkdir_p( $agentic_agents_dir );
+		}
+
+		$agentic_tmp_dir = $agentic_agents_dir . '/__upload_tmp_' . wp_generate_password( 8, false );
+		wp_mkdir_p( $agentic_tmp_dir );
+
+		// Validate and sanitize the uploaded file.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- is_uploaded_file() validates the file path directly from $_FILES, sanitization not required for validation.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- is_uploaded_file() validates the file, sanitization not required.
+		if ( ! isset( $_FILES['agentzip']['tmp_name'] ) || ! is_uploaded_file( $_FILES['agentzip']['tmp_name'] ) ) {
+			$agentic_upload_error = __( 'Invalid file upload.', 'agent-builder' );
+		} else {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- File path already validated by is_uploaded_file, do not sanitize as it can corrupt the path.
+			$agentic_unzip = unzip_file( $_FILES['agentzip']['tmp_name'], $agentic_tmp_dir );
+
+			if ( is_wp_error( $agentic_unzip ) ) {
+				$agentic_upload_error = $agentic_unzip->get_error_message();
+			} else {
+				// Find agent.php — could be at root or inside a subfolder.
+				$agentic_agent_file = null;
+				$agentic_agent_root = null;
+
+				if ( file_exists( $agentic_tmp_dir . '/agent.php' ) ) {
+					$agentic_agent_file = $agentic_tmp_dir . '/agent.php';
+					$agentic_agent_root = $agentic_tmp_dir;
+				} else {
+					// Check one level deep (zip contains a folder).
+					$agentic_subdirs = glob( $agentic_tmp_dir . '/*', GLOB_ONLYDIR );
+					foreach ( $agentic_subdirs as $agentic_subdir ) {
+						if ( file_exists( $agentic_subdir . '/agent.php' ) ) {
+							$agentic_agent_file = $agentic_subdir . '/agent.php';
+							$agentic_agent_root = $agentic_subdir;
+							break;
+						}
+					}
+				}
+
+				if ( ! $agentic_agent_file ) {
+					$agentic_upload_error = __( 'The uploaded zip does not contain a valid agent. An agent.php file is required.', 'agent-builder' );
+				} else {
+					// Read agent headers.
+					$agentic_headers = array(
+						'name'        => 'Agent Name',
+						'version'     => 'Version',
+						'description' => 'Description',
+						'author'      => 'Author',
+					);
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+					$agentic_agent_contents = file_get_contents( $agentic_agent_file );
+					$agentic_parsed_headers = array();
+					foreach ( $agentic_headers as $agentic_hkey => $agentic_hlabel ) {
+						if ( preg_match( '/^\s*\*?\s*' . preg_quote( $agentic_hlabel, '/' ) . ':\s*(.+)$/mi', $agentic_agent_contents, $agentic_hmatch ) ) {
+							$agentic_parsed_headers[ $agentic_hkey ] = trim( $agentic_hmatch[1] );
+						}
+					}
+
+					if ( empty( $agentic_parsed_headers['name'] ) ) {
+						$agentic_upload_error = __( 'The agent.php file is missing a required "Agent Name" header.', 'agent-builder' );
+					} elseif (
+						file_exists( $agentic_agent_root . '/.requires-license' )
+						&& ( ! class_exists( '\Agentic\License_Client' ) || ! \Agentic\License_Client::get_instance()->is_pro() )
+					) {
+						$agentic_upload_error = __( 'This agent requires Agent Builder Pro. Download for free at agentic-plugin.com', 'agent-builder' );
+					} else {
+						// Derive slug from folder name or sanitize the agent name.
+						$agentic_upload_slug = sanitize_title( basename( $agentic_agent_root ) );
+						if ( '__upload_tmp_' === substr( $agentic_upload_slug, 0, 13 ) ) {
+							$agentic_upload_slug = sanitize_title( $agentic_parsed_headers['name'] );
+						}
+
+						$agentic_dest = $agentic_agents_dir . '/' . $agentic_upload_slug;
+
+						if ( is_dir( $agentic_dest ) ) {
+							// Remove existing version for update.
+							global $wp_filesystem;
+							$wp_filesystem->delete( $agentic_dest, true );
+						}
+
+						rename( $agentic_agent_root, $agentic_dest ); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- Moving extracted directory; WP_Filesystem::move() does not support directory moves.
+
+						// Stamp as uploaded (not user-created) so license gating can distinguish.
+						// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+						file_put_contents( $agentic_dest . '/.uploaded', gmdate( 'c' ) );
+
+						// --- Community agent activation via .license file ---
+						$agentic_license_file  = $agentic_dest . '/.license';
+						$agentic_activation_ok = true; // Default: free agent, no activation needed.
+
+						// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+						if ( file_exists( $agentic_license_file ) ) {
+							// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+							$agentic_lic_data = json_decode( file_get_contents( $agentic_license_file ), true );
+
+							if ( ! empty( $agentic_lic_data['token'] ) && ! empty( $agentic_lic_data['agent'] ) ) {
+								$agentic_activate_response = wp_remote_post(
+									'https://agentic-plugin.com/wp-json/agentic/v1/agents/activate-token',
+									array(
+										'body'      => array(
+											'token'      => $agentic_lic_data['token'],
+											'agent_slug' => $agentic_lic_data['agent'],
+											'site_url'   => home_url(),
+										),
+										'timeout'   => 15,
+										'sslverify' => true,
+									)
+								);
+
+								if ( is_wp_error( $agentic_activate_response ) ) {
+									$agentic_activation_ok = false;
+									$agentic_upload_error  = sprintf(
+										/* translators: %s: error message */
+										__( 'Assistant installed but license activation failed: %s. Please re-install or contact support.', 'agent-builder' ),
+										$agentic_activate_response->get_error_message()
+									);
+								} else {
+									$agentic_activate_http = wp_remote_retrieve_response_code( $agentic_activate_response );
+									$agentic_activate_body = json_decode( wp_remote_retrieve_body( $agentic_activate_response ), true );
+
+									if ( 200 === $agentic_activate_http && ! empty( $agentic_activate_body['success'] ) && ! empty( $agentic_activate_body['activation_hash'] ) ) {
+											// Write .activation hash — domain-binds this install.
+										// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+										file_put_contents( $agentic_dest . '/.activation', $agentic_activate_body['activation_hash'] );
+									} else {
+										$agentic_activation_ok = false;
+										$agentic_err_code      = $agentic_activate_body['code'] ?? 'unknown';
+										$agentic_err_msgs      = array(
+											'token_invalid' => __( 'License token is invalid. Please re-download from your agentic-plugin.com account.', 'agent-builder' ),
+											'token_expired' => __( 'Your agent license has expired. Please renew at agentic-plugin.com.', 'agent-builder' ),
+											'token_used' => __( 'This license has already been activated on a different domain. Use your account to transfer it.', 'agent-builder' ),
+											'agent_mismatch' => __( 'The license token is for a different assistant.', 'agent-builder' ),
+										);
+										$agentic_upload_error  = $agentic_err_msgs[ $agentic_err_code ] ?? sprintf(
+											/* translators: %s: error code */
+											__( 'Activation error: %s. Please contact support.', 'agent-builder' ),
+											esc_html( $agentic_err_code )
+										);
+									}
+								}
+							} else {
+								// Malformed .license file.
+								$agentic_activation_ok = false;
+								$agentic_upload_error  = __( 'The .license file in this archive is malformed. Please re-download from your account.', 'agent-builder' );
+							}
+
+							// If activation failed, remove the installed directory so a broken agent is not left behind.
+							if ( ! $agentic_activation_ok ) {
+								global $wp_filesystem;
+								$wp_filesystem->delete( $agentic_dest, true );
+							}
+						}
+
+						if ( $agentic_activation_ok ) {
+							$agentic_upload_message = sprintf(
+								/* translators: %s: Agent name */
+								__( 'Assistant "%s" has been installed successfully. You can now activate it below.', 'agent-builder' ),
+								$agentic_parsed_headers['name']
+							);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Cleanup temp directory if it still exists.
+	if ( is_dir( $agentic_tmp_dir ) ) {
+		global $wp_filesystem;
+		$wp_filesystem->delete( $agentic_tmp_dir, true );
+	}
+}
+
+$agentic_registry = Agentic_Agent_Registry::get_instance();
+$agentic_agents   = $agentic_registry->get_installed_agents( true );
+
+// Fetch cached update data (populated by Agent_Updates::check() on page load).
+$agentic_available_updates = class_exists( '\Agentic\Agent_Updates' ) ? \Agentic\Agent_Updates::get() : array();
+
+// Filter by status.
+$agentic_filter = isset( $_GET['agent_status'] ) ? sanitize_text_field( wp_unslash( $_GET['agent_status'] ) ) : 'all';
+
+$agentic_all_count      = count( $agentic_agents );
+$agentic_active_count   = count( array_filter( $agentic_agents, fn( $a ) => $a['active'] ) );
+$agentic_inactive_count = $agentic_all_count - $agentic_active_count;
+
+if ( 'active' === $agentic_filter ) {
+	$agentic_agents = array_filter( $agentic_agents, fn( $a ) => $a['active'] );
+} elseif ( 'inactive' === $agentic_filter ) {
+	$agentic_agents = array_filter( $agentic_agents, fn( $a ) => ! $a['active'] );
+}
+
+?>
+
+<div class="wrap agentic-agents-page">
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Agents', 'agent-builder' ); ?></h1>
+	<a href="<?php echo esc_url( $agentic_marketplace_url ); ?>" class="page-title-action" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Community Agents', 'agent-builder' ); ?></a>
+	<a href="#" class="upload-view-toggle page-title-action" id="agentic-upload-toggle"><?php esc_html_e( 'Upload Agent', 'agent-builder' ); ?></a>
+	<hr class="wp-header-end">
+
+	<div class="agentic-card agentic-card-wide">
+
+	<?php if ( $agentic_upload_message ) : ?>
+		<div class="notice notice-success is-dismissible">
+			<p><?php echo esc_html( $agentic_upload_message ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( $agentic_upload_error ) : ?>
+		<div class="notice notice-error is-dismissible">
+			<p><?php echo esc_html( $agentic_upload_error ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<!-- Upload Agent Form (hidden by default) -->
+	<div class="upload-agent-wrap" id="agentic-upload-wrap" style="display: none;">
+		<div class="upload-agent">
+			<?php if ( class_exists( '\Agentic\License_Client' ) && \Agentic\License_Client::get_instance()->is_pro() ) : ?>
+				<p class="install-help"><?php esc_html_e( 'If you have an assistant in a .zip format, you may install it by uploading it here.', 'agent-builder' ); ?></p>
+				<form method="post" enctype="multipart/form-data" class="wp-upload-form" action="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agents' ) ); ?>">
+					<?php wp_nonce_field( 'agentic-agent-upload' ); ?>
+					<label class="screen-reader-text" for="agentzip">
+						<?php esc_html_e( 'Agent zip file', 'agent-builder' ); ?>
+					</label>
+					<input type="file" id="agentzip" name="agentzip" accept=".zip" />
+					<?php submit_button( __( 'Install Now', 'agent-builder' ), 'primary', 'install-agent-submit', false ); ?>
+				</form>
+			<?php else : ?>
+				<p class="install-help">
+					<?php esc_html_e( 'Installing assistant packages from a .zip is an Agent Builder Pro feature. In the free plugin, build assistants instantly with the Assistant Trainer.', 'agent-builder' ); ?>
+					<a href="https://agentic-plugin.com" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more', 'agent-builder' ); ?></a>
+				</p>
+			<?php endif; ?>
+		</div>
+	</div>
+
+	<?php if ( $agentic_message ) : ?>
+		<div class="notice notice-success is-dismissible">
+			<p><?php echo wp_kses( $agentic_message, array( 'a' => array( 'href' => array() ) ) ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( $agentic_agent_error ) : ?>
+		<div class="notice notice-error is-dismissible">
+			<p><?php echo esc_html( $agentic_agent_error ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<!-- Filter Links -->
+	<ul class="subsubsub">
+		<li class="all">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agents' ) ); ?>"
+		class="<?php echo 'all' === $agentic_filter ? 'current' : ''; ?>">
+				<?php esc_html_e( 'All', 'agent-builder' ); ?>
+				<span class="count">(<?php echo esc_html( $agentic_all_count ); ?>)</span>
+			</a> |
+		</li>
+		<li class="active">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agents&agent_status=active' ) ); ?>"
+				class="<?php echo 'active' === $agentic_filter ? 'current' : ''; ?>">
+				<?php esc_html_e( 'Active', 'agent-builder' ); ?>
+				<span class="count">(<?php echo esc_html( $agentic_active_count ); ?>)</span>
+			</a> |
+		</li>
+		<li class="inactive">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agents&agent_status=inactive' ) ); ?>"
+				class="<?php echo 'inactive' === $agentic_filter ? 'current' : ''; ?>">
+				<?php esc_html_e( 'Inactive', 'agent-builder' ); ?>
+				<span class="count">(<?php echo esc_html( $agentic_inactive_count ); ?>)</span>
+			</a> |
+		</li>
+		<li class="available">
+			<a href="<?php echo esc_url( $agentic_marketplace_url ); ?>" target="_blank" rel="noopener noreferrer">
+				<?php esc_html_e( 'Community Agents', 'agent-builder' ); ?>
+				<span class="dashicons dashicons-external" style="font-size:14px;width:14px;height:14px;vertical-align:middle;" aria-hidden="true"></span>
+			</a>
+		</li>
+	</ul>
+
+	<form method="post" id="bulk-action-form">
+	<?php wp_nonce_field( 'agentic_bulk_action', '_wpnonce_bulk' ); ?>
+
+	<!-- Tablenav Top -->
+	<div class="tablenav top">
+		<div class="alignleft actions bulkactions">
+			<label for="bulk-action-selector-top" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'agent-builder' ); ?></label>
+			<select name="bulk_action" id="bulk-action-selector-top">
+				<option value="-1"><?php esc_html_e( 'Bulk actions', 'agent-builder' ); ?></option>
+				<option value="activate"><?php esc_html_e( 'Activate', 'agent-builder' ); ?></option>
+				<option value="deactivate"><?php esc_html_e( 'Deactivate', 'agent-builder' ); ?></option>
+				<option value="delete"><?php esc_html_e( 'Delete', 'agent-builder' ); ?></option>
+			</select>
+			<input type="submit" id="doaction" class="button action" value="<?php esc_attr_e( 'Apply', 'agent-builder' ); ?>" onclick="return agentic_confirm_bulk(this);">
+		</div>
+		<br class="clear">
+	</div>
+
+	<!-- Agents Table -->
+	<table class="wp-list-table widefat plugins">
+		<thead>
+			<tr>
+				<td id="cb" class="manage-column column-cb check-column">
+					<input type="checkbox" id="cb-select-all-1">
+				</td>
+				<th scope="col" class="manage-column column-name column-primary">
+					<?php esc_html_e( 'Agent', 'agent-builder' ); ?>
+				</th>
+				<th scope="col" class="manage-column column-description">
+					<?php esc_html_e( 'Description', 'agent-builder' ); ?>
+				</th>
+			</tr>
+		</thead>
+		<tbody id="the-list">
+			<?php if ( empty( $agentic_agents ) ) : ?>
+				<tr class="no-items">
+					<td class="colspanchange" colspan="3">
+						<?php esc_html_e( 'No assistants installed yet.', 'agent-builder' ); ?>
+					</td>
+				</tr>
+			<?php else : ?>
+				<?php foreach ( $agentic_agents as $agentic_slug => $agentic_agent ) : ?>
+					<?php
+					$agentic_row_class = $agentic_agent['active'] ? 'active' : 'inactive';
+					$agentic_nonce     = wp_create_nonce( 'agentic_agent_action' );
+					?>
+					<tr class="<?php echo esc_attr( $agentic_row_class ); ?>" data-slug="<?php echo esc_attr( $agentic_slug ); ?>">
+						<th scope="row" class="check-column">
+							<input type="checkbox" name="checked[]" value="<?php echo esc_attr( $agentic_slug ); ?>">
+						</th>
+						<td class="plugin-title column-primary">
+							<strong><?php echo esc_html( $agentic_agent['name'] ); ?></strong>
+
+							<div class="row-actions visible">
+
+								<?php if ( $agentic_agent['active'] ) : ?>
+									<?php
+									$agentic_page_slug = 'assistant-trainer' === $agentic_slug ? 'agent-builder' : 'agentic-chat';
+									?>
+						<span class="chat">
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $agentic_page_slug . '&agent=' . $agentic_slug ) ); ?>" class="agentic-text-fw600">
+											<?php esc_html_e( 'Chat', 'agent-builder' ); ?>
+										</a> |
+									</span>
+									<span class="deactivate">
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agents&action=deactivate&agent=' . $agentic_slug . '&_wpnonce=' . $agentic_nonce ) ); ?>">
+											<?php esc_html_e( 'Deactivate', 'agent-builder' ); ?>
+										</a>
+									</span>
+								<?php else : ?>
+									<span class="activate">
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agents&action=activate&agent=' . $agentic_slug . '&_wpnonce=' . $agentic_nonce ) ); ?>">
+											<?php esc_html_e( 'Activate', 'agent-builder' ); ?>
+										</a> |
+									</span>
+									<span class="delete">
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agents&action=delete&agent=' . $agentic_slug . '&_wpnonce=' . $agentic_nonce ) ); ?>"
+											class="delete"
+											data-agentic-confirm="<?php echo esc_attr( __( 'Are you sure you want to delete this assistant?', 'agent-builder' ) ); ?>" data-agentic-confirm-danger data-agentic-confirm-ok="<?php echo esc_attr( __( 'Delete', 'agent-builder' ) ); ?>">
+											<?php esc_html_e( 'Delete', 'agent-builder' ); ?>
+										</a>
+									</span>
+								<?php endif; ?>
+							</div>
+						</td>
+						<td class="column-description desc">
+							<div class="plugin-description">
+								<p><?php echo esc_html( $agentic_agent['description'] ); ?></p>
+							</div>
+							<div class="plugin-meta">
+								<?php if ( ! empty( $agentic_agent['version'] ) ) : ?>
+									<span class="agent-version">
+									<?php
+									/* translators: %s: agent version number */
+									printf( esc_html__( 'Version %s', 'agent-builder' ), esc_html( $agentic_agent['version'] ) );
+									?>
+									</span>
+									<span class="separator">|</span>
+								<?php endif; ?>
+
+								<?php if ( ! empty( $agentic_agent['author'] ) ) : ?>
+									<span class="agent-author">
+										<?php esc_html_e( 'By', 'agent-builder' ); ?>
+										<?php if ( ! empty( $agentic_agent['author_uri'] ) ) : ?>
+											<a href="<?php echo esc_url( $agentic_agent['author_uri'] ); ?>" target="_blank">
+												<?php echo esc_html( $agentic_agent['author'] ); ?>
+											</a>
+										<?php else : ?>
+											<?php echo esc_html( $agentic_agent['author'] ); ?>
+										<?php endif; ?>
+									</span>
+									<span class="separator">|</span>
+								<?php endif; ?>
+
+								<?php if ( ! empty( $agentic_agent['category'] ) ) : ?>
+									<span class="agent-category">
+										<?php echo esc_html( $agentic_agent['category'] ); ?>
+									</span>
+									<span class="separator">|</span>
+								<?php endif; ?>
+
+								<?php if ( ! empty( $agentic_agent['capabilities'] ) ) : ?>
+									<span class="agent-capabilities">
+										<?php
+										/* translators: %s: comma-separated list of agent capabilities */                                       printf(
+											esc_html__( 'Capabilities: %s', 'agent-builder' ),
+											esc_html( implode( ', ', $agentic_agent['capabilities'] ) )
+										);
+										?>
+									</span>
+								<?php endif; ?>
+							</div>
+						</td>
+					</tr>
+
+					<?php if ( isset( $agentic_available_updates[ $agentic_slug ] ) ) : ?>
+						<?php $agentic_upd = $agentic_available_updates[ $agentic_slug ]; ?>
+						<tr class="plugin-update-tr <?php echo esc_attr( $agentic_row_class ); ?>" id="<?php echo esc_attr( $agentic_slug ); ?>-update" data-slug="<?php echo esc_attr( $agentic_slug ); ?>">
+							<td colspan="3" class="plugin-update colspanchange">
+								<div class="update-message notice inline notice-warning notice-alt">
+									<p>
+										<?php if ( ! empty( $agentic_upd['package'] ) ) : ?>
+											<?php
+											printf(
+												wp_kses(
+													/* translators: 1: assistant name 2: new version number 3: details URL 4: zip download URL 5: slug 6: nonce */
+													__( 'There is a new version of <strong>%1$s</strong> available. <a href="%3$s" target="_blank">View version %2$s details</a> or <a href="#" class="agentic-update-now" data-slug="%5$s" data-nonce="%6$s" data-url="%4$s">update now</a>.', 'agent-builder' ),
+													array(
+														'strong' => array(),
+														'a'      => array(
+															'href' => array(),
+															'target' => array(),
+															'class' => array(),
+															'data-slug' => array(),
+															'data-nonce' => array(),
+															'data-url' => array(),
+														),
+													)
+												),
+												esc_html( $agentic_upd['name'] ),
+												esc_html( $agentic_upd['version'] ),
+												esc_url( $agentic_upd['url'] ),
+												esc_url( $agentic_upd['package'] ),
+												esc_attr( $agentic_slug ),
+												esc_attr( wp_create_nonce( 'agentic_agent_update_' . $agentic_slug ) )
+											);
+											?>
+										<?php else : ?>
+											<?php
+											printf(
+												wp_kses(
+													/* translators: 1: assistant name 2: new version number 3: details URL */
+													__( 'There is a new version of <strong>%1$s</strong> available. <a href="%3$s" target="_blank">View version %2$s details</a>.', 'agent-builder' ),
+													array(
+														'strong' => array(),
+														'a'      => array(
+															'href' => array(),
+															'target' => array(),
+														),
+													)
+												),
+												esc_html( $agentic_upd['name'] ),
+												esc_html( $agentic_upd['version'] ),
+												esc_url( $agentic_upd['url'] )
+											);
+											?>
+										<?php endif; ?>
+									</p>
+								</div>
+							</td>
+						</tr>
+					<?php endif; ?>
+
+				<?php endforeach; ?>
+			<?php endif; ?>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td class="manage-column column-cb check-column">
+					<input type="checkbox" id="cb-select-all-2">
+				</td>
+				<th scope="col" class="manage-column column-name column-primary">
+					<?php esc_html_e( 'Agent', 'agent-builder' ); ?>
+				</th>
+				<th scope="col" class="manage-column column-description">
+					<?php esc_html_e( 'Description', 'agent-builder' ); ?>
+				</th>
+			</tr>
+		</tfoot>
+	</table>
+	</div><!-- /.agentic-card -->
+
+	<!-- Tablenav Bottom -->
+	<div class="tablenav bottom">
+		<div class="alignleft actions bulkactions">
+			<label for="bulk-action-selector-bottom" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'agent-builder' ); ?></label>
+			<select name="bulk_action" id="bulk-action-selector-bottom">
+				<option value="-1"><?php esc_html_e( 'Bulk actions', 'agent-builder' ); ?></option>
+				<option value="activate"><?php esc_html_e( 'Activate', 'agent-builder' ); ?></option>
+				<option value="deactivate"><?php esc_html_e( 'Deactivate', 'agent-builder' ); ?></option>
+				<option value="delete"><?php esc_html_e( 'Delete', 'agent-builder' ); ?></option>
+			</select>
+			<input type="submit" id="doaction2" class="button action" value="<?php esc_attr_e( 'Apply', 'agent-builder' ); ?>" onclick="return agentic_confirm_bulk(this);">
+		</div>
+		<br class="clear">
+	</div>
+
+	</form><!-- end bulk-action-form -->
+</div>
+
+<script>
+(function () {
+	var toggle = document.getElementById( 'agentic-upload-toggle' );
+	var wrap   = document.getElementById( 'agentic-upload-wrap' );
+
+	if ( toggle && wrap ) {
+		toggle.addEventListener( 'click', function ( e ) {
+			e.preventDefault();
+			var isVisible = 'none' !== wrap.style.display;
+			wrap.style.display = isVisible ? 'none' : 'block';
+		} );
+
+		<?php if ( $agentic_upload_error ) : ?>
+		// Show upload form when there was an upload error.
+		wrap.style.display = 'block';
+		<?php endif; ?>
+	}
+
+	// Keep top/bottom bulk selects in sync.
+	var selTop    = document.getElementById( 'bulk-action-selector-top' );
+	var selBottom = document.getElementById( 'bulk-action-selector-bottom' );
+	if ( selTop && selBottom ) {
+		selTop.addEventListener( 'change', function () { selBottom.value = selTop.value; } );
+		selBottom.addEventListener( 'change', function () { selTop.value = selBottom.value; } );
+	}
+
+	// Keep top/bottom checkboxes in sync.
+	var cbAll1 = document.getElementById( 'cb-select-all-1' );
+	var cbAll2 = document.getElementById( 'cb-select-all-2' );
+	function syncCheckAll( from, to ) {
+		if ( from && to ) {
+			from.addEventListener( 'change', function () {
+				to.checked = from.checked;
+				document.querySelectorAll( '#the-list input[type="checkbox"]' ).forEach( function ( cb ) {
+					cb.checked = from.checked;
+				} );
+			} );
+		}
+	}
+	syncCheckAll( cbAll1, cbAll2 );
+	syncCheckAll( cbAll2, cbAll1 );
+})();
+
+function agentic_confirm_bulk( btn ) {
+	var sel = document.getElementById( 'bulk-action-selector-top' );
+	if ( ! sel || sel.value === '-1' ) {
+		agenticUI.toast( '<?php echo esc_js( __( 'Please select a bulk action.', 'agent-builder' ) ); ?>', 'warning' );
+		return false;
+	}
+	var checked = document.querySelectorAll( '#the-list input[type="checkbox"]:checked' );
+	if ( ! checked.length ) {
+		agenticUI.toast( '<?php echo esc_js( __( 'Please select at least one agent.', 'agent-builder' ) ); ?>', 'warning' );
+		return false;
+	}
+	if ( sel.value === 'delete' ) {
+		// Block the synchronous submit; re-submit programmatically once confirmed.
+		agenticUI.confirm( '<?php echo esc_js( __( 'Are you sure you want to delete the selected agents?', 'agent-builder' ) ); ?>', { danger: true, confirmText: '<?php echo esc_js( __( 'Delete', 'agent-builder' ) ); ?>' } ).then( function ( ok ) {
+			if ( ok ) {
+				btn.closest( 'form' ).submit();
+			}
+		} );
+		return false;
+	}
+	return true;
+}
+
+<?php if ( class_exists( '\Agentic\Agent_Updates' ) ) : ?>
+(function () {
+	// One-click agent update handler.
+	document.querySelectorAll( '.agentic-update-now' ).forEach( function ( link ) {
+		link.addEventListener( 'click', function ( e ) {
+			e.preventDefault();
+
+			var slug   = this.dataset.slug;
+			var nonce  = this.dataset.nonce;
+			var zipUrl = this.dataset.url;
+			var row    = document.getElementById( slug + '-update' );
+			var self   = this;
+
+			self.textContent = '<?php echo esc_js( __( 'Updating\u2026', 'agent-builder' ) ); ?>';
+			self.style.pointerEvents = 'none';
+
+			var body = new URLSearchParams( {
+				action:    'agentic_agent_update',
+				slug:      slug,
+				zip_url:   zipUrl,
+				_wpnonce:  nonce,
+			} );
+
+			fetch( ajaxurl, {
+				method:  'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body:    body.toString(),
+			} )
+			.then( function ( r ) { return r.json(); } )
+			.then( function ( data ) {
+				if ( data.success ) {
+					if ( row ) {
+						row.innerHTML =
+							'<td colspan="3"><div class="update-message notice inline notice-success notice-alt">' +
+							'<p>' + data.data.message + '</p></div></td>';
+					}
+					// Reload after a short delay so the updated version number shows.
+					setTimeout( function () { location.reload(); }, 1500 );
+				} else {
+					agenticUI.toast( '<?php echo esc_js( __( 'Update failed: ', 'agent-builder' ) ); ?>' + ( data.data || '<?php echo esc_js( __( 'Unknown error.', 'agent-builder' ) ); ?>' ), 'error' );
+					self.textContent = '<?php echo esc_js( __( 'update now', 'agent-builder' ) ); ?>';
+					self.style.pointerEvents = '';
+				}
+			} )
+			.catch( function () {
+				agenticUI.toast( '<?php echo esc_js( __( 'Update failed due to a network error.', 'agent-builder' ) ); ?>', 'error' );
+				self.textContent = '<?php echo esc_js( __( 'update now', 'agent-builder' ) ); ?>';
+				self.style.pointerEvents = '';
+			} );
+		} );
+	} );
+}());
+<?php endif; ?>
+</script>

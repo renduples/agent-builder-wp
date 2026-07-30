@@ -1,0 +1,92 @@
+<?php
+/**
+ * Tool: add_custom_js
+ *
+ * @package    Agent_Builder
+ * @subpackage Tools
+ * @since      2.0.0
+ *
+ * php version 8.1
+ */
+
+namespace Agentic\Tools;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+use Agentic\Tool_Base;
+
+class Add_Custom_Js extends Tool_Base {
+	public function get_name(): string {
+		return 'add_custom_js';
+	}
+
+	public function get_description(): string {
+		return 'Add a custom JavaScript snippet to the site without modifying theme files. Snippets are stored and enqueued by Agent Builder on wp_head or wp_footer.';
+	}
+
+	public function get_category(): string {
+		return 'utility';
+	}
+
+	public function get_parameters(): array {
+		return array(
+			'type'       => 'object',
+			'properties' => array(
+				'js'       => array(
+					'type'        => 'string',
+					'description' => 'The JavaScript code to add.',
+				),
+				'label'    => array(
+					'type'        => 'string',
+					'description' => 'A descriptive label for this snippet. Defaults to "Custom JS".',
+				),
+				'location' => array(
+					'type'        => 'string',
+					'description' => 'Where to output the JS: "footer" (default, recommended) or "head".',
+					'enum'        => array( 'head', 'footer' ),
+				),
+			),
+			'required'   => array( 'js' ),
+		);
+	}
+
+	public function get_annotations(): array {
+		return array( 'read_only' => false, 'destructive' => false );
+	}
+
+	public function execute( array $args ): array {
+		$js       = $args['js'] ?? '';
+		$label    = sanitize_text_field( $args['label'] ?? 'Custom JS' );
+		$location = in_array( $args['location'] ?? '', array( 'head', 'footer' ), true )
+			? $args['location']
+			: 'footer';
+
+		if ( ! trim( $js ) ) {
+			return array( 'error' => 'js is required and cannot be empty.' );
+		}
+
+		$snippets   = (array) get_option( 'agentic_custom_js', array() );
+		$snippet_id = 'js_' . time() . '_' . wp_rand( 1000, 9999 );
+
+		$snippets[ $snippet_id ] = array(
+			'label'      => $label,
+			'js'         => $js,
+			'location'   => $location,
+			'created_at' => gmdate( 'c' ),
+		);
+
+		update_option( 'agentic_custom_js', $snippets );
+
+		return array(
+			'snippet_id' => $snippet_id,
+			'label'      => $label,
+			'location'   => $location,
+			'js_preview' => substr( $js, 0, 100 ) . ( strlen( $js ) > 100 ? '...' : '' ),
+			'note'       => 'Enqueued by Agent Builder on wp_head/wp_footer when active.',
+		);
+	}
+}
+
+return new Add_Custom_Js();
