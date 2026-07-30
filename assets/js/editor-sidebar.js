@@ -207,8 +207,12 @@
 	/**
 	 * Create a structured suggestion from assistant text (Phase 3).
 	 * Simple heuristics for newsroom use; can be made smarter with agent structured output later.
+	 *
+	 * @param {string}   text          Assistant response text to turn into a suggestion.
+	 * @param {Function} setSuggestions State setter from EditorSidebarInner, passed in because
+	 *                                  this is a sibling function and cannot close over it.
 	 */
-	function addSuggestionFromText( text ) {
+	function addSuggestionFromText( text, setSuggestions ) {
 		if ( ! text || ! text.trim() ) return;
 		var clean = text.trim();
 		var type = 'paragraph';
@@ -635,7 +639,7 @@
 					if ( config.injectContext && data.response && (data.response.length > 40) ) {
 						// Heuristic: if response contains proposal language or substantial text, offer as suggestion
 						if ( /paragraph|headline|lede|quote|list|here is|proposed|suggest/i.test(data.response) || data.response.split(' ').length > 15 ) {
-							addSuggestionFromText( data.response );
+							addSuggestionFromText( data.response, setSuggestions );
 						}
 					}
 				}
