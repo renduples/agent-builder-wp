@@ -15,6 +15,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Agentic\WP_Optional_API;
+
 /**
  * Connects this site to the Agentic MCP relay (mcp.agentic-plugin.com).
  *

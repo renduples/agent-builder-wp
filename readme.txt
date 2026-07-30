@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.7
+Stable tag: 3.3.8
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.8 - 2026-07-30 =
+* Fix: `wp agent abilities list` and `wp agent wp-ai abilities`/`test-execute` threw a fatal error (Class "Agentic\CLI\WP_Optional_API" not found) — the CLI classes live in the Agentic\CLI namespace but referenced WP_Optional_API unqualified instead of importing it from Agentic. Same bug also broke the MCP relay's ability-listing handler (class-relay-connect.php, which loads in the global namespace).
+* Fix: Assistant Trainer's system prompt, the agent-documentation generator, and the Deployment → CLI admin page all documented `wp agent prompt`, `wp agent tools`, and `wp agent run-task` as working free-tier commands. None of the three are registered in the free build (Pro-only) — every custom agent's generated docs and the WordPress Assistant's own CLI guidance would have pointed users at commands that error. Corrected to only reference what actually exists (`wp agent list`, `wp agent info`, `wp agent abilities list`, `wp agent wp-ai status`) and labelled the Pro-only ones accordingly.
 
 = 3.3.7 - 2026-07-30 =
 * Fix: search_capabilities could report a real, already-active bundled agent as "not found" because the remote capabilities index it queries does not reflect this site's actual install/activation state, and the prompt-level guidance alone wasn't reliable enough to keep smaller models from picking it over get_agent_list for a named local agent. The tool itself now cross-checks the local agent registry (matching on name/slug/description, with common connector words filtered out) and merges any local match into the results — with locally-confirmed install/active state always taking priority over the remote index — so this can no longer produce a false negative regardless of which tool gets called.

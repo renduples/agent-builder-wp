@@ -20,6 +20,8 @@ declare( strict_types=1 );
 
 namespace Agentic\CLI;
 
+use Agentic\WP_Optional_API;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

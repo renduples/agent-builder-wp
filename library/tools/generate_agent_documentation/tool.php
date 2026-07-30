@@ -170,7 +170,7 @@ class Generate_Agent_Documentation extends Tool_Base {
 			$md .= "\n";
 		}
 
-		$md .= "### WP-CLI\n\n```bash\nwp agent prompt {$slug} \"Your message here\"\nwp agent info {$slug}\nwp agent tools {$slug}\n```\n\n";
+		$md .= "### WP-CLI\n\n```bash\nwp agent list\nwp agent info {$slug}\n```\n\nSending a live prompt from the CLI is a Pro-only capability.\n\n";
 
 		if ( $include_examples && ! empty( $prompts ) ) {
 			$md .= "## Example Interactions\n\n";

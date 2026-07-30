@@ -7,7 +7,8 @@
  *      by Read / Write / Admin risk. Saved into the run_wp_cli tool's
  *      parameters column in wp_agentic_tools.
  *   2. Agent CLI Privileges       — per-agent matrix with two toggles each:
- *        • Allow CLI invocation   (wp agent prompt / run-task from shell)
+ *        • Allow CLI invocation   (wp agent prompt / run-task from shell — Pro only; these
+ *                                  subcommands do not exist in the free-tier CLI)
  *        • Allow run_wp_cli tool  (agent can call the tool in conversation)
  *      Stored in wp_agentic_agent_settings via Agent_Settings.
  *
@@ -243,7 +244,7 @@ $agentic_ajax_url         = admin_url( 'admin-ajax.php' );
 				<th><?php esc_html_e( 'Assistant', 'agent-builder' ); ?></th>
 				<th class="agentic-col-180 agentic-td-center">
 					<?php esc_html_e( 'CLI invocation', 'agent-builder' ); ?>
-					<br><small class="agentic-small-muted"><?php esc_html_e( 'wp agent prompt/run-task', 'agent-builder' ); ?></small>
+					<br><small class="agentic-small-muted"><?php esc_html_e( 'wp agent prompt/run-task — Pro', 'agent-builder' ); ?></small>
 				</th>
 				<th class="agentic-col-180 agentic-td-center">
 					<?php esc_html_e( 'run_wp_cli tool', 'agent-builder' ); ?>

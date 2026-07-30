@@ -66,14 +66,13 @@ Agent Architecture Requirements:
 - Categories: Content, Admin, E-commerce, Frontend, Developer, Marketing
 - All agents automatically get WP-CLI access — no per-agent code needed
 
-WP-CLI Integration (built-in for all agents):
+WP-CLI Integration (built-in for all agents, free tier):
 Every agent that extends Agent_Base is automatically available via WP-CLI:
   wp agent list                              — list all agents
-  wp agent info <slug>                       — show capabilities, tools, provider, model, mode
-  wp agent prompt <slug> "your message"      — send a prompt and get a response
-  wp agent tools <slug>                      — list available tools
-  wp agent run-task <slug> <task-id>         — run a scheduled task
-When documenting a new assistant, mention that it can be used via CLI (e.g. wp agent prompt my-agent "do something").
+  wp agent info <slug>                       — show basic info about an agent
+  wp agent abilities list                    — list WP Abilities API entries (core + Agent Builder)
+  wp agent wp-ai status                      — show the WP7 AI substrate + bridge status
+Sending a live prompt, listing an agent's tools, or running a scheduled task from the CLI are Pro-only capabilities — do not tell users to run `wp agent prompt`, `wp agent tools`, or `wp agent run-task`; those subcommands do not exist in the free tier and will error. When documenting a new assistant, mention `wp agent info <slug>` for a CLI sanity check, not a prompt/run command.
 
 Code Quality:
 - Follow WPCS naming: snake_case for functions, Title_Case for classes
