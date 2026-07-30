@@ -483,7 +483,7 @@ class Chat_Security {
 		 *
 		 * @return string IP address.
 		 */
-	private static function get_client_ip(): string {
+	public static function get_client_ip(): string {
 		$headers = array(
 			'HTTP_CF_CONNECTING_IP',  // Cloudflare.
 			'HTTP_X_FORWARDED_FOR',   // Proxy.

@@ -759,6 +759,7 @@ React_Admin::init();
 Dashboard_REST::init();
 Agent_Wizard_REST::init();
 Site_Local_Tools::init();
+Login_Monitor::init();
 
 // Activation/Deactivation hooks — must be registered at global scope in the main
 // plugin file so WordPress can locate them reliably, regardless of how/when the
