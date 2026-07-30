@@ -311,23 +311,13 @@ This plugin lets you connect to third-party services to process and execute task
 
 == Changelog ==
 
-= 3.3.0 - 2026-07-28 =
-* Privacy / WPorg: free builds no longer show the Agent Updates opt-in wall or phone home for update checks. **Agents → Community Agents** links to https://agentic-plugin.com/community-agents/ (marketplace). In-dashboard update checks remain Pro-only after opt-in.
-* New: **React Settings app** — full Settings shell (searchable left nav) with current IA: Interface, Agents, Providers, Users, Security; Advanced shows APIs and Endpoints. Removed empty General / Global tabs after moving their options.
-* New: **Interface** — Basic/Advanced mode, how assistants address people, chat theme preview cards (Light default on install), font/accent, Getting Started toggle.
-* New: **Agents** tab — site-wide chat features (audio, TTS, vision, white-label), compact active-agent provider/model overrides (connected providers only; site default from Providers), Disable All Agents emergency stop.
-* New: **Providers** — Set Default only for connected providers; keys stay on-site.
-* New: **Users** — restored roles & privileges matrices with ? tooltips; daily query/token quotas. **Request rate limits** moved to **Security**.
-* New: **Security** — agent mode, message scanning, consent, retention, per-minute rate limits (authenticated + anonymous).
-* New: **Knowledge** page tabs — Wiki (OKF), Instructions, Memory, Vector. Global instructions migrate quietly into always-on OKF knowledge. Instructions/Memory use the settings React embed with correct footers.
-* New: **Tools** (React) — category tabs, risk column + risk filter, Basic ability profiles, Pro site-local tool builder (free can use/suggest tools).
-* New: **Approvals** (React) — comfort preferences, email alerts, approve progress feedback; docs linked to approval-queue.
-* Improve: **Activity** friendly timeline; **Publish** deployment tab labels A–Z; Frontend Modal rename; scheduled tasks product fixes.
-* Improve: every Settings tab and React admin surface shows the standard policy footer; Documentation links follow `admin/doc-map.php` (tab-aware `footerByTab`).
-* Docs: agentic-plugin.com Settings / Knowledge / Security / Providers / Users pages updated with current screenshots and copy.
-* Dev: REST settings bootstrap/save aligned with new tabs; site-local tools exempted from abilities undeclared checks; experiment-ready free plugin testing path.
-* Coord: ships with Agent Builder Pro 3.2.0 React hubs (Usage credits wallet, Connectors MCP CRUD, Health, Cloudflare, WordPress AI).
-* Compat: **Pro License tab** loads inside React Settings via `GET agentic/v1/admin-settings/classic-tab` + `agentic_settings_classic_html_tabs` (Pro activates license/deactivate without classic form wrapper). Free doc-map includes Pro admin pages for shared footers.
+= 3.3.0 - 2026-07-29 =
+* New: React **Settings** app (Interface, Agents, Providers, Users, Security; Advanced APIs/Endpoints).
+* New: React **Tools**, **Approvals**, and **Knowledge** hubs (Wiki, Instructions, Memory, Vector).
+* Improve: clearer admin navigation, policy footers, and Documentation links on every surface.
+* Privacy: free plugin no longer phones home for agent update checks — use **Community Agents** instead.
+* Providers: Kimi (Moonshot AI) and DeepSeek listed alongside existing LLMs.
+* Compat: works with Agent Builder Pro 3.2.0 (License tab inside Settings; React Pro hubs).
 
 = 3.2.4 - 2026-07-25 =
 * New: Model_Capabilities matrix — ordered rules (exact/prefix/regex/provider) replace ad-hoc model-name regexes for tools + reasoning.
@@ -475,7 +465,7 @@ For the full version history, visit [agentic-plugin.com/changelog](https://agent
 == Upgrade Notice ==
 
 = 3.3.0 =
-React Settings IA (Interface / Agents / Providers / Users / Security), Knowledge hub tabs, Tools risk + ability profiles, Approvals comfort UI, and tab-aware admin footers/docs. No intentional breaking changes for existing agents or API keys.
+React Settings, Tools, Approvals, and Knowledge hubs; free plugin no longer phones home for agent updates (Community Agents link instead). No intentional breaking changes for existing agents or API keys.
 
 = 3.0.0 =
 Contextual AI launchers across wp-admin (Plugins, Media, Users, Comments, Dashboard), a new manage_cache tool, WordPress Abilities fully integrated into the Tools hub with enable/disable toggles, and a fix for disabled tools being incorrectly published as outbound Abilities. No breaking changes.
