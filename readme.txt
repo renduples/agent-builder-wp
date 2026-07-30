@@ -35,7 +35,7 @@ Discover more on [Community Agents](https://agentic-plugin.com/community-agents/
 = Key Features =
 
 * Create unlimited role-based AI agents using natural language
-* Multi-LLM support (OpenAI, Anthropic, xAI, Google, local models via Ollama, and more)
+* Multi-LLM support (OpenAI, Anthropic, xAI, Google, Kimi, local models via Ollama, and more)
 * 250+ built-in tools and skills let your agents take real actions inside WordPress
 * **Tools hub** with category tabs, risk levels, filters, and Basic ability profiles (Pro: site-local custom tools)
 * Secure sandboxed execution with **Approvals** (comfort preferences, email alerts, progress feedback) and full audit logs
@@ -87,8 +87,10 @@ Works with popular AI services you already know:
 - Cohere  
 - xAI
 - Google
+- Kimi (Moonshot AI)
 - Meta Llama
 - Mistral
+- DeepSeek
 - Ollama
 - Your provider not in the list? You can add as many LLM providers as you like. 
 
@@ -143,7 +145,7 @@ You can also switch to [Agent Builder Pro](https://agentic-plugin.com/download/)
 
 = Where does Agent Builder send my data? =
 
-Data is sent to your LLM providers such as Agentic AI, xAI, OpenAI, Anthropic or Google etc.
+Data is sent to your LLM providers such as Agentic AI, xAI, OpenAI, Anthropic, Google, Kimi, or others you configure.
 
 You can also use local models via Ollama / LM Studio (fully private — nothing leaves your server)
 
@@ -243,6 +245,13 @@ This plugin lets you connect to third-party services to process and execute task
 * **Data sent:** Chat messages, system prompts, tool definitions, and tool call results.
 * **Terms of Service:** [https://cohere.com/terms-of-use](https://cohere.com/terms-of-use)
 * **Privacy Policy:** [https://cohere.com/privacy](https://cohere.com/privacy)
+
+= Kimi (Moonshot AI) =
+* **Endpoint:** `https://api.moonshot.ai/v1/chat/completions`
+* **When used:** When Kimi is selected as the AI provider in Settings.
+* **Data sent:** Chat messages, system prompts, tool definitions, and tool call results.
+* **Terms of Service:** [https://platform.moonshot.ai/docs/agreement/modeluse](https://platform.moonshot.ai/docs/agreement/modeluse)
+* **Privacy Policy:** [https://platform.moonshot.ai/docs/agreement/privacy](https://platform.moonshot.ai/docs/agreement/privacy)
 
 = Ollama (Local) =
 * **Endpoint:** User-configured local URL (default: `http://localhost:11434`)
