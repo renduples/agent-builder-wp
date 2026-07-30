@@ -132,25 +132,27 @@ class UI_Settings_REST {
 		}
 
 		// Emergency kill switch — side effects, not a simple option write.
-		$disable_all = $request->get_param( 'disable_all_agents' );
+		$disable_all        = $request->get_param( 'disable_all_agents' );
+		$emergency_warnings = array();
 		if ( null !== $disable_all ) {
 			$want = rest_sanitize_boolean( $disable_all );
 			if ( $want && ! Emergency_Stop::is_active() ) {
 				Emergency_Stop::enable();
 			} elseif ( ! $want && Emergency_Stop::is_active() ) {
-				Emergency_Stop::disable();
+				$emergency_warnings = Emergency_Stop::disable()['warnings'] ?? array();
 			}
 		}
 
-		return new \WP_REST_Response( self::current(), 200 );
+		return new \WP_REST_Response( self::current( $emergency_warnings ), 200 );
 	}
 
 	/**
 	 * Read the current settings as a normalized array.
 	 *
+	 * @param string[] $warnings Optional warnings from the last mutation (e.g. emergency-stop restore failures).
 	 * @return array<string,mixed>
 	 */
-	private static function current(): array {
+	private static function current( array $warnings = array() ): array {
 		return array(
 			'ui_mode'            => 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) ? 'advanced' : 'basic',
 			'show_onboarding'    => '0' !== get_option( 'agentic_show_onboarding', '1' ),
@@ -158,6 +160,7 @@ class UI_Settings_REST {
 			'global_font'        => (string) get_option( 'agentic_global_font', '' ),
 			'global_accent'      => (string) get_option( 'agentic_global_accent', '' ),
 			'themes_url'         => admin_url( 'admin.php?page=agentic-settings&tab=global' ),
+			'warnings'           => $warnings,
 		);
 	}
 }

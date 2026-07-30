@@ -170,7 +170,7 @@ class Dashboard_REST {
 	 *
 	 * @return \WP_REST_Response
 	 */
-	public static function get_dashboard(): \WP_REST_Response {
+	public static function get_dashboard( array $warnings = array() ): \WP_REST_Response {
 		$llm         = new LLM_Client();
 		$is_pro      = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
 		$is_advanced = Admin_Menu_Handler::is_advanced_mode();
@@ -320,6 +320,7 @@ class Dashboard_REST {
 				'onboarding'     => $steps,
 				'layout'         => self::get_layout_for_user(),
 				'layout_default' => self::default_layout(),
+				'warnings'       => $warnings,
 			),
 			200
 		);
@@ -356,13 +357,14 @@ class Dashboard_REST {
 				break;
 
 			case 'set_emergency_stop':
-				$enable = rest_sanitize_boolean( $request->get_param( 'enable' ) );
+				$enable            = rest_sanitize_boolean( $request->get_param( 'enable' ) );
+				$emergency_warnings = array();
 				if ( $enable && ! Emergency_Stop::is_active() ) {
 					Emergency_Stop::enable();
 				} elseif ( ! $enable && Emergency_Stop::is_active() ) {
-					Emergency_Stop::disable();
+					$emergency_warnings = Emergency_Stop::disable()['warnings'] ?? array();
 				}
-				break;
+				return self::get_dashboard( $emergency_warnings );
 
 			case 'set_agent_updates':
 				// Free / WPorg: remote update opt-in is not available.

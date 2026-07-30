@@ -147,7 +147,7 @@ class Emergency_Stop {
 	/**
 	 * Disable the kill switch and restore the pre-stop snapshot when available.
 	 *
-	 * @return array{ok:bool,restored?:bool,error?:string}
+	 * @return array{ok:bool,restored?:bool,warnings?:string[],error?:string}
 	 */
 	public static function disable(): array {
 		if ( ! self::is_active() ) {
@@ -156,6 +156,7 @@ class Emergency_Stop {
 
 		$snapshot = get_option( self::OPTION_SNAPSHOT, array() );
 		$snapshot = is_array( $snapshot ) ? $snapshot : array();
+		$warnings = array();
 
 		Security_Log::log_system(
 			'emergency_stop_disabled',
@@ -171,7 +172,7 @@ class Emergency_Stop {
 		update_option( self::OPTION_ENABLED, '0', false );
 
 		// Restore providers first so agents can use them again.
-		self::restore_providers( $snapshot );
+		$warnings = array_merge( $warnings, self::restore_providers( $snapshot ) );
 
 		if ( ! empty( $snapshot['default_provider'] ) ) {
 			update_option( 'agentic_llm_provider', sanitize_key( (string) $snapshot['default_provider'] ), false );
@@ -198,6 +199,14 @@ class Emergency_Stop {
 						'error'   => is_wp_error( $result ) ? $result->get_error_message() : '',
 					)
 				);
+				if ( is_wp_error( $result ) ) {
+					$warnings[] = sprintf(
+						/* translators: 1: agent slug, 2: error message */
+						__( 'Could not reactivate agent "%1$s": %2$s', 'agent-builder' ),
+						$slug,
+						$result->get_error_message()
+					);
+				}
 			}
 		}
 
@@ -211,6 +220,7 @@ class Emergency_Stop {
 		return array(
 			'ok'       => true,
 			'restored' => ! empty( $snapshot ),
+			'warnings' => $warnings,
 		);
 	}
 
@@ -327,8 +337,11 @@ class Emergency_Stop {
 	 * Restore provider keys / Ollama URL from snapshot.
 	 *
 	 * @param array<string,mixed> $snapshot Snapshot.
+	 * @return string[] Human-readable warnings for any provider that failed to restore.
 	 */
-	private static function restore_providers( array $snapshot ): void {
+	private static function restore_providers( array $snapshot ): array {
+		$warnings = array();
+
 		foreach ( (array) ( $snapshot['providers'] ?? array() ) as $slug => $info ) {
 			if ( ! is_array( $info ) ) {
 				continue;
@@ -338,7 +351,15 @@ class Emergency_Stop {
 			if ( '' === $slug || '' === $enc ) {
 				continue;
 			}
-			Provider_Registry::restore_encrypted_api_key( $slug, $enc );
+			$restored = Provider_Registry::restore_encrypted_api_key( $slug, $enc );
+			if ( ! $restored ) {
+				$warnings[] = sprintf(
+					/* translators: %s: provider name */
+					__( 'Could not restore the API key for "%s" — the provider no longer exists.', 'agent-builder' ),
+					(string) ( $info['name'] ?? $slug )
+				);
+				continue;
+			}
 			Security_Log::log_system(
 				'emergency_stop_provider_restored',
 				'emergency_stop',
@@ -352,6 +373,8 @@ class Emergency_Stop {
 		if ( ! empty( $snapshot['ollama_url'] ) ) {
 			update_option( 'agentic_ollama_url', esc_url_raw( (string) $snapshot['ollama_url'] ), false );
 		}
+
+		return $warnings;
 	}
 
 	/**

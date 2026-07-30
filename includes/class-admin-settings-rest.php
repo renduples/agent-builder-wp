@@ -236,6 +236,8 @@ class Admin_Settings_REST {
 			$tab = 'agents';
 		}
 
+		$warnings = array();
+
 		switch ( $tab ) {
 			case 'interface':
 				self::save_interface( $data );
@@ -250,7 +252,7 @@ class Admin_Settings_REST {
 				self::save_memory( $data );
 				break;
 			case 'agents':
-				self::save_agents( $data );
+				$warnings = self::save_agents( $data );
 				break;
 			case 'instructions':
 				self::save_instructions( $data );
@@ -281,9 +283,10 @@ class Admin_Settings_REST {
 
 		return new \WP_REST_Response(
 			array(
-				'ok'   => true,
-				'tab'  => $tab,
-				'data' => $out,
+				'ok'       => true,
+				'tab'      => $tab,
+				'data'     => $out,
+				'warnings' => $warnings,
 			),
 			200
 		);
@@ -741,8 +744,11 @@ class Admin_Settings_REST {
 
 	/**
 	 * @param array<string,mixed> $data Data.
+	 * @return string[] Warnings from any side effect (e.g. emergency-stop restore failures).
 	 */
-	private static function save_agents( array $data ): void {
+	private static function save_agents( array $data ): array {
+		$warnings = array();
+
 		if ( isset( $data['global_provider'] ) ) {
 			$slug = sanitize_key( (string) $data['global_provider'] );
 			if ( Provider_Registry::is_valid( $slug ) ) {
@@ -770,7 +776,7 @@ class Admin_Settings_REST {
 			if ( $want && ! Emergency_Stop::is_active() ) {
 				Emergency_Stop::enable();
 			} elseif ( ! $want && Emergency_Stop::is_active() ) {
-				Emergency_Stop::disable();
+				$warnings = Emergency_Stop::disable()['warnings'] ?? array();
 			}
 		}
 		foreach ( array( 'chat_audio', 'chat_tts', 'chat_vision', 'chat_whitelabel' ) as $key ) {
@@ -778,6 +784,8 @@ class Admin_Settings_REST {
 				update_option( 'agentic_' . $key, ! empty( $data[ $key ] ) ? '1' : '0' );
 			}
 		}
+
+		return $warnings;
 	}
 
 	/**

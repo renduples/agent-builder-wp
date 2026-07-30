@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.9
+Stable tag: 3.3.10
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.10 - 2026-07-30 =
+* Fix: turning off Emergency Stop (Disable All Agents) always reported success even when an agent or LLM provider connection failed to come back — `Emergency_Stop::disable()` computed and logged each restore failure to the Activity Log, but every caller (Dashboard, Interface Settings, and the classic Settings page) discarded that information and always returned a plain success response. An admin toggling the switch off had no way to know from the response whether everything actually came back online. `disable()` now returns the failures as a `warnings` list, and all three REST endpoints include it in their response instead of silently dropping it. Found while live-testing Emergency Stop end-to-end: an orphaned agent reference (a previously-deleted custom agent slug left behind in the active-agents list) failed to reactivate during restore, and the response reported full success regardless.
 
 = 3.3.9 - 2026-07-30 =
 * Fix: Settings → Users role permissions for "Manage Agents", "Run Tasks Manually", "Configure Tools", and "View Audit Log" had no effect for non-administrator roles. The Agents, Publish, and Run Task admin pages hardcoded a `manage_options` check instead of honoring the granted `agentic_manage_agents`/`agentic_run_tasks_manually` capability, so a role explicitly granted access still got "You do not have permission to access this page." Separately, the Tools, Approvals, and Activity Log pages moved to a shared React admin surface backed by one REST endpoint that required `agentic_manage_settings` regardless of which page was requested — so a role granted only "Configure Tools" (for example) could see the menu item and the empty page shell, but every data request 403'd. Both are now fixed: each page's own permission check matches the capability already used to register its wp-admin menu entry, and the REST endpoint resolves the required capability per requested page/action instead of using one fixed capability for all of them. Verified live with a dedicated Editor-role test account granted each privilege individually.
