@@ -315,7 +315,6 @@ This plugin lets you connect to third-party services to process and execute task
 * New: React **Settings** app (Interface, Agents, Providers, Users, Security; Advanced APIs/Endpoints).
 * New: React **Tools**, **Approvals**, and **Knowledge** hubs (Wiki, Instructions, Memory, Vector).
 * Improve: clearer admin navigation, policy footers, and Documentation links on every surface.
-* Privacy: free plugin no longer phones home for agent update checks — use **Community Agents** instead.
 * Providers: Kimi (Moonshot AI) and DeepSeek listed alongside existing LLMs.
 * Compat: works with Agent Builder Pro 3.2.0 (License tab inside Settings; React Pro hubs).
 
@@ -465,7 +464,7 @@ For the full version history, visit [agentic-plugin.com/changelog](https://agent
 == Upgrade Notice ==
 
 = 3.3.0 =
-React Settings, Tools, Approvals, and Knowledge hubs; free plugin no longer phones home for agent updates (Community Agents link instead). No intentional breaking changes for existing agents or API keys.
+React Settings, Tools, Approvals, and Knowledge hubs. No intentional breaking changes for existing agents or API keys.
 
 = 3.0.0 =
 Contextual AI launchers across wp-admin (Plugins, Media, Users, Comments, Dashboard), a new manage_cache tool, WordPress Abilities fully integrated into the Tools hub with enable/disable toggles, and a fix for disabled tools being incorrectly published as outbound Abilities. No breaking changes.
