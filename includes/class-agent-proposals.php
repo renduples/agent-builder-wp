@@ -115,7 +115,11 @@ class Agent_Proposals {
 		$proposal['approved_by'] = get_current_user_id();
 		set_transient( self::TRANSIENT_PREFIX . $proposal_id, $proposal, self::EXPIRY );
 
-		// Execute the change via Tool_Loader.
+		// Execute the change via Tool_Loader. This path bypasses Tool_Executor
+		// entirely, so the calling-agent context (needed by tools like
+		// delegate_to_agent to detect delegation cycles) must be set explicitly.
+		Tool_Base::set_calling_agent( (string) ( $proposal['agent_id'] ?? '' ) );
+
 		$result = Tool_Loader::get_instance()->execute(
 			$proposal['tool'],
 			$proposal['params']

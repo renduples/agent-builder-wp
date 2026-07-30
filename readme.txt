@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.4
+Stable tag: 3.3.5
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.5 - 2026-07-30 =
+* Fix: delegate_to_agent always failed with a false "Delegation cycle blocked" error, even on the very first delegation. Agent_Proposals::approve() (the resume path for any medium-risk confirm-gated tool) calls Tool_Loader directly, bypassing Tool_Executor's Tool_Base::set_calling_agent() call, so the calling agent slug was empty at execution time — Agent_Run then fell back to using the target agent as its own root, making the cycle check trivially true. Now set explicitly from the proposal's stored agent_id before execution.
 
 = 3.3.4 - 2026-07-30 =
 * Fix: editor sidebar's post-response suggestion heuristic (addSuggestionFromText) referenced setSuggestions, a variable scoped to a different top-level function (same class of bug as the 3.3.1 and 3.3.3 fixes — addSuggestionFromText is a sibling of EditorSidebarInner, not nested inside it). This threw a ReferenceError that was silently caught by sendMessage's try/catch and misreported as "Connection error. Please try again." even after the real AI response had already rendered successfully.
