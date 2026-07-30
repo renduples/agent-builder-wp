@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.8
+Stable tag: 3.3.9
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.9 - 2026-07-30 =
+* Fix: Settings → Users role permissions for "Manage Agents", "Run Tasks Manually", "Configure Tools", and "View Audit Log" had no effect for non-administrator roles. The Agents, Publish, and Run Task admin pages hardcoded a `manage_options` check instead of honoring the granted `agentic_manage_agents`/`agentic_run_tasks_manually` capability, so a role explicitly granted access still got "You do not have permission to access this page." Separately, the Tools, Approvals, and Activity Log pages moved to a shared React admin surface backed by one REST endpoint that required `agentic_manage_settings` regardless of which page was requested — so a role granted only "Configure Tools" (for example) could see the menu item and the empty page shell, but every data request 403'd. Both are now fixed: each page's own permission check matches the capability already used to register its wp-admin menu entry, and the REST endpoint resolves the required capability per requested page/action instead of using one fixed capability for all of them. Verified live with a dedicated Editor-role test account granted each privilege individually.
 
 = 3.3.8 - 2026-07-30 =
 * Fix: `wp agent abilities list` and `wp agent wp-ai abilities`/`test-execute` threw a fatal error (Class "Agentic\CLI\WP_Optional_API" not found) — the CLI classes live in the Agentic\CLI namespace but referenced WP_Optional_API unqualified instead of importing it from Agentic. Same bug also broke the MCP relay's ability-listing handler (class-relay-connect.php, which loads in the global namespace).

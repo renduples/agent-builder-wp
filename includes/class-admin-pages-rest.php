@@ -67,10 +67,45 @@ class Admin_Pages_REST {
 	}
 
 	/**
+	 * Permission check for the shared admin-page REST endpoint.
+	 *
+	 * This single endpoint serves several distinct React admin surfaces
+	 * (tools, skills, approvals, logs, deployment, train-data, upgrade-pro),
+	 * each already gated behind its own `agentic_*` capability at the
+	 * wp-admin menu level (see Admin_Menu_Handler::register()). The
+	 * capability required here must match that per-page grant, otherwise a
+	 * role granted e.g. `agentic_manage_tools` can see the menu item and
+	 * the empty page shell but every data request 403s.
+	 *
+	 * @param \WP_REST_Request $request Request.
 	 * @return bool
 	 */
-	public static function can_manage(): bool {
-		return current_user_can( 'manage_options' ) || current_user_can( 'agentic_manage_settings' );
+	public static function can_manage( \WP_REST_Request $request ): bool {
+		if ( current_user_can( 'manage_options' ) ) {
+			return true;
+		}
+
+		$page   = sanitize_key( (string) $request->get_param( 'page' ) );
+		$action = sanitize_key( (string) $request->get_param( 'action_name' ) );
+
+		$tools_actions  = array( 'toggle_tool', 'apply_tools_profile', 'delete_skill' );
+		$agents_actions = array( 'save_approval_prefs', 'approval_decide' );
+
+		if ( 'tools' === $page || 'skills' === $page || in_array( $action, $tools_actions, true ) ) {
+			return current_user_can( 'agentic_manage_tools' );
+		}
+
+		if ( 'approvals' === $page || 'deployment' === $page || in_array( $action, $agents_actions, true ) ) {
+			return current_user_can( 'agentic_manage_agents' );
+		}
+
+		if ( 'logs' === $page ) {
+			return current_user_can( 'agentic_view_audit_log' );
+		}
+
+		// train-data, upgrade-pro, and anything unmapped stay behind the
+		// broadest admin-settings privilege as a safe default.
+		return current_user_can( 'agentic_manage_settings' );
 	}
 
 	/**
