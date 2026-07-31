@@ -189,25 +189,28 @@ class Chat_Security {
 	 * Get rate-limit header values for the current user.
 	 *
 	 * Returns the data needed to populate X-RateLimit-* response headers.
-	 * The window is 1 minute (MINUTE_IN_SECONDS); reset is approximated as
-	 * now + 60 s since transient creation time is not exposed by WordPress.
+	 * The window is 1 minute (MINUTE_IN_SECONDS); 'reset' reflects the
+	 * current window's actual expiry when one is stored, else now + 60 s.
 	 *
 	 * @param int $user_id Logged-in user ID, or 0 for anonymous.
 	 * @return array{limit: int, remaining: int, reset: int}
 	 */
 	public static function get_rate_limit_headers( int $user_id ): array {
 		if ( $user_id > 0 ) {
-			$limit = self::get_auth_rate_limit();
-			$count = (int) get_transient( 'agentic_rate_user_' . $user_id );
+			$limit  = self::get_auth_rate_limit();
+			$window = get_transient( 'agentic_rate_user_' . $user_id );
 		} else {
-			$limit = self::get_anon_rate_limit();
-			$count = (int) get_transient( 'agentic_rate_ip_' . md5( self::get_client_ip() ) );
+			$limit  = self::get_anon_rate_limit();
+			$window = get_transient( 'agentic_rate_ip_' . md5( self::get_client_ip() ) );
 		}
+
+		$count = is_array( $window ) ? (int) ( $window['count'] ?? 0 ) : 0;
+		$reset = is_array( $window ) && isset( $window['expires'] ) ? (int) $window['expires'] : time() + MINUTE_IN_SECONDS;
 
 		return array(
 			'limit'     => $limit,
 			'remaining' => max( 0, $limit - $count ),
-			'reset'     => time() + MINUTE_IN_SECONDS,
+			'reset'     => $reset,
 		);
 	}
 
@@ -353,9 +356,20 @@ class Chat_Security {
 			$limit = self::get_anon_rate_limit();
 		}
 
-		$count = (int) get_transient( $key );
+		$now    = time();
+		$window = get_transient( $key );
 
-		if ( $count >= $limit ) {
+		// Start a fresh rolling window if none is stored, or the stored one
+		// has already lapsed (belt-and-suspenders — the transient itself
+		// should have expired by then too).
+		if ( ! is_array( $window ) || ! isset( $window['count'], $window['expires'] ) || $window['expires'] <= $now ) {
+			$window = array(
+				'count'   => 0,
+				'expires' => $now + MINUTE_IN_SECONDS,
+			);
+		}
+
+		if ( $window['count'] >= $limit ) {
 			self::log_rate_limited( $user_id );
 
 			return array(
@@ -365,8 +379,18 @@ class Chat_Security {
 			);
 		}
 
-		// Increment counter.
-		set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
+		// Increment within the existing window without extending it. Calling
+		// set_transient() with a fresh MINUTE_IN_SECONDS on every request
+		// would push the expiration out each time (that's how WP transients
+		// work), so a steady chat pace faster than one message per minute
+		// would keep the window alive indefinitely — turning a "N per
+		// minute" cap into "N total since the last 60-second gap in
+		// activity" and eventually blocking any sustained, non-abusive
+		// conversation. Persisting the window's own 'expires' and reusing
+		// only the time remaining until it keeps the cap tied to the actual
+		// rolling minute instead.
+		++$window['count'];
+		set_transient( $key, $window, max( 1, $window['expires'] - $now ) );
 
 		return null;
 	}

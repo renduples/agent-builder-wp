@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.14
+Stable tag: 3.3.15
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.15 - 2026-07-30 =
+* Fix: the per-minute chat rate limit (30 messages/minute for logged-in users, 10/minute anonymous by default) never actually reset during continuous use, so any sustained conversation would eventually hit "Too many requests" even at a pace far below the configured limit. The counter was stored in a WordPress transient with a fresh 60-second expiration set on every single passing message — and `set_transient()` always refreshes a transient's expiration when called, even on an existing key — so as long as messages kept arriving less than 60 seconds apart, the window never closed and the count only ever went up. Verified live: a steady pace of one message every 7 seconds (about 8–9/minute, nowhere near the 30/minute cap) got incorrectly blocked after roughly 3.5 minutes of normal conversation. Fixed by storing the window's own expiry alongside the count and preserving the remaining time on every increment, so a fresh 60-second window only starts once the previous one has actually elapsed — genuine bursts (e.g. 31 messages within seconds) still correctly trip the limit, confirmed by re-running both scenarios after the fix: rapid abuse blocked at the same point as before, sustained normal-paced use (40 messages over ~280 seconds) no longer blocked at all.
 
 = 3.3.14 - 2026-07-30 =
 * Critical fix: every scheduled agent task, every event-listener-triggered agent run, and the frontend chat modal widget threw a fatal PHP error ("Class Plugin not found") every single time they ran. `Agent_Lifecycle::execute_scheduled_task()`, `Agent_Lifecycle::handle_async_event()`, and `Chat_Assets::enqueue_modal_assets()` each referenced `\Plugin::get_instance()` — a leading backslash forces PHP to resolve from the global namespace, but the class is `Agentic\Plugin`. Scheduled tasks fire via ordinary WP-Cron, which piggybacks on regular page loads by default, so any site with an active scheduled task or event listener could crash a real visitor's page load when the cron event happened to be due. Any site with the frontend chat modal enabled would hit this on every single frontend page view. Found while live-testing scheduled tasks: creating a real task and triggering it produced "There has been a critical error on this website" instead of running. Fixed all three call sites to the correct fully-qualified `\Agentic\Plugin::get_instance()`; a repo-wide sweep confirmed no other file has the same mistake (several other call sites already had it right, which is what exposed the inconsistency). Verified live: re-ran the same scheduled task and a real event-listener trigger, both completed cleanly with the audit log showing the correct agent response, no fatal error.
