@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.13
+Stable tag: 3.3.14
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.14 - 2026-07-30 =
+* Critical fix: every scheduled agent task, every event-listener-triggered agent run, and the frontend chat modal widget threw a fatal PHP error ("Class Plugin not found") every single time they ran. `Agent_Lifecycle::execute_scheduled_task()`, `Agent_Lifecycle::handle_async_event()`, and `Chat_Assets::enqueue_modal_assets()` each referenced `\Plugin::get_instance()` — a leading backslash forces PHP to resolve from the global namespace, but the class is `Agentic\Plugin`. Scheduled tasks fire via ordinary WP-Cron, which piggybacks on regular page loads by default, so any site with an active scheduled task or event listener could crash a real visitor's page load when the cron event happened to be due. Any site with the frontend chat modal enabled would hit this on every single frontend page view. Found while live-testing scheduled tasks: creating a real task and triggering it produced "There has been a critical error on this website" instead of running. Fixed all three call sites to the correct fully-qualified `\Agentic\Plugin::get_instance()`; a repo-wide sweep confirmed no other file has the same mistake (several other call sites already had it right, which is what exposed the inconsistency). Verified live: re-ran the same scheduled task and a real event-listener trigger, both completed cleanly with the audit log showing the correct agent response, no fatal error.
 
 = 3.3.13 - 2026-07-30 =
 * Fix: the three Knowledge Wiki retrieval tools — search_okf, list_okf_concepts, read_okf_concept — silently failed to load. Each tool.php file was missing its final `return new ClassName();` statement (present in every other tool file), so Tool_Loader's `include_once` got PHP's default return value of `1` instead of a tool instance, and the `instanceof Tool_Base` check silently dropped it — no error, no warning, just a missing tool. This meant any Knowledge Wiki entry NOT marked "always on" (the normal case — marking every entry always-on would flood every prompt) was completely unreachable by agents; only the always-on injection path worked. Assistants would either report the tool as unavailable or, worse, answer with a fabricated guess after seeing a matching entry title with no way to read its body.

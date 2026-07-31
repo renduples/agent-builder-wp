@@ -351,7 +351,7 @@ class Chat_Assets {
 		}
 
 		// Ensure chat components (Chat_Security, etc.) are available.
-		\Plugin::get_instance()->load_chat_components();
+		\Agentic\Plugin::get_instance()->load_chat_components();
 
 		// Register the frontend chat assets if the Shortcodes class hasn't yet.
 		if ( ! wp_style_is( 'agentic-chat-frontend', 'registered' ) ) {

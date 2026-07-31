@@ -196,7 +196,7 @@ class Agent_Lifecycle {
 	 * @return void
 	 */
 	public static function execute_scheduled_task( Agent_Base $agent, array $task ): void {
-		\Plugin::get_instance()->load_chat_components();
+		\Agentic\Plugin::get_instance()->load_chat_components();
 
 		$audit    = new Audit_Log();
 		$start    = microtime( true );
@@ -470,7 +470,7 @@ class Agent_Lifecycle {
 	 * @return void
 	 */
 	public static function handle_async_event( string $agent_id, string $listener_id, string $prompt, array $hook_args ): void {
-		\Plugin::get_instance()->load_chat_components();
+		\Agentic\Plugin::get_instance()->load_chat_components();
 
 		$registry = \Agentic_Agent_Registry::get_instance();
 		$agent    = $registry->get_agent_instance( $agent_id );
