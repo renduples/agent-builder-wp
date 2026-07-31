@@ -58,3 +58,5 @@ class List_Okf_Concepts extends \Agentic\Tool_Base {
 		);
 	}
 }
+
+return new List_Okf_Concepts();

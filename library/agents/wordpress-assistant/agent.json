@@ -40,7 +40,10 @@
         "get_user_last_login",
         "list_comments",
         "moderate_comment",
-        "reply_to_comment"
+        "reply_to_comment",
+        "list_okf_concepts",
+        "read_okf_concept",
+        "search_okf"
     ],
     "suggested_prompts": [
         "What can Agent Builder do?",

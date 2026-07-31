@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.12
+Stable tag: 3.3.13
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,12 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.13 - 2026-07-30 =
+* Fix: the three Knowledge Wiki retrieval tools — search_okf, list_okf_concepts, read_okf_concept — silently failed to load. Each tool.php file was missing its final `return new ClassName();` statement (present in every other tool file), so Tool_Loader's `include_once` got PHP's default return value of `1` instead of a tool instance, and the `instanceof Tool_Base` check silently dropped it — no error, no warning, just a missing tool. This meant any Knowledge Wiki entry NOT marked "always on" (the normal case — marking every entry always-on would flood every prompt) was completely unreachable by agents; only the always-on injection path worked. Assistants would either report the tool as unavailable or, worse, answer with a fabricated guess after seeing a matching entry title with no way to read its body.
+* Fix: four bundled agents (WordPress Assistant, Content Writer, Support Triage, User Assistant) declared the three Knowledge Wiki tools in their abilities.json risk manifest but not in their agent.json tool list — the list actually used to decide which tools an agent is offered. Declaring risk for a tool an agent is never offered has no effect, so even with the loader fixed these four agents still couldn't search their own knowledge wiki. Added the three tools to each agent's declared tool list.
+* Improvement: strengthened the Knowledge Wiki system-prompt guidance to explicitly warn that index/list entries are titles only, not answers, and that read_okf_concept must be called before answering — reducing the chance an assistant answers from a matching title without checking the actual content.
+* Verified live with a controlled experiment: saved a unique, unguessable fact via the always-on path and confirmed an agent correctly cited it, then deleted it and confirmed the agent correctly said it didn't know — proving genuine causal influence, not coincidence. Separately reproduced the search-based path's exact failure (tool unavailable, then a fabricated answer) before the fix, then confirmed 3/3 clean trials reliably retrieving and citing the correct fact via read_okf_concept after all three fixes.
 
 = 3.3.12 - 2026-07-30 =
 * Fix: the "Trust more (higher risk)" approval comfort profile (Settings > Approvals) produced identical enforcement to "Auto-approve low risk" — both auto-approved only none/low risk tools and still paused medium-risk (content-changing) actions for confirmation. "Trust more" requires an explicit extra risk acknowledgment reading "I understand assistants may change my site with less waiting" and is described as letting assistants "work with less interruption," but its `auto_max` was set to `low`, identical to the "balanced" profile, so it never actually auto-approved anything the safer profile didn't already. Changed its ceiling to `medium` so it genuinely auto-approves content-changing writes (send_email, add_custom_css, cleanup/purge tools, etc.) as its own consent text describes; high-risk actions still queue for admin approval and extreme actions stay blocked either way. Verified live by computing the full risk-tier enforcement matrix for all three profiles before and after the fix, then confirming a real medium-risk tool call executes immediately under "Trust more" and correctly pauses for confirmation again after reverting to "Always ask me."

@@ -65,3 +65,5 @@ class Search_Okf extends \Agentic\Tool_Base {
 		);
 	}
 }
+
+return new Search_Okf();

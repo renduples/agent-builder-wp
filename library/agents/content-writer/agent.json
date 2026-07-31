@@ -24,7 +24,10 @@
         "update_post_content",
         "manage_categories",
         "manage_tags",
-        "rewrite_for_readability"
+        "rewrite_for_readability",
+        "list_okf_concepts",
+        "read_okf_concept",
+        "search_okf"
     ],
     "suggested_prompts": [
         "Write a post about [topic]",

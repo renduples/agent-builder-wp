@@ -608,7 +608,7 @@ class Okf_Store {
 		}
 
 		$block = "\n\n[KNOWLEDGE WIKI — Open Knowledge Format]\n"
-			. __( 'Curated local knowledge. Use list_okf_concepts / read_okf_concept / search_okf when you need full details.', 'agent-builder' )
+			. __( 'Curated local knowledge. The entries below are titles only, not the answer — before answering any question with one of them, call read_okf_concept with its [id] to load the full text. Never answer from a title alone; if you have not called read_okf_concept for it in this turn, you do not yet know its content.', 'agent-builder' )
 			. "\n"
 			. implode( "\n", $lines )
 			. "\n";

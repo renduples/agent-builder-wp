@@ -66,3 +66,5 @@ class Read_Okf_Concept extends \Agentic\Tool_Base {
 		);
 	}
 }
+
+return new Read_Okf_Concept();
