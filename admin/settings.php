@@ -616,7 +616,7 @@ $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );
 		wp_safe_redirect( admin_url( 'admin.php?page=agentic-train-data&tab=memory' ) );
 		exit;
 	}
-	$agentic_tabs       = array(
+	$agentic_tabs = array(
 		'interface' => __( 'Interface', 'agent-builder' ),
 		'agents'    => __( 'Agents', 'agent-builder' ),
 		'providers' => __( 'Providers', 'agent-builder' ),

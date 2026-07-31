@@ -112,11 +112,11 @@ class Okf_Admin {
 		$body = is_string( $body_raw ) ? str_replace( "\0", '', $body_raw ) : '';
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- verified in guard().
-		$type        = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'FAQ';
-		$title       = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : $id;
-		$description = isset( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
-		$status      = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : 'stable';
-		$tags_raw    = isset( $_POST['tags'] ) ? sanitize_text_field( wp_unslash( $_POST['tags'] ) ) : '';
+		$type          = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'FAQ';
+		$title         = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : $id;
+		$description   = isset( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '';
+		$status        = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : 'stable';
+		$tags_raw      = isset( $_POST['tags'] ) ? sanitize_text_field( wp_unslash( $_POST['tags'] ) ) : '';
 		$example_raw   = isset( $_POST['example'] ) ? sanitize_text_field( wp_unslash( $_POST['example'] ) ) : '';
 		$always_on_raw = isset( $_POST['always_on'] ) ? sanitize_text_field( wp_unslash( $_POST['always_on'] ) ) : '';
 		$stale         = isset( $_POST['stale_after'] ) ? sanitize_text_field( wp_unslash( $_POST['stale_after'] ) ) : '';

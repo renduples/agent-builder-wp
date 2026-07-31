@@ -100,7 +100,7 @@ class Site_Local_Tool extends Tool_Base {
 	 * {@inheritdoc}
 	 */
 	public function get_annotations(): array {
-		$handler = (string) ( $this->def['handler'] ?? '' );
+		$handler  = (string) ( $this->def['handler'] ?? '' );
 		$readonly = in_array( $handler, array( 'wp_list_posts', 'wp_get_post', 'wp_get_option', 'http_get' ), true );
 		return array(
 			'readonly'    => $readonly,

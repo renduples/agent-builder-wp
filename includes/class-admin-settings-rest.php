@@ -264,7 +264,10 @@ class Admin_Settings_REST {
 		Security_Log::log_system(
 			'settings_changed',
 			$tab . '_settings',
-			array( 'tab' => $tab, 'via' => 'react_rest' )
+			array(
+				'tab' => $tab,
+				'via' => 'react_rest',
+			)
 		);
 		if ( class_exists( Audit_Log::class ) ) {
 			Audit_Log::log_admin(
@@ -302,15 +305,15 @@ class Admin_Settings_REST {
 	 */
 	private static function data_interface(): array {
 		return array(
-			'ui_mode'            => 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) ? 'advanced' : 'basic',
-			'show_onboarding'    => '0' !== get_option( 'agentic_show_onboarding', '1' ),
-			'admin_address'      => (string) get_option( 'agentic_admin_address', '' ),
-			'frontend_address'   => (string) get_option( 'agentic_frontend_address', '' ),
-			'global_font'        => (string) get_option( 'agentic_global_font', '' ),
-			'global_accent'      => (string) get_option( 'agentic_global_accent', '' ),
-			'chat_theme'         => (string) get_option( 'agentic_chat_theme', 'light' ),
-			'chat_themes'        => self::chat_theme_presets(),
-			'font_options'       => array(
+			'ui_mode'          => 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) ? 'advanced' : 'basic',
+			'show_onboarding'  => '0' !== get_option( 'agentic_show_onboarding', '1' ),
+			'admin_address'    => (string) get_option( 'agentic_admin_address', '' ),
+			'frontend_address' => (string) get_option( 'agentic_frontend_address', '' ),
+			'global_font'      => (string) get_option( 'agentic_global_font', '' ),
+			'global_accent'    => (string) get_option( 'agentic_global_accent', '' ),
+			'chat_theme'       => (string) get_option( 'agentic_chat_theme', 'light' ),
+			'chat_themes'      => self::chat_theme_presets(),
+			'font_options'     => array(
 				array(
 					'label' => __( 'Theme default', 'agent-builder' ),
 					'value' => '',
@@ -427,10 +430,10 @@ class Admin_Settings_REST {
 	 * @return array<string,mixed>
 	 */
 	private static function data_agents(): array {
-		$registry   = \Agentic_Agent_Registry::get_instance();
-		$installed  = $registry->get_installed_agents();
-		$active     = $registry->get_active_agents();
-		$providers  = array();
+		$registry  = \Agentic_Agent_Registry::get_instance();
+		$installed = $registry->get_installed_agents();
+		$active    = $registry->get_active_agents();
+		$providers = array();
 		foreach ( Provider_Registry::get_all() as $p ) {
 			$providers[] = array(
 				'slug'          => $p['slug'],
@@ -447,14 +450,14 @@ class Admin_Settings_REST {
 				continue;
 			}
 			$agents[] = array(
-				'slug'             => $slug,
-				'name'             => (string) ( $installed[ $slug ]['name'] ?? $slug ),
-				'override_provider'=> (string) Agent_Settings::get( $slug, 'override_provider' ),
-				'override_model'   => (string) Agent_Settings::get( $slug, 'override_model' ),
-				'override_mode'    => (string) Agent_Settings::get( $slug, 'override_mode' ),
-				'override_audio'   => (string) Agent_Settings::get( $slug, 'override_audio' ),
-				'override_tts'     => (string) Agent_Settings::get( $slug, 'override_tts' ),
-				'override_vision'  => (string) Agent_Settings::get( $slug, 'override_vision' ),
+				'slug'              => $slug,
+				'name'              => (string) ( $installed[ $slug ]['name'] ?? $slug ),
+				'override_provider' => (string) Agent_Settings::get( $slug, 'override_provider' ),
+				'override_model'    => (string) Agent_Settings::get( $slug, 'override_model' ),
+				'override_mode'     => (string) Agent_Settings::get( $slug, 'override_mode' ),
+				'override_audio'    => (string) Agent_Settings::get( $slug, 'override_audio' ),
+				'override_tts'      => (string) Agent_Settings::get( $slug, 'override_tts' ),
+				'override_vision'   => (string) Agent_Settings::get( $slug, 'override_vision' ),
 			);
 		}
 
@@ -496,14 +499,14 @@ class Admin_Settings_REST {
 	 */
 	private static function data_security(): array {
 		return array(
-			'default_agent_mode'         => (string) get_option( 'agentic_default_agent_mode', 'supervised' ),
-			'message_scanning'           => (bool) get_option( 'agentic_message_scanning', true ),
-			'chat_consent_enabled'       => (bool) get_option( 'agentic_chat_consent_enabled', false ),
-			'chat_consent_text'          => (string) get_option( 'agentic_chat_consent_text', '' ),
-			'retention_conversations'    => (int) get_option( 'agentic_retention_conversations', 30 ),
-			'retention_audit_log'        => (int) get_option( 'agentic_retention_audit_log', 30 ),
-			'rate_limit_authenticated'   => (int) get_option( 'agentic_rate_limit_authenticated', 30 ),
-			'rate_limit_anonymous'       => (int) get_option( 'agentic_rate_limit_anonymous', 10 ),
+			'default_agent_mode'       => (string) get_option( 'agentic_default_agent_mode', 'supervised' ),
+			'message_scanning'         => (bool) get_option( 'agentic_message_scanning', true ),
+			'chat_consent_enabled'     => (bool) get_option( 'agentic_chat_consent_enabled', false ),
+			'chat_consent_text'        => (string) get_option( 'agentic_chat_consent_text', '' ),
+			'retention_conversations'  => (int) get_option( 'agentic_retention_conversations', 30 ),
+			'retention_audit_log'      => (int) get_option( 'agentic_retention_audit_log', 30 ),
+			'rate_limit_authenticated' => (int) get_option( 'agentic_rate_limit_authenticated', 30 ),
+			'rate_limit_anonymous'     => (int) get_option( 'agentic_rate_limit_anonymous', 10 ),
 		);
 	}
 
@@ -565,8 +568,8 @@ class Admin_Settings_REST {
 	 */
 	private static function data_memory(): array {
 		return array(
-			'ttl_days'              => (int) get_option( 'agentic_memory_ttl_days', 30 ),
-			'local_memory_enabled'  => '1' === (string) get_option( 'agentic_local_memory_enabled', '0' ),
+			'ttl_days'             => (int) get_option( 'agentic_memory_ttl_days', 30 ),
+			'local_memory_enabled' => '1' === (string) get_option( 'agentic_local_memory_enabled', '0' ),
 		);
 	}
 

@@ -28,9 +28,9 @@ if (
 		? wp_unslash( $_POST['agentic_ab'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized per-field below.
 		: array();
 
-	$agentic_ab_registry  = \Agentic_Agent_Registry::get_instance();
-	$agentic_ab_all_slugs = array_keys( $agentic_ab_registry->get_all_instances() );
-	$agentic_ab_submitted = array();
+	$agentic_ab_registry   = \Agentic_Agent_Registry::get_instance();
+	$agentic_ab_all_slugs  = array_keys( $agentic_ab_registry->get_all_instances() );
+	$agentic_ab_submitted  = array();
 	$agentic_ab_config_log = array();
 
 	foreach ( $agentic_ab_raw as $agentic_ab_slug => $agentic_ab_data ) {
@@ -101,10 +101,10 @@ if (
 		array(
 			'setting' => 'admin_surfaces',
 			'changes' => array(
-				'admin_bar_agents'   => $agentic_ab_config_log,
-				'launchers_enabled'  => get_option( 'agentic_admin_launchers_enabled', '1' ),
-				'launcher_screens'   => $agentic_launcher_screens,
-				'launcher_agent'     => $agentic_launcher_agent,
+				'admin_bar_agents'  => $agentic_ab_config_log,
+				'launchers_enabled' => get_option( 'agentic_admin_launchers_enabled', '1' ),
+				'launcher_screens'  => $agentic_launcher_screens,
+				'launcher_agent'    => $agentic_launcher_agent,
 			),
 		)
 	);

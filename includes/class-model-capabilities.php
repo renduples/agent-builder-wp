@@ -46,24 +46,24 @@ final class Model_Capabilities {
 	public static function defaults(): array {
 		return array(
 			// Tools work on the default chat API for this provider.
-			'supports_tools'                     => true,
+			'supports_tools'                            => true,
 			// Prefer /v1/chat/completions unless a rule says otherwise.
-			'preferred_tools_api'                => self::API_CHAT_COMPLETIONS,
+			'preferred_tools_api'                       => self::API_CHAT_COMPLETIONS,
 			// If true and tools are present on Chat Completions, force reasoning_effort=none.
 			'requires_reasoning_effort_none_with_tools' => false,
 			// Schema dialect for tool parameters.
-			'tool_schema_dialect'                => self::DIALECT_OPENAI,
+			'tool_schema_dialect'                       => self::DIALECT_OPENAI,
 			// Keys to strip from tool parameter schemas (recursive).
-			'schema_strip_keys'                  => array(
+			'schema_strip_keys'                         => array(
 				'sanitize_callback',
 				'validate_callback',
 				'$schema',
 				'$id',
 			),
 			// Whether additionalProperties is allowed in tool parameter schemas.
-			'allows_additional_properties'       => true,
+			'allows_additional_properties'              => true,
 			// Human-readable notes (debug / admin).
-			'notes'                              => '',
+			'notes'                                     => '',
 		);
 	}
 
@@ -86,8 +86,8 @@ final class Model_Capabilities {
 				'value' => array( 'gpt-5.6-sol', 'gpt-5.6-sol-2025', 'gpt-5-sol' ),
 				'caps'  => array(
 					'requires_reasoning_effort_none_with_tools' => true,
-					'preferred_tools_api'                      => self::API_CHAT_COMPLETIONS,
-					'notes'                                    => 'OpenAI sol models reject tools unless reasoning_effort=none on Chat Completions.',
+					'preferred_tools_api' => self::API_CHAT_COMPLETIONS,
+					'notes'               => 'OpenAI sol models reject tools unless reasoning_effort=none on Chat Completions.',
 				),
 			),
 
@@ -97,7 +97,7 @@ final class Model_Capabilities {
 				'value' => array( 'gpt-5', 'o1', 'o3', 'o4' ),
 				'caps'  => array(
 					'requires_reasoning_effort_none_with_tools' => true,
-					'notes'                                    => 'Reasoning-class OpenAI models: force reasoning_effort=none when using tools on Chat Completions.',
+					'notes' => 'Reasoning-class OpenAI models: force reasoning_effort=none when using tools on Chat Completions.',
 				),
 			),
 
@@ -107,39 +107,39 @@ final class Model_Capabilities {
 				'value' => '/(^|[-_])(sol|reasoning)([-_]|$)/i',
 				'caps'  => array(
 					'requires_reasoning_effort_none_with_tools' => true,
-					'notes'                                    => 'Name contains sol/reasoning — treat as tools-incompatible with default reasoning effort.',
+					'notes' => 'Name contains sol/reasoning — treat as tools-incompatible with default reasoning effort.',
 				),
 			),
 
 			// ── DeepSeek (OpenAI-compatible; reasoner/v4-pro use thinking) ──
 			array(
-				'match'    => 'provider',
-				'value'    => 'deepseek',
-				'caps'     => array(
-					'tool_schema_dialect'                      => self::DIALECT_OPENAI,
+				'match' => 'provider',
+				'value' => 'deepseek',
+				'caps'  => array(
+					'tool_schema_dialect' => self::DIALECT_OPENAI,
 					// reasoner models may not support tools; do not force OpenAI-style none.
 					'requires_reasoning_effort_none_with_tools' => false,
-					'notes'                                    => 'DeepSeek Chat Completions API (OpenAI-compatible).',
+					'notes'               => 'DeepSeek Chat Completions API (OpenAI-compatible).',
 				),
 			),
 
 			// ── Kimi / Moonshot (OpenAI-compatible; K3 always thinks) ───────
 			array(
-				'match'    => 'provider',
-				'value'    => 'kimi',
-				'caps'     => array(
-					'tool_schema_dialect'                      => self::DIALECT_OPENAI,
+				'match' => 'provider',
+				'value' => 'kimi',
+				'caps'  => array(
+					'tool_schema_dialect' => self::DIALECT_OPENAI,
 					// Do not force reasoning_effort=none — K3 always uses thinking mode.
 					'requires_reasoning_effort_none_with_tools' => false,
-					'notes'                                    => 'Moonshot/Kimi Chat Completions API (OpenAI-compatible).',
+					'notes'               => 'Moonshot/Kimi Chat Completions API (OpenAI-compatible).',
 				),
 			),
 
 			// ── Provider dialects ───────────────────────────────────────────
 			array(
-				'match'    => 'provider',
-				'value'    => 'google',
-				'caps'     => array(
+				'match' => 'provider',
+				'value' => 'google',
+				'caps'  => array(
 					'tool_schema_dialect'          => self::DIALECT_GOOGLE,
 					'allows_additional_properties' => false,
 					'schema_strip_keys'            => array(
@@ -165,9 +165,9 @@ final class Model_Capabilities {
 				),
 			),
 			array(
-				'match'    => 'provider',
-				'value'    => 'anthropic',
-				'caps'     => array(
+				'match' => 'provider',
+				'value' => 'anthropic',
+				'caps'  => array(
 					'tool_schema_dialect' => self::DIALECT_ANTHROPIC,
 					'notes'               => 'Anthropic tool use input_schema dialect.',
 				),
@@ -325,8 +325,8 @@ final class Model_Capabilities {
 	 * @return array
 	 */
 	public static function apply_to_request_body( array $body, string $model, string $provider = '' ): array {
-		$caps  = self::for_model( $model, $provider );
-		$tools = $body['tools'] ?? null;
+		$caps      = self::for_model( $model, $provider );
+		$tools     = $body['tools'] ?? null;
 		$has_tools = ! empty( $tools );
 
 		if ( $has_tools && ! empty( $caps['requires_reasoning_effort_none_with_tools'] ) ) {
@@ -369,8 +369,8 @@ final class Model_Capabilities {
 			return $node;
 		}
 
-		$caps   = self::for_model( $model, $provider );
-		$strip  = $caps['schema_strip_keys'] ?? array();
+		$caps  = self::for_model( $model, $provider );
+		$strip = $caps['schema_strip_keys'] ?? array();
 		if ( ! is_array( $strip ) ) {
 			$strip = array();
 		}

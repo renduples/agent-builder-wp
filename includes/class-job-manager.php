@@ -407,7 +407,7 @@ class Job_Manager {
 		);
 		$ids = is_array( $ids ) ? $ids : array();
 
-		$pending = 0;
+		$pending    = 0;
 		$processing = 0;
 		foreach ( $ids as $job_id ) {
 			$job = self::get_job( (string) $job_id );

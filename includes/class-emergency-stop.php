@@ -80,13 +80,13 @@ class Emergency_Stop {
 			'emergency_stop_enabled',
 			'emergency_stop',
 			array(
-				'user_id'           => get_current_user_id(),
-				'active_agents'     => $snapshot['active_agents'] ?? array(),
-				'agent_count'       => count( $snapshot['agents'] ?? array() ),
-				'provider_count'    => count( $snapshot['providers'] ?? array() ),
-				'jobs_pending'      => count( $snapshot['jobs_pending'] ?? array() ),
-				'jobs_processing'   => count( $snapshot['jobs_processing'] ?? array() ),
-				'default_provider'  => $snapshot['default_provider'] ?? '',
+				'user_id'          => get_current_user_id(),
+				'active_agents'    => $snapshot['active_agents'] ?? array(),
+				'agent_count'      => count( $snapshot['agents'] ?? array() ),
+				'provider_count'   => count( $snapshot['providers'] ?? array() ),
+				'jobs_pending'     => count( $snapshot['jobs_pending'] ?? array() ),
+				'jobs_processing'  => count( $snapshot['jobs_processing'] ?? array() ),
+				'default_provider' => $snapshot['default_provider'] ?? '',
 			)
 		);
 
@@ -151,7 +151,10 @@ class Emergency_Stop {
 	 */
 	public static function disable(): array {
 		if ( ! self::is_active() ) {
-			return array( 'ok' => true, 'restored' => false );
+			return array(
+				'ok'       => true,
+				'restored' => false,
+			);
 		}
 
 		$snapshot = get_option( self::OPTION_SNAPSHOT, array() );
@@ -162,8 +165,8 @@ class Emergency_Stop {
 			'emergency_stop_disabled',
 			'emergency_stop',
 			array(
-				'user_id'          => get_current_user_id(),
-				'has_snapshot'     => ! empty( $snapshot ),
+				'user_id'           => get_current_user_id(),
+				'has_snapshot'      => ! empty( $snapshot ),
 				'agents_to_restore' => $snapshot['active_agents'] ?? array(),
 			)
 		);
@@ -240,9 +243,9 @@ class Emergency_Stop {
 					array_map( 'sanitize_key', (array) $registry->get_active_agents() )
 				)
 			);
-			$installed = $registry->get_installed_agents();
+			$installed     = $registry->get_installed_agents();
 			foreach ( $active_agents as $slug ) {
-				$info            = $installed[ $slug ] ?? array();
+				$info           = $installed[ $slug ] ?? array();
 				$agents_state[] = array(
 					'slug'        => $slug,
 					'name'        => (string) ( $info['name'] ?? $slug ),
@@ -270,14 +273,14 @@ class Emergency_Stop {
 					continue;
 				}
 			}
-			$encrypted = self::get_encrypted_api_key( $slug );
+			$encrypted          = self::get_encrypted_api_key( $slug );
 			$providers[ $slug ] = array(
-				'slug'           => $slug,
-				'name'           => (string) ( $p['name'] ?? $slug ),
-				'had_key'        => ! empty( $p['api_key'] ),
-				'encrypted_key'  => $encrypted,
-				'default_model'  => (string) ( $p['default_model'] ?? '' ),
-				'auth_type'      => (string) ( $p['auth_type'] ?? '' ),
+				'slug'          => $slug,
+				'name'          => (string) ( $p['name'] ?? $slug ),
+				'had_key'       => ! empty( $p['api_key'] ),
+				'encrypted_key' => $encrypted,
+				'default_model' => (string) ( $p['default_model'] ?? '' ),
+				'auth_type'     => (string) ( $p['auth_type'] ?? '' ),
 			);
 		}
 

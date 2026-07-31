@@ -535,7 +535,7 @@ class Okf_Store {
 			$need_write = is_wp_error( $existing );
 			if ( ! $need_write && is_array( $existing ) ) {
 				// Only overwrite if empty body or still the placeholder.
-				$body = trim( (string) ( $existing['body'] ?? '' ) );
+				$body       = trim( (string) ( $existing['body'] ?? '' ) );
 				$need_write = ( '' === $body );
 			}
 			if ( $need_write ) {
@@ -552,7 +552,7 @@ class Okf_Store {
 					$legacy,
 					'site'
 				);
-				$wrote = ! is_wp_error( $result );
+				$wrote  = ! is_wp_error( $result );
 			} elseif ( is_array( $existing ) && ! self::is_always_on( $existing['frontmatter'] ?? array() ) ) {
 				// Ensure flag if concept already had content but not always_on.
 				$fm              = $existing['frontmatter'] ?? array();

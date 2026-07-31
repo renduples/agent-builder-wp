@@ -506,7 +506,7 @@ class Admin_Ajax {
 		}
 
 		if ( ! $found ) {
-			$id     = 'us_' . uniqid();
+			$id      = 'us_' . uniqid();
 			$tasks[] = array(
 				'id'          => $id,
 				'agent_slug'  => $agent_slug,
@@ -585,7 +585,7 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Missing task ID.', 'agent-builder' ) );
 		}
 
-		$tasks     = Agent_Lifecycle::get_user_scheduled_tasks();
+		$tasks      = Agent_Lifecycle::get_user_scheduled_tasks();
 		$agent_slug = '';
 		foreach ( $tasks as $row ) {
 			if ( ( $row['id'] ?? '' ) === $id ) {

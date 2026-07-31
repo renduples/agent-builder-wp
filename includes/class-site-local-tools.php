@@ -227,7 +227,7 @@ class Site_Local_Tools {
 			? (bool) $input['enabled']
 			: true;
 
-		$now = gmdate( 'Y-m-d H:i:s' );
+		$now  = gmdate( 'Y-m-d H:i:s' );
 		$prev = $existing_name ? self::get( $existing_name ) : null;
 
 		return array(
@@ -366,7 +366,7 @@ class Site_Local_Tools {
 	 * @return array<string, mixed>
 	 */
 	private static function sanitize_parameters_schema( array $schema ): array {
-		$out = array(
+		$out   = array(
 			'type'       => 'object',
 			'properties' => array(),
 		);
@@ -742,11 +742,17 @@ class Site_Local_Tools {
 	private static function handler_get_post( array $args ): array {
 		$id = absint( $args['post_id'] ?? 0 );
 		if ( $id < 1 ) {
-			return array( 'success' => false, 'error' => 'post_id required' );
+			return array(
+				'success' => false,
+				'error'   => 'post_id required',
+			);
 		}
 		$p = get_post( $id );
 		if ( ! $p ) {
-			return array( 'success' => false, 'error' => 'Post not found' );
+			return array(
+				'success' => false,
+				'error'   => 'Post not found',
+			);
 		}
 		return array(
 			'success' => true,
@@ -767,7 +773,10 @@ class Site_Local_Tools {
 	 */
 	private static function handler_create_post( array $args ): array {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return array( 'success' => false, 'error' => 'Permission denied' );
+			return array(
+				'success' => false,
+				'error'   => 'Permission denied',
+			);
 		}
 		$title     = sanitize_text_field( (string) ( $args['title'] ?? '' ) );
 		$content   = wp_kses_post( (string) ( $args['content'] ?? '' ) );
@@ -776,7 +785,10 @@ class Site_Local_Tools {
 			$post_type = 'post';
 		}
 		if ( '' === $title ) {
-			return array( 'success' => false, 'error' => 'title required' );
+			return array(
+				'success' => false,
+				'error'   => 'title required',
+			);
 		}
 		$id = wp_insert_post(
 			array(
@@ -788,7 +800,10 @@ class Site_Local_Tools {
 			true
 		);
 		if ( is_wp_error( $id ) ) {
-			return array( 'success' => false, 'error' => $id->get_error_message() );
+			return array(
+				'success' => false,
+				'error'   => $id->get_error_message(),
+			);
 		}
 		return array(
 			'success' => true,
@@ -805,10 +820,16 @@ class Site_Local_Tools {
 	private static function handler_update_post( array $args ): array {
 		$id = absint( $args['post_id'] ?? 0 );
 		if ( $id < 1 ) {
-			return array( 'success' => false, 'error' => 'post_id required' );
+			return array(
+				'success' => false,
+				'error'   => 'post_id required',
+			);
 		}
 		if ( ! current_user_can( 'edit_post', $id ) ) {
-			return array( 'success' => false, 'error' => 'Permission denied' );
+			return array(
+				'success' => false,
+				'error'   => 'Permission denied',
+			);
 		}
 		$update = array( 'ID' => $id );
 		if ( isset( $args['title'] ) ) {
@@ -824,11 +845,17 @@ class Site_Local_Tools {
 			}
 		}
 		if ( count( $update ) < 2 ) {
-			return array( 'success' => false, 'error' => 'Nothing to update' );
+			return array(
+				'success' => false,
+				'error'   => 'Nothing to update',
+			);
 		}
 		$r = wp_update_post( $update, true );
 		if ( is_wp_error( $r ) ) {
-			return array( 'success' => false, 'error' => $r->get_error_message() );
+			return array(
+				'success' => false,
+				'error'   => $r->get_error_message(),
+			);
 		}
 		return array(
 			'success' => true,
@@ -842,8 +869,8 @@ class Site_Local_Tools {
 	 * @return array<string, mixed>
 	 */
 	private static function handler_get_option( array $args, array $config ): array {
-		$key = sanitize_text_field( (string) ( $args['option_key'] ?? '' ) );
-		$key = preg_replace( '/[^a-z0-9_\-]/', '', strtolower( $key ) ) ?? '';
+		$key     = sanitize_text_field( (string) ( $args['option_key'] ?? '' ) );
+		$key     = preg_replace( '/[^a-z0-9_\-]/', '', strtolower( $key ) ) ?? '';
 		$allowed = $config['allowed_options'] ?? array();
 		if ( ! is_array( $allowed ) || ! in_array( $key, $allowed, true ) ) {
 			return array(
@@ -866,7 +893,10 @@ class Site_Local_Tools {
 	private static function handler_http_get( array $args, array $config ): array {
 		$raw = trim( (string) ( $args['path_or_url'] ?? '' ) );
 		if ( '' === $raw ) {
-			return array( 'success' => false, 'error' => 'path_or_url required' );
+			return array(
+				'success' => false,
+				'error'   => 'path_or_url required',
+			);
 		}
 		if ( str_starts_with( $raw, '/' ) ) {
 			$url = home_url( $raw );
@@ -874,24 +904,33 @@ class Site_Local_Tools {
 			$url = esc_url_raw( $raw );
 		}
 		if ( ! $url || ! preg_match( '#^https?://#i', $url ) ) {
-			return array( 'success' => false, 'error' => 'Invalid URL' );
+			return array(
+				'success' => false,
+				'error'   => 'Invalid URL',
+			);
 		}
-		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		$host    = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
 		$allowed = $config['allowed_hosts'] ?? array();
 		if ( ! is_array( $allowed ) || ! in_array( $host, array_map( 'strtolower', $allowed ), true ) ) {
-			return array( 'success' => false, 'error' => 'Host not allowed for this tool.' );
+			return array(
+				'success' => false,
+				'error'   => 'Host not allowed for this tool.',
+			);
 		}
 		$max = absint( $config['max_bytes'] ?? 50000 );
 		$res = wp_remote_get(
 			$url,
 			array(
-				'timeout'     => 15,
-				'redirection' => 2,
+				'timeout'             => 15,
+				'redirection'         => 2,
 				'limit_response_size' => $max,
 			)
 		);
 		if ( is_wp_error( $res ) ) {
-			return array( 'success' => false, 'error' => $res->get_error_message() );
+			return array(
+				'success' => false,
+				'error'   => $res->get_error_message(),
+			);
 		}
 		$code = (int) wp_remote_retrieve_response_code( $res );
 		$body = (string) wp_remote_retrieve_body( $res );
@@ -993,7 +1032,13 @@ class Site_Local_Tools {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		return new \WP_REST_Response( array( 'ok' => true, 'tool' => $result ), 201 );
+		return new \WP_REST_Response(
+			array(
+				'ok'   => true,
+				'tool' => $result,
+			),
+			201
+		);
 	}
 
 	/**
@@ -1016,7 +1061,13 @@ class Site_Local_Tools {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		return new \WP_REST_Response( array( 'ok' => true, 'tool' => $result ), 200 );
+		return new \WP_REST_Response(
+			array(
+				'ok'   => true,
+				'tool' => $result,
+			),
+			200
+		);
 	}
 
 	/**
@@ -1052,7 +1103,13 @@ class Site_Local_Tools {
 		// Force enabled for test of draft tools.
 		$def['enabled'] = true;
 		$result         = self::execute_handler( $def, $args );
-		return new \WP_REST_Response( array( 'ok' => true, 'result' => $result ), 200 );
+		return new \WP_REST_Response(
+			array(
+				'ok'     => true,
+				'result' => $result,
+			),
+			200
+		);
 	}
 
 	/**
@@ -1075,15 +1132,15 @@ class Site_Local_Tools {
 			$handlers[] = array_merge( array( 'id' => $id ), $meta );
 		}
 		return array(
-			'pro'              => self::is_feature_available(),
-			'can_manage'       => self::current_user_can_manage(),
-			'handlers'         => $handlers,
-			'site_tools'       => self::all(),
-			'agents'           => $agents,
-			'upgrade_url'      => class_exists( Distribution::class )
+			'pro'         => self::is_feature_available(),
+			'can_manage'  => self::current_user_can_manage(),
+			'handlers'    => $handlers,
+			'site_tools'  => self::all(),
+			'agents'      => $agents,
+			'upgrade_url' => class_exists( Distribution::class )
 				? Distribution::free_pro_promo_url()
 				: 'https://agentic-plugin.com/licensing-and-pricing/',
-			'docs_url'         => 'https://agentic-plugin.com/agent-tools/',
+			'docs_url'    => 'https://agentic-plugin.com/agent-tools/',
 		);
 	}
 }

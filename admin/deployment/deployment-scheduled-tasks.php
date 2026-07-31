@@ -167,25 +167,25 @@ foreach ( $agentic_instances as $agentic_agent ) {
 					),
 				)
 			);
-			$agentic_st_row = \Agentic\Deployments::get( $agentic_st_new_id );
+			$agentic_st_row    = \Agentic\Deployments::get( $agentic_st_new_id );
 		}
 
 		$agentic_all_tasks[] = array(
-			'source'          => 'builtin',
-			'agent_id'        => $agentic_agent->get_id(),
-			'agent_name'      => $agentic_agent->get_name(),
-			'agent_icon'      => $agentic_agent->get_icon(),
-			'task_id'         => $agentic_task['id'],
-			'task_name'       => $agentic_task['name'],
-			'description'     => $agentic_task['description'] ?? '',
-			'schedule'        => $agentic_task['schedule'],
-			'schedule_display'=> $agentic_schedules[ $agentic_task['schedule'] ]['display'] ?? ucfirst( $agentic_task['schedule'] ),
-			'hook'            => $agentic_hook,
-			'next_run'        => $agentic_next_run,
-			'registered'      => false !== $agentic_next_run,
-			'mode'            => ! empty( $agentic_task['prompt'] ) ? 'autonomous' : 'direct',
-			'last_run'        => $agentic_st_row['config']['last_run'] ?? null,
-			'last_status'     => $agentic_st_row['config']['last_status'] ?? null,
+			'source'           => 'builtin',
+			'agent_id'         => $agentic_agent->get_id(),
+			'agent_name'       => $agentic_agent->get_name(),
+			'agent_icon'       => $agentic_agent->get_icon(),
+			'task_id'          => $agentic_task['id'],
+			'task_name'        => $agentic_task['name'],
+			'description'      => $agentic_task['description'] ?? '',
+			'schedule'         => $agentic_task['schedule'],
+			'schedule_display' => $agentic_schedules[ $agentic_task['schedule'] ]['display'] ?? ucfirst( $agentic_task['schedule'] ),
+			'hook'             => $agentic_hook,
+			'next_run'         => $agentic_next_run,
+			'registered'       => false !== $agentic_next_run,
+			'mode'             => ! empty( $agentic_task['prompt'] ) ? 'autonomous' : 'direct',
+			'last_run'         => $agentic_st_row['config']['last_run'] ?? null,
+			'last_status'      => $agentic_st_row['config']['last_status'] ?? null,
 		);
 	}
 }

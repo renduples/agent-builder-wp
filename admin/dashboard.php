@@ -25,10 +25,10 @@ if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'agentic_view
 if ( class_exists( '\Agentic\React_Admin' ) && \Agentic\React_Admin::enqueue( 'dashboard-app' ) ) {
 	// Prefetch community agent count into transient (used by dashboard bootstrap).
 	if ( false === get_transient( 'agentic_dashboard_marketplace_agent_count' ) ) {
-		$agentic_api_base = class_exists( '\Agentic\Service_Registry' )
+		$agentic_api_base        = class_exists( '\Agentic\Service_Registry' )
 			? \Agentic\Service_Registry::url( 'agentic-api' )
 			: 'https://agentic-plugin.com';
-		$agentic_response = wp_remote_get(
+		$agentic_response        = wp_remote_get(
 			trailingslashit( untrailingslashit( $agentic_api_base ) ) . 'wp-json/agentic/v1/agents?per_page=1',
 			array(
 				'timeout'   => 3,

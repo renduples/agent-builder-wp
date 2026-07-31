@@ -201,11 +201,11 @@ class Admin_Pages_REST {
 					'tools_profile_applied',
 					'tools',
 					array(
-						'id'        => $profile_id,
-						'profile'   => $profile_id,
-						'max_risk'  => $max,
-						'enabled'   => $result['enabled'] ?? 0,
-						'disabled'  => $result['disabled'] ?? 0,
+						'id'       => $profile_id,
+						'profile'  => $profile_id,
+						'max_risk' => $max,
+						'enabled'  => $result['enabled'] ?? 0,
+						'disabled' => $result['disabled'] ?? 0,
 					),
 					(string) ( $profiles[ $profile_id ]['label'] ?? $profile_id )
 				);
@@ -244,7 +244,13 @@ class Admin_Pages_REST {
 				return new \WP_Error( 'invalid', __( 'Invalid skill.', 'agent-builder' ), array( 'status' => 400 ) );
 			}
 			Skills_Registry::delete( $id );
-			return new \WP_REST_Response( array( 'ok' => true, 'id' => $id ), 200 );
+			return new \WP_REST_Response(
+				array(
+					'ok' => true,
+					'id' => $id,
+				),
+				200
+			);
 		}
 
 		return new \WP_Error( 'unknown_action', __( 'Unknown action.', 'agent-builder' ), array( 'status' => 400 ) );
@@ -257,40 +263,40 @@ class Admin_Pages_REST {
 	 */
 	private static function tool_category_labels(): array {
 		return array(
-			'all'                      => __( 'All', 'agent-builder' ),
-			'agents'                   => __( 'Agents', 'agent-builder' ),
-			'ai-visibility'            => __( 'AI Visibility', 'agent-builder' ),
-			'analytics'                => __( 'Analytics', 'agent-builder' ),
-			'assistant-trainer'        => __( 'Agents', 'agent-builder' ),
-			'caching'                  => __( 'Caching', 'agent-builder' ),
-			'cli'                      => __( 'CLI', 'agent-builder' ),
-			'communication'            => __( 'Communication', 'agent-builder' ),
-			'content'                  => __( 'Content', 'agent-builder' ),
-			'custom'                   => __( 'Custom', 'agent-builder' ),
-			'crm'                      => __( 'CRM', 'agent-builder' ),
-			'database'                 => __( 'Database', 'agent-builder' ),
-			'dataforseo'               => __( 'DataForSEO', 'agent-builder' ),
-			'ecommerce'                => __( 'Ecommerce', 'agent-builder' ),
-			'email'                    => __( 'Email', 'agent-builder' ),
-			'files'                    => __( 'Files', 'agent-builder' ),
-			'forms'                    => __( 'Forms', 'agent-builder' ),
-			'gbp'                      => __( 'Google Business', 'agent-builder' ),
-			'git'                      => __( 'Git', 'agent-builder' ),
-			'google-search-marketing'  => __( 'Search Marketing', 'agent-builder' ),
-			'google-workspace'         => __( 'Google Workspace', 'agent-builder' ),
-			'maintenance'              => __( 'Maintenance', 'agent-builder' ),
-			'media'                    => __( 'Media', 'agent-builder' ),
-			'orchestration'            => __( 'Orchestration', 'agent-builder' ),
-			'plugins'                  => __( 'Plugins', 'agent-builder' ),
-			'security'                 => __( 'Security', 'agent-builder' ),
-			'seo'                      => __( 'SEO', 'agent-builder' ),
-			'site-audit'               => __( 'Site Audit', 'agent-builder' ),
-			'site-health'              => __( 'Site Health', 'agent-builder' ),
-			'themes'                   => __( 'Themes', 'agent-builder' ),
-			'users'                    => __( 'Users', 'agent-builder' ),
-			'utility'                  => __( 'Utility', 'agent-builder' ),
-			'web'                      => __( 'Web', 'agent-builder' ),
-			'wordpress'                => __( 'WordPress', 'agent-builder' ),
+			'all'                     => __( 'All', 'agent-builder' ),
+			'agents'                  => __( 'Agents', 'agent-builder' ),
+			'ai-visibility'           => __( 'AI Visibility', 'agent-builder' ),
+			'analytics'               => __( 'Analytics', 'agent-builder' ),
+			'assistant-trainer'       => __( 'Agents', 'agent-builder' ),
+			'caching'                 => __( 'Caching', 'agent-builder' ),
+			'cli'                     => __( 'CLI', 'agent-builder' ),
+			'communication'           => __( 'Communication', 'agent-builder' ),
+			'content'                 => __( 'Content', 'agent-builder' ),
+			'custom'                  => __( 'Custom', 'agent-builder' ),
+			'crm'                     => __( 'CRM', 'agent-builder' ),
+			'database'                => __( 'Database', 'agent-builder' ),
+			'dataforseo'              => __( 'DataForSEO', 'agent-builder' ),
+			'ecommerce'               => __( 'Ecommerce', 'agent-builder' ),
+			'email'                   => __( 'Email', 'agent-builder' ),
+			'files'                   => __( 'Files', 'agent-builder' ),
+			'forms'                   => __( 'Forms', 'agent-builder' ),
+			'gbp'                     => __( 'Google Business', 'agent-builder' ),
+			'git'                     => __( 'Git', 'agent-builder' ),
+			'google-search-marketing' => __( 'Search Marketing', 'agent-builder' ),
+			'google-workspace'        => __( 'Google Workspace', 'agent-builder' ),
+			'maintenance'             => __( 'Maintenance', 'agent-builder' ),
+			'media'                   => __( 'Media', 'agent-builder' ),
+			'orchestration'           => __( 'Orchestration', 'agent-builder' ),
+			'plugins'                 => __( 'Plugins', 'agent-builder' ),
+			'security'                => __( 'Security', 'agent-builder' ),
+			'seo'                     => __( 'SEO', 'agent-builder' ),
+			'site-audit'              => __( 'Site Audit', 'agent-builder' ),
+			'site-health'             => __( 'Site Health', 'agent-builder' ),
+			'themes'                  => __( 'Themes', 'agent-builder' ),
+			'users'                   => __( 'Users', 'agent-builder' ),
+			'utility'                 => __( 'Utility', 'agent-builder' ),
+			'web'                     => __( 'Web', 'agent-builder' ),
+			'wordpress'               => __( 'WordPress', 'agent-builder' ),
 		);
 	}
 
@@ -311,7 +317,7 @@ class Admin_Pages_REST {
 	}
 
 	/**
-	 * Normalize category slug for grouping (e.g. WordPress → wordpress).
+	 * Normalize category slug for grouping (e.g. WordPress → WordPress).
 	 *
 	 * @param string $category Raw category.
 	 * @return string
@@ -379,7 +385,7 @@ class Admin_Pages_REST {
 		}
 
 		// Counts per normalized category.
-		$counts = array( 'all' => 0 );
+		$counts   = array( 'all' => 0 );
 		$rows_all = array();
 		foreach ( $tools as $tool ) {
 			$name = (string) ( $tool['name'] ?? '' );
@@ -394,14 +400,14 @@ class Admin_Pages_REST {
 			++$counts['all'];
 
 			$rows_all[] = array(
-				'id'          => $name,
-				'title'       => $name,
-				'subtitle'    => (string) ( $tool['description'] ?? '' ),
-				'category'    => $cat,
+				'id'             => $name,
+				'title'          => $name,
+				'subtitle'       => (string) ( $tool['description'] ?? '' ),
+				'category'       => $cat,
 				'category_label' => self::tool_category_label( $cat ),
-				'enabled'     => ! empty( $tool['enabled'] ),
-				'source'      => (string) ( $tool['source'] ?? 'core' ),
-				'risk_level'  => (string) ( $tool['risk_level'] ?? '' ),
+				'enabled'        => ! empty( $tool['enabled'] ),
+				'source'         => (string) ( $tool['source'] ?? 'core' ),
+				'risk_level'     => (string) ( $tool['risk_level'] ?? '' ),
 			);
 		}
 
@@ -494,7 +500,13 @@ class Admin_Pages_REST {
 
 		$site_local = class_exists( Site_Local_Tools::class )
 			? Site_Local_Tools::admin_payload()
-			: array( 'pro' => false, 'can_manage' => false, 'handlers' => array(), 'site_tools' => array(), 'agents' => array() );
+			: array(
+				'pro'        => false,
+				'can_manage' => false,
+				'handlers'   => array(),
+				'site_tools' => array(),
+				'agents'     => array(),
+			);
 
 		$is_advanced = class_exists( Admin_Menu_Handler::class )
 			? Admin_Menu_Handler::is_advanced_mode()
@@ -517,42 +529,42 @@ class Admin_Pages_REST {
 				continue;
 			}
 			$profile_cards[] = array(
-				'id'          => $id,
-				'label'       => $p['label'],
-				'summary'     => $p['summary'],
-				'detail'      => $p['detail'],
-				'max_risk'    => $p['max_risk'],
-				'icon'        => $p['icon'],
-				'active'      => $id === $active_profile,
+				'id'       => $id,
+				'label'    => $p['label'],
+				'summary'  => $p['summary'],
+				'detail'   => $p['detail'],
+				'max_risk' => $p['max_risk'],
+				'icon'     => $p['icon'],
+				'active'   => $id === $active_profile,
 			);
 		}
 
 		return array(
-			'page'              => 'tools',
-			'tab'               => $tab,
-			'site_local'        => $site_local,
-			'title'             => __( 'Tools', 'agent-builder' ),
-			'panel_title'       => $is_advanced
+			'page'             => 'tools',
+			'tab'              => $tab,
+			'site_local'       => $site_local,
+			'title'            => __( 'Tools', 'agent-builder' ),
+			'panel_title'      => $is_advanced
 				? $panel_title
 				: __( 'What may assistants do?', 'agent-builder' ),
-			'description'       => $is_advanced
+			'description'      => $is_advanced
 				? __( 'Enable or disable tools assistants can use. Group by category using the tabs.', 'agent-builder' )
 				: __( 'Pick a simple safety profile. We turn tools on or off to match — no need to manage hundreds of tools one by one.', 'agent-builder' ),
-			'rows'              => $rows,
-			'tabs'              => $tabs,
-			'counts'            => $counts,
-			'is_advanced'       => $is_advanced,
-			'ui_mode'           => $is_advanced ? 'advanced' : 'basic',
-			'interface_url'     => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
-			'active_profile'    => $active_profile,
-			'profiles'          => $profile_cards,
-			'enabled_count'     => $enabled_count,
-			'disabled_count'    => $disabled_count,
-			'enabled_max_risk'  => class_exists( Tools_Registry::class )
+			'rows'             => $rows,
+			'tabs'             => $tabs,
+			'counts'           => $counts,
+			'is_advanced'      => $is_advanced,
+			'ui_mode'          => $is_advanced ? 'advanced' : 'basic',
+			'interface_url'    => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
+			'active_profile'   => $active_profile,
+			'profiles'         => $profile_cards,
+			'enabled_count'    => $enabled_count,
+			'disabled_count'   => $disabled_count,
+			'enabled_max_risk' => class_exists( Tools_Registry::class )
 				? Tools_Registry::enabled_max_risk_level()
 				: 'none',
-			'docs_url'          => 'https://agentic-plugin.com/agent-tools/',
-			'footer_policy'     => __(
+			'docs_url'         => 'https://agentic-plugin.com/agent-tools/',
+			'footer_policy'    => __(
 				'Assistants only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings. Provider processing of chat content is covered by our Privacy Policy.',
 				'agent-builder'
 			),
@@ -566,28 +578,28 @@ class Admin_Pages_REST {
 	 */
 	private static function tools_ability_profiles(): array {
 		return array(
-			'browse'  => array(
+			'browse' => array(
 				'label'    => __( 'Browse & answer', 'agent-builder' ),
 				'summary'  => __( 'Safest — read-only help', 'agent-builder' ),
 				'detail'   => __( 'Assistants can look things up and answer questions. They cannot change posts, settings, or your site.', 'agent-builder' ),
 				'max_risk' => 'low',
 				'icon'     => '👀',
 			),
-			'assist'  => array(
+			'assist' => array(
 				'label'    => __( 'Help with drafts', 'agent-builder' ),
 				'summary'  => __( 'Balanced — create drafts with care', 'agent-builder' ),
 				'detail'   => __( 'Read plus everyday writing (drafts and light edits). Riskier changes still ask for confirmation.', 'agent-builder' ),
 				'max_risk' => 'medium',
 				'icon'     => '✍️',
 			),
-			'manage'  => array(
+			'manage' => array(
 				'label'    => __( 'Manage my site', 'agent-builder' ),
 				'summary'  => __( 'Full productivity — approvals for big changes', 'agent-builder' ),
 				'detail'   => __( 'Most tools on, including significant updates. High-risk actions go through the Approvals queue. Extreme tools stay off.', 'agent-builder' ),
 				'max_risk' => 'high',
 				'icon'     => '🛠️',
 			),
-			'custom'  => array(
+			'custom' => array(
 				'label'    => __( 'Custom mix', 'agent-builder' ),
 				'summary'  => __( 'You mixed tools manually', 'agent-builder' ),
 				'detail'   => __( 'Individual tools were toggled outside a profile.', 'agent-builder' ),
@@ -603,7 +615,7 @@ class Admin_Pages_REST {
 	 * @return string
 	 */
 	private static function resolve_active_tools_profile(): string {
-		$stored = sanitize_key( (string) get_option( 'agentic_tools_ability_profile', '' ) );
+		$stored   = sanitize_key( (string) get_option( 'agentic_tools_ability_profile', '' ) );
 		$profiles = self::tools_ability_profiles();
 		if ( $stored && isset( $profiles[ $stored ] ) && 'custom' !== $stored ) {
 			return $stored;
@@ -633,16 +645,16 @@ class Admin_Pages_REST {
 		$skills = class_exists( Skills_Registry::class ) ? Skills_Registry::get_all() : array();
 		$rows   = array();
 		foreach ( $skills as $skill ) {
-			$id = (int) ( $skill['id'] ?? 0 );
+			$id     = (int) ( $skill['id'] ?? 0 );
 			$rows[] = array(
-				'id'          => (string) $id,
-				'title'       => (string) ( $skill['name'] ?? '' ),
-				'subtitle'    => (string) ( $skill['description'] ?? '' ),
-				'agent'       => (string) ( $skill['agent_slug'] ?? '' ),
-				'enabled'     => ! empty( $skill['enabled'] ),
-				'version'     => (string) ( $skill['version'] ?? '' ),
-				'edit_url'    => admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $id ),
-				'delete_id'   => $id,
+				'id'        => (string) $id,
+				'title'     => (string) ( $skill['name'] ?? '' ),
+				'subtitle'  => (string) ( $skill['description'] ?? '' ),
+				'agent'     => (string) ( $skill['agent_slug'] ?? '' ),
+				'enabled'   => ! empty( $skill['enabled'] ),
+				'version'   => (string) ( $skill['version'] ?? '' ),
+				'edit_url'  => admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $id ),
+				'delete_id' => $id,
 			);
 		}
 
@@ -653,8 +665,8 @@ class Admin_Pages_REST {
 			'rows'        => $rows,
 			'actions'     => array(
 				array(
-					'label' => __( 'Create Skill', 'agent-builder' ),
-					'url'   => admin_url( 'admin.php?page=agentic-skills&skill_view=new' ),
+					'label'   => __( 'Create Skill', 'agent-builder' ),
+					'url'     => admin_url( 'admin.php?page=agentic-skills&skill_view=new' ),
 					'primary' => true,
 				),
 				array(
@@ -709,14 +721,14 @@ class Admin_Pages_REST {
 		$prefs = self::get_approval_prefs();
 
 		return array(
-			'page'           => 'approvals',
-			'tab'            => $tab,
-			'title'          => __( 'Approvals', 'agent-builder' ),
-			'panel_title'    => __( 'Things waiting for your OK', 'agent-builder' ),
-			'description'    => __( 'When an assistant wants to change something important, it waits here until you approve or reject it.', 'agent-builder' ),
-			'pending_count'  => count( $rows ),
-			'rows'           => $rows,
-			'tabs'           => array(
+			'page'             => 'approvals',
+			'tab'              => $tab,
+			'title'            => __( 'Approvals', 'agent-builder' ),
+			'panel_title'      => __( 'Things waiting for your OK', 'agent-builder' ),
+			'description'      => __( 'When an assistant wants to change something important, it waits here until you approve or reject it.', 'agent-builder' ),
+			'pending_count'    => count( $rows ),
+			'rows'             => $rows,
+			'tabs'             => array(
 				array(
 					'id'    => 'approvals',
 					'label' => __( 'Approvals', 'agent-builder' ),
@@ -728,17 +740,17 @@ class Admin_Pages_REST {
 					'url'   => admin_url( 'admin.php?page=agentic-approvals&tab=backups' ),
 				),
 			),
-			'agent_mode'     => (string) get_option( 'agentic_agent_mode', 'supervised' ),
-			'is_advanced'    => $is_advanced,
-			'interface_url'  => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
-			'prefs'          => $prefs,
+			'agent_mode'       => (string) get_option( 'agentic_agent_mode', 'supervised' ),
+			'is_advanced'      => $is_advanced,
+			'interface_url'    => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
+			'prefs'            => $prefs,
 			'comfort_profiles' => self::approval_comfort_profiles(),
-			'docs_url'       => 'https://agentic-plugin.com/approval-queue/',
-			'footer_policy'  => __(
+			'docs_url'         => 'https://agentic-plugin.com/approval-queue/',
+			'footer_policy'    => __(
 				'Approvals keep high-risk assistant actions under human control. Email alerts use your admin address and never include passwords. See Privacy Policy for how providers process chat.',
 				'agent-builder'
 			),
-			'classic_url'    => admin_url( 'admin.php?page=agentic-approvals&tab=approvals&classic=1' ),
+			'classic_url'      => admin_url( 'admin.php?page=agentic-approvals&tab=approvals&classic=1' ),
 		);
 	}
 
@@ -751,37 +763,37 @@ class Admin_Pages_REST {
 		$active = sanitize_key( (string) get_option( 'agentic_approval_comfort', 'careful' ) );
 		$cards  = array(
 			array(
-				'id'       => 'careful',
-				'icon'     => '🛡️',
-				'label'    => __( 'Always ask me', 'agent-builder' ),
-				'summary'  => __( 'Safest default', 'agent-builder' ),
-				'detail'   => __( 'Important or writing actions wait for you. Best when you want full control.', 'agent-builder' ),
-				'risk_note'=> __( 'No automatic approvals beyond the safest reads.', 'agent-builder' ),
-				'auto_max' => 'none',
-				'mode'     => 'supervised',
-				'needs_ack'=> false,
+				'id'        => 'careful',
+				'icon'      => '🛡️',
+				'label'     => __( 'Always ask me', 'agent-builder' ),
+				'summary'   => __( 'Safest default', 'agent-builder' ),
+				'detail'    => __( 'Important or writing actions wait for you. Best when you want full control.', 'agent-builder' ),
+				'risk_note' => __( 'No automatic approvals beyond the safest reads.', 'agent-builder' ),
+				'auto_max'  => 'none',
+				'mode'      => 'supervised',
+				'needs_ack' => false,
 			),
 			array(
-				'id'       => 'balanced',
-				'icon'     => '⚖️',
-				'label'    => __( 'Auto-approve low risk', 'agent-builder' ),
-				'summary'  => __( 'Recommended for most sites', 'agent-builder' ),
-				'detail'   => __( 'Simple look-ups run freely. Drafts and bigger changes still pause for confirmation or this queue.', 'agent-builder' ),
-				'risk_note'=> __( 'You accept that low-risk tools may run without a separate approval email.', 'agent-builder' ),
-				'auto_max' => 'low',
-				'mode'     => 'supervised',
-				'needs_ack'=> false,
+				'id'        => 'balanced',
+				'icon'      => '⚖️',
+				'label'     => __( 'Auto-approve low risk', 'agent-builder' ),
+				'summary'   => __( 'Recommended for most sites', 'agent-builder' ),
+				'detail'    => __( 'Simple look-ups run freely. Drafts and bigger changes still pause for confirmation or this queue.', 'agent-builder' ),
+				'risk_note' => __( 'You accept that low-risk tools may run without a separate approval email.', 'agent-builder' ),
+				'auto_max'  => 'low',
+				'mode'      => 'supervised',
+				'needs_ack' => false,
 			),
 			array(
-				'id'       => 'hands_off',
-				'icon'     => '⚡',
-				'label'    => __( 'Trust more (higher risk)', 'agent-builder' ),
-				'summary'  => __( 'Faster — use with care', 'agent-builder' ),
-				'detail'   => __( 'Assistants work with less interruption (autonomous mode). You can still review history. Extreme tools stay blocked.', 'agent-builder' ),
-				'risk_note'=> __( 'I understand assistants may change content without waiting in this queue, and I accept that increased risk.', 'agent-builder' ),
-				'auto_max' => 'medium',
-				'mode'     => 'autonomous',
-				'needs_ack'=> true,
+				'id'        => 'hands_off',
+				'icon'      => '⚡',
+				'label'     => __( 'Trust more (higher risk)', 'agent-builder' ),
+				'summary'   => __( 'Faster — use with care', 'agent-builder' ),
+				'detail'    => __( 'Assistants work with less interruption (autonomous mode). You can still review history. Extreme tools stay blocked.', 'agent-builder' ),
+				'risk_note' => __( 'I understand assistants may change content without waiting in this queue, and I accept that increased risk.', 'agent-builder' ),
+				'auto_max'  => 'medium',
+				'mode'      => 'autonomous',
+				'needs_ack' => true,
 			),
 		);
 		foreach ( $cards as &$c ) {
@@ -802,12 +814,12 @@ class Admin_Pages_REST {
 			$email = (string) get_option( 'admin_email' );
 		}
 		return array(
-			'email_notify' => (bool) get_option( 'agentic_approval_email_notify', false ),
-			'email_to'     => $email,
-			'comfort'      => sanitize_key( (string) get_option( 'agentic_approval_comfort', 'careful' ) ),
-			'auto_max_risk'=> sanitize_key( (string) get_option( 'agentic_approval_auto_max_risk', 'none' ) ),
-			'risk_ack'     => (bool) get_option( 'agentic_approval_risk_ack', false ),
-			'agent_mode'   => (string) get_option( 'agentic_agent_mode', 'supervised' ),
+			'email_notify'  => (bool) get_option( 'agentic_approval_email_notify', false ),
+			'email_to'      => $email,
+			'comfort'       => sanitize_key( (string) get_option( 'agentic_approval_comfort', 'careful' ) ),
+			'auto_max_risk' => sanitize_key( (string) get_option( 'agentic_approval_auto_max_risk', 'none' ) ),
+			'risk_ack'      => (bool) get_option( 'agentic_approval_risk_ack', false ),
+			'agent_mode'    => (string) get_option( 'agentic_agent_mode', 'supervised' ),
 		);
 	}
 
@@ -952,12 +964,12 @@ class Admin_Pages_REST {
 	private static function logs_payload( string $tab, string $period = 'week' ): array {
 		$rows          = array();
 		$stats         = array(
-			'total'      => 0,
-			'chats'      => 0,
-			'tools'      => 0,
-			'approvals'  => 0,
-			'security'   => 0,
-			'tokens'     => 0,
+			'total'     => 0,
+			'chats'     => 0,
+			'tools'     => 0,
+			'approvals' => 0,
+			'security'  => 0,
+			'tokens'    => 0,
 		);
 		$is_advanced   = class_exists( Admin_Menu_Handler::class )
 			? Admin_Menu_Handler::is_advanced_mode()
@@ -967,7 +979,7 @@ class Admin_Pages_REST {
 			'week'  => 500,
 			'month' => 1500,
 		);
-		$limit = $period_limits[ $period ] ?? 500;
+		$limit         = $period_limits[ $period ] ?? 500;
 
 		if ( 'audit' === $tab && class_exists( Audit_Log::class ) ) {
 			$log = new Audit_Log();
@@ -1014,9 +1026,9 @@ class Admin_Pages_REST {
 					ARRAY_A
 				);
 				foreach ( (array) $items as $item ) {
-					$agent = (string) ( $item['agent_id'] ?? '' );
-					$user  = absint( $item['user_id'] ?? 0 );
-					$uname = $user ? ( get_userdata( $user )->display_name ?? ( 'User #' . $user ) ) : __( 'Guest', 'agent-builder' );
+					$agent  = (string) ( $item['agent_id'] ?? '' );
+					$user   = absint( $item['user_id'] ?? 0 );
+					$uname  = $user ? ( get_userdata( $user )->display_name ?? ( 'User #' . $user ) ) : __( 'Guest', 'agent-builder' );
 					$rows[] = array(
 						'id'         => (string) ( $item['id'] ?? '' ),
 						'title'      => sprintf(
@@ -1062,7 +1074,7 @@ class Admin_Pages_REST {
 					ARRAY_A
 				);
 				foreach ( (array) $items as $item ) {
-					$event = (string) ( $item['event'] ?? $item['action'] ?? 'security' );
+					$event  = (string) ( $item['event'] ?? $item['action'] ?? 'security' );
 					$rows[] = array(
 						'id'         => (string) ( $item['id'] ?? '' ),
 						'title'      => self::friendly_security_title( $event ),
@@ -1105,17 +1117,44 @@ class Admin_Pages_REST {
 			'stats'          => $stats,
 			'period'         => $period,
 			'period_options' => array(
-				array( 'id' => 'day', 'label' => $period_labels['day'] ),
-				array( 'id' => 'week', 'label' => $period_labels['week'] ),
-				array( 'id' => 'month', 'label' => $period_labels['month'] ),
+				array(
+					'id'    => 'day',
+					'label' => $period_labels['day'],
+				),
+				array(
+					'id'    => 'week',
+					'label' => $period_labels['week'],
+				),
+				array(
+					'id'    => 'month',
+					'label' => $period_labels['month'],
+				),
 			),
 			'kind_filters'   => array(
-				array( 'id' => 'all', 'label' => __( 'All', 'agent-builder' ) ),
-				array( 'id' => 'tool', 'label' => __( 'Tools used', 'agent-builder' ) ),
-				array( 'id' => 'approval', 'label' => __( 'Approvals', 'agent-builder' ) ),
-				array( 'id' => 'chat', 'label' => __( 'Chats', 'agent-builder' ) ),
-				array( 'id' => 'settings', 'label' => __( 'Settings', 'agent-builder' ) ),
-				array( 'id' => 'other', 'label' => __( 'Other', 'agent-builder' ) ),
+				array(
+					'id'    => 'all',
+					'label' => __( 'All', 'agent-builder' ),
+				),
+				array(
+					'id'    => 'tool',
+					'label' => __( 'Tools used', 'agent-builder' ),
+				),
+				array(
+					'id'    => 'approval',
+					'label' => __( 'Approvals', 'agent-builder' ),
+				),
+				array(
+					'id'    => 'chat',
+					'label' => __( 'Chats', 'agent-builder' ),
+				),
+				array(
+					'id'    => 'settings',
+					'label' => __( 'Settings', 'agent-builder' ),
+				),
+				array(
+					'id'    => 'other',
+					'label' => __( 'Other', 'agent-builder' ),
+				),
 			),
 			'is_advanced'    => $is_advanced,
 			'interface_url'  => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
@@ -1240,33 +1279,33 @@ class Admin_Pages_REST {
 	 */
 	private static function friendly_action_title( string $action, string $target, array $details ): string {
 		$map = array(
-			'chat_start'                  => __( 'Started a chat', 'agent-builder' ),
-			'chat_complete'               => __( 'Finished a chat', 'agent-builder' ),
-			'tool_call'                   => __( 'Used a tool', 'agent-builder' ),
-			'tool_choice'                 => __( 'Chose tools for a reply', 'agent-builder' ),
-			'tool_executed_on_approval'   => __( 'Ran an approved action', 'agent-builder' ),
-			'tool_enabled'                => __( 'Tool turned on', 'agent-builder' ),
-			'tool_disabled'               => __( 'Tool turned off', 'agent-builder' ),
-			'tools_profile_applied'       => __( 'Tools safety profile applied', 'agent-builder' ),
-			'site_tool_created'           => __( 'Site-local tool created', 'agent-builder' ),
-			'site_tool_updated'           => __( 'Site-local tool updated', 'agent-builder' ),
-			'site_tool_deleted'           => __( 'Site-local tool deleted', 'agent-builder' ),
-			'approval_queued'             => __( 'Action waiting for approval', 'agent-builder' ),
-			'approval_approved'           => __( 'You approved an action', 'agent-builder' ),
-			'approval_rejected'           => __( 'You rejected an action', 'agent-builder' ),
-			'action_approved'             => __( 'You approved an action', 'agent-builder' ),
-			'action_rejected'             => __( 'You rejected an action', 'agent-builder' ),
-			'approval_prefs_saved'        => __( 'Approval preferences saved', 'agent-builder' ),
-			'ui_mode_changed'             => __( 'Interface mode changed', 'agent-builder' ),
-			'default_agent_mode_changed'  => __( 'Default assistant mode changed', 'agent-builder' ),
-			'deployment_created'          => __( 'Deployment created', 'agent-builder' ),
-			'deployment_updated'          => __( 'Deployment updated', 'agent-builder' ),
-			'deployment_enabled'          => __( 'Deployment enabled', 'agent-builder' ),
-			'deployment_disabled'         => __( 'Deployment disabled', 'agent-builder' ),
-			'deployment_deleted'          => __( 'Deployment deleted', 'agent-builder' ),
-			'settings_changed'            => __( 'Settings changed', 'agent-builder' ),
-			'agent_activated'             => __( 'Assistant activated', 'agent-builder' ),
-			'agent_deactivated'           => __( 'Assistant deactivated', 'agent-builder' ),
+			'chat_start'                 => __( 'Started a chat', 'agent-builder' ),
+			'chat_complete'              => __( 'Finished a chat', 'agent-builder' ),
+			'tool_call'                  => __( 'Used a tool', 'agent-builder' ),
+			'tool_choice'                => __( 'Chose tools for a reply', 'agent-builder' ),
+			'tool_executed_on_approval'  => __( 'Ran an approved action', 'agent-builder' ),
+			'tool_enabled'               => __( 'Tool turned on', 'agent-builder' ),
+			'tool_disabled'              => __( 'Tool turned off', 'agent-builder' ),
+			'tools_profile_applied'      => __( 'Tools safety profile applied', 'agent-builder' ),
+			'site_tool_created'          => __( 'Site-local tool created', 'agent-builder' ),
+			'site_tool_updated'          => __( 'Site-local tool updated', 'agent-builder' ),
+			'site_tool_deleted'          => __( 'Site-local tool deleted', 'agent-builder' ),
+			'approval_queued'            => __( 'Action waiting for approval', 'agent-builder' ),
+			'approval_approved'          => __( 'You approved an action', 'agent-builder' ),
+			'approval_rejected'          => __( 'You rejected an action', 'agent-builder' ),
+			'action_approved'            => __( 'You approved an action', 'agent-builder' ),
+			'action_rejected'            => __( 'You rejected an action', 'agent-builder' ),
+			'approval_prefs_saved'       => __( 'Approval preferences saved', 'agent-builder' ),
+			'ui_mode_changed'            => __( 'Interface mode changed', 'agent-builder' ),
+			'default_agent_mode_changed' => __( 'Default assistant mode changed', 'agent-builder' ),
+			'deployment_created'         => __( 'Deployment created', 'agent-builder' ),
+			'deployment_updated'         => __( 'Deployment updated', 'agent-builder' ),
+			'deployment_enabled'         => __( 'Deployment enabled', 'agent-builder' ),
+			'deployment_disabled'        => __( 'Deployment disabled', 'agent-builder' ),
+			'deployment_deleted'         => __( 'Deployment deleted', 'agent-builder' ),
+			'settings_changed'           => __( 'Settings changed', 'agent-builder' ),
+			'agent_activated'            => __( 'Assistant activated', 'agent-builder' ),
+			'agent_deactivated'          => __( 'Assistant deactivated', 'agent-builder' ),
 		);
 		if ( isset( $map[ $action ] ) ) {
 			return $map[ $action ];
@@ -1374,7 +1413,7 @@ class Admin_Pages_REST {
 	 * @return array<string,mixed>
 	 */
 	private static function upgrade_payload(): array {
-		$is_pro = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
+		$is_pro  = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
 		$pricing = class_exists( Distribution::class )
 			? Distribution::PRICING_URL
 			: 'https://agentic-plugin.com/licensing-and-pricing/';

@@ -54,28 +54,28 @@ return array(
 	'tabs'  => array(
 
 		// Settings tabs (current IA).
-		'agentic-settings:interface'    => 'https://agentic-plugin.com/chat-styles-and-themes/',
-		'agentic-settings:agents'       => 'https://agentic-plugin.com/installed-agents/',
-		'agentic-settings:providers'    => 'https://agentic-plugin.com/manage-llm-providers/',
-		'agentic-settings:users'        => 'https://agentic-plugin.com/user-roles-and-privileges/',
-		'agentic-settings:security'     => 'https://agentic-plugin.com/important-security-settings/',
-		'agentic-settings:license'      => 'https://agentic-plugin.com/licensing-and-pricing/',
-		'agentic-settings:apis'         => 'https://agentic-plugin.com/connecting-an-ai-provider/',
-		'agentic-settings:endpoints'    => 'https://agentic-plugin.com/connecting-an-ai-provider/',
+		'agentic-settings:interface'          => 'https://agentic-plugin.com/chat-styles-and-themes/',
+		'agentic-settings:agents'             => 'https://agentic-plugin.com/installed-agents/',
+		'agentic-settings:providers'          => 'https://agentic-plugin.com/manage-llm-providers/',
+		'agentic-settings:users'              => 'https://agentic-plugin.com/user-roles-and-privileges/',
+		'agentic-settings:security'           => 'https://agentic-plugin.com/important-security-settings/',
+		'agentic-settings:license'            => 'https://agentic-plugin.com/licensing-and-pricing/',
+		'agentic-settings:apis'               => 'https://agentic-plugin.com/connecting-an-ai-provider/',
+		'agentic-settings:endpoints'          => 'https://agentic-plugin.com/connecting-an-ai-provider/',
 		// Legacy settings tabs (redirected in UI; keep docs for bookmarks).
-		'agentic-settings:general'      => 'https://agentic-plugin.com/chat-styles-and-themes/',
-		'agentic-settings:global'       => 'https://agentic-plugin.com/global-chat-settings/',
-		'agentic-settings:instructions' => 'https://agentic-plugin.com/agent-instructions/',
-		'agentic-settings:memory'       => 'https://agentic-plugin.com/agent-memory/',
-		'agentic-settings:health'       => 'https://agentic-plugin.com/troubleshooting/',
-		'agentic-settings:styles'       => 'https://agentic-plugin.com/chat-styles-and-themes/',
-		'agentic-settings:mcp'          => 'https://agentic-plugin.com/mcp-integration/',
+		'agentic-settings:general'            => 'https://agentic-plugin.com/chat-styles-and-themes/',
+		'agentic-settings:global'             => 'https://agentic-plugin.com/global-chat-settings/',
+		'agentic-settings:instructions'       => 'https://agentic-plugin.com/agent-instructions/',
+		'agentic-settings:memory'             => 'https://agentic-plugin.com/agent-memory/',
+		'agentic-settings:health'             => 'https://agentic-plugin.com/troubleshooting/',
+		'agentic-settings:styles'             => 'https://agentic-plugin.com/chat-styles-and-themes/',
+		'agentic-settings:mcp'                => 'https://agentic-plugin.com/mcp-integration/',
 
 		// Knowledge page tabs.
-		'agentic-train-data:wiki'         => 'https://agentic-plugin.com/knowledge-wiki-okf/',
-		'agentic-train-data:instructions' => 'https://agentic-plugin.com/agent-instructions/',
-		'agentic-train-data:memory'       => 'https://agentic-plugin.com/agent-memory/',
-		'agentic-train-data:vector'       => 'https://agentic-plugin.com/ai-data-training/',
+		'agentic-train-data:wiki'             => 'https://agentic-plugin.com/knowledge-wiki-okf/',
+		'agentic-train-data:instructions'     => 'https://agentic-plugin.com/agent-instructions/',
+		'agentic-train-data:memory'           => 'https://agentic-plugin.com/agent-memory/',
+		'agentic-train-data:vector'           => 'https://agentic-plugin.com/ai-data-training/',
 
 		// Deployment tabs.
 		'agentic-deployment:admin-ui'         => 'https://agentic-plugin.com/admin-sidebar-deployment/',
@@ -88,22 +88,22 @@ return array(
 		'agentic-deployment:cli'              => 'https://agentic-plugin.com/wp-cli-commands/',
 
 		// Tools sections.
-		'agentic-tools:tools'    => 'https://agentic-plugin.com/agent-tools/',
-		'agentic-tools:all'      => 'https://agentic-plugin.com/agent-tools/',
-		'agentic-tools:custom'   => 'https://agentic-plugin.com/agent-tools/',
-		'agentic-tools:abilities'=> 'https://agentic-plugin.com/capabilities/',
+		'agentic-tools:tools'                 => 'https://agentic-plugin.com/agent-tools/',
+		'agentic-tools:all'                   => 'https://agentic-plugin.com/agent-tools/',
+		'agentic-tools:custom'                => 'https://agentic-plugin.com/agent-tools/',
+		'agentic-tools:abilities'             => 'https://agentic-plugin.com/capabilities/',
 
 		// Integrations sections.
-		'agentic-integrations:channels' => 'https://agentic-plugin.com/channels/',
-		'agentic-integrations:mcp'      => 'https://agentic-plugin.com/mcp-integration/',
+		'agentic-integrations:channels'       => 'https://agentic-plugin.com/channels/',
+		'agentic-integrations:mcp'            => 'https://agentic-plugin.com/mcp-integration/',
 
 		// Logs tabs.
-		'agentic-audit-log:audit'         => 'https://agentic-plugin.com/audit-log/',
-		'agentic-audit-log:conversations' => 'https://agentic-plugin.com/audit-log/',
-		'agentic-audit-log:security'      => 'https://agentic-plugin.com/important-security-settings/',
+		'agentic-audit-log:audit'             => 'https://agentic-plugin.com/audit-log/',
+		'agentic-audit-log:conversations'     => 'https://agentic-plugin.com/audit-log/',
+		'agentic-audit-log:security'          => 'https://agentic-plugin.com/important-security-settings/',
 
 		// Approvals tabs.
-		'agentic-approvals:approvals' => 'https://agentic-plugin.com/approval-queue/',
-		'agentic-approvals:backups'   => 'https://agentic-plugin.com/backups/',
+		'agentic-approvals:approvals'         => 'https://agentic-plugin.com/approval-queue/',
+		'agentic-approvals:backups'           => 'https://agentic-plugin.com/backups/',
 	),
 );

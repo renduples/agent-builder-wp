@@ -1046,7 +1046,7 @@ class REST_API {
 			return $this->api_error( 'already_processed', 'Approval already processed' );
 		}
 
-		$new_status = 'approve' === $action ? 'approved' : 'rejected';
+		$new_status   = 'approve' === $action ? 'approved' : 'rejected';
 		$action_label = str_replace( '_', ' ', (string) ( $approval['action'] ?? 'action' ) );
 		$agent_label  = str_replace( '-', ' ', (string) ( $approval['agent_id'] ?? '' ) );
 

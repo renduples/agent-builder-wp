@@ -35,7 +35,7 @@ if ( ! in_array( $agentic_active_tab, array( 'admin-bar', 'cli', 'admin-ui', 'ev
 
 	<?php
 	// Labels A–Z for nav order.
-	$agentic_deploy_tabs = array(
+	$agentic_deploy_tabs  = array(
 		'admin-bar'        => __( 'Admin', 'agent-builder' ),
 		'cli'              => __( 'CLI', 'agent-builder' ),
 		'admin-ui'         => __( 'Editor', 'agent-builder' ),

@@ -196,11 +196,11 @@ class Tools_Registry {
 			$max_level = Risk_Level::LOW;
 		}
 
-		$max_w   = Risk_Level::weight( $max_level );
-		$now     = gmdate( 'Y-m-d H:i:s' );
-		$enabled = 0;
+		$max_w    = Risk_Level::weight( $max_level );
+		$now      = gmdate( 'Y-m-d H:i:s' );
+		$enabled  = 0;
 		$disabled = 0;
-		$table   = $wpdb->prefix . 'agentic_tools';
+		$table    = $wpdb->prefix . 'agentic_tools';
 
 		foreach ( self::get_all() as $name => $tool ) {
 			$risk = (string) ( $tool['risk_level'] ?? Risk_Level::NONE );

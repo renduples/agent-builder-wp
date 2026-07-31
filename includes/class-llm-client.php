@@ -1639,7 +1639,7 @@ class LLM_Client {
 			if ( ! is_array( $params ) ) {
 				$params = array();
 			}
-			$fn['parameters']  = $this->normalize_tool_schema( $params );
+			$fn['parameters'] = $this->normalize_tool_schema( $params );
 			$tool['function'] = $fn;
 			// Ensure OpenAI wrapper shape.
 			if ( empty( $tool['type'] ) ) {

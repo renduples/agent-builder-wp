@@ -348,7 +348,7 @@ class Admin_Menu_Handler {
 		);
 
 		if ( $is_pro ) {
-			$catalog['usage'] = array(
+			$catalog['usage']   = array(
 				'label'    => __( 'Usage', 'agent-builder' ),
 				'url'      => admin_url( 'admin.php?page=agentic-costs' ),
 				'default'  => true,
@@ -866,16 +866,16 @@ class Admin_Menu_Handler {
 		}
 
 		return array(
-			'doc_url'         => $doc_url,
-			'support_url'     => $support_url,
-			'promo_url'       => $promo_url,
-			'promo_label'     => $promo_label,
-			'promo_external'  => $promo_external,
-			'is_pro'          => $is_pro,
-			'policy'          => $policy,
-			'terms_url'       => 'https://agentic-plugin.com/terms-of-service/',
-			'privacy_url'     => 'https://agentic-plugin.com/privacy-policy/',
-			'gdpr_url'         => 'https://agentic-plugin.com/gdpr-policy/',
+			'doc_url'        => $doc_url,
+			'support_url'    => $support_url,
+			'promo_url'      => $promo_url,
+			'promo_label'    => $promo_label,
+			'promo_external' => $promo_external,
+			'is_pro'         => $is_pro,
+			'policy'         => $policy,
+			'terms_url'      => 'https://agentic-plugin.com/terms-of-service/',
+			'privacy_url'    => 'https://agentic-plugin.com/privacy-policy/',
+			'gdpr_url'       => 'https://agentic-plugin.com/gdpr-policy/',
 		);
 	}
 
@@ -894,21 +894,21 @@ class Admin_Menu_Handler {
 		if ( ! empty( $f['policy'] ) ) {
 			$html .= '<span class="agentic-page-footer-policy">' . esc_html( (string) $f['policy'] ) . '</span> ';
 		}
-		$html .= esc_html__( 'Need help?', 'agent-builder' ) . ' ';
-		$html .= '<a href="' . esc_url( (string) $f['support_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Visit our Support Center', 'agent-builder' ) . '</a>';
-		$html .= ' | ';
-		$html .= '<a href="' . esc_url( (string) $f['doc_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Documentation', 'agent-builder' ) . '</a>';
-		$html .= ' | ';
+		$html       .= esc_html__( 'Need help?', 'agent-builder' ) . ' ';
+		$html       .= '<a href="' . esc_url( (string) $f['support_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Visit our Support Center', 'agent-builder' ) . '</a>';
+		$html       .= ' | ';
+		$html       .= '<a href="' . esc_url( (string) $f['doc_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Documentation', 'agent-builder' ) . '</a>';
+		$html       .= ' | ';
 		$promo_blank = ! empty( $f['promo_external'] ) || ! empty( $f['is_pro'] );
 		$html       .= '<a href="' . esc_url( (string) $f['promo_url'] ) . '"' . ( $promo_blank ? ' target="_blank" rel="noopener noreferrer"' : '' ) . '>' . esc_html( (string) $f['promo_label'] ) . '</a>';
-		$html .= '</span>';
-		$html .= '<span class="agentic-page-footer-right">';
-		$html .= '<a href="' . esc_url( (string) $f['terms_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Terms of Service', 'agent-builder' ) . '</a>';
-		$html .= ' | ';
-		$html .= '<a href="' . esc_url( (string) $f['privacy_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Privacy Policy', 'agent-builder' ) . '</a>';
-		$html .= ' | ';
-		$html .= '<a href="' . esc_url( (string) $f['gdpr_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'GDPR Policy', 'agent-builder' ) . '</a>';
-		$html .= '</span></div>';
+		$html       .= '</span>';
+		$html       .= '<span class="agentic-page-footer-right">';
+		$html       .= '<a href="' . esc_url( (string) $f['terms_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Terms of Service', 'agent-builder' ) . '</a>';
+		$html       .= ' | ';
+		$html       .= '<a href="' . esc_url( (string) $f['privacy_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'Privacy Policy', 'agent-builder' ) . '</a>';
+		$html       .= ' | ';
+		$html       .= '<a href="' . esc_url( (string) $f['gdpr_url'] ) . '" target="_blank" rel="noopener">' . esc_html__( 'GDPR Policy', 'agent-builder' ) . '</a>';
+		$html       .= '</span></div>';
 
 		return $html;
 	}
@@ -923,11 +923,26 @@ class Admin_Menu_Handler {
 		// React admin pages (skip agents — plugins-style list later).
 		// Deployment stays on classic PHP (multi-tab shortcodes/tasks/events UI).
 		$react_map = array(
-			'tools'       => array( 'page' => 'tools', 'tab' => '' ),
-			'skills'      => array( 'page' => 'skills', 'tab' => '' ),
-			'approvals'   => array( 'page' => 'approvals', 'tab' => '' ),
-			'logs'        => array( 'page' => 'logs', 'tab' => '' ),
-			'upgrade-pro' => array( 'page' => 'upgrade-pro', 'tab' => '' ),
+			'tools'       => array(
+				'page' => 'tools',
+				'tab'  => '',
+			),
+			'skills'      => array(
+				'page' => 'skills',
+				'tab'  => '',
+			),
+			'approvals'   => array(
+				'page' => 'approvals',
+				'tab'  => '',
+			),
+			'logs'        => array(
+				'page' => 'logs',
+				'tab'  => '',
+			),
+			'upgrade-pro' => array(
+				'page' => 'upgrade-pro',
+				'tab'  => '',
+			),
 		);
 
 		// Skills create/edit/hub stay on classic PHP forms.

@@ -183,8 +183,8 @@ class Dashboard_REST {
 			if ( ! Admin_Menu_Handler::provider_is_connected( $p ) ) {
 				continue;
 			}
-			$slug  = (string) ( $p['slug'] ?? '' );
-			$model = ( $slug === $provider && '' !== $site_model )
+			$slug        = (string) ( $p['slug'] ?? '' );
+			$model       = ( $slug === $provider && '' !== $site_model )
 				? $site_model
 				: (string) ( $p['default_model'] ?? '' );
 			$providers[] = array(
@@ -233,7 +233,7 @@ class Dashboard_REST {
 		}
 
 		// Onboarding steps.
-		$agent_counts = self::agent_counts();
+		$agent_counts  = self::agent_counts();
 		$has_knowledge = class_exists( Okf_Store::class )
 			? Okf_Store::has_active_knowledge()
 			: (bool) get_option( 'agentic_has_knowledge', false );
@@ -276,51 +276,51 @@ class Dashboard_REST {
 
 		return new \WP_REST_Response(
 			array(
-				'version'        => AGENT_BUILDER_VERSION,
-				'schema_version' => (string) get_option( 'agentic_db_schema_version', AGENT_BUILDER_DB_VERSION ),
-				'is_pro'         => $is_pro,
-				'is_advanced'    => $is_advanced,
-				'is_configured'  => $is_configured,
-				'emergency_stop' => Emergency_Stop::is_active(),
-				'show_onboarding'=> '0' !== get_option( 'agentic_show_onboarding', '1' ),
-				'show_pro_nudge' => (bool) $show_nudge,
-				'agent_updates'  => class_exists( Agent_Updates::class ) && Agent_Updates::is_opted_in(),
+				'version'                 => AGENT_BUILDER_VERSION,
+				'schema_version'          => (string) get_option( 'agentic_db_schema_version', AGENT_BUILDER_DB_VERSION ),
+				'is_pro'                  => $is_pro,
+				'is_advanced'             => $is_advanced,
+				'is_configured'           => $is_configured,
+				'emergency_stop'          => Emergency_Stop::is_active(),
+				'show_onboarding'         => '0' !== get_option( 'agentic_show_onboarding', '1' ),
+				'show_pro_nudge'          => (bool) $show_nudge,
+				'agent_updates'           => class_exists( Agent_Updates::class ) && Agent_Updates::is_opted_in(),
 				// Pro-only: free / WPorg never expose the opt-in toggle (marketplace link instead).
 				'has_agent_updates_class' => class_exists( Agent_Updates::class ) && Agent_Updates::is_remote_check_available(),
-				'urls'           => array(
-					'admin'           => admin_url(),
-					'icon'            => AGENT_BUILDER_URL . 'assets/icon.svg',
-					'license'         => admin_url( 'admin.php?page=agentic-settings&tab=license' ),
-					'providers'       => admin_url( 'admin.php?page=agentic-settings&tab=providers' ),
-					'interface'       => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
-					'activity'        => admin_url( 'admin.php?page=agentic-audit-log' ),
-					'pricing'         => 'https://agentic-plugin.com/pricing/',
-					'community'       => class_exists( Agent_Updates::class )
+				'urls'                    => array(
+					'admin'     => admin_url(),
+					'icon'      => AGENT_BUILDER_URL . 'assets/icon.svg',
+					'license'   => admin_url( 'admin.php?page=agentic-settings&tab=license' ),
+					'providers' => admin_url( 'admin.php?page=agentic-settings&tab=providers' ),
+					'interface' => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
+					'activity'  => admin_url( 'admin.php?page=agentic-audit-log' ),
+					'pricing'   => 'https://agentic-plugin.com/pricing/',
+					'community' => class_exists( Agent_Updates::class )
 						? Agent_Updates::MARKETPLACE_URL
 						: 'https://agentic-plugin.com/community-agents/',
-					'settings'        => admin_url( 'admin.php?page=agentic-settings' ),
+					'settings'  => admin_url( 'admin.php?page=agentic-settings' ),
 				),
-				'license'        => $license,
-				'jobs'           => array(
+				'license'                 => $license,
+				'jobs'                    => array(
 					'pending'    => (int) ( $job_health['stats']['pending'] ?? 0 ),
 					'processing' => (int) ( $job_health['stats']['processing'] ?? 0 ),
 					'completed'  => (int) ( $job_health['stats']['completed'] ?? 0 ),
 					'stuck'      => (int) ( $job_health['stuck_processing'] ?? 0 ),
 					'abandoned'  => (int) ( $job_health['abandoned_pending'] ?? 0 ),
 				),
-				'activity'       => array(
+				'activity'                => array(
 					'actions' => (int) ( $stats['total_actions'] ?? 0 ),
 					'tokens'  => (int) ( $stats['total_tokens'] ?? 0 ),
 					'cost'    => round( (float) ( $stats['total_cost'] ?? 0 ), 4 ),
 				),
-				'agents'         => $agent_counts,
-				'providers'      => $providers,
-				'default_provider' => $provider,
-				'quick_actions'  => $qa_list,
-				'onboarding'     => $steps,
-				'layout'         => self::get_layout_for_user(),
-				'layout_default' => self::default_layout(),
-				'warnings'       => $warnings,
+				'agents'                  => $agent_counts,
+				'providers'               => $providers,
+				'default_provider'        => $provider,
+				'quick_actions'           => $qa_list,
+				'onboarding'              => $steps,
+				'layout'                  => self::get_layout_for_user(),
+				'layout_default'          => self::default_layout(),
+				'warnings'                => $warnings,
 			),
 			200
 		);
@@ -348,16 +348,16 @@ class Dashboard_REST {
 						'ui_mode_changed',
 						'settings',
 						array(
-							'id'       => $mode,
-							'from'     => $prev,
-							'to'       => $mode,
+							'id'   => $mode,
+							'from' => $prev,
+							'to'   => $mode,
 						)
 					);
 				}
 				break;
 
 			case 'set_emergency_stop':
-				$enable            = rest_sanitize_boolean( $request->get_param( 'enable' ) );
+				$enable             = rest_sanitize_boolean( $request->get_param( 'enable' ) );
 				$emergency_warnings = array();
 				if ( $enable && ! Emergency_Stop::is_active() ) {
 					Emergency_Stop::enable();
@@ -440,10 +440,10 @@ class Dashboard_REST {
 	private static function license_tile( bool $is_pro ): array {
 		if ( ! $is_pro ) {
 			return array(
-				'status'  => 'free',
-				'label'   => 'GPL-2.0-or-later',
-				'tier'    => 'free',
-				'class'   => '',
+				'status' => 'free',
+				'label'  => 'GPL-2.0-or-later',
+				'tier'   => 'free',
+				'class'  => '',
 			);
 		}
 
@@ -512,10 +512,10 @@ class Dashboard_REST {
 
 		$community = get_transient( 'agentic_dashboard_marketplace_agent_count' );
 		if ( false === $community ) {
-			$api_base = class_exists( Service_Registry::class )
+			$api_base  = class_exists( Service_Registry::class )
 				? Service_Registry::url( 'agentic-api' )
 				: 'https://agentic-plugin.com';
-			$response = wp_remote_get(
+			$response  = wp_remote_get(
 				trailingslashit( untrailingslashit( $api_base ) ) . 'wp-json/agentic/v1/agents?per_page=1',
 				array(
 					'timeout'   => 3,

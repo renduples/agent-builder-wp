@@ -1233,19 +1233,19 @@ class Provider_Registry {
 					// v4 is current; chat/reasoner remain as transitional aliases (deprecated mid-2026).
 					'models'        => array( 'deepseek-v4-flash', 'deepseek-v4-pro', 'deepseek-chat', 'deepseek-reasoner' ),
 					'model_pricing' => array(
-						'deepseek-v4-flash'  => array(
+						'deepseek-v4-flash' => array(
 							'in'  => 0.14,
 							'out' => 0.28,
 						),
-						'deepseek-v4-pro'    => array(
+						'deepseek-v4-pro'   => array(
 							'in'  => 0.55,
 							'out' => 2.19,
 						),
-						'deepseek-chat'      => array(
+						'deepseek-chat'     => array(
 							'in'  => 0.14,
 							'out' => 0.28,
 						),
-						'deepseek-reasoner'  => array(
+						'deepseek-reasoner' => array(
 							'in'  => 0.55,
 							'out' => 2.19,
 						),
