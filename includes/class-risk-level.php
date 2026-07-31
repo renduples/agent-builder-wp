@@ -232,11 +232,16 @@ class Risk_Level {
 	 * @var array<string, string>
 	 */
 	private const BASELINE_RISKS = array(
-		// Executes or installs code.
+		// Executes or installs code. WP MCP / Abilities guidance: shell and
+		// remote-install style tools are not "normal" content abilities — keep
+		// floors high/extreme so free agents + MCP cannot silently run them.
 		'install_plugin_from_url'              => self::HIGH,
 		'add_custom_js'                        => self::HIGH,
+		'run_wp_cli'                           => self::EXTREME,
+		'create_agent_files'                   => self::EXTREME,
+		'validate_agent_code'                  => self::HIGH,
 
-		// Mutates the deployed codebase.
+		// Mutates the deployed codebase (Pro-only tools when free is stripped).
 		'git_pull'                             => self::HIGH,
 		'git_push'                             => self::HIGH,
 		'git_commit'                           => self::HIGH,

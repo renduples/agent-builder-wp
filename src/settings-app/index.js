@@ -2043,6 +2043,19 @@ function SettingsApp() {
 		}
 		saveTab( tab, payload )
 			.then( ( res ) => {
+				const warnings = Array.isArray( res?.warnings )
+					? res.warnings
+					: [];
+				if ( warnings.length ) {
+					window.alert(
+						__(
+							'Settings saved with warnings:',
+							'agent-builder'
+						) +
+							'\n\n' +
+							warnings.join( '\n' )
+					);
+				}
 				if ( res.data ) {
 					setTabData( ( prev ) => ( {
 						...prev,

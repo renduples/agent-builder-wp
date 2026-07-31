@@ -531,9 +531,21 @@ function InterfaceCard( { data, mutate, dnd } ) {
 			return;
 		}
 		setBusy( true );
-		mutate( { action_name: 'set_emergency_stop', enable } ).finally( () =>
-			setBusy( false )
-		);
+		mutate( { action_name: 'set_emergency_stop', enable } )
+			.then( ( d ) => {
+				const warnings = Array.isArray( d?.warnings ) ? d.warnings : [];
+				if ( warnings.length ) {
+					window.alert(
+						__(
+							'Emergency stop restore finished with warnings:',
+							'agent-builder'
+						) +
+							'\n\n' +
+							warnings.join( '\n' )
+					);
+				}
+			} )
+			.finally( () => setBusy( false ) );
 	};
 
 	const setUpdates = ( enable ) => {

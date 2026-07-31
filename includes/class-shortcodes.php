@@ -200,6 +200,7 @@ class Shortcodes {
 		?>
 		<div id="<?php echo esc_attr( $container_id ); ?>" 
 			class="agentic-chat-container agentic-chat-frontend <?php echo esc_attr( $style_class ); ?>"
+			data-agentic-chat-root="1"
 			data-agent-id="<?php echo esc_attr( $agent_id ); ?>"
 			data-context="<?php echo esc_attr( $atts['context'] ); ?>"
 			style="--agentic-chat-height: <?php echo esc_attr( $height ); ?>">

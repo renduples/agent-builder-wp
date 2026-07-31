@@ -1,32 +1,37 @@
 /**
  * Agentic Chat Interface
- * 
- * Supports per-agent session isolation - each agent has its own
- * conversation history and session ID.
+ *
+ * Multi-instance: each .agentic-chat-container[data-agent-id] (or #agentic-chat)
+ * boots its own isolated state. Forms use class .agentic-chat-form; lookups are
+ * scoped to the root so shortcode + modal (or multiple shortcodes) work together.
  */
 (function() {
     'use strict';
 
-    // This script wires itself to the FIRST #agentic-chat-form found in the
-    // DOM (see `form` below) — it is not built to run multiple independent
-    // instances on one page. When a second chat surface renders on the same
-    // page (e.g. the modal widget alongside a shortcode-embedded chat, or two
-    // shortcodes), that second form's send button has no submit listener
-    // attached to it at all, so clicking it falls through to the browser's
-    // native form submission and reloads the page, discarding both chats'
-    // state. Belt-and-suspenders: swallow any submit from an untracked
-    // chat form so that failure mode is a no-op instead of a page reload,
-    // regardless of which instance chat.js happened to bind to.
+    // Uninitialized chat forms must not native-submit (page reload).
     document.addEventListener('submit', function (e) {
         var target = e.target;
         if (!target || !target.matches) return;
-        if (target.matches('#agentic-chat-form, .agentic-chat-form') && !target._agenticInitialized) {
+        if (target.matches('.agentic-chat-form, #agentic-chat-form') && !target._agenticInitialized) {
             e.preventDefault();
         }
     });
 
+    function bootChatRoot(root) {
+        if (!root || root._agenticChatBooted) {
+            return;
+        }
+        root._agenticChatBooted = true;
+
+        function q(sel) {
+            return root.querySelector(sel);
+        }
+        function qid(id) {
+            return root.querySelector('#' + id);
+        }
+
     // Get current agent from data attribute (supports both admin template ID and shortcode dynamic ID)
-    const chatContainer = document.getElementById('agentic-chat') || document.querySelector('.agentic-chat-container[data-agent-id]');
+    const chatContainer = root;
     const currentAgentId = chatContainer ? chatContainer.dataset.agentId || 'default' : 'default';
 
     // Page context — combines explicit data-context attribute with auto-detected page info.
@@ -64,14 +69,14 @@
     localStorage.setItem(`agentic_session_${currentAgentId}`, sessionId);
 
     // Elements
-    const form = document.getElementById('agentic-chat-form');
-    const input = document.getElementById('agentic-input');
-    const messages = document.getElementById('agentic-messages');
-    const sendBtn = document.getElementById('agentic-send');
-    const typingIndicator = document.getElementById('agentic-typing');
-    const clearBtn = document.getElementById('agentic-clear-chat');
-    const stats = document.getElementById('agentic-stats');
-    const agentSelect = document.getElementById('agentic-agent-select');
+    const form = q('.agentic-chat-form') || qid('agentic-chat-form');
+    const input = q('.agentic-chat-input') || q('textarea') || qid('agentic-input');
+    const messages = q('.agentic-chat-messages') || qid('agentic-messages');
+    const sendBtn = q('.agentic-send-btn') || qid('agentic-send');
+    const typingIndicator = q('.agentic-typing-indicator') || qid('agentic-typing');
+    const clearBtn = q('.agentic-clear-chat') || qid('agentic-clear-chat');
+    const stats = q('.agentic-stats') || qid('agentic-stats');
+    const agentSelect = q('.agentic-agent-dropdown') || qid('agentic-agent-select');
 
     // Initialize
     function init() {
@@ -122,7 +127,7 @@
 
         // Handle suggested prompt clicks
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('agentic-prompt-btn')) {
+            if (e.target.classList.contains('agentic-prompt-btn') && root.contains(e.target)) {
                 const prompt = e.target.getAttribute('data-prompt');
                 if (prompt && input) {
                     if (/\[[^\]]+\]/.test(prompt)) {
@@ -134,7 +139,7 @@
                         // One-click send for a snappy first experience.
                         input.value = prompt;
                         autoResize();
-                        var _f = document.getElementById('agentic-chat-form');
+                        var _f = form;
                         if (_f && typeof _f.requestSubmit === 'function') { _f.requestSubmit(); }
                         else if (_f) { _f.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true })); }
                         else { input.focus(); }
@@ -145,7 +150,7 @@
 
         // Handle copy button clicks on code blocks
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('agentic-copy-btn')) {
+            if (e.target.classList.contains('agentic-copy-btn') && root.contains(e.target)) {
                 var btn = e.target;
                 var code = btn.nextElementSibling.textContent;
                 var onCopied = function() {
@@ -166,7 +171,7 @@
         // Now passes richer handoff context (last few turns + optional reasoning summary)
         // so the receiving agent has real shared understanding instead of just the last message.
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('agentic-delegate-btn')) {
+            if (e.target.classList.contains('agentic-delegate-btn') && root.contains(e.target)) {
                 var agentId = e.target.dataset.agent;
                 var handoffContext = '';
 
@@ -316,7 +321,7 @@
             initFileUpload();
         } else {
             // Hide attach button when vision is disabled
-            const attachBtn = document.getElementById('agentic-attach-btn');
+            const attachBtn = qid('agentic-attach-btn');
             if (attachBtn) attachBtn.style.display = 'none';
         }
 
@@ -367,9 +372,9 @@
         // Already accepted — cookie present.
         if (document.cookie.split(';').some(c => c.trim().startsWith('agentic_consent_given=1'))) return;
 
-        const banner = document.getElementById('agentic-consent-banner');
-        const textEl = document.getElementById('agentic-consent-text');
-        const acceptBtn = document.getElementById('agentic-consent-accept');
+        const banner = qid('agentic-consent-banner');
+        const textEl = qid('agentic-consent-text');
+        const acceptBtn = qid('agentic-consent-accept');
         if (!banner || !acceptBtn) return;
 
         if (textEl) textEl.textContent = agenticChat.consentText || '';
@@ -391,7 +396,7 @@
     function initTurnstile() {
         if (typeof agenticChat === 'undefined' || !agenticChat.turnstileSiteKey) return;
 
-        const container = document.getElementById('agentic-turnstile');
+        const container = qid('agentic-turnstile');
         if (!container) return;
 
         // Turnstile script loads async; wait for it to be ready.
@@ -413,7 +418,7 @@
 
     // Voice input via Web Speech API
     function initVoiceInput() {
-        const voiceBtn = document.getElementById('agentic-voice-btn');
+        const voiceBtn = qid('agentic-voice-btn');
         if (!voiceBtn) return;
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -499,11 +504,11 @@
 
     // File/image upload
     function initFileUpload() {
-        const attachBtn = document.getElementById('agentic-attach-btn');
-        const fileInput = document.getElementById('agentic-file-input');
-        const previewWrap = document.getElementById('agentic-image-preview');
-        const previewImg = document.getElementById('agentic-preview-img');
-        const removeBtn = document.getElementById('agentic-remove-image');
+        const attachBtn = qid('agentic-attach-btn');
+        const fileInput = qid('agentic-file-input');
+        const previewWrap = qid('agentic-image-preview');
+        const previewImg = qid('agentic-preview-img');
+        const removeBtn = qid('agentic-remove-image');
         const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
         if (!attachBtn || !fileInput) return;
@@ -554,9 +559,9 @@
 
     function clearPendingImage() {
         pendingImage = null;
-        const fileInput = document.getElementById('agentic-file-input');
-        const previewWrap = document.getElementById('agentic-image-preview');
-        const attachBtn = document.getElementById('agentic-attach-btn');
+        const fileInput = qid('agentic-file-input');
+        const previewWrap = qid('agentic-image-preview');
+        const attachBtn = qid('agentic-attach-btn');
         if (fileInput) fileInput.value = '';
         if (previewWrap) previewWrap.style.display = 'none';
         if (attachBtn) attachBtn.classList.remove('agentic-attach-active');
@@ -755,7 +760,7 @@
         sendBtn.disabled = true;
         typingIndicator.style.display = 'flex';
 
-        const typingText = document.getElementById('agentic-typing-text');
+        const typingText = qid('agentic-typing-text');
         if (typingText) typingText.textContent = agenticChat.i18n.thinking;
 
         // After 20s with no response, hint that the model may be warming up.
@@ -1055,12 +1060,12 @@
             conversationHistory = [];
             localStorage.removeItem(`agentic_history_${currentAgentId}`);
             localStorage.removeItem(`agentic_stats_${currentAgentId}`);
-            const messagesEl = document.getElementById('agentic-messages');
+            const messagesEl = qid('agentic-messages');
             if (messagesEl) {
                 const bubbles = messagesEl.querySelectorAll('.agentic-message');
                 for (let i = 1; i < bubbles.length; i++) { bubbles[i].remove(); }
             }
-            const statsEl = document.getElementById('agentic-stats');
+            const statsEl = qid('agentic-stats');
             if (statsEl) statsEl.textContent = '';
         } catch (e) {
             // Network/parse error - keep the conversation untouched.
@@ -1115,7 +1120,7 @@
         }
 
         // Close history panel if open
-        const panel = document.getElementById('agentic-history-panel');
+        const panel = qid('agentic-history-panel');
         if (panel) panel.style.display = 'none';
     }
 
@@ -1149,9 +1154,9 @@
     }
 
     function initHistory() {
-        const historyBtn = document.getElementById('agentic-history-btn');
-        const closeBtn = document.getElementById('agentic-history-close');
-        const panel = document.getElementById('agentic-history-panel');
+        const historyBtn = qid('agentic-history-btn');
+        const closeBtn = qid('agentic-history-close');
+        const panel = qid('agentic-history-panel');
         if (!historyBtn || !panel) return;
 
         historyBtn.addEventListener('click', function(e) {
@@ -1173,7 +1178,7 @@
     }
 
     async function fetchSessions() {
-        const listEl = document.getElementById('agentic-history-list');
+        const listEl = qid('agentic-history-list');
         if (!listEl) return;
 
         listEl.innerHTML = '<div class="agentic-history-loading">Loading sessions…</div>';
@@ -1230,7 +1235,7 @@
     }
 
     async function loadSession(targetSessionId) {
-        const panel = document.getElementById('agentic-history-panel');
+        const panel = qid('agentic-history-panel');
 
         try {
             const url = agenticChat.restUrl + 'history/' + encodeURIComponent(targetSessionId);
@@ -1783,7 +1788,7 @@
     // ── TTS Output ──
 
     function initTTS() {
-        const ttsBtn = document.getElementById('agentic-tts-btn');
+        const ttsBtn = qid('agentic-tts-btn');
         if (!ttsBtn) return;
 
         ttsBtn.style.display = '';
@@ -1909,4 +1914,30 @@
         }
     }
 
+
+    }
+
+    function bootAllChats() {
+        var roots = document.querySelectorAll(
+            '.agentic-chat-container[data-agent-id], #agentic-chat.agentic-chat-container, #agentic-chat'
+        );
+        // Prefer unique roots (modal nests .agentic-chat-container inside widget).
+        var seen = [];
+        roots.forEach(function (root) {
+            // Skip nested containers if parent already is a chat root
+            for (var i = 0; i < seen.length; i++) {
+                if (seen[i].contains(root) && seen[i] !== root) {
+                    return;
+                }
+            }
+            seen.push(root);
+            bootChatRoot(root);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootAllChats);
+    } else {
+        bootAllChats();
+    }
 })();

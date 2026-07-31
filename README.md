@@ -1,6 +1,6 @@
 # Agent Builder
 
-**Version:** 3.3.0
+**Version:** 3.3.17
 
 Free [Agent Builder](https://agentic-plugin.com/) WordPress plugin.
 

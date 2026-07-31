@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.16
+Stable tag: 3.3.17
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,13 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.17 - 2026-07-30 =
+* Fix: multi-instance chat — shortcode/block + modal (or multiple embeds) each run fully; no page reload / silent second form.
+* Security: Pro-only tools removed from free package source (send_email, git_*, cloudflare_*, related includes); free packaging still strips if residual.
+* Security: outbound WP Abilities / MCP no longer advertise high/extreme or shell-class tools as mcp.public (aligned with WordPress MCP adapter guidance).
+* Improve: emergency-stop restore warnings shown in Dashboard and Settings.
+* Risk floors: run_wp_cli, create_agent_files extreme; validate_agent_code high.
 
 = 3.3.16 - 2026-07-30 =
 * Fix: when two chat surfaces render on the same page — the floating modal widget alongside a `[agentic_chat]` shortcode or block, two shortcodes/blocks, etc. — clicking Send on whichever instance loaded second reloaded the entire page instead of sending the message, discarding both chats' conversations. chat.js binds its send handling to the first `#agentic-chat-form` it finds on the page; any additional instance's Send button is a native `type="submit"` button with no JS listener attached, so the browser's default form submission took over. The Gutenberg block explicitly supports being inserted multiple times (`"multiple": true`) and the modal widget defaults to appearing on every page, so this is a realistic combination, not just an edge case. Added a page-level safeguard so an untracked chat form's submit is swallowed instead of reloading the page — a secondary chat instance's Send button is now a safe no-op rather than a destructive crash. Note: this does not make the secondary instance fully interactive — that requires chat.js to support multiple independent instances per page (distinct per-instance DOM ids/state instead of the current single global `getElementById` lookups used throughout its ~1900 lines, including streaming, voice input, image upload, TTS, and the in-chat proposal cards), which is a larger follow-up worth doing but was judged too broad a change to make safely, and fully verify, within this pass.

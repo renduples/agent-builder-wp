@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <!-- Agentic Modal Widget -->
 <div id="agentic-modal-widget" class="agentic-modal-widget agentic-modal-<?php echo esc_attr( $position ); ?>" style="display:none;">
-	<div class="agentic-chat-container agentic-chat-frontend agentic-chat-popup"
+	<div class="agentic-chat-container agentic-chat-frontend agentic-chat-popup" data-agentic-chat-root="1"
 			data-agent-id="<?php echo esc_attr( $first_slug ); ?>">
 		<div class="agentic-chat-header">
 			<div class="agentic-agent-info">

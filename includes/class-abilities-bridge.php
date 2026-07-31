@@ -212,8 +212,29 @@ class Abilities_Bridge {
 		);
 
 		// WP 7.0+ enhancements (richer meta for AI Client + MCP + native consumers).
+		// Align with WordPress MCP adapter guidance: MCP clients act as the
+		// logged-in user — do not advertise high/extreme or shell-class tools as
+		// public MCP tools (same posture as core Abilities / official adapter).
 		if ( WP_AI_Detection::is_wp7_or_later() ) {
-			$ability_args['meta']['mcp.public'] = true;
+			$risk = class_exists( Risk_Level::class )
+				? Risk_Level::get_tool_default( $tool_name )
+				: Risk_Level::NONE;
+
+			$block_mcp = in_array(
+				$tool_name,
+				array(
+					'run_wp_cli',
+					'install_plugin_from_url',
+					'create_agent_files',
+					'add_custom_js',
+					'validate_agent_code',
+				),
+				true
+			) || in_array( $risk, array( Risk_Level::HIGH, Risk_Level::EXTREME ), true )
+			|| str_starts_with( $tool_name, 'git_' )
+			|| str_starts_with( $tool_name, 'cloudflare_' );
+
+			$ability_args['meta']['mcp.public'] = ! $block_mcp;
 
 			// Provide rich instructions for the model when using native AI Client.
 			$instructions                         = "Use the '{$label}' ability when the user needs to {$description}. Always respect the permission model.";
