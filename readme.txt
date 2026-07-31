@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.15
+Stable tag: 3.3.16
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.16 - 2026-07-30 =
+* Fix: when two chat surfaces render on the same page — the floating modal widget alongside a `[agentic_chat]` shortcode or block, two shortcodes/blocks, etc. — clicking Send on whichever instance loaded second reloaded the entire page instead of sending the message, discarding both chats' conversations. chat.js binds its send handling to the first `#agentic-chat-form` it finds on the page; any additional instance's Send button is a native `type="submit"` button with no JS listener attached, so the browser's default form submission took over. The Gutenberg block explicitly supports being inserted multiple times (`"multiple": true`) and the modal widget defaults to appearing on every page, so this is a realistic combination, not just an edge case. Added a page-level safeguard so an untracked chat form's submit is swallowed instead of reloading the page — a secondary chat instance's Send button is now a safe no-op rather than a destructive crash. Note: this does not make the secondary instance fully interactive — that requires chat.js to support multiple independent instances per page (distinct per-instance DOM ids/state instead of the current single global `getElementById` lookups used throughout its ~1900 lines, including streaming, voice input, image upload, TTS, and the in-chat proposal cards), which is a larger follow-up worth doing but was judged too broad a change to make safely, and fully verify, within this pass.
+* Verified live: reproduced the crash with a shortcode chat plus the modal widget on the same real page (URL gained a stray `?` and the modal disappeared on Send); confirmed the modal works perfectly when it's the only chat surface on a page (correct response end-to-end); confirmed genuinely anonymous, cookie-less requests to the chat REST endpoint work correctly when anonymous chat is enabled; after the fix, reproduced the same two-instances-on-one-page scenario and confirmed Send on the secondary instance no longer reloads the page or loses either conversation's history.
 
 = 3.3.15 - 2026-07-30 =
 * Fix: the per-minute chat rate limit (30 messages/minute for logged-in users, 10/minute anonymous by default) never actually reset during continuous use, so any sustained conversation would eventually hit "Too many requests" even at a pace far below the configured limit. The counter was stored in a WordPress transient with a fresh 60-second expiration set on every single passing message — and `set_transient()` always refreshes a transient's expiration when called, even on an existing key — so as long as messages kept arriving less than 60 seconds apart, the window never closed and the count only ever went up. Verified live: a steady pace of one message every 7 seconds (about 8–9/minute, nowhere near the 30/minute cap) got incorrectly blocked after roughly 3.5 minutes of normal conversation. Fixed by storing the window's own expiry alongside the count and preserving the remaining time on every increment, so a fresh 60-second window only starts once the previous one has actually elapsed — genuine bursts (e.g. 31 messages within seconds) still correctly trip the limit, confirmed by re-running both scenarios after the fix: rapid abuse blocked at the same point as before, sustained normal-paced use (40 messages over ~280 seconds) no longer blocked at all.

@@ -7,6 +7,24 @@
 (function() {
     'use strict';
 
+    // This script wires itself to the FIRST #agentic-chat-form found in the
+    // DOM (see `form` below) — it is not built to run multiple independent
+    // instances on one page. When a second chat surface renders on the same
+    // page (e.g. the modal widget alongside a shortcode-embedded chat, or two
+    // shortcodes), that second form's send button has no submit listener
+    // attached to it at all, so clicking it falls through to the browser's
+    // native form submission and reloads the page, discarding both chats'
+    // state. Belt-and-suspenders: swallow any submit from an untracked
+    // chat form so that failure mode is a no-op instead of a page reload,
+    // regardless of which instance chat.js happened to bind to.
+    document.addEventListener('submit', function (e) {
+        var target = e.target;
+        if (!target || !target.matches) return;
+        if (target.matches('#agentic-chat-form, .agentic-chat-form') && !target._agenticInitialized) {
+            e.preventDefault();
+        }
+    });
+
     // Get current agent from data attribute (supports both admin template ID and shortcode dynamic ID)
     const chatContainer = document.getElementById('agentic-chat') || document.querySelector('.agentic-chat-container[data-agent-id]');
     const currentAgentId = chatContainer ? chatContainer.dataset.agentId || 'default' : 'default';
