@@ -42,6 +42,7 @@ class Dashboard_REST {
 	public static function default_layout(): array {
 		return array(
 			'status',
+			'safety',
 			'activity',
 			'providers',
 			'quick-actions',
@@ -226,6 +227,14 @@ class Dashboard_REST {
 		// Activity.
 		$stats = ( new Audit_Log() )->get_stats( 'week' );
 
+		// Safety net — pending approvals and the automatic file/DB backups
+		// created before an assistant modifies something (Tool_Helpers).
+		$pending_approvals = class_exists( Approval_Queue::class )
+			? ( new Approval_Queue() )->get_pending_count()
+			: 0;
+		$file_backups  = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_backups() ) : 0;
+		$table_backups = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_table_backups() ) : 0;
+
 		// Quick actions.
 		$catalog = Admin_Menu_Handler::quick_actions_catalog();
 		$enabled = Admin_Menu_Handler::get_enabled_quick_actions();
@@ -311,6 +320,8 @@ class Dashboard_REST {
 					'providers' => admin_url( 'admin.php?page=agentic-settings&tab=providers' ),
 					'interface' => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
 					'activity'  => admin_url( 'admin.php?page=agentic-audit-log' ),
+					'approvals' => admin_url( 'admin.php?page=agentic-approvals' ),
+					'backups'   => admin_url( 'admin.php?page=agentic-approvals&tab=backups' ),
 					'pricing'   => 'https://agentic-plugin.com/pricing/',
 					'community' => class_exists( Agent_Updates::class )
 						? Agent_Updates::MARKETPLACE_URL
@@ -329,6 +340,11 @@ class Dashboard_REST {
 					'actions' => (int) ( $stats['total_actions'] ?? 0 ),
 					'tokens'  => (int) ( $stats['total_tokens'] ?? 0 ),
 					'cost'    => round( (float) ( $stats['total_cost'] ?? 0 ), 4 ),
+				),
+				'safety'                  => array(
+					'pending_approvals' => (int) $pending_approvals,
+					'file_backups'      => $file_backups,
+					'table_backups'     => $table_backups,
 				),
 				'agents'                  => $agent_counts,
 				'providers'               => $providers,

@@ -198,6 +198,58 @@ function StatusCard( { data, dnd } ) {
 	);
 }
 
+function SafetyCard( { data, dnd } ) {
+	const safety = data.safety || {};
+	const pending = Number( safety.pending_approvals || 0 );
+	const pendingClass = pending > 0 ? 'agentic-status-expiring' : 'agentic-status-active';
+
+	return (
+		<Card
+			cardId="safety"
+			{ ...dnd }
+			title={ __( 'Approvals & Backups', 'agent-builder' ) }
+			headerLink={
+				<a
+					className="agentic-card-header-link"
+					href={ data.urls?.approvals }
+				>
+					{ __( 'View Approvals →', 'agent-builder' ) }
+				</a>
+			}
+		>
+			<div className="agentic-status-grid">
+				<StatusTile label={ __( 'Pending Approvals', 'agent-builder' ) }>
+					<a href={ data.urls?.approvals }>
+						<span className={ pendingClass }>●</span>{ ' ' }
+						{ formatInt( pending ) }
+					</a>
+				</StatusTile>
+				<StatusTile label={ __( 'Files Backed Up', 'agent-builder' ) }>
+					<a href={ data.urls?.backups }>
+						<span className="agentic-status-active">●</span>{ ' ' }
+						{ formatInt( safety.file_backups ) }
+					</a>
+				</StatusTile>
+				<StatusTile label={ __( 'DB Tables Backed Up', 'agent-builder' ) }>
+					<a href={ data.urls?.backups }>
+						<span className="agentic-status-active">●</span>{ ' ' }
+						{ formatInt( safety.table_backups ) }
+					</a>
+				</StatusTile>
+			</div>
+			{ pending > 0 && (
+				<p className="agentic-text-muted">
+					{ sprintf(
+						/* translators: %s: number of pending approvals. */
+						__( '%s waiting for your OK.', 'agent-builder' ),
+						formatInt( pending )
+					) }
+				</p>
+			) }
+		</Card>
+	);
+}
+
 function ActivityCard( { data, activity, dnd } ) {
 	const a = activity || data.activity || {};
 	const agents = data.agents || {};
@@ -789,6 +841,7 @@ function sprintf( format, ...args ) {
 
 const DEFAULT_LAYOUT = [
 	'status',
+	'safety',
 	'activity',
 	'providers',
 	'quick-actions',
@@ -991,6 +1044,8 @@ function DashboardApp() {
 		switch ( id ) {
 			case 'status':
 				return <StatusCard key={ id } data={ data } dnd={ dnd } />;
+			case 'safety':
+				return <SafetyCard key={ id } data={ data } dnd={ dnd } />;
 			case 'activity':
 				return (
 					<ActivityCard

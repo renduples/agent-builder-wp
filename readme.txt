@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.27
+Stable tag: 3.3.28
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.28 - 2026-08-01 =
+* New: "Approvals & Backups" Dashboard card — pending-approval count and automatic file/database-table backup counts, right on the Dashboard, each linking straight to where you'd act on them. Previously this only showed as a small badge in the sidebar menu (approvals) or a table you had to scroll to on a separate tab (backups).
 
 = 3.3.27 - 2026-08-01 =
 * Improvement: the admin-bar quick-chat overlay now renders the same in-chat proposal and approval cards the main Agent Chat page got in 3.3.26, instead of showing pending confirmations as plain text with no way to act on them there.
