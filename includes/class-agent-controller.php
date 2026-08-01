@@ -985,17 +985,38 @@ class Agent_Controller {
 			'reasoning'   => $final_reasoning,  // P0 observability. — surfaced for chat UI cards.
 		);
 
-		// Surface any pending proposal from tool results to the chat UI.
+		// Surface any pending proposal or high-risk queued approval from tool
+		// results to the chat UI, so the user can act on it without leaving
+		// the conversation (queued approvals otherwise sit invisibly until a
+		// separate trip to the Approval Queue admin page).
 		foreach ( $tool_results as $tr ) {
-			if ( 'confirmation_required' === ( $tr['result']['status'] ?? '' ) || ! empty( $tr['result']['pending_proposal'] ) ) {
+			$tr_status = $tr['result']['status'] ?? '';
+
+			if ( 'confirmation_required' === $tr_status || ! empty( $tr['result']['pending_proposal'] ) ) {
 				$result['pending_proposal'] = true;
 				$result['proposal']         = array(
+					'kind'        => 'proposal',
 					'id'          => $tr['result']['proposal_id'],
 					'description' => $tr['result']['description'] ?? $tr['result']['reason'] ?? '',
 					'diff'        => $tr['result']['diff'] ?? '',
 					'tool'        => $tr['tool'],
 				);
 				break; // One proposal per response.
+			}
+
+			if ( 'queued_for_approval' === $tr_status ) {
+				$result['pending_proposal'] = true;
+				$result['proposal']         = array(
+					'kind'        => 'approval',
+					'id'          => $tr['result']['approval_id'],
+					'description' => sprintf(
+						'%s — %s',
+						str_replace( '_', ' ', (string) $tr['tool'] ),
+						(string) ( $tr['result']['reason'] ?? '' )
+					),
+					'tool'        => $tr['tool'],
+				);
+				break;
 			}
 		}
 

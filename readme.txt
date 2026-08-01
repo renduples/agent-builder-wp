@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.25
+Stable tag: 3.3.26
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.26 - 2026-08-01 =
+* New: high-risk actions an assistant queues for approval (e.g. Assistant Trainer creating a new agent) now show up as a real Approve/Reject card right in the chat conversation for administrators, instead of only a text message pointing to the separate Approvals admin page. It's the same secure, admin-only endpoint the Approvals page itself uses (never something the AI model can trigger on its own) — clicking the button in chat is the only thing that can actually approve it.
+* New: get_user_context tool (Assistant Trainer) — lets an agent check who it's actually talking to (display name, WordPress role, and whether they can approve high-risk actions) before promising something only an administrator can do.
 
 = 3.3.25 - 2026-08-01 =
 * Improvement: final tooltip pass from the learning-curve plan. The Knowledge screen's four tabs (Wiki, Instructions, Memory, Vector Store) now have a one-line explanation on hover — the tab people most often confuse with each other. Each item in the Approvals queue now explains why it's waiting on you, even when there's no plain-language reasoning available and the raw parameters would otherwise be the only clue.

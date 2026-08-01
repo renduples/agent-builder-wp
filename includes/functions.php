@@ -35,6 +35,7 @@ function agentic_chat_i18n(): array {
 		'showDiff'            => __( '\u25b6 Show Diff', 'agent-builder' ),
 		'hideDiff'            => __( '\u25bc Hide Diff', 'agent-builder' ),
 		'proposalDefault'     => __( 'Agent wants to make a change.', 'agent-builder' ),
+		'approvalDefault'     => __( 'An assistant wants to perform a high-risk action.', 'agent-builder' ),
 		'ttsOff'              => __( 'Read aloud: off \u2014 click to enable', 'agent-builder' ),
 		'ttsOn'               => __( 'Read aloud: on \u2014 click to disable', 'agent-builder' ),
 		'voiceHttpsRequired'  => __( 'Voice input requires Chrome, Edge, or Safari with HTTPS', 'agent-builder' ),
@@ -45,6 +46,8 @@ function agentic_chat_i18n(): array {
 		'errorConnection'     => __( 'Sorry, there was an error connecting to the agent. Please try again.', 'agent-builder' ),
 		/* translators: %s is the error message detail */
 		'errorProposal'       => __( 'Error processing proposal: %s', 'agent-builder' ),
+		/* translators: %s is the error message detail */
+		'errorApproval'       => __( 'Error processing approval: %s', 'agent-builder' ),
 		'errorTurnstile'      => __( 'Browser verification failed. Please refresh the page and try again.', 'agent-builder' ),
 		'errorTtsLimit'       => __( 'Text-to-speech is currently unavailable. Please try again later.', 'agent-builder' ),
 		/* translators: %s is the name of the agent that handed off the conversation */

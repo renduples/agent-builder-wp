@@ -7,6 +7,9 @@
     "platform-knowledge.txt"
   ],
   "abilities": {
+    "get_user_context": {
+      "risk": "none"
+    },
     "search_capabilities": {
       "risk": "none"
     },

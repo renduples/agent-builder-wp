@@ -721,7 +721,7 @@
 
             // Show proposal card for pending user-space changes
             if (meta.proposal) {
-                const proposalDiv = renderProposal(meta.proposal);
+                const proposalDiv = renderProposalCard(meta.proposal);
                 div.appendChild(proposalDiv);
             }
         }
@@ -927,7 +927,7 @@
                                     }
                                 // Pending confirmation -> render approve/reject buttons (streaming parity).
                                 if (streamBubble && evt.pending_proposal && evt.proposal) {
-                                    streamBubble.appendChild(renderProposal(evt.proposal));
+                                    streamBubble.appendChild(renderProposalCard(evt.proposal));
                                 }
                                 } else if (evt.type === 'error') {
                                     const errText = evt.message || agenticChat.i18n.errorGeneric;
@@ -1277,6 +1277,13 @@
         }
     }
 
+    // Dispatch to the right card renderer: a user-space proposal (medium risk,
+    // once/session/always/deny) or a high-risk admin approval-queue item
+    // (approve/reject only, backed by the same endpoint the Approvals page uses).
+    function renderProposalCard(proposal) {
+        return proposal.kind === 'approval' ? renderApprovalCard(proposal) : renderProposal(proposal);
+    }
+
     // Render a proposal card with diff and approve/reject buttons
     function renderProposal(proposal) {
         const card = document.createElement('div');
@@ -1351,6 +1358,54 @@
             actions.appendChild(rejectBtn);
         } else {
             // Non-admin frontend users cannot grant tool permissions.
+            const blockedNote = document.createElement('div');
+            blockedNote.className = 'agentic-proposal-status';
+            blockedNote.textContent = 'This action requires admin approval.';
+            actions.appendChild(blockedNote);
+        }
+        card.appendChild(actions);
+
+        return card;
+    }
+
+    // Render a high-risk admin-approval card (Approval Queue item), approve/reject
+    // only — no once/session/always distinction, since that grant model doesn't
+    // apply to admin-queued actions.
+    function renderApprovalCard(proposal) {
+        const card = document.createElement('div');
+        card.className = 'agentic-proposal-card';
+        card.dataset.proposalId = proposal.id;
+
+        const header = document.createElement('div');
+        header.className = 'agentic-proposal-header';
+        header.innerHTML = '<span class="dashicons dashicons-lock"></span> <strong>Needs Your Approval</strong>';
+        card.appendChild(header);
+
+        const desc = document.createElement('div');
+        desc.className = 'agentic-proposal-desc';
+        desc.textContent = proposal.description || agenticChat.i18n.approvalDefault;
+        card.appendChild(desc);
+
+        const actions = document.createElement('div');
+        actions.className = 'agentic-proposal-actions';
+
+        if (agenticChat.isAdmin === '1') {
+            const approveBtn = document.createElement('button');
+            approveBtn.type = 'button';
+            approveBtn.className = 'agentic-proposal-btn agentic-proposal-approve';
+            approveBtn.innerHTML = '<span class="dashicons dashicons-yes"></span> Approve';
+            approveBtn.addEventListener('click', () => handleApprovalAction(proposal.id, 'approve', card));
+
+            const rejectBtn = document.createElement('button');
+            rejectBtn.type = 'button';
+            rejectBtn.className = 'agentic-proposal-btn agentic-proposal-reject';
+            rejectBtn.innerHTML = '<span class="dashicons dashicons-no"></span> Reject';
+            rejectBtn.addEventListener('click', () => handleApprovalAction(proposal.id, 'reject', card));
+
+            actions.appendChild(approveBtn);
+            actions.appendChild(rejectBtn);
+        } else {
+            // Non-admins cannot resolve admin approval-queue items.
             const blockedNote = document.createElement('div');
             blockedNote.className = 'agentic-proposal-status';
             blockedNote.textContent = 'This action requires admin approval.';
@@ -1442,6 +1497,44 @@
             console.error('Proposal action error:', error);
             buttons.forEach(btn => btn.disabled = false);
             addMessage(agenticChat.i18n.errorProposal.replace('%s', error.message), 'agent');
+        }
+    }
+
+    // Send an approve/reject decision to the real admin approval-queue REST
+    // endpoint (the same one the Approvals page uses) — never a call the LLM
+    // can trigger itself; only a genuine click from a signed-in admin browser
+    // session reaches this function.
+    async function handleApprovalAction(approvalId, action, cardElement) {
+        const buttons = cardElement.querySelectorAll('.agentic-proposal-btn');
+        buttons.forEach(btn => btn.disabled = true);
+
+        try {
+            const response = await fetch(agenticChat.restUrl + 'approvals/' + approvalId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': agenticChat.nonce
+                },
+                body: JSON.stringify({ action: action })
+            });
+
+            const data = await response.json();
+            const actionsDiv = cardElement.querySelector('.agentic-proposal-actions');
+
+            if (!response.ok || data.success === false) {
+                const errMsg = (data.error && data.error.message) || data.message || 'Something went wrong.';
+                actionsDiv.innerHTML = '<div class="agentic-proposal-status agentic-proposal-error">⚠️ ' + escapeHtml(errMsg) + '</div>';
+                buttons.forEach(btn => btn.disabled = false);
+                return;
+            }
+
+            cardElement.classList.add('agentic-proposal-' + (action === 'approve' ? 'approved' : 'rejected'));
+            const okMsg = (data.data && data.data.message) || (action === 'approve' ? 'Approved.' : 'Rejected.');
+            actionsDiv.innerHTML = '<div class="agentic-proposal-status">' + (action === 'approve' ? '✅ ' : '❌ ') + escapeHtml(okMsg) + '</div>';
+        } catch (error) {
+            console.error('Approval action error:', error);
+            buttons.forEach(btn => btn.disabled = false);
+            addMessage(agenticChat.i18n.errorApproval.replace('%s', error.message), 'agent');
         }
     }
 

@@ -178,9 +178,8 @@ class Tool_Executor {
 					'status'      => 'queued_for_approval',
 					'approval_id' => $queue_id,
 					'message'     => sprintf(
-						'This action (%s) is high-risk and has been queued for admin approval (ID: %s). The administrator will review it at the Approval Queue page.',
-						$tool_name,
-						$queue_id
+						'This action (%s) is high-risk and needs admin approval. Review it below, or in the Approval Queue page later.',
+						$tool_name
 					),
 					'reason'      => $reason,
 				);

@@ -12,6 +12,7 @@
         "manage_options"
     ],
     "tools": [
+        "get_user_context",
         "search_capabilities",
         "analyze_requirements",
         "validate_agent_code",
