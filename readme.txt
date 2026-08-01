@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.24
+Stable tag: 3.3.25
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.25 - 2026-08-01 =
+* Improvement: final tooltip pass from the learning-curve plan. The Knowledge screen's four tabs (Wiki, Instructions, Memory, Vector Store) now have a one-line explanation on hover — the tab people most often confuse with each other. Each item in the Approvals queue now explains why it's waiting on you, even when there's no plain-language reasoning available and the raw parameters would otherwise be the only clue.
 
 = 3.3.24 - 2026-08-01 =
 * New: Publish wizard — a guided "Publish Your Agent" flow (admin.php?page=agentic-deploy-wizard) that closes the gap between "I trained an agent" and "people can actually reach it." Pick an agent and a surface (chat widget, admin bar, Ask AI launcher, or Gutenberg block), a minimal config, and it turns that surface on using the exact same settings the classic Publish tabs already read — nothing new to maintain, just a faster on-ramp. The Train an Agent wizard's success screen now links straight here for the agent you just created.

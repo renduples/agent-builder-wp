@@ -36,6 +36,15 @@ $agentic_td_tabs = array(
 	'vector'       => __( 'Vector Store', 'agent-builder' ) . ( $agentic_is_pro ? '' : ' · Pro' ),
 );
 
+// One-line "why does this exist" tooltip per tab — these four are the ones
+// new users most often confuse with each other.
+$agentic_td_tab_titles = array(
+	'wiki'         => __( 'Facts, policies, and FAQs every assistant can look up — the site\'s shared source of truth.', 'agent-builder' ),
+	'instructions' => __( 'How one specific assistant talks: its tone, greeting, and persona. Not shared facts — that\'s the Wiki.', 'agent-builder' ),
+	'memory'       => __( 'Short notes an assistant keeps between chats, e.g. things a user told it. Optional and site-owned.', 'agent-builder' ),
+	'vector'       => __( 'Hosted semantic search over large documents (PDFs, long pages) for faster, more precise recall.', 'agent-builder' ),
+);
+
 $agentic_scopes = array( 'site' => __( 'Site-wide wiki', 'agent-builder' ) );
 if ( class_exists( '\Agentic_Agent_Registry' ) ) {
 	$agentic_reg = \Agentic_Agent_Registry::get_instance();
@@ -74,6 +83,7 @@ if ( class_exists( '\Agentic_Agent_Registry' ) ) {
 			'slug'  => $agentic_td_slug,
 			'label' => $agentic_td_label,
 			'url'   => admin_url( 'admin.php?page=agentic-train-data&tab=' . $agentic_td_slug ),
+			'title' => $agentic_td_tab_titles[ $agentic_td_slug ] ?? '',
 		);
 	}
 	\Agentic\Admin_Vnav::open(

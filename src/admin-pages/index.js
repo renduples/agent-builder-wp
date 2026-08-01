@@ -25,6 +25,11 @@ const RISK_EXPLANATIONS = {
 	extreme: __( 'Too risky to allow at all — hidden from assistants entirely, cannot be enabled.', 'agent-builder' ),
 };
 
+const APPROVAL_ACTION_HINT = __(
+	'An assistant tried to run this specific action and paused here first. Nothing happens until you decide — approve to let it run once, or reject to cancel it.',
+	'agent-builder'
+);
+
 function bootConfig() {
 	return window.agenticAdminPage || { page: 'tools', tab: '' };
 }
@@ -1776,6 +1781,7 @@ function ApprovalsView( { data, reload } ) {
 						>
 							<div className="agentic-react-approval-card__main">
 								<strong>{ r.title }</strong>
+								<InfoTip text={ APPROVAL_ACTION_HINT } />
 								<span
 									className={
 										'agentic-react-risk agentic-react-risk--' +

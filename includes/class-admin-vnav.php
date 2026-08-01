@@ -60,6 +60,7 @@ class Admin_Vnav {
 	 *       'badge'  (string) optional pre-escaped HTML appended inside the link (e.g. a count badge).
 	 *       'suffix' (string) optional pre-escaped HTML appended after the label (e.g. a status dot).
 	 *       'active' (bool)   optional explicit active flag (overrides slug comparison).
+	 *       'title'  (string) optional one-line tooltip (native title attribute) explaining what this section is for.
 	 * }
 	 * @return void
 	 */
@@ -126,12 +127,14 @@ class Admin_Vnav {
 									$slug      = (string) ( $item['slug'] ?? '' );
 									$label     = (string) ( $item['label'] ?? '' );
 									$url       = (string) ( $item['url'] ?? '#' );
+									$title     = (string) ( $item['title'] ?? '' );
 									$is_active = isset( $item['active'] ) ? (bool) $item['active'] : ( '' !== $slug && $slug === $args['active'] );
 									?>
 									<li>
 										<a href="<?php echo esc_url( $url ); ?>"
 											class="agentic-settings-nav-item <?php echo $is_active ? 'is-active' : ''; ?>"
 											data-filter-label="<?php echo esc_attr( $label ); ?>"
+											<?php echo '' !== $title ? 'title="' . esc_attr( $title ) . '"' : ''; ?>
 											<?php echo $is_active ? 'aria-current="page"' : ''; ?>>
 											<?php
 											echo esc_html( $label );
