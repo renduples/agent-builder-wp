@@ -287,10 +287,236 @@
             const metaDiv = el('div', { className: 'agentic-overlay-msg-meta' });
             if (meta.cached) metaDiv.innerHTML += '<span title="Cached">⚡</span> ';
             div.appendChild(metaDiv);
+
+            // Show a proposal (medium risk) or approval-queue (high risk) card
+            // for a pending action, so it can be resolved right here instead of
+            // only on a separate admin page.
+            if (meta.proposal) {
+                div.appendChild(renderProposalCard(meta.proposal));
+            }
         }
 
         msgs.appendChild(div);
         msgs.scrollTop = msgs.scrollHeight;
+        return div;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  Proposals & approvals                                              */
+    /*  Mirrors assets/js/chat.js's two card kinds:                        */
+    /*    - "proposal" (medium risk, user-space): once/session/always/deny */
+    /*    - "approval"  (high risk, admin queue): approve/reject only,     */
+    /*      backed by the same secure endpoint the Approvals admin page    */
+    /*      uses. Every user who can even see this overlay already passed  */
+    /*      the manage_options gate in enqueue_adminbar_chat_overlay(), so */
+    /*      agenticChat.isAdmin is checked here only for defense-in-depth  */
+    /*      consistency with the other chat surfaces, not as the real gate.*/
+    /* ------------------------------------------------------------------ */
+    function renderProposalCard(proposal) {
+        return proposal.kind === 'approval' ? renderApprovalCard(proposal) : renderProposal(proposal);
+    }
+
+    function renderProposal(proposal) {
+        const card = el('div', { className: 'agentic-overlay-proposal-card' });
+        card.dataset.proposalId = proposal.id;
+
+        const header = el('div', {
+            className: 'agentic-overlay-proposal-header',
+            innerHTML: '<span class="dashicons dashicons-editor-code"></span> <strong>Proposed Change</strong>'
+        });
+        card.appendChild(header);
+
+        const desc = el('div', {
+            className: 'agentic-overlay-proposal-desc',
+            textContent: proposal.description || 'Agent wants to make a change.'
+        });
+        card.appendChild(desc);
+
+        if (proposal.diff) {
+            const diffToggle = el('button', {
+                type: 'button',
+                className: 'agentic-overlay-proposal-toggle',
+                textContent: '▶ Show Diff'
+            });
+            card.appendChild(diffToggle);
+
+            const diffPre = el('pre', {
+                className: 'agentic-overlay-proposal-diff',
+                style: 'display:none',
+                innerHTML: formatDiff(proposal.diff)
+            });
+            card.appendChild(diffPre);
+
+            diffToggle.addEventListener('click', function () {
+                const visible = diffPre.style.display !== 'none';
+                diffPre.style.display = visible ? 'none' : 'block';
+                diffToggle.textContent = visible ? '▶ Show Diff' : '▼ Hide Diff';
+            });
+        }
+
+        const actions = el('div', { className: 'agentic-overlay-proposal-actions' });
+
+        if (agenticChat.isAdmin === '1') {
+            const onceBtn = el('button', {
+                type: 'button',
+                className: 'agentic-overlay-proposal-btn agentic-overlay-proposal-approve',
+                innerHTML: '<span class="dashicons dashicons-yes"></span> Allow Once'
+            });
+            onceBtn.addEventListener('click', () => handleProposalAction(proposal.id, 'once', card));
+
+            const sessionBtn = el('button', {
+                type: 'button',
+                className: 'agentic-overlay-proposal-btn agentic-overlay-proposal-session',
+                innerHTML: '<span class="dashicons dashicons-clock"></span> Allow this Session'
+            });
+            sessionBtn.addEventListener('click', () => handleProposalAction(proposal.id, 'session', card));
+
+            const alwaysBtn = el('button', {
+                type: 'button',
+                className: 'agentic-overlay-proposal-btn agentic-overlay-proposal-always',
+                innerHTML: '<span class="dashicons dashicons-star-filled"></span> Always Allow'
+            });
+            alwaysBtn.addEventListener('click', () => handleProposalAction(proposal.id, 'always', card));
+
+            const rejectBtn = el('button', {
+                type: 'button',
+                className: 'agentic-overlay-proposal-btn agentic-overlay-proposal-reject',
+                innerHTML: '<span class="dashicons dashicons-no"></span> Deny'
+            });
+            rejectBtn.addEventListener('click', () => handleProposalAction(proposal.id, 'reject', card));
+
+            actions.appendChild(onceBtn);
+            actions.appendChild(sessionBtn);
+            actions.appendChild(alwaysBtn);
+            actions.appendChild(rejectBtn);
+        } else {
+            actions.appendChild(el('div', {
+                className: 'agentic-overlay-proposal-status',
+                textContent: 'This action requires admin approval.'
+            }));
+        }
+        card.appendChild(actions);
+
+        return card;
+    }
+
+    function renderApprovalCard(proposal) {
+        const card = el('div', { className: 'agentic-overlay-proposal-card' });
+        card.dataset.proposalId = proposal.id;
+
+        const header = el('div', {
+            className: 'agentic-overlay-proposal-header',
+            innerHTML: '<span class="dashicons dashicons-lock"></span> <strong>Needs Your Approval</strong>'
+        });
+        card.appendChild(header);
+
+        const desc = el('div', {
+            className: 'agentic-overlay-proposal-desc',
+            textContent: proposal.description || 'An assistant wants to perform a high-risk action.'
+        });
+        card.appendChild(desc);
+
+        const actions = el('div', { className: 'agentic-overlay-proposal-actions' });
+
+        if (agenticChat.isAdmin === '1') {
+            const approveBtn = el('button', {
+                type: 'button',
+                className: 'agentic-overlay-proposal-btn agentic-overlay-proposal-approve',
+                innerHTML: '<span class="dashicons dashicons-yes"></span> Approve'
+            });
+            approveBtn.addEventListener('click', () => handleApprovalAction(proposal.id, 'approve', card));
+
+            const rejectBtn = el('button', {
+                type: 'button',
+                className: 'agentic-overlay-proposal-btn agentic-overlay-proposal-reject',
+                innerHTML: '<span class="dashicons dashicons-no"></span> Reject'
+            });
+            rejectBtn.addEventListener('click', () => handleApprovalAction(proposal.id, 'reject', card));
+
+            actions.appendChild(approveBtn);
+            actions.appendChild(rejectBtn);
+        } else {
+            actions.appendChild(el('div', {
+                className: 'agentic-overlay-proposal-status',
+                textContent: 'This action requires admin approval.'
+            }));
+        }
+        card.appendChild(actions);
+
+        return card;
+    }
+
+    function formatDiff(diff) {
+        return diff.split('\n').map(function (line) {
+            const escaped = esc(line);
+            if (line.startsWith('+')) return '<span class="diff-add">' + escaped + '</span>';
+            if (line.startsWith('-')) return '<span class="diff-del">' + escaped + '</span>';
+            if (line.startsWith('@@')) return '<span class="diff-hunk">' + escaped + '</span>';
+            return escaped;
+        }).join('\n');
+    }
+
+    // Send a once/session/always/reject decision to the user-space proposal endpoint.
+    async function handleProposalAction(proposalId, action, cardElement) {
+        const buttons = cardElement.querySelectorAll('.agentic-overlay-proposal-btn');
+        buttons.forEach(function (btn) { btn.disabled = true; });
+
+        try {
+            const response = await fetch(agenticChat.restUrl + 'proposals/' + proposalId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': agenticChat.nonce },
+                body: JSON.stringify({ action: action, session_id: sessionId })
+            });
+            const data = await response.json();
+
+            const isApproveVariant = action === 'once' || action === 'session' || action === 'always';
+            cardElement.classList.add('agentic-overlay-proposal-' + (isApproveVariant ? 'approved' : 'rejected'));
+
+            const actionsDiv = cardElement.querySelector('.agentic-overlay-proposal-actions');
+            let statusText;
+            if (action === 'once') statusText = '✅ Allowed once — change applied.';
+            else if (action === 'session') statusText = '✅ Allowed for this session — change applied.';
+            else if (action === 'always') statusText = '✅ Always allowed — change applied.';
+            else statusText = '❌ Denied — no change made.';
+            if (data.error) statusText = '⚠️ ' + data.error;
+            actionsDiv.innerHTML = '<div class="agentic-overlay-proposal-status' + (data.error ? ' agentic-overlay-proposal-error' : '') + '">' + esc(statusText) + '</div>';
+        } catch (error) {
+            buttons.forEach(function (btn) { btn.disabled = false; });
+            addMessage('Error processing proposal: ' + error.message, 'agent');
+        }
+    }
+
+    // Send an approve/reject decision to the real admin approval-queue REST
+    // endpoint (the same one the Approvals page uses) — never a call the LLM
+    // can trigger itself; only a genuine click from a signed-in admin browser
+    // session reaches this function.
+    async function handleApprovalAction(approvalId, action, cardElement) {
+        const buttons = cardElement.querySelectorAll('.agentic-overlay-proposal-btn');
+        buttons.forEach(function (btn) { btn.disabled = true; });
+
+        try {
+            const response = await fetch(agenticChat.restUrl + 'approvals/' + approvalId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': agenticChat.nonce },
+                body: JSON.stringify({ action: action })
+            });
+            const data = await response.json();
+            const actionsDiv = cardElement.querySelector('.agentic-overlay-proposal-actions');
+
+            if (!response.ok || data.success === false) {
+                const errMsg = (data.error && data.error.message) || data.message || 'Something went wrong.';
+                actionsDiv.innerHTML = '<div class="agentic-overlay-proposal-status agentic-overlay-proposal-error">⚠️ ' + esc(errMsg) + '</div>';
+                buttons.forEach(function (btn) { btn.disabled = false; });
+                return;
+            }
+
+            cardElement.classList.add('agentic-overlay-proposal-' + (action === 'approve' ? 'approved' : 'rejected'));
+            const okMsg = (data.data && data.data.message) || (action === 'approve' ? 'Approved.' : 'Rejected.');
+            actionsDiv.innerHTML = '<div class="agentic-overlay-proposal-status">' + (action === 'approve' ? '✅ ' : '❌ ') + esc(okMsg) + '</div>';
+        } catch (error) {
+            buttons.forEach(function (btn) { btn.disabled = false; });
+            addMessage('Error processing approval: ' + error.message, 'agent');
+        }
     }
 
     /* ------------------------------------------------------------------ */
@@ -350,10 +576,11 @@
                 history.push({ role: 'assistant', content: data.response });
                 saveHistory();
                 addMessage(data.response, 'agent', {
-                    tokens: data.tokens_used,
-                    cost:   data.cost,
-                    tools:  data.tools_used,
-                    cached: data.cached || false
+                    tokens:   data.tokens_used,
+                    cost:     data.cost,
+                    tools:    data.tools_used,
+                    cached:   data.cached || false,
+                    proposal: data.pending_proposal ? data.proposal : null
                 });
             }
         } catch (err) {

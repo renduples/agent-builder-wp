@@ -168,6 +168,11 @@ class Chat_Assets {
 				'nonce'           => wp_create_nonce( 'wp_rest' ),
 				'userId'          => get_current_user_id(),
 				'userName'        => wp_get_current_user()->display_name,
+				// The overlay itself is already gated to manage_options above, but
+				// keep this explicit and consistent with the other two chat surfaces
+				// (class-shortcodes.php, class-admin-menu-handler.php) rather than
+				// relying on that outer gate implicitly.
+				'isAdmin'         => current_user_can( 'manage_options' ) ? '1' : '0',
 				'welcomeMessages' => $agentic_welcome_messages,
 				'agentNames'      => $agentic_agent_names,
 				'showBranding'    => $agentic_overlay_whitelabel ? '0' : '1',

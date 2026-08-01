@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.26
+Stable tag: 3.3.27
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.27 - 2026-08-01 =
+* Improvement: the admin-bar quick-chat overlay now renders the same in-chat proposal and approval cards the main Agent Chat page got in 3.3.26, instead of showing pending confirmations as plain text with no way to act on them there.
 
 = 3.3.26 - 2026-08-01 =
 * New: high-risk actions an assistant queues for approval (e.g. Assistant Trainer creating a new agent) now show up as a real Approve/Reject card right in the chat conversation for administrators, instead of only a text message pointing to the separate Approvals admin page. It's the same secure, admin-only endpoint the Approvals page itself uses (never something the AI model can trigger on its own) — clicking the button in chat is the only thing that can actually approve it.
