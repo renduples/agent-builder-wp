@@ -638,7 +638,7 @@ $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );
 		$agentic_active_tab = 'interface';
 	}
 
-	$agentic_is_advanced = \Agentic\Admin_Menu_Handler::is_advanced_mode();
+	$agentic_is_advanced = \Agentic\Admin_Menu_Handler::is_advanced_mode( 'settings' );
 
 	// Group the flat settings tabs into labelled clusters (see UX/IA §5). Tabs are
 	// matched by slug; any tab not explicitly placed (for example a future add-on

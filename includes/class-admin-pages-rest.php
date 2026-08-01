@@ -103,6 +103,25 @@ class Admin_Pages_REST {
 			return current_user_can( 'agentic_view_audit_log' );
 		}
 
+		// set_screen_mode is a personal, per-user preference for one screen —
+		// require whatever capability that screen itself already requires,
+		// so setting it never grants more than reading the screen already
+		// does (and reset_screen_modes only touches the current user's own
+		// overrides, so any of these are a safe minimum).
+		if ( 'set_screen_mode' === $action || 'reset_screen_modes' === $action ) {
+			$screen = sanitize_key( (string) $request->get_param( 'screen' ) );
+			if ( in_array( $screen, array( 'tools', 'skills' ), true ) ) {
+				return current_user_can( 'agentic_manage_tools' );
+			}
+			if ( in_array( $screen, array( 'approvals', 'deployment' ), true ) ) {
+				return current_user_can( 'agentic_manage_agents' );
+			}
+			if ( 'logs' === $screen ) {
+				return current_user_can( 'agentic_view_audit_log' );
+			}
+			return current_user_can( 'agentic_manage_settings' );
+		}
+
 		// train-data, upgrade-pro, and anything unmapped stay behind the
 		// broadest admin-settings privilege as a safe default.
 		return current_user_can( 'agentic_manage_settings' );
@@ -251,6 +270,28 @@ class Admin_Pages_REST {
 				),
 				200
 			);
+		}
+
+		if ( 'set_screen_mode' === $action ) {
+			$screen = sanitize_key( (string) $request->get_param( 'screen' ) );
+			$mode   = sanitize_key( (string) $request->get_param( 'mode' ) );
+			if ( '' === $screen || ! in_array( $mode, array( 'basic', 'advanced' ), true ) ) {
+				return new \WP_Error( 'invalid', __( 'Invalid screen or mode.', 'agent-builder' ), array( 'status' => 400 ) );
+			}
+			Admin_Menu_Handler::set_screen_mode( $screen, $mode );
+			return new \WP_REST_Response(
+				array(
+					'ok'     => true,
+					'screen' => $screen,
+					'mode'   => $mode,
+				),
+				200
+			);
+		}
+
+		if ( 'reset_screen_modes' === $action ) {
+			Admin_Menu_Handler::reset_screen_modes();
+			return new \WP_REST_Response( array( 'ok' => true ), 200 );
 		}
 
 		return new \WP_Error( 'unknown_action', __( 'Unknown action.', 'agent-builder' ), array( 'status' => 400 ) );
@@ -509,7 +550,7 @@ class Admin_Pages_REST {
 			);
 
 		$is_advanced = class_exists( Admin_Menu_Handler::class )
-			? Admin_Menu_Handler::is_advanced_mode()
+			? Admin_Menu_Handler::is_advanced_mode( 'tools' )
 			: ( 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) );
 
 		$enabled_count  = 0;
@@ -715,7 +756,7 @@ class Admin_Pages_REST {
 		}
 
 		$is_advanced = class_exists( Admin_Menu_Handler::class )
-			? Admin_Menu_Handler::is_advanced_mode()
+			? Admin_Menu_Handler::is_advanced_mode( 'approvals' )
 			: ( 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) );
 
 		$prefs = self::get_approval_prefs();
@@ -972,7 +1013,7 @@ class Admin_Pages_REST {
 			'tokens'    => 0,
 		);
 		$is_advanced   = class_exists( Admin_Menu_Handler::class )
-			? Admin_Menu_Handler::is_advanced_mode()
+			? Admin_Menu_Handler::is_advanced_mode( 'logs' )
 			: ( 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) );
 		$period_limits = array(
 			'day'   => 200,

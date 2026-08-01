@@ -228,16 +228,71 @@ class Admin_Menu_Handler {
 	}
 
 	/**
+	 * User meta key for per-screen Basic/Advanced overrides.
+	 *
+	 * Stores an associative array of screen key => 'basic'|'advanced', e.g.
+	 * { "tools": "advanced", "logs": "basic" }. A screen with no entry here
+	 * falls back to the site-wide agentic_ui_mode default (see
+	 * is_advanced_mode()). Same array-in-user-meta shape as
+	 * QUICK_ACTIONS_META above.
+	 */
+	public const SCREEN_MODE_META = 'agentic_screen_mode';
+
+	/**
 	 * Whether the admin UI is in "Advanced" mode.
 	 *
-	 * Stored as a site-wide option so the navigation can hide advanced
-	 * concepts from non-technical users by default. Both this plugin and
-	 * Agent Builder Pro read the same option to gate advanced surfaces.
+	 * When $screen is given, a per-user override for that specific screen
+	 * (stored in SCREEN_MODE_META) takes precedence. With no override, or no
+	 * $screen argument at all, falls back to the site-wide agentic_ui_mode
+	 * option — this is also the only behavior a caller with no $screen ever
+	 * sees, so existing callers (including Agent Builder Pro, which reads
+	 * this same option) are unaffected.
 	 *
+	 * @param string $screen Screen key (e.g. 'tools', 'approvals', 'logs',
+	 *                        'dashboard', 'settings'), or '' for the
+	 *                        site-wide default only.
 	 * @return bool
 	 */
-	public static function is_advanced_mode(): bool {
+	public static function is_advanced_mode( string $screen = '' ): bool {
+		if ( '' !== $screen ) {
+			$overrides = get_user_meta( get_current_user_id(), self::SCREEN_MODE_META, true );
+			if ( is_array( $overrides ) && isset( $overrides[ $screen ] ) && in_array( $overrides[ $screen ], array( 'basic', 'advanced' ), true ) ) {
+				return 'advanced' === $overrides[ $screen ];
+			}
+		}
+
 		return 'advanced' === get_option( 'agentic_ui_mode', 'basic' );
+	}
+
+	/**
+	 * Persist a per-screen Basic/Advanced override for the current user.
+	 *
+	 * @param string $screen Screen key.
+	 * @param string $mode   'basic' or 'advanced'.
+	 * @return void
+	 */
+	public static function set_screen_mode( string $screen, string $mode ): void {
+		if ( '' === $screen || ! in_array( $mode, array( 'basic', 'advanced' ), true ) ) {
+			return;
+		}
+
+		$overrides = get_user_meta( get_current_user_id(), self::SCREEN_MODE_META, true );
+		if ( ! is_array( $overrides ) ) {
+			$overrides = array();
+		}
+
+		$overrides[ $screen ] = $mode;
+		update_user_meta( get_current_user_id(), self::SCREEN_MODE_META, $overrides );
+	}
+
+	/**
+	 * Clear all per-screen Basic/Advanced overrides for the current user,
+	 * resetting every screen back to the site-wide default.
+	 *
+	 * @return void
+	 */
+	public static function reset_screen_modes(): void {
+		delete_user_meta( get_current_user_id(), self::SCREEN_MODE_META );
 	}
 
 	/**

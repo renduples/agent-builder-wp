@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.18
+Stable tag: 3.3.19
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.19 - 2026-08-01 =
+* Internal: laid the groundwork for per-screen Basic/Advanced interface mode (Phase 1 of the learning-curve plan) — Admin_Menu_Handler::is_advanced_mode() now accepts an optional screen key and checks a new per-user override (agentic_screen_mode user meta) before falling back to the existing site-wide Interface Mode setting. No visible behavior change in this release: no screen has an override yet, so every screen renders exactly as before. Screen-specific toggle controls ship in a follow-up release.
 
 = 3.3.18 - 2026-08-01 =
 * Fix: create_agent_files — Assistant Trainer's core, documented capability — was completely unusable. A prior security-hardening pass (3.3.17) reclassified it from high to extreme risk to stop remote MCP clients from silently creating agents, but extreme risk hides a tool from the LLM entirely and always blocks it, for anyone, at any trust level — including Assistant Trainer's own intentional, local chat use, which its own system prompt describes as going through "the approval queue" (a high-risk, not extreme-risk, mechanism). Restored to high risk: a remote/unattended caller still can't create an agent silently — it queues for a human either way — while local use through Assistant Trainer works again exactly as designed. Found and fixed while verifying Assistant Trainer's new clarifying-question flow below; reproduced live (create_agent_files hard-blocked 3 times in a row) and re-verified after the fix (queues for approval as expected).

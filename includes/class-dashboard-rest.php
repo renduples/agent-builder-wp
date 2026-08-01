@@ -173,7 +173,7 @@ class Dashboard_REST {
 	public static function get_dashboard( array $warnings = array() ): \WP_REST_Response {
 		$llm         = new LLM_Client();
 		$is_pro      = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
-		$is_advanced = Admin_Menu_Handler::is_advanced_mode();
+		$is_advanced = Admin_Menu_Handler::is_advanced_mode( 'dashboard' );
 		$provider    = $llm->get_provider();
 		$site_model  = (string) get_option( 'agentic_model', '' );
 

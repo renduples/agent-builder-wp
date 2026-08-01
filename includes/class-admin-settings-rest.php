@@ -82,7 +82,7 @@ class Admin_Settings_REST {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_bootstrap(): \WP_REST_Response {
-		$is_advanced = Admin_Menu_Handler::is_advanced_mode();
+		$is_advanced = Admin_Menu_Handler::is_advanced_mode( 'settings' );
 		$is_pro      = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
 
 		$tabs = array(
