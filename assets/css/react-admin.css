@@ -150,6 +150,30 @@
 	font-size: 12px;
 }
 
+.agentic-react-infotip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	margin-left: 4px;
+	padding: 0;
+	border: 1px solid #8c8f94;
+	border-radius: 50%;
+	background: transparent;
+	color: #646970;
+	font-size: 11px;
+	line-height: 1;
+	cursor: help;
+	vertical-align: middle;
+}
+
+.agentic-react-infotip:hover,
+.agentic-react-infotip:focus {
+	border-color: #2271b1;
+	color: #2271b1;
+}
+
 /* Shared page footer (policy + docs) inside React admin surfaces */
 .agentic-page-footer {
 	display: flex;

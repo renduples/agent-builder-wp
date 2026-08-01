@@ -10,6 +10,9 @@
     "get_agent_list": {
       "risk": "none"
     },
+    "get_onboarding_status": {
+      "risk": "none"
+    },
     "get_site_overview": {
       "risk": "none"
     },

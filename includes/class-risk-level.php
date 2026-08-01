@@ -238,7 +238,16 @@ class Risk_Level {
 		'install_plugin_from_url'              => self::HIGH,
 		'add_custom_js'                        => self::HIGH,
 		'run_wp_cli'                           => self::EXTREME,
-		'create_agent_files'                   => self::EXTREME,
+		// EXTREME hides a tool from the LLM entirely and always blocks it — no
+		// approval path, for anyone, at any trust level. That's right for
+		// run_wp_cli (arbitrary shell), but create_agent_files is Assistant
+		// Trainer's core, documented capability: its own system prompt says
+		// "the approval queue handles safety automatically," which requires
+		// the HIGH (queue-for-approval) path, not an unconditional block. HIGH
+		// still stops a remote MCP client from creating an agent silently — it
+		// queues for a human either way — while restoring the local,
+		// intentional chat flow this tool exists for.
+		'create_agent_files'                   => self::HIGH,
 		'validate_agent_code'                  => self::HIGH,
 
 		// Mutates the deployed codebase (Pro-only tools when free is stripped).

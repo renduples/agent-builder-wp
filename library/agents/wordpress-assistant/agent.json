@@ -13,6 +13,7 @@
     ],
     "tools": [
         "get_agent_list",
+        "get_onboarding_status",
         "get_site_overview",
         "get_site_context",
         "run_health_check",

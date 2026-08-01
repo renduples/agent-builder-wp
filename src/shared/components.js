@@ -12,6 +12,7 @@ import {
 	Notice,
 	Flex,
 	FlexItem,
+	Tooltip,
 } from '@wordpress/components';
 
 /**
@@ -126,5 +127,35 @@ export function Section( { title, children } ) {
 			) }
 			{ children }
 		</div>
+	);
+}
+
+/**
+ * Small inline "?" affordance showing a one-line plain-language explainer on
+ * hover/focus. Renders nothing interactive when `text` is empty, so call
+ * sites can pass it conditionally without littering conditionals.
+ *
+ * Content guideline for anyone adding a new call site: one short sentence,
+ * plain language, answers "why does this exist / what happens if I change
+ * it" rather than restating the label, kept under ~120 characters. Skip
+ * InfoTip entirely on a control that already has its own `help` text —
+ * it's for the many controls that currently have none.
+ */
+export function InfoTip( { text, children } ) {
+	if ( ! text ) {
+		return children || null;
+	}
+	return (
+		<Tooltip text={ text }>
+			{ children || (
+				<button
+					type="button"
+					className="agentic-react-infotip"
+					aria-label={ __( 'More info', 'agent-builder' ) }
+				>
+					?
+				</button>
+			) }
+		</Tooltip>
 	);
 }

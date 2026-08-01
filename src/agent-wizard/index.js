@@ -602,6 +602,12 @@ function App() {
 							] }
 							onChange={ ( v ) => set( 'mode', v ) }
 						/>
+						<p className="agentic-wizard-hint">
+							{ __(
+								'This only controls how often the agent pauses to ask you. Higher-risk actions still queue for your approval, and the riskiest actions are always blocked, no matter which autonomy level you pick.',
+								'agent-builder'
+							) }
+						</p>
 						{ options.tools && options.tools.length > 0 && (
 							<Fragment>
 								<p className="agentic-wizard-sublabel">

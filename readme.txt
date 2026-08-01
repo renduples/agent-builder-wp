@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.17
+Stable tag: 3.3.18
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,13 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.18 - 2026-08-01 =
+* Fix: create_agent_files — Assistant Trainer's core, documented capability — was completely unusable. A prior security-hardening pass (3.3.17) reclassified it from high to extreme risk to stop remote MCP clients from silently creating agents, but extreme risk hides a tool from the LLM entirely and always blocks it, for anyone, at any trust level — including Assistant Trainer's own intentional, local chat use, which its own system prompt describes as going through "the approval queue" (a high-risk, not extreme-risk, mechanism). Restored to high risk: a remote/unattended caller still can't create an agent silently — it queues for a human either way — while local use through Assistant Trainer works again exactly as designed. Found and fixed while verifying Assistant Trainer's new clarifying-question flow below; reproduced live (create_agent_files hard-blocked 3 times in a row) and re-verified after the fix (queues for approval as expected).
+* Improvement: WordPress Assistant now offers a short, plain-English "what is an agentic AI assistant" explainer on a user's first greeting/open-ended question, understands today's Basic/Advanced interface mode well enough to answer "where did X go," and can check the site's setup-checklist progress (new read-only get_onboarding_status tool) to weave one relevant next-step suggestion into replies for users who are still getting set up.
+* Improvement: Assistant Trainer no longer just says "describe the assistant you want" to a user who doesn't know how to answer that — it now offers a few concrete starter categories with examples, capped at one clarifying turn, then proceeds to build immediately once the user names anything (or makes a reasonable assumption if they're still unsure).
+* Improvement: added inline tooltips explaining what each risk level ("low," "medium," "high," "extreme") actually means/requires next to risk badges in Tools and Approvals, and a note on the agent autonomy picker clarifying that higher autonomy never bypasses risk-based approval queuing.
+* Improvement: the Approvals page's empty state now briefly explains what approvals are, not just that none are currently waiting.
 
 = 3.3.17 - 2026-07-30 =
 * Fix: multi-instance chat — shortcode/block + modal (or multiple embeds) each run fully; no page reload / silent second form.

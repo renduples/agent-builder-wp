@@ -13,7 +13,17 @@ import {
 	SearchControl,
 	ExternalLink,
 } from '@wordpress/components';
-import { AdminPage, Panel } from '../shared/components';
+import { AdminPage, Panel, InfoTip } from '../shared/components';
+
+// One-line, plain-language explanation of what each risk level actually
+// means in practice — shown via InfoTip next to any raw risk badge.
+const RISK_EXPLANATIONS = {
+	none: __( 'Safe to run automatically — read-only, no approval needed.', 'agent-builder' ),
+	low: __( 'Runs automatically by default; may read data that includes personal information.', 'agent-builder' ),
+	medium: __( 'Changes something — assistants pause for your in-chat confirmation first.', 'agent-builder' ),
+	high: __( 'A significant or bulk change — waits in the Approvals queue for you to allow it.', 'agent-builder' ),
+	extreme: __( 'Too risky to allow at all — hidden from assistants entirely, cannot be enabled.', 'agent-builder' ),
+};
 
 function bootConfig() {
 	return window.agenticAdminPage || { page: 'tools', tab: '' };
@@ -1047,6 +1057,14 @@ function ToolsView( { data, reload, patchData } ) {
 															'agent-builder'
 														) }
 												</span>
+												<InfoTip
+													text={
+														RISK_EXPLANATIONS[
+															r.risk_level ||
+																'none'
+														]
+													}
+												/>
 											</td>
 											<td>{ r.source }</td>
 										</tr>
@@ -1680,7 +1698,13 @@ function ApprovalsView( { data, reload } ) {
 					</p>
 					<p className="agentic-react-muted">
 						{ __(
-							'Nothing is waiting. When an assistant needs permission for a bigger change, it will show up here',
+							'Approvals pause any action an assistant rates as risky until you say yes — nothing waiting here means nothing is on hold right now.',
+							'agent-builder'
+						) }
+					</p>
+					<p className="agentic-react-muted">
+						{ __(
+							'When an assistant needs permission for a bigger change, it will show up here',
 							'agent-builder'
 						) }
 						{ emailNotify
@@ -1708,6 +1732,13 @@ function ApprovalsView( { data, reload } ) {
 								>
 									{ r.risk_level || 'high' }
 								</span>
+								<InfoTip
+									text={
+										RISK_EXPLANATIONS[
+											r.risk_level || 'high'
+										]
+									}
+								/>
 								<div className="agentic-react-muted">
 									{ r.subtitle
 										? `${ r.subtitle } · `
