@@ -250,7 +250,19 @@ class Dashboard_REST {
 			? Okf_Store::has_active_knowledge()
 			: (bool) get_option( 'agentic_has_knowledge', false );
 		$is_configured = $llm->is_configured() && ! Emergency_Stop::is_active();
+		// Chat comes first: WordPress Assistant works out of the box on the
+		// bundled default provider, so a brand-new user can start talking to it
+		// with zero setup — before "connect a provider" (bring your own key/model)
+		// or anything else. The &agent= param forces WordPress Assistant open
+		// regardless of any last-used-agent cookie.
 		$steps         = array(
+			array(
+				'id'    => 'chat',
+				'done'  => (int) ( $stats['total_actions'] ?? 0 ) > 0,
+				'label' => __( 'Say hi to WordPress Assistant', 'agent-builder' ),
+				'url'   => admin_url( 'admin.php?page=agentic-chat&agent=wordpress-assistant' ),
+				'cta'   => __( 'Open chat', 'agent-builder' ),
+			),
 			array(
 				'id'    => 'provider',
 				'done'  => $is_configured,
@@ -264,13 +276,6 @@ class Dashboard_REST {
 				'label' => __( 'Activate your first agent', 'agent-builder' ),
 				'url'   => admin_url( 'admin.php?page=agentic-agents' ),
 				'cta'   => __( 'Browse agents', 'agent-builder' ),
-			),
-			array(
-				'id'    => 'chat',
-				'done'  => (int) ( $stats['total_actions'] ?? 0 ) > 0,
-				'label' => __( 'Start a conversation', 'agent-builder' ),
-				'url'   => admin_url( 'admin.php?page=agentic-chat' ),
-				'cta'   => __( 'Open chat', 'agent-builder' ),
 			),
 			array(
 				'id'    => 'knowledge',

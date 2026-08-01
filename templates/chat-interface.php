@@ -25,12 +25,17 @@ $agentic_registry = Agentic_Agent_Registry::get_instance();
 $agentic_agents   = $agentic_registry->get_accessible_instances();
 
 // Default to first available agent or passed agent_id.
-// Priority: URL parameter → cookie preference → first agent.
+// Priority: URL parameter → cookie preference → WordPress Assistant (for a
+// user who has never chatted with anything yet) → first agent.
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No form submission, just URL parameter for agent selection.
 $agentic_default_agent_id = isset( $_GET['agent'] ) ? sanitize_key( $_GET['agent'] ) : '';
 
 if ( ! $agentic_default_agent_id && isset( $_COOKIE['agentic_last_agent'] ) ) {
 	$agentic_default_agent_id = sanitize_key( $_COOKIE['agentic_last_agent'] );
+}
+
+if ( ! $agentic_default_agent_id && isset( $agentic_agents['wordpress-assistant'] ) ) {
+	$agentic_default_agent_id = 'wordpress-assistant';
 }
 
 $agentic_current_agent    = null;

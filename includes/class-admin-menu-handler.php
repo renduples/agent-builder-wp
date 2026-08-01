@@ -109,8 +109,11 @@ class Admin_Menu_Handler {
 			fn() => $this->render_page( 'agents' )
 		);
 
+		// Publish — developer-facing deployment surfaces (scheduled tasks, event
+		// listeners, Gutenberg blocks, CLI, shortcodes, etc.); hidden from nav in
+		// Basic mode but still reachable at admin.php?page=agentic-deployment.
 		add_submenu_page(
-			'agent-builder',
+			$agentic_advanced_parent,
 			__( 'Agent Builder — Publish', 'agent-builder' ),
 			__( 'Publish', 'agent-builder' ),
 			'agentic_manage_agents',
@@ -188,8 +191,11 @@ class Admin_Menu_Handler {
 
 		// Usage / Costs page is registered by Agent Builder Pro.
 
+		// Activity — hidden from nav in Basic mode (reachable via the Dashboard's
+		// "View all activity" link and directly at admin.php?page=agentic-audit-log)
+		// so Basic nav doesn't need a dedicated top-level slot for it.
 		add_submenu_page(
-			'agent-builder',
+			$agentic_advanced_parent,
 			__( 'Agent Builder — Activity', 'agent-builder' ),
 			__( 'Activity', 'agent-builder' ),
 			'agentic_view_audit_log',
@@ -1083,11 +1089,18 @@ class Admin_Menu_Handler {
 			true
 		);
 
-		// Resolve agent slug (same priority as chat-interface.php: URL → cookie → first).
+		// Resolve agent slug (same priority as chat-interface.php: URL → cookie →
+		// WordPress Assistant, if the user has never chatted with anything yet → first).
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$agentic_chat_slug = isset( $_GET['agent'] ) ? sanitize_key( $_GET['agent'] ) : '';
 		if ( ! $agentic_chat_slug && isset( $_COOKIE['agentic_last_agent'] ) ) {
 			$agentic_chat_slug = sanitize_key( $_COOKIE['agentic_last_agent'] );
+		}
+		if ( ! $agentic_chat_slug ) {
+			$agentic_chat_accessible = \Agentic_Agent_Registry::get_instance()->get_accessible_instances();
+			if ( isset( $agentic_chat_accessible['wordpress-assistant'] ) ) {
+				$agentic_chat_slug = 'wordpress-assistant';
+			}
 		}
 		$agentic_chat_features = agentic_get_effective_chat_features( $agentic_chat_slug );
 

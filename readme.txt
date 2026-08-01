@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.21
+Stable tag: 3.3.22
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,11 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.22 - 2026-08-01 =
+* Improvement: Basic-mode navigation now shows 7 conservative items (Dashboard, Chat, Agents, Knowledge, Tools, Approvals, Settings) instead of also cluttering the menu with developer-facing surfaces. Publish (8 deployment tabs: scheduled tasks, event listeners, Gutenberg blocks, CLI, etc.) and Activity now hide from Basic nav exactly like Skills already did — both stay fully reachable by direct URL and, for Activity, via the Dashboard's existing "View Activity →" link.
+* Improvement: brand-new users (no chat cookie yet) landing on the Chat page or Dashboard now default straight into WordPress Assistant instead of whichever agent happens to be first in the list — getting people talking to the one agent whose whole job is guiding them through the plugin, faster.
+* Improvement: the Dashboard's Getting Started checklist now leads with "Say hi to WordPress Assistant" (using the bundled default AI provider, no setup required) ahead of "Connect an AI provider," since chatting needs zero configuration on a fresh install.
 
 = 3.3.21 - 2026-08-01 =
 * Fix: the Dashboard was completely broken (site-wide critical error on every load). Dashboard_REST::get_dashboard() is registered directly as the GET /dashboard REST callback, but its signature takes an `array $warnings` param for two internal callers (emergency-stop toggling) — WordPress's REST server always invokes registered callbacks with a WP_REST_Request, which is not an array, so every single Dashboard request fatal-errored with an uncaught TypeError. Root cause pre-dates this release (introduced in the 3.3.10 mirror sync, unrelated to the ongoing learning-curve work) but only surfaced now while live-verifying Phase 2's Dashboard changes. Fixed by adding a thin get_dashboard_route(WP_REST_Request) wrapper for the REST registration and leaving the internal array-based get_dashboard() signature untouched for its two existing callers.
