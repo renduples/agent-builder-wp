@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.28
+Stable tag: 3.3.29
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -289,259 +289,99 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 
 == Changelog ==
 
+= 3.3.29 - 2026-08-01 =
+* Fix: WordPress.org Plugin Check compliance — the readme.txt Changelog section had grown past the 5,000-character limit the plugin directory's readme parser truncates at, so the Changelog tab on the plugin page would have shown a cut-off, broken-looking history. Trimmed older entries to one line each (full detail stays in git history); a link to the complete version history was already present and now correctly follows the trimmed section.
+
 = 3.3.28 - 2026-08-01 =
-* New: "Approvals & Backups" Dashboard card — pending-approval count and automatic file/database-table backup counts, right on the Dashboard, each linking straight to where you'd act on them. Previously this only showed as a small badge in the sidebar menu (approvals) or a table you had to scroll to on a separate tab (backups).
+* Feature: Dashboard "Approvals & Backups" card — pending-approval count and file/DB backup counts, with quick links.
 
 = 3.3.27 - 2026-08-01 =
-* Improvement: the admin-bar quick-chat overlay now renders the same in-chat proposal and approval cards the main Agent Chat page got in 3.3.26, instead of showing pending confirmations as plain text with no way to act on them there.
+* Improvement: admin-bar chat overlay now renders in-chat proposal/approval cards, matching the main Agent Chat page.
 
 = 3.3.26 - 2026-08-01 =
-* New: high-risk actions an assistant queues for approval (e.g. Assistant Trainer creating a new agent) now show up as a real Approve/Reject card right in the chat conversation for administrators, instead of only a text message pointing to the separate Approvals admin page. It's the same secure, admin-only endpoint the Approvals page itself uses (never something the AI model can trigger on its own) — clicking the button in chat is the only thing that can actually approve it.
-* New: get_user_context tool (Assistant Trainer) — lets an agent check who it's actually talking to (display name, WordPress role, and whether they can approve high-risk actions) before promising something only an administrator can do.
+* Feature: high-risk queued actions show an in-chat Approve/Reject card instead of only a text pointer to the Approvals page.
+* Feature: new get_user_context tool lets Assistant Trainer check who it's talking to before promising admin-only actions.
 
 = 3.3.25 - 2026-08-01 =
-* Improvement: final tooltip pass from the learning-curve plan. The Knowledge screen's four tabs (Wiki, Instructions, Memory, Vector Store) now have a one-line explanation on hover — the tab people most often confuse with each other. Each item in the Approvals queue now explains why it's waiting on you, even when there's no plain-language reasoning available and the raw parameters would otherwise be the only clue.
+* Improvement: added tooltips to Knowledge's four tabs and each Approvals queue item.
 
 = 3.3.24 - 2026-08-01 =
-* New: Publish wizard — a guided "Publish Your Agent" flow (admin.php?page=agentic-deploy-wizard) that closes the gap between "I trained an agent" and "people can actually reach it." Pick an agent and a surface (chat widget, admin bar, Ask AI launcher, or Gutenberg block), a minimal config, and it turns that surface on using the exact same settings the classic Publish tabs already read — nothing new to maintain, just a faster on-ramp. The Train an Agent wizard's success screen now links straight here for the agent you just created.
-* Fix: the Approvals page's link to the classic queue and one-click backup/restore table only showed up in Advanced mode — invisible to most users, since Basic is the site-wide default. The backups link (and one-click restore for any file or database table an assistant has changed) now shows regardless of mode; the classic-queue link stays Advanced-only since Basic mode's simplified queue already covers that need.
+* Feature: guided Publish wizard (chat widget, admin bar, Ask AI launcher, or Gutenberg block).
+* Fix: the Approvals backups/restore link is now visible in Basic interface mode too.
 
 = 3.3.23 - 2026-08-01 =
-* New: Knowledge wizard — a guided "Add Knowledge" flow (admin.php?page=agentic-knowledge-wizard) that replaces the steep jump straight into the full multi-tab Wiki editor. Pick a source (paste text, upload a .txt/.md file, or pick existing published pages/posts), give it a title and optional tags, and save — it writes the same Open Knowledge Format concept the classic editor produces, so nothing about how agents use it changes. The Dashboard's "Add knowledge" onboarding step and a new "Guided setup" link on the classic Wiki editor both point here now; the full editor is still there for anyone who wants it.
+* Feature: guided Knowledge wizard (paste text, upload a file, or pick existing pages).
 
 = 3.3.22 - 2026-08-01 =
-* Improvement: Basic-mode navigation now shows 7 conservative items (Dashboard, Chat, Agents, Knowledge, Tools, Approvals, Settings) instead of also cluttering the menu with developer-facing surfaces. Publish (8 deployment tabs: scheduled tasks, event listeners, Gutenberg blocks, CLI, etc.) and Activity now hide from Basic nav exactly like Skills already did — both stay fully reachable by direct URL and, for Activity, via the Dashboard's existing "View Activity →" link.
-* Improvement: brand-new users (no chat cookie yet) landing on the Chat page or Dashboard now default straight into WordPress Assistant instead of whichever agent happens to be first in the list — getting people talking to the one agent whose whole job is guiding them through the plugin, faster.
-* Improvement: the Dashboard's Getting Started checklist now leads with "Say hi to WordPress Assistant" (using the bundled default AI provider, no setup required) ahead of "Connect an AI provider," since chatting needs zero configuration on a fresh install.
+* Improvement: Basic-mode navigation trimmed to 7 core items; new users default into WordPress Assistant.
 
 = 3.3.21 - 2026-08-01 =
-* Fix: the Dashboard was completely broken (site-wide critical error on every load). Dashboard_REST::get_dashboard() is registered directly as the GET /dashboard REST callback, but its signature takes an `array $warnings` param for two internal callers (emergency-stop toggling) — WordPress's REST server always invokes registered callbacks with a WP_REST_Request, which is not an array, so every single Dashboard request fatal-errored with an uncaught TypeError. Root cause pre-dates this release (introduced in the 3.3.10 mirror sync, unrelated to the ongoing learning-curve work) but only surfaced now while live-verifying Phase 2's Dashboard changes. Fixed by adding a thin get_dashboard_route(WP_REST_Request) wrapper for the REST registration and leaving the internal array-based get_dashboard() signature untouched for its two existing callers.
+* Fix: the Dashboard was completely broken (fatal error on every load) due to a REST callback signature mismatch.
 
 = 3.3.20 - 2026-08-01 =
-* Improvement: Tools, Approvals, and Activity now each have their own Basic/Advanced switch, right on the page — the "go switch it in Settings" link is gone, replaced with an in-page toggle that only affects that one screen (Phase 2 of the learning-curve plan; storage/read-path shipped inert in 3.3.19). The Dashboard and Settings → Interface toggles still exist but now set your site-wide default for any screen you have not customized individually, with a new "Reset all screens to my default" action if you want to start over.
+* Improvement: Tools, Approvals, and Activity each get their own in-page Basic/Advanced switch.
 
 = 3.3.19 - 2026-08-01 =
-* Internal: laid the groundwork for per-screen Basic/Advanced interface mode (Phase 1 of the learning-curve plan) — Admin_Menu_Handler::is_advanced_mode() now accepts an optional screen key and checks a new per-user override (agentic_screen_mode user meta) before falling back to the existing site-wide Interface Mode setting. No visible behavior change in this release: no screen has an override yet, so every screen renders exactly as before. Screen-specific toggle controls ship in a follow-up release.
+* Internal: groundwork for per-screen interface mode (no visible change yet).
 
 = 3.3.18 - 2026-08-01 =
-* Fix: create_agent_files — Assistant Trainer's core, documented capability — was completely unusable. A prior security-hardening pass (3.3.17) reclassified it from high to extreme risk to stop remote MCP clients from silently creating agents, but extreme risk hides a tool from the LLM entirely and always blocks it, for anyone, at any trust level — including Assistant Trainer's own intentional, local chat use, which its own system prompt describes as going through "the approval queue" (a high-risk, not extreme-risk, mechanism). Restored to high risk: a remote/unattended caller still can't create an agent silently — it queues for a human either way — while local use through Assistant Trainer works again exactly as designed. Found and fixed while verifying Assistant Trainer's new clarifying-question flow below; reproduced live (create_agent_files hard-blocked 3 times in a row) and re-verified after the fix (queues for approval as expected).
-* Improvement: WordPress Assistant now offers a short, plain-English "what is an agentic AI assistant" explainer on a user's first greeting/open-ended question, understands today's Basic/Advanced interface mode well enough to answer "where did X go," and can check the site's setup-checklist progress (new read-only get_onboarding_status tool) to weave one relevant next-step suggestion into replies for users who are still getting set up.
-* Improvement: Assistant Trainer no longer just says "describe the assistant you want" to a user who doesn't know how to answer that — it now offers a few concrete starter categories with examples, capped at one clarifying turn, then proceeds to build immediately once the user names anything (or makes a reasonable assumption if they're still unsure).
-* Improvement: added inline tooltips explaining what each risk level ("low," "medium," "high," "extreme") actually means/requires next to risk badges in Tools and Approvals, and a note on the agent autonomy picker clarifying that higher autonomy never bypasses risk-based approval queuing.
-* Improvement: the Approvals page's empty state now briefly explains what approvals are, not just that none are currently waiting.
+* Fix: create_agent_files was incorrectly blocked at extreme risk, breaking Assistant Trainer's core function.
+* Improvement: better onboarding guidance, tooltips, and Approvals empty-state copy.
 
 = 3.3.17 - 2026-07-30 =
-* Fix: multi-instance chat — shortcode/block + modal (or multiple embeds) each run fully; no page reload / silent second form.
-* Security: Pro-only tools removed from free package source (send_email, git_*, cloudflare_*, related includes); free packaging still strips if residual.
-* Security: outbound WP Abilities / MCP no longer advertise high/extreme or shell-class tools as mcp.public (aligned with WordPress MCP adapter guidance).
-* Improve: emergency-stop restore warnings shown in Dashboard and Settings.
-* Risk floors: run_wp_cli, create_agent_files extreme; validate_agent_code high.
+* Fix: multi-instance chat (modal + shortcode/block together) could reload the page and lose conversations.
+* Security: Pro-only tools stripped from the free package; MCP no longer advertises high-risk tools.
 
 = 3.3.16 - 2026-07-30 =
-* Fix: when two chat surfaces render on the same page — the floating modal widget alongside a `[agentic_chat]` shortcode or block, two shortcodes/blocks, etc. — clicking Send on whichever instance loaded second reloaded the entire page instead of sending the message, discarding both chats' conversations. chat.js binds its send handling to the first `#agentic-chat-form` it finds on the page; any additional instance's Send button is a native `type="submit"` button with no JS listener attached, so the browser's default form submission took over. The Gutenberg block explicitly supports being inserted multiple times (`"multiple": true`) and the modal widget defaults to appearing on every page, so this is a realistic combination, not just an edge case. Added a page-level safeguard so an untracked chat form's submit is swallowed instead of reloading the page — a secondary chat instance's Send button is now a safe no-op rather than a destructive crash. Note: this does not make the secondary instance fully interactive — that requires chat.js to support multiple independent instances per page (distinct per-instance DOM ids/state instead of the current single global `getElementById` lookups used throughout its ~1900 lines, including streaming, voice input, image upload, TTS, and the in-chat proposal cards), which is a larger follow-up worth doing but was judged too broad a change to make safely, and fully verify, within this pass.
-* Verified live: reproduced the crash with a shortcode chat plus the modal widget on the same real page (URL gained a stray `?` and the modal disappeared on Send); confirmed the modal works perfectly when it's the only chat surface on a page (correct response end-to-end); confirmed genuinely anonymous, cookie-less requests to the chat REST endpoint work correctly when anonymous chat is enabled; after the fix, reproduced the same two-instances-on-one-page scenario and confirmed Send on the secondary instance no longer reloads the page or loses either conversation's history.
+* Fix: a second chat instance on the same page could reload the page instead of sending a message.
 
 = 3.3.15 - 2026-07-30 =
-* Fix: the per-minute chat rate limit (30 messages/minute for logged-in users, 10/minute anonymous by default) never actually reset during continuous use, so any sustained conversation would eventually hit "Too many requests" even at a pace far below the configured limit. The counter was stored in a WordPress transient with a fresh 60-second expiration set on every single passing message — and `set_transient()` always refreshes a transient's expiration when called, even on an existing key — so as long as messages kept arriving less than 60 seconds apart, the window never closed and the count only ever went up. Verified live: a steady pace of one message every 7 seconds (about 8–9/minute, nowhere near the 30/minute cap) got incorrectly blocked after roughly 3.5 minutes of normal conversation. Fixed by storing the window's own expiry alongside the count and preserving the remaining time on every increment, so a fresh 60-second window only starts once the previous one has actually elapsed — genuine bursts (e.g. 31 messages within seconds) still correctly trip the limit, confirmed by re-running both scenarios after the fix: rapid abuse blocked at the same point as before, sustained normal-paced use (40 messages over ~280 seconds) no longer blocked at all.
+* Fix: the chat rate limit never reset during sustained normal use, eventually blocking legitimate conversations.
 
 = 3.3.14 - 2026-07-30 =
-* Critical fix: every scheduled agent task, every event-listener-triggered agent run, and the frontend chat modal widget threw a fatal PHP error ("Class Plugin not found") every single time they ran. `Agent_Lifecycle::execute_scheduled_task()`, `Agent_Lifecycle::handle_async_event()`, and `Chat_Assets::enqueue_modal_assets()` each referenced `\Plugin::get_instance()` — a leading backslash forces PHP to resolve from the global namespace, but the class is `Agentic\Plugin`. Scheduled tasks fire via ordinary WP-Cron, which piggybacks on regular page loads by default, so any site with an active scheduled task or event listener could crash a real visitor's page load when the cron event happened to be due. Any site with the frontend chat modal enabled would hit this on every single frontend page view. Found while live-testing scheduled tasks: creating a real task and triggering it produced "There has been a critical error on this website" instead of running. Fixed all three call sites to the correct fully-qualified `\Agentic\Plugin::get_instance()`; a repo-wide sweep confirmed no other file has the same mistake (several other call sites already had it right, which is what exposed the inconsistency). Verified live: re-ran the same scheduled task and a real event-listener trigger, both completed cleanly with the audit log showing the correct agent response, no fatal error.
+* Fix: scheduled tasks, event listeners, and the chat modal widget could throw a fatal error on execution.
 
 = 3.3.13 - 2026-07-30 =
-* Fix: the three Knowledge Wiki retrieval tools — search_okf, list_okf_concepts, read_okf_concept — silently failed to load. Each tool.php file was missing its final `return new ClassName();` statement (present in every other tool file), so Tool_Loader's `include_once` got PHP's default return value of `1` instead of a tool instance, and the `instanceof Tool_Base` check silently dropped it — no error, no warning, just a missing tool. This meant any Knowledge Wiki entry NOT marked "always on" (the normal case — marking every entry always-on would flood every prompt) was completely unreachable by agents; only the always-on injection path worked. Assistants would either report the tool as unavailable or, worse, answer with a fabricated guess after seeing a matching entry title with no way to read its body.
-* Fix: four bundled agents (WordPress Assistant, Content Writer, Support Triage, User Assistant) declared the three Knowledge Wiki tools in their abilities.json risk manifest but not in their agent.json tool list — the list actually used to decide which tools an agent is offered. Declaring risk for a tool an agent is never offered has no effect, so even with the loader fixed these four agents still couldn't search their own knowledge wiki. Added the three tools to each agent's declared tool list.
-* Improvement: strengthened the Knowledge Wiki system-prompt guidance to explicitly warn that index/list entries are titles only, not answers, and that read_okf_concept must be called before answering — reducing the chance an assistant answers from a matching title without checking the actual content.
-* Verified live with a controlled experiment: saved a unique, unguessable fact via the always-on path and confirmed an agent correctly cited it, then deleted it and confirmed the agent correctly said it didn't know — proving genuine causal influence, not coincidence. Separately reproduced the search-based path's exact failure (tool unavailable, then a fabricated answer) before the fix, then confirmed 3/3 clean trials reliably retrieving and citing the correct fact via read_okf_concept after all three fixes.
+* Fix: Knowledge Wiki search/list/read tools failed to load; four bundled agents couldn't use them at all.
 
 = 3.3.12 - 2026-07-30 =
-* Fix: the "Trust more (higher risk)" approval comfort profile (Settings > Approvals) produced identical enforcement to "Auto-approve low risk" — both auto-approved only none/low risk tools and still paused medium-risk (content-changing) actions for confirmation. "Trust more" requires an explicit extra risk acknowledgment reading "I understand assistants may change my site with less waiting" and is described as letting assistants "work with less interruption," but its `auto_max` was set to `low`, identical to the "balanced" profile, so it never actually auto-approved anything the safer profile didn't already. Changed its ceiling to `medium` so it genuinely auto-approves content-changing writes (send_email, add_custom_css, cleanup/purge tools, etc.) as its own consent text describes; high-risk actions still queue for admin approval and extreme actions stay blocked either way. Verified live by computing the full risk-tier enforcement matrix for all three profiles before and after the fix, then confirming a real medium-risk tool call executes immediately under "Trust more" and correctly pauses for confirmation again after reverting to "Always ask me."
+* Fix: the "Trust more" approval profile behaved identically to the safer "Auto-approve low risk" profile.
 
 = 3.3.11 - 2026-07-30 =
-* Fix: the in-chat "Proposed Change" confirmation card (Allow Once / Allow this Session / Always Allow / Deny, shown for medium-risk actions) was completely non-functional for every user except full administrators. Its REST route (agentic/v1/proposals/{id}) required manage_options regardless of who the proposal was for, so any non-admin role — including Editor, Author, Contributor, and Subscriber, all of which get frontend chat access by default — would see the card in their own conversation but every button on it would fail with a permission error. Fixed by opening the route to anyone who can chat (matching the chat endpoint's own access check) and adding a same-user ownership check inside the handler, so a proposal can only be resolved by the user it was created for, or by an administrator — this also closes a latent cross-user risk the old blanket admin-only gate happened to mask.
-* Fix: the admin Approval Queue's actual approve/reject REST endpoints (agentic/v1/approvals and agentic/v1/approvals/{id}), plus the React admin page's equivalent POST actions, all required manage_options regardless of the granular `agentic_manage_agents` capability already used to gate the Approvals page itself and fixed in 3.3.9 for page access — so a role granted "Manage Agents" could see the queue but never actually approve or reject anything. Now accepts either capability, consistently with the page-level gate.
-* Verified live: created a real queued high-risk tool call and a real in-chat proposal, confirmed reject genuinely prevents execution (audit trail shows queued → rejected, no side effects ran) for an admin, for a role granted only agentic_manage_agents, and for the proposal's own non-admin creator; confirmed a second, non-owning non-admin user is correctly blocked from resolving someone else's proposal; confirmed an administrator can still override and resolve any proposal.
+* Fix: in-chat proposal confirmations and the admin Approval Queue didn't work for non-administrator roles.
 
 = 3.3.10 - 2026-07-30 =
-* Fix: turning off Emergency Stop (Disable All Agents) always reported success even when an agent or LLM provider connection failed to come back — `Emergency_Stop::disable()` computed and logged each restore failure to the Activity Log, but every caller (Dashboard, Interface Settings, and the classic Settings page) discarded that information and always returned a plain success response. An admin toggling the switch off had no way to know from the response whether everything actually came back online. `disable()` now returns the failures as a `warnings` list, and all three REST endpoints include it in their response instead of silently dropping it. Found while live-testing Emergency Stop end-to-end: an orphaned agent reference (a previously-deleted custom agent slug left behind in the active-agents list) failed to reactivate during restore, and the response reported full success regardless.
+* Fix: turning off Emergency Stop always reported success even when a restore actually failed.
 
 = 3.3.9 - 2026-07-30 =
-* Fix: Settings → Users role permissions for "Manage Agents", "Run Tasks Manually", "Configure Tools", and "View Audit Log" had no effect for non-administrator roles. The Agents, Publish, and Run Task admin pages hardcoded a `manage_options` check instead of honoring the granted `agentic_manage_agents`/`agentic_run_tasks_manually` capability, so a role explicitly granted access still got "You do not have permission to access this page." Separately, the Tools, Approvals, and Activity Log pages moved to a shared React admin surface backed by one REST endpoint that required `agentic_manage_settings` regardless of which page was requested — so a role granted only "Configure Tools" (for example) could see the menu item and the empty page shell, but every data request 403'd. Both are now fixed: each page's own permission check matches the capability already used to register its wp-admin menu entry, and the REST endpoint resolves the required capability per requested page/action instead of using one fixed capability for all of them. Verified live with a dedicated Editor-role test account granted each privilege individually.
+* Fix: Settings → Users role permissions had no effect for several granular capabilities.
 
 = 3.3.8 - 2026-07-30 =
-* Fix: `wp agent abilities list` and `wp agent wp-ai abilities`/`test-execute` threw a fatal error (Class "Agentic\CLI\WP_Optional_API" not found) — the CLI classes live in the Agentic\CLI namespace but referenced WP_Optional_API unqualified instead of importing it from Agentic. Same bug also broke the MCP relay's ability-listing handler (class-relay-connect.php, which loads in the global namespace).
-* Fix: Assistant Trainer's system prompt, the agent-documentation generator, and the Deployment → CLI admin page all documented `wp agent prompt`, `wp agent tools`, and `wp agent run-task` as working free-tier commands. None of the three are registered in the free build (Pro-only) — every custom agent's generated docs and the WordPress Assistant's own CLI guidance would have pointed users at commands that error. Corrected to only reference what actually exists (`wp agent list`, `wp agent info`, `wp agent abilities list`, `wp agent wp-ai status`) and labelled the Pro-only ones accordingly.
+* Fix: two WP-CLI commands and the MCP relay threw a fatal error from an unqualified class reference.
 
 = 3.3.7 - 2026-07-30 =
-* Fix: search_capabilities could report a real, already-active bundled agent as "not found" because the remote capabilities index it queries does not reflect this site's actual install/activation state, and the prompt-level guidance alone wasn't reliable enough to keep smaller models from picking it over get_agent_list for a named local agent. The tool itself now cross-checks the local agent registry (matching on name/slug/description, with common connector words filtered out) and merges any local match into the results — with locally-confirmed install/active state always taking priority over the remote index — so this can no longer produce a false negative regardless of which tool gets called.
+* Fix: search_capabilities could report an already-active local agent as "not found".
 
 = 3.3.6 - 2026-07-30 =
-* Fix: WordPress Assistant's system prompt told it that search_capabilities and get_agent_list were interchangeable for checking whether a specific bundled agent is installed/active on this site. search_capabilities queries a remote bundled+marketplace agent index and does not reflect local install state, so the model sometimes picked it for a named, already-active agent and reported a false "not found". Clarified routing: get_agent_list is now the sole source of truth for local status; search_capabilities is reserved for capability/keyword discovery when no specific agent was named.
+* Fix: clarified when to use search_capabilities vs. get_agent_list for local agent status.
 
 = 3.3.5 - 2026-07-30 =
-* Fix: delegate_to_agent always failed with a false "Delegation cycle blocked" error, even on the very first delegation. Agent_Proposals::approve() (the resume path for any medium-risk confirm-gated tool) calls Tool_Loader directly, bypassing Tool_Executor's Tool_Base::set_calling_agent() call, so the calling agent slug was empty at execution time — Agent_Run then fell back to using the target agent as its own root, making the cycle check trivially true. Now set explicitly from the proposal's stored agent_id before execution.
+* Fix: delegate_to_agent always failed with a false "delegation cycle" error.
 
 = 3.3.4 - 2026-07-30 =
-* Fix: editor sidebar's post-response suggestion heuristic (addSuggestionFromText) referenced setSuggestions, a variable scoped to a different top-level function (same class of bug as the 3.3.1 and 3.3.3 fixes — addSuggestionFromText is a sibling of EditorSidebarInner, not nested inside it). This threw a ReferenceError that was silently caught by sendMessage's try/catch and misreported as "Connection error. Please try again." even after the real AI response had already rendered successfully.
+* Fix: editor sidebar suggestion heuristic threw a silent error, misreported as a connection failure.
 
 = 3.3.3 - 2026-07-30 =
-* Fix: editor sidebar's "Insert paragraph at end" success callback referenced setMessages, a variable scoped to a different top-level function (MessageBubble is a sibling of EditorSidebarInner, not nested inside it — the same class of bug fixed in 3.3.1's editor sidebar crash). Threw a ReferenceError on every successful insert, even though the insert itself succeeded.
+* Fix: editor sidebar's "Insert paragraph" success callback threw an error despite the insert succeeding.
 
 = 3.3.2 - 2026-07-30 =
-* Fix: editor sidebar error messages ("Connection error", quota/API errors) offered the same "Insert paragraph at end" / "Replace selection" buttons as real AI responses, letting a stray click insert literal error text into post content.
+* Fix: editor sidebar error messages incorrectly offered "Insert"/"Replace" buttons.
 
 = 3.3.1 - 2026-07-30 =
-* Fix: editor sidebar crash (ReferenceError on an out-of-scope variable in MessageBubble's replace-selection button).
-* Fix: get_failed_logins tool queried a non-existent database column, throwing a DB error on every call.
-* New: failed login attempts are now recorded to the security log (previously nothing wrote them, so the tool always reported zero).
-* Fix: Agent_Library and Agent_Settings threw DB errors when their tables were absent (e.g. under Plugin Check's sandbox) instead of degrading gracefully.
-* Fix: multi-agent handoff re-sent its context on every message instead of once, and its "User:"/"Previous Agent:" labels falsely tripped the chat security filter, blocking the first message of every handoff.
+* Fix: editor sidebar crash, a get_failed_logins DB error, and a multi-agent handoff context bug.
 
 = 3.3.0 - 2026-07-29 =
-* New: React **Settings** app (Interface, Agents, Providers, Users, Security; Advanced APIs/Endpoints).
-* New: React **Tools**, **Approvals**, and **Knowledge** hubs (Wiki, Instructions, Memory, Vector).
-* Improve: clearer admin navigation, policy footers, and Documentation links on every surface.
-* Providers: Kimi (Moonshot AI) and DeepSeek listed alongside existing LLMs.
-
-= 3.2.4 - 2026-07-25 =
-* New: Model_Capabilities matrix — ordered rules (exact/prefix/regex/provider) replace ad-hoc model-name regexes for tools + reasoning.
-* Fix: Future-proof gpt-5 / sol / o-series / reasoning models via filterable rules (agentic_model_capability_rules, agentic_model_capabilities).
-* Fix: Google/OpenAI/Anthropic tool schema dialects driven by capabilities (additionalProperties, sanitize_callback, etc.).
-* Hook: agentic_use_responses_api_for_tools (default off) for a future Responses API path.
-
-= 3.2.3 - 2026-07-25 =
-* Fix: gpt-5.x / reasoning models — set reasoning_effort=none when function tools are present (Chat Completions).
-* Fix: Google Gemini tools — strip additionalProperties and sanitize_callback from functionDeclarations schemas.
-
-= 3.2.2 - 2026-07-25 =
-* Fix: Sanitize tool schemas for OpenAI/Gemini — strip top-level oneOf/anyOf/enum (fixes Invalid schema for function woocommerce__product_create and similar WP abilities).
-* Fix: abilities.json declaration — honor agent.json tools list and WP ability name mapping (reduces "Not declared in abilities.json" blocks).
-
-= 3.2.1 - 2026-07-25 =
-* Fix: OpenAI/Google provider catalogs refresh; Google resp_format must be google (heals retired -exp/1.5 models).
-* Fix: PHPCS alignment for OKF Knowledge Wiki.
-* Include provider heal in release zip so installs get working Gemini/OpenAI defaults.
-
-= 3.2.0 - 2026-07-25 =
-* New: **Knowledge Wiki (Open Knowledge Format / OKF)** — free, local markdown knowledge base under Knowledge → Knowledge Wiki. Concepts use YAML frontmatter + body, progressive tools (`list_okf_concepts`, `read_okf_concept`, `search_okf`), export/import, and persona-text migration. No cloud, no credits.
-* Product split: **hosted Vector Store / RAG** is a Pro upgrade surface in free (clear upgrade card, WP.org-friendly — free OKF remains fully usable). Vector train/query AJAX requires Agent Builder Pro.
-* Improve: Knowledge admin UX (wiki browser + editor), prompt injects a compact OKF index; full concepts load on demand via tools.
-* Docs: Knowledge Wiki and Vector Store guidance updated at agentic-plugin.com.
-
-= 3.1.0 - 2026-07-24 =
-* New: "Knowledge" step in the Train an Agent wizard — train new assistants on your pages, posts and files (Vector Store) during creation.
-* New: Automatic Agent Updates toggle on the dashboard — opt in or out any time.
-* Fix: newly created agents now auto-activate correctly (abilities manifest no longer flags the framework-global report_issue tool).
-* Fix: hosted-chat requests always carry the licence key so usage is metered; unlicensed sites are guided to setup instead of running unmetered.
-* Improve: Agents settings table layout, Account tab (removed duplicate licence key, clearer status), Tools table overflow, Approvals empty-state icon.
-
-= 3.0.0 - 2026-06-30 =
-* feature: **contextual AI launchers** across wp-admin — Agent Builder now surfaces relevant chat prompts on the Plugins screen, Media Library, Users list, Comments list, and Dashboard. Each launcher opens the chat overlay pre-seeded with a task-appropriate prompt (editable before sending, never auto-sent). Launchers are dismissible per-user and can be disabled globally under Deployment → Admin UI
-* feature: **manage_cache** tool (Caching category, high-risk, disabled by default) — agents can flush the WordPress object cache, purge all transients, reset the opcode cache (opcache_reset), flush rewrite rules, and auto-detect and purge major page-cache plugins (WP Rocket, W3 Total Cache, WP Super Cache, LiteSpeed Cache, WP Fastest Cache, Cache Enabler, and more)
-* improvement: **WordPress Abilities integrated into Tools** — the former separate "WP Abilities" section is removed; Inbound Abilities now appear as a category in the Tools hub with per-ability enable/disable toggles, and each tool row shows its published ability name inline
-* fix: **WP Abilities outbound leak** — disabled tools were previously still published as WordPress Abilities (exposing them via MCP/REST/core AI). Per-tool Enabled toggles now properly gate ability registration and execution
-* improvement: contextual launcher on the Plugins screen is capability-aware — shows a "Create a plugin with AI" entry only when Agent Builder Pro's Plugin Assistant is active, and always routes the health-check prompt to an agent that can actually audit plugins
-
-
-
-= 2.17.0 - 2026-06-21 =
-* improvement: the **Activity**, **Deployment**, **Knowledge**, **Approvals**, and **Tools** admin pages now use the same left vertical navigation as Settings, for a consistent, easier-to-scan layout across the whole plugin
-* dev: new reusable `\Agentic\Admin_Vnav` helper renders the shared two-pane navigation shell, plus a shared `admin-vnav.js` search filter (removes the duplicated inline Settings filter script)
-
-= 2.16.0 - 2026-06-21 =
-* feature: new **Account** settings tab — see your current plan at a glance and which AI providers have an API key configured (shown as a connection status with a masked hint; keys are never displayed in full). Includes a quick link to manage providers and, on the free plugin, to explore Pro
-* dev: Pro can extend the Account view via the new `agentic_after_account_tab` action (used to list MCP connector credentials)
-
-= 2.15.0 - 2026-06-21 =
-* feature: redesigned **Settings** with a left vertical navigation and a search box, so sections are easier to scan and find — mirroring the familiar layout of popular desktop AI apps
-* feature: new **General** settings tab for global personalization that applies to every agent — set what agents should call administrators and frontend visitors, give all agents shared site context via "Instructions for Agents", and choose a global chat font and accent colour (with a link to Chat Themes for fine-grained control)
-* improvement: global appearance (font + accent) now applies consistently across the admin chat, admin-bar overlay, and frontend chat surfaces
-* dev: `Agent_Prompt_Builder` gains opt-in global instruction and addressing blocks (empty by default, no token cost); saving the General tab clears the response cache so new instructions take effect immediately
-
-= 2.14.0 - 2026-06-14 =
-* feature: new **Agent Creation Wizard** ("Train an Agent") — a guided, multi-step React flow that lets you create and activate a new AI agent in minutes: name & description, persona/instructions, provider/model, autonomy level, and optional tools, with a review step and follow-up links to add knowledge or start chatting
-* feature: added a prominent "Train an Agent" quick action to the Dashboard
-* dev: new admin-only REST endpoints `agentic/v1/agent-wizard/options` and `agentic/v1/agent-wizard/create`; agent creation is delegated to the existing audited create-agent tool (manifest + signed abilities + activation), and the wizard ships as a third @wordpress/scripts build entry
-
-= 2.13.0 - 2026-06-14 =
-* feature: Settings tabs are now organized into labelled groups — Basic, Security & limits, and Advanced — so common options are easier to find and developer-only tabs (APIs, Endpoints) stay grouped under Advanced, shown only in Advanced mode
-* improvement: every Settings tab remains reachable by direct URL, and Pro-added tabs (such as License and Health) are placed in the appropriate group automatically
-
-= 2.12.0 - 2026-06-14 =
-* feature: the dashboard "Weekly Statistics" card is now a live React "Activity" card — it refreshes automatically and adds a Week/Month period toggle, with the server-rendered version kept as a fallback
-* feature: new admin-only REST endpoint `agentic/v1/dashboard-stats` returns live activity metrics (actions, tokens, estimated cost) plus the ecosystem agent counts
-* dev: added a second @wordpress/scripts build entry (dashboard-activity); the rest of the dashboard remains server-rendered
-
-= 2.11.0 - 2026-06-14 =
-* feature: introduced a React-powered Settings → Interface panel (built with @wordpress/scripts) where you can switch between Basic and Advanced interface modes and toggle the dashboard Getting Started checklist
-* dev: added a Node/JSX build pipeline (package.json, webpack config, src/) whose compiled output ships in build/; the release scripts now build assets automatically and exclude JS sources from the distributed package
-= 2.10.0 - 2026-06-14 =
-* ux: streamlined the admin navigation — renamed Deploy to Publish and Logs to Activity, and grouped advanced developer tools (Skills, APIs, Endpoints) behind a new Basic/Advanced interface toggle so the menu stays approachable for non-technical users
-* ux: redesigned the Dashboard — replaced the recent-activity preview with a Getting Started checklist, surfaced estimated usage, and trimmed quick actions to the most common tasks
-= 2.9.272 - 2026-06-07 =
-* compat: centralised all WordPress Abilities API calls behind a single guarded adapter so the plugin passes WordPress.org Plugin Check cleanly while still supporting WordPress 6.4+
-* compat: queries in the local memory engine now use the `%i` identifier placeholder instead of interpolating the table name
-* compat: replaced array_is_list() with an equivalent helper, added a missing ABSPATH guard to the validate_agent_code tool, and bumped "Tested up to" to 7.0
-
-= 2.9.271 - 2026-06-07 =
-* feature: multi-agent orchestration — team-lead agents can delegate subtasks to other active agents (sequential, in-process) with depth, fan-out and cost/token budgets
-* feature: local conversational memory (opt-in) — agents can recall a short, relevant excerpt of a user's earlier messages, stored entirely on your own server (Settings → Security → Local Memory)
-* feature: WordPress Abilities readiness banner and an outbound abilities list under Tools → WP Abilities, with guidance for sites not yet on WordPress 6.9/7
-* feature: forward-compatible WordPress core AI provider adapter (dormant until a native AI runtime is available)
-* feature: four vertical quick-start agent templates — Support Triage, SEO Optimizer, Site Health Sentinel, and an Editorial Director team lead that delegates to your specialist agents (one-click activate from the Agents screen)
-* privacy: local memory honours the Chat History Retention window and is removed on personal-data erasure
-* privacy: local memory is scoped to logged-in users only, so it is never shared between anonymous visitors, and recalled excerpts are framed as untrusted data
-* perf: added a (memory_type, created_at) index so memory retention cleanup stays fast on large sites
-* ux: replaced all blocking browser alert()/confirm() dialogs with accessible, non-blocking toast notifications and confirmation modals (keyboard focus trap, Esc to cancel, screen-reader roles) across the admin and chat UI
-
-= 2.9.270 - 2026-06-07 =
-* Release 2.9.270
-
-= 2.9.269 - 2026-06-07 =
-* Release 2.9.269
-
-= 2.9.268 - 2026-06-07 =
-* Release 2.9.268
-
-= 2.9.267 - 2026-06-07 =
-* Release 2.9.267
-
-= 2.9.266 - 2026-06-07 =
-* Release 2.9.266
-
-= 2.9.265 - 2026-06-07 =
-* Release 2.9.265
-
-= 2.9.264 - 2026-06-05 =
-* Release 2.9.264
-
-= 2.9.195 - 2026-05-07 =
-* Release 2.9.195
-
-
-
-= 2.9.194 - 2026-05-07 =
-* fix: SSE streaming now works correctly with tool calls and cache-hit responses
-* fix: dashboard audit-log links corrected to the right page slug
-* fix: Usage and Agent Health dashboard buttons removed from free build (WP.org guideline 5 compliance)
-* fix: welcome message and agent shortcuts now reflect only active agents
-* improvement: dashboard "Tools & Channels" renamed to "Tools"; Skills quick-action button added
-* improvement: chat UI cleanup and message action bar (copy, thumbs, regenerate)
-
-= 2.9.154 - 2026-05-04 =
-* Release 2.9.154
-
-
-
-= 2.9.145 - 2026-05-03 =
-* feat: Agent delegation — context-switch buttons let you hand off to any installed agent mid-conversation
-
-= 2.9.141 - 2026-05-01 =
-* feat: SSE streaming for chat — agent responses now stream in real time instead of waiting for the full reply
-* refactor: Agent_Prompt_Builder extracted to a dedicated class; unused Plugin methods removed
-
-= 2.9.108 - 2026-04-30 =
-* feat: 42 new tools and 8 new skills (content planning, web browsing, translation, data analysis, PDF/DOCX, XLSX)
-* fix: TTS word-by-word sync with audio playback;
+* New: React Settings, Tools, Approvals, and Knowledge hubs. Kimi and DeepSeek providers added.
 
 For the full version history, visit [agentic-plugin.com/changelog](https://agentic-plugin.com/changelog/).
 
