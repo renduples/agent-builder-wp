@@ -300,6 +300,7 @@ class Agent_Wizard_REST {
 			'chat_url'      => admin_url( 'admin.php?page=agentic-chat' ),
 			'agents_url'    => admin_url( 'admin.php?page=agentic-agents' ),
 			'configure_url' => admin_url( 'admin.php?page=agentic-settings&tab=instructions&edit_persona=' . rawurlencode( $slug ) ),
+			'deploy_url'    => admin_url( 'admin.php?page=agentic-deploy-wizard&agent=' . rawurlencode( $slug ) ),
 		);
 
 		if ( ! empty( $result['warning'] ) ) {

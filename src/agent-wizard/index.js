@@ -366,6 +366,11 @@ function App() {
 							</Button>
 						</FlexItem>
 						<FlexItem>
+							<Button variant="secondary" href={ done.deploy_url }>
+								{ __( 'Publish This Agent', 'agent-builder' ) }
+							</Button>
+						</FlexItem>
+						<FlexItem>
 							<Button
 								variant="tertiary"
 								href={ done.configure_url }

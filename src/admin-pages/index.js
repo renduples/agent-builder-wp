@@ -1834,17 +1834,24 @@ function ApprovalsView( { data, reload } ) {
 				</div>
 			) }
 
-			{ data.is_advanced && (
-				<p className="agentic-react-muted" style={ { marginTop: 16 } }>
-					{ __(
-						'Need batch approve or backup restore tools?',
-						'agent-builder'
-					) }{ ' ' }
-					<a href={ data.classic_url || data.tabs?.[ 0 ]?.url }>
-						{ __( 'Open classic queue / backups', 'agent-builder' ) }
-					</a>
-				</p>
-			) }
+			<p className="agentic-react-muted" style={ { marginTop: 16 } }>
+				{ __(
+					'Assistants back up files and database tables automatically before changing them.',
+					'agent-builder'
+				) }{ ' ' }
+				<a href={ data.tabs?.find( ( t ) => t.id === 'backups' )?.url }>
+					{ __( 'View backups and restore', 'agent-builder' ) }
+				</a>
+				{ data.is_advanced && (
+					<>
+						{ ' ' }
+						{ __( '· Need batch approve tools?', 'agent-builder' ) }{ ' ' }
+						<a href={ data.classic_url || data.tabs?.[ 0 ]?.url }>
+							{ __( 'Open classic queue', 'agent-builder' ) }
+						</a>
+					</>
+				) }
+			</p>
 		</>
 	);
 }

@@ -151,6 +151,16 @@ class Admin_Menu_Handler {
 			fn() => $this->render_page( 'knowledge-wizard' )
 		);
 
+		// Hidden page — Publish Wizard (guided "get your agent in front of people" flow).
+		add_submenu_page(
+			'',
+			__( 'Agent Builder — Publish Your Agent', 'agent-builder' ),
+			__( 'Publish Your Agent', 'agent-builder' ),
+			'manage_options',
+			'agentic-deploy-wizard',
+			fn() => $this->render_page( 'deploy-wizard' )
+		);
+
 		add_submenu_page(
 			'agent-builder',
 			__( 'Agent Builder — Knowledge', 'agent-builder' ),
