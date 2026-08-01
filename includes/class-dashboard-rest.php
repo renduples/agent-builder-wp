@@ -281,7 +281,7 @@ class Dashboard_REST {
 				'id'    => 'knowledge',
 				'done'  => $has_knowledge,
 				'label' => __( 'Add knowledge', 'agent-builder' ),
-				'url'   => admin_url( 'admin.php?page=agentic-train-data' ),
+				'url'   => admin_url( 'admin.php?page=agentic-knowledge-wizard' ),
 				'cta'   => __( 'Add knowledge', 'agent-builder' ),
 			),
 		);

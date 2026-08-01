@@ -138,6 +138,7 @@ if ( class_exists( '\Agentic_Agent_Registry' ) ) {
 				<input type="search" id="agentic-okf-search" placeholder="<?php esc_attr_e( 'Search concepts…', 'agent-builder' ); ?>" />
 			</div>
 			<div class="agentic-kn-toolbar-actions">
+				<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-knowledge-wizard' ) ); ?>"><?php esc_html_e( 'Guided setup', 'agent-builder' ); ?></a>
 				<button type="button" class="button" id="agentic-okf-export"><?php esc_html_e( 'Export', 'agent-builder' ); ?></button>
 				<button type="button" class="button" id="agentic-okf-import-persona"><?php esc_html_e( 'Import persona text', 'agent-builder' ); ?></button>
 				<button type="button" class="button button-primary" id="agentic-okf-new"><?php esc_html_e( 'New concept', 'agent-builder' ); ?></button>

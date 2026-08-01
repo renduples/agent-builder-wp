@@ -15,6 +15,7 @@ module.exports = {
 		'dashboard-activity': './src/dashboard-activity/index.js',
 		'dashboard-app': './src/dashboard-app/index.js',
 		'agent-wizard': './src/agent-wizard/index.js',
+		'knowledge-wizard': './src/knowledge-wizard/index.js',
 		'settings-app': './src/settings-app/index.js',
 		'admin-list': './src/admin-list/index.js',
 		'admin-pages': './src/admin-pages/index.js',

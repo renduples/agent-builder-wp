@@ -141,6 +141,16 @@ class Admin_Menu_Handler {
 			fn() => $this->render_page( 'agent-wizard' )
 		);
 
+		// Hidden page — Knowledge Wizard (guided "Add knowledge" flow).
+		add_submenu_page(
+			'',
+			__( 'Agent Builder — Add Knowledge', 'agent-builder' ),
+			__( 'Add Knowledge', 'agent-builder' ),
+			'agentic_manage_settings',
+			'agentic-knowledge-wizard',
+			fn() => $this->render_page( 'knowledge-wizard' )
+		);
+
 		add_submenu_page(
 			'agent-builder',
 			__( 'Agent Builder — Knowledge', 'agent-builder' ),

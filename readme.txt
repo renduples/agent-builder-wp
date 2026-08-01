@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.22
+Stable tag: 3.3.23
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.23 - 2026-08-01 =
+* New: Knowledge wizard — a guided "Add Knowledge" flow (admin.php?page=agentic-knowledge-wizard) that replaces the steep jump straight into the full multi-tab Wiki editor. Pick a source (paste text, upload a .txt/.md file, or pick existing published pages/posts), give it a title and optional tags, and save — it writes the same Open Knowledge Format concept the classic editor produces, so nothing about how agents use it changes. The Dashboard's "Add knowledge" onboarding step and a new "Guided setup" link on the classic Wiki editor both point here now; the full editor is still there for anyone who wants it.
 
 = 3.3.22 - 2026-08-01 =
 * Improvement: Basic-mode navigation now shows 7 conservative items (Dashboard, Chat, Agents, Knowledge, Tools, Approvals, Settings) instead of also cluttering the menu with developer-facing surfaces. Publish (8 deployment tabs: scheduled tasks, event listeners, Gutenberg blocks, CLI, etc.) and Activity now hide from Basic nav exactly like Skills already did — both stay fully reachable by direct URL and, for Activity, via the Dashboard's existing "View Activity →" link.

@@ -5,7 +5,7 @@
  * Plugin Name:       Agent Builder
  * Plugin URI:        https://agentic-plugin.com
  * Description:       Orchestrate role-based AI agents and teams with simple job descriptions.
- * Version:           3.3.22
+ * Version:           3.3.23
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Agent Builder Team
@@ -57,7 +57,7 @@ spl_autoload_register(
 
 // Plugin constants.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-define( 'AGENT_BUILDER_VERSION', '3.3.22' );
+define( 'AGENT_BUILDER_VERSION', '3.3.23' );
 define( 'AGENT_BUILDER_FILE', __FILE__ );
 define( 'AGENT_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGENT_BUILDER_URL', plugin_dir_url( __FILE__ ) );
@@ -697,6 +697,7 @@ require_once AGENT_BUILDER_DIR . 'includes/class-jobs-api.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-ui-settings-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-dashboard-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-agent-wizard-rest.php';
+require_once AGENT_BUILDER_DIR . 'includes/class-knowledge-wizard-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-security-log.php';
 // Cloudflare Email stack is Agent Builder Pro (not shipped in free / WPorg builds).
 // Load only when present so free packages that strip these files do not fatally require them.
@@ -758,6 +759,7 @@ Admin_Pages_REST::init();
 React_Admin::init();
 Dashboard_REST::init();
 Agent_Wizard_REST::init();
+Knowledge_Wizard_REST::init();
 Site_Local_Tools::init();
 Login_Monitor::init();
 
