@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.19
+Stable tag: 3.3.21
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,12 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.21 - 2026-08-01 =
+* Fix: the Dashboard was completely broken (site-wide critical error on every load). Dashboard_REST::get_dashboard() is registered directly as the GET /dashboard REST callback, but its signature takes an `array $warnings` param for two internal callers (emergency-stop toggling) — WordPress's REST server always invokes registered callbacks with a WP_REST_Request, which is not an array, so every single Dashboard request fatal-errored with an uncaught TypeError. Root cause pre-dates this release (introduced in the 3.3.10 mirror sync, unrelated to the ongoing learning-curve work) but only surfaced now while live-verifying Phase 2's Dashboard changes. Fixed by adding a thin get_dashboard_route(WP_REST_Request) wrapper for the REST registration and leaving the internal array-based get_dashboard() signature untouched for its two existing callers.
+
+= 3.3.20 - 2026-08-01 =
+* Improvement: Tools, Approvals, and Activity now each have their own Basic/Advanced switch, right on the page — the "go switch it in Settings" link is gone, replaced with an in-page toggle that only affects that one screen (Phase 2 of the learning-curve plan; storage/read-path shipped inert in 3.3.19). The Dashboard and Settings → Interface toggles still exist but now set your site-wide default for any screen you have not customized individually, with a new "Reset all screens to my default" action if you want to start over.
 
 = 3.3.19 - 2026-08-01 =
 * Internal: laid the groundwork for per-screen Basic/Advanced interface mode (Phase 1 of the learning-curve plan) — Admin_Menu_Handler::is_advanced_mode() now accepts an optional screen key and checks a new per-user override (agentic_screen_mode user meta) before falling back to the existing site-wide Interface Mode setting. No visible behavior change in this release: no screen has an override yet, so every screen renders exactly as before. Screen-specific toggle controls ship in a follow-up release.

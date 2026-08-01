@@ -227,6 +227,25 @@ function SettingsNav( { bootstrap, active, onChange, filter } ) {
 
 function InterfaceTab( { data, setData, onSave, saving, error, saved, clearSaved } ) {
 	const useThemeAccent = ! data.global_accent;
+	const [ resetting, setResetting ] = useState( false );
+	const resetScreens = () => {
+		if (
+			! window.confirm(
+				__(
+					'Reset every screen back to your default interface? Any screen you switched individually will lose that override.',
+					'agent-builder'
+				)
+			)
+		) {
+			return;
+		}
+		setResetting( true );
+		apiFetch( {
+			path: 'agentic/v1/admin-page',
+			method: 'POST',
+			data: { action_name: 'reset_screen_modes' },
+		} ).finally( () => setResetting( false ) );
+	};
 	return (
 		<Panel
 			title={ __( 'Interface', 'agent-builder' ) }
@@ -238,7 +257,7 @@ function InterfaceTab( { data, setData, onSave, saving, error, saved, clearSaved
 				onDismissSaved={ clearSaved }
 			/>
 			<RadioControl
-				label={ __( 'Interface mode', 'agent-builder' ) }
+				label={ __( 'Default interface mode', 'agent-builder' ) }
 				selected={ data.ui_mode || 'basic' }
 				options={ [
 					{ label: __( 'Basic', 'agent-builder' ), value: 'basic' },
@@ -249,10 +268,18 @@ function InterfaceTab( { data, setData, onSave, saving, error, saved, clearSaved
 				] }
 				onChange={ ( v ) => setData( { ...data, ui_mode: v } ) }
 				help={ __(
-					'Advanced reveals developer tools (Skills, APIs, Endpoints).',
+					'Used by any screen you have not set individually. Tools, Approvals, and Activity each have their own Basic/Advanced switch now — this is just the starting point for screens you have not touched.',
 					'agent-builder'
 				) }
 			/>
+			<Button
+				variant="link"
+				isDestructive
+				disabled={ resetting }
+				onClick={ resetScreens }
+			>
+				{ __( 'Reset all screens to my default', 'agent-builder' ) }
+			</Button>
 			<hr
 				className="agentic-react-section-sep"
 				style={ {

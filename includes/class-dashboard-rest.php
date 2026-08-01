@@ -111,7 +111,7 @@ class Dashboard_REST {
 			array(
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( __CLASS__, 'get_dashboard' ),
+					'callback'            => array( __CLASS__, 'get_dashboard_route' ),
 					'permission_callback' => array( __CLASS__, 'can_view' ),
 				),
 				array(
@@ -163,6 +163,18 @@ class Dashboard_REST {
 			),
 			200
 		);
+	}
+
+	/**
+	 * GET /dashboard REST callback — the REST server always calls this with a
+	 * WP_REST_Request, which is incompatible with get_dashboard()'s own
+	 * $warnings array param (used only by internal callers below).
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response
+	 */
+	public static function get_dashboard_route( \WP_REST_Request $request ): \WP_REST_Response {
+		return self::get_dashboard();
 	}
 
 	/**

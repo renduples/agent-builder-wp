@@ -572,7 +572,7 @@ function InterfaceCard( { data, mutate, dnd } ) {
 		>
 			<div className="agentic-interface-section agentic-mode-toggle">
 				<span className="agentic-mode-label">
-					{ __( 'Interface:', 'agent-builder' ) }
+					{ __( 'Default interface:', 'agent-builder' ) }
 				</span>
 				<button
 					type="button"
@@ -598,10 +598,38 @@ function InterfaceCard( { data, mutate, dnd } ) {
 				</button>
 				<span className="agentic-mode-hint agentic-text-muted">
 					{ __(
-						'Advanced reveals developer tools (Skills, APIs, Endpoints).',
+						'Used by any screen you have not set individually. Tools, Approvals, and Activity each have their own Basic/Advanced switch now.',
 						'agent-builder'
 					) }
 				</span>
+				<button
+					type="button"
+					className="button-link agentic-reset-screens-link"
+					disabled={ busy }
+					onClick={ () => {
+						if (
+							! window.confirm(
+								__(
+									'Reset every screen back to your default interface? Any screen you switched individually will lose that override.',
+									'agent-builder'
+								)
+							)
+						) {
+							return;
+						}
+						setBusy( true );
+						apiFetch( {
+							path: 'agentic/v1/admin-page',
+							method: 'POST',
+							data: { action_name: 'reset_screen_modes' },
+						} ).finally( () => setBusy( false ) );
+					} }
+				>
+					{ __(
+						'Reset all screens to my default',
+						'agent-builder'
+					) }
+				</button>
 			</div>
 
 			<div className="agentic-interface-section agentic-updates-toggle">

@@ -30,6 +30,64 @@ function bootConfig() {
 }
 
 /**
+ * Small in-page Basic/Advanced control for one screen. Writes a per-user
+ * override for `screen` via the set_screen_mode REST action, independent of
+ * every other screen's mode and of the site-wide default (Settings >
+ * Interface / the Dashboard toggle) — modelled visually on the Dashboard's
+ * own InterfaceCard button pair.
+ */
+function ScreenModeToggle( { screen, data, reload } ) {
+	const [ busy, setBusy ] = useState( false );
+
+	const setMode = ( mode ) => {
+		if ( busy || mode === ( data.is_advanced ? 'advanced' : 'basic' ) ) {
+			return;
+		}
+		setBusy( true );
+		apiFetch( {
+			path: 'agentic/v1/admin-page',
+			method: 'POST',
+			data: { action_name: 'set_screen_mode', screen, mode },
+		} )
+			.then( () => reload( { silent: true } ) )
+			.finally( () => setBusy( false ) );
+	};
+
+	return (
+		<span className="agentic-screen-mode-toggle">
+			<button
+				type="button"
+				className={
+					'button button-small' +
+					( ! data.is_advanced ? ' button-primary' : '' )
+				}
+				disabled={ busy }
+				onClick={ () => setMode( 'basic' ) }
+			>
+				{ __( 'Basic', 'agent-builder' ) }
+			</button>
+			<button
+				type="button"
+				className={
+					'button button-small' +
+					( data.is_advanced ? ' button-primary' : '' )
+				}
+				disabled={ busy }
+				onClick={ () => setMode( 'advanced' ) }
+			>
+				{ __( 'Advanced', 'agent-builder' ) }
+			</button>
+			<InfoTip
+				text={ __(
+					'Only changes this screen. Other screens and your site-wide default (Settings → Interface) are unaffected.',
+					'agent-builder'
+				) }
+			/>
+		</span>
+	);
+}
+
+/**
  * Standard admin footer: policy blurb + support/docs + legal links.
  * Matches PHP agentic-page-footer used on classic admin screens.
  */
@@ -593,9 +651,6 @@ function ToolsBasicProfiles( { data, reload } ) {
 	const [ ok, setOk ] = useState( '' );
 	const profiles = data.profiles || [];
 	const active = data.active_profile || '';
-	const interfaceUrl =
-		data.interface_url ||
-		'admin.php?page=agentic-settings&tab=interface';
 
 	const apply = ( profileId ) => {
 		if ( busy ) {
@@ -646,16 +701,15 @@ function ToolsBasicProfiles( { data, reload } ) {
 					'These profiles control which tools every assistant may use. Approvals still apply for riskier actions.',
 					'agent-builder'
 				) }{ ' ' }
-				<a href={ interfaceUrl }>
-					{ __(
-						'Switch to Advanced in Interface settings',
-						'agent-builder'
-					) }
-				</a>
 				{ __(
-					' if you want the full tool-by-tool list.',
+					'Switch to Advanced for the full tool-by-tool list:',
 					'agent-builder'
-				) }
+				) }{ ' ' }
+				<ScreenModeToggle
+					screen="tools"
+					data={ data }
+					reload={ reload }
+				/>
 			</p>
 
 			{ err && (
@@ -752,9 +806,6 @@ function ToolsView( { data, reload, patchData } ) {
 	const activeTab = data.tab || 'all';
 	const isCustom = activeTab === 'custom';
 	const isAdvanced = !! data.is_advanced;
-	const interfaceUrl =
-		data.interface_url ||
-		'admin.php?page=agentic-settings&tab=interface';
 	const categoryHref = ( slug ) => {
 		const found = ( data.tabs || [] ).find( ( t ) => t.id === slug );
 		return (
@@ -763,13 +814,11 @@ function ToolsView( { data, reload, patchData } ) {
 		);
 	};
 
-	// Basic Interface mode: simple ability profiles only (not the tool table).
-	if ( ! isAdvanced ) {
-		return (
-			<ToolsBasicProfiles data={ data } reload={ reload } />
-		);
-	}
-
+	// Hooks must run unconditionally on every render (Rules of Hooks) — this
+	// screen can now flip basic/advanced in place via ScreenModeToggle
+	// without a full page reload (previously it always required navigating
+	// away and back, which remounted the component fresh and masked any
+	// hook ordered after the early return below).
 	const riskCounts = useMemo( () => {
 		const counts = {
 			all: 0,
@@ -830,6 +879,13 @@ function ToolsView( { data, reload, patchData } ) {
 		);
 	}, [ data.rows, q, riskFilter ] );
 
+	// Basic Interface mode: simple ability profiles only (not the tool table).
+	if ( ! isAdvanced ) {
+		return (
+			<ToolsBasicProfiles data={ data } reload={ reload } />
+		);
+	}
+
 	const setRowEnabled = ( name, enabled ) => {
 		if ( typeof patchData === 'function' ) {
 			patchData( ( d ) => ( {
@@ -889,17 +945,15 @@ function ToolsView( { data, reload, patchData } ) {
 			{ ! isCustom && (
 				<>
 					<p className="agentic-react-muted" style={ { marginTop: 0 } }>
-						<a href={ interfaceUrl }>
-							{ __(
-								'Interface settings',
-								'agent-builder'
-							) }
-						</a>
-						{ ' · ' }
 						{ __(
-							'You are in Advanced view (full tool list). Switch to Basic there for simple safety profiles.',
+							'You are in Advanced view (full tool list).',
 							'agent-builder'
-						) }
+						) }{ ' ' }
+						<ScreenModeToggle
+							screen="tools"
+							data={ data }
+							reload={ reload }
+						/>
 					</p>
 					<div className="agentic-react-tools-toolbar">
 						<SearchControl
@@ -1201,9 +1255,6 @@ function ApprovalsView( { data, reload } ) {
 	const rows = data.rows || [];
 	const prefs = data.prefs || {};
 	const profiles = data.comfort_profiles || [];
-	const interfaceUrl =
-		data.interface_url ||
-		'admin.php?page=agentic-settings&tab=interface';
 	const [ busy, setBusy ] = useState( '' );
 	const [ err, setErr ] = useState( '' );
 	const [ ok, setOk ] = useState( '' );
@@ -1466,19 +1517,20 @@ function ApprovalsView( { data, reload } ) {
 		<>
 			<p className="agentic-react-lead">{ data.description }</p>
 			<p className="agentic-react-muted" style={ { marginTop: 0 } }>
-				<a href={ interfaceUrl }>
-					{ __( 'Interface settings', 'agent-builder' ) }
-				</a>
-				{ ' · ' }
 				{ data.is_advanced
 					? __(
-							'Advanced view shows technical detail. Basic mode keeps this page simpler.',
+							'Advanced view shows technical detail.',
 							'agent-builder'
 					  )
 					: __(
-							'Simple view for non-technical admins. Switch to Advanced for more detail.',
+							'Simple view for non-technical admins.',
 							'agent-builder'
-					  ) }
+					  ) }{ ' ' }
+				<ScreenModeToggle
+					screen="approvals"
+					data={ data }
+					reload={ reload }
+				/>
 			</p>
 
 			{ err && (
@@ -1802,9 +1854,6 @@ function LogsView( { data, reload } ) {
 	const [ kind, setKind ] = useState( 'all' );
 	const period = data.period || 'week';
 	const stats = data.stats || {};
-	const interfaceUrl =
-		data.interface_url ||
-		'admin.php?page=agentic-settings&tab=interface';
 
 	const kindCounts = useMemo( () => {
 		const c = { all: 0, tool: 0, approval: 0, chat: 0, settings: 0, other: 0, security: 0 };
@@ -1848,14 +1897,15 @@ function LogsView( { data, reload } ) {
 		<>
 			<p className="agentic-react-lead">{ data.description }</p>
 			<p className="agentic-react-muted" style={ { marginTop: 0 } }>
-				<a href={ interfaceUrl }>
-					{ __( 'Interface settings', 'agent-builder' ) }
-				</a>
-				{ ' · ' }
 				{ __(
 					'This is a friendly activity feed. Technical names stay in Advanced detail when useful.',
 					'agent-builder'
-				) }
+				) }{ ' ' }
+				<ScreenModeToggle
+					screen="logs"
+					data={ data }
+					reload={ reload }
+				/>
 			</p>
 
 			{ /* Summary metrics */ }
