@@ -30,6 +30,10 @@ class Admin_Pages_REST {
 	 */
 	public static function init(): void {
 		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
+		// Plain admin-post handler (not REST) so the browser can trigger a
+		// native file download via GET navigation — no fetch/blob dance,
+		// no REST nonce-header requirement.
+		add_action( 'admin_post_agentic_export_logs', array( __CLASS__, 'export_logs' ) );
 	}
 
 	/**
@@ -1199,6 +1203,16 @@ class Admin_Pages_REST {
 			),
 			'is_advanced'    => $is_advanced,
 			'interface_url'  => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
+			// Built by hand (not wp_nonce_url()): that helper HTML-entity-escapes
+			// the "&" separators for embedding in server-rendered HTML, but this
+			// URL is consumed as-is by React as a real href — entity-escaped
+			// "&amp;" would reach the browser literally, mangling every param
+			// after the first (including _wpnonce, which would then 403).
+			'export_url'     => admin_url(
+				'admin-post.php?action=agentic_export_logs&tab=' . rawurlencode( $tab )
+				. '&period=' . rawurlencode( $period )
+				. '&_wpnonce=' . wp_create_nonce( 'agentic_export_logs' )
+			),
 			'docs_url'       => 'https://agentic-plugin.com/audit-log/',
 			'footer_policy'  => __(
 				'Activity helps you understand what assistants did on your site. Logs are stored locally and purged according to your retention settings. Chat content lives under Conversations.',
@@ -1222,6 +1236,79 @@ class Admin_Pages_REST {
 				),
 			),
 		);
+	}
+
+	/**
+	 * Download the current Logs view (Timeline/Conversations/Security) as a
+	 * CSV file — e.g. to attach to a support email when diagnosing an issue.
+	 * Plain admin-post handler (not REST) so a simple GET navigation
+	 * triggers a native browser download; gated the same way the Logs page
+	 * itself is (agentic_view_audit_log), plus a nonce since this both reads
+	 * potentially sensitive data and is reachable via direct URL.
+	 *
+	 * @return void
+	 */
+	public static function export_logs(): void {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'agentic_export_logs' ) ) {
+			wp_die( esc_html__( 'Security check failed. Please reload the Activity page and try exporting again.', 'agent-builder' ), 403 );
+		}
+		if ( ! current_user_can( 'agentic_view_audit_log' ) && ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to export logs.', 'agent-builder' ), 403 );
+		}
+
+		$tab    = sanitize_key( (string) ( $_GET['tab'] ?? 'audit' ) );
+		$period = sanitize_key( (string) ( $_GET['period'] ?? 'week' ) );
+		if ( ! in_array( $tab, array( 'audit', 'conversations', 'security' ), true ) ) {
+			$tab = 'audit';
+		}
+		if ( ! in_array( $period, array( 'day', 'week', 'month' ), true ) ) {
+			$period = 'week';
+		}
+
+		$payload = self::logs_payload( $tab, $period );
+		$rows    = is_array( $payload['rows'] ?? null ) ? $payload['rows'] : array();
+
+		$filename = sprintf(
+			'agent-builder-%s-log-%s.csv',
+			$tab,
+			gmdate( 'Y-m-d-His' )
+		);
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=' . $filename );
+
+		$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Direct CSV stream to browser, not a filesystem write.
+		// PHP 8.3+ deprecates relying on fputcsv()'s implicit $escape default;
+		// pass it explicitly (backslash matches the historical default) so a
+		// stray "Deprecated:" notice can never leak into the CSV body if this
+		// site has error display on.
+		fputcsv( $out, array( 'Date (UTC)', 'Kind', 'Actor', 'Action', 'Summary', 'Detail', 'Tokens', 'Cost (USD)' ), ',', '"', '\\' );
+		foreach ( $rows as $row ) {
+			fputcsv(
+				$out,
+				array(
+					(string) ( $row['when'] ?? '' ),
+					(string) ( $row['kind'] ?? '' ),
+					(string) ( $row['subtitle'] ?? '' ),
+					(string) ( $row['raw_action'] ?? '' ),
+					(string) ( $row['title'] ?? '' ),
+					(string) ( $row['detail'] ?? '' ),
+					(string) ( $row['tokens'] ?? 0 ),
+					(string) ( $row['cost'] ?? '' ),
+				),
+				',',
+				'"',
+				'\\'
+			);
+		}
+		fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+
+		if ( class_exists( Security_Log::class ) ) {
+			Security_Log::log_system( 'logs_exported', $tab . '_log', array( 'tab' => $tab, 'period' => $period, 'rows' => count( $rows ) ) );
+		}
+
+		exit;
 	}
 
 	/**
@@ -1281,6 +1368,9 @@ class Admin_Pages_REST {
 		$detail_bits = array();
 		if ( ! empty( $item['reasoning'] ) ) {
 			$detail_bits[] = (string) $item['reasoning'];
+		}
+		if ( 'endpoint_url_changed' === $action && ! empty( $details['previous'] ) && ! empty( $details['new'] ) ) {
+			$detail_bits[] = sprintf( '%s → %s', $details['previous'], $details['new'] );
 		}
 		if ( ! empty( $details['message'] ) && is_string( $details['message'] ) ) {
 			$detail_bits[] = $details['message'];
@@ -1345,6 +1435,7 @@ class Admin_Pages_REST {
 			'deployment_disabled'        => __( 'Deployment disabled', 'agent-builder' ),
 			'deployment_deleted'         => __( 'Deployment deleted', 'agent-builder' ),
 			'settings_changed'           => __( 'Settings changed', 'agent-builder' ),
+			'endpoint_url_changed'       => __( 'Changed a service endpoint URL', 'agent-builder' ),
 			'agent_activated'            => __( 'Assistant activated', 'agent-builder' ),
 			'agent_deactivated'          => __( 'Assistant deactivated', 'agent-builder' ),
 		);

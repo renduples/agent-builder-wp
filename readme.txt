@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.38
+Stable tag: 3.3.41
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,16 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.41 - 2026-08-02 =
+* Fix: The CSV export's fputcsv() calls relied on PHP 8.3+'s now-deprecated implicit $escape default, which could leak "Deprecated:" notices into the exported file's content on sites with error display on. Passed explicitly now.
+
+= 3.3.40 - 2026-08-02 =
+* Fix: The new "Export CSV" button on the Activity page 403'd — its URL was built with wp_nonce_url(), which HTML-entity-escapes "&" for embedding in server-rendered HTML, but the URL is consumed directly by React as a real link. Built without that escaping now.
+
+= 3.3.39 - 2026-08-02 =
+* Add: Changing a service endpoint URL (Settings → Endpoints) is now logged with the specific service and the before/after URL, not just a generic "settings changed" entry — endpoint changes redirect where AI/media traffic goes, so they're worth a clear audit trail.
+* Add: An "Export CSV" button on the Activity (Logs) page downloads the current Timeline, Conversations, or Security log — handy to attach when emailing support about an issue.
 
 = 3.3.38 - 2026-08-02 =
 * Fix: Saving the new Endpoints → Agentic Services URLs after editing one crashed with a "circular structure" error — the shared Save button wires its click handler directly as the save callback's first argument, so editing a field could route non-plain data into the save payload. Now calls the save handler explicitly with no arguments.

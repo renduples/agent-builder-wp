@@ -2029,6 +2029,18 @@ function LogsView( { data, reload } ) {
 						? __( '1 event', 'agent-builder' )
 						: `${ rows.length } ${ __( 'events', 'agent-builder' ) }` }
 				</span>
+				{ data.export_url && (
+					<Button
+						variant="secondary"
+						href={ data.export_url }
+						title={ __(
+							'Download this log as a CSV file — handy to attach when emailing support about an issue.',
+							'agent-builder'
+						) }
+					>
+						{ __( 'Export CSV', 'agent-builder' ) }
+					</Button>
+				) }
 			</div>
 
 			{ ! rows.length ? (

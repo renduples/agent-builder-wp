@@ -876,11 +876,29 @@ class Admin_Settings_REST {
 			if ( ! in_array( $slug, Service_Registry::get_slugs(), true ) ) {
 				continue; // Unknown/custom slug — services are a fixed built-in set.
 			}
+			$before = Service_Registry::url( $slug );
 			// Service_Registry::update() already treats an empty string as
 			// "reset to default"; sanitize_text_field() alone would mangle a
 			// URL (stripping slashes-as-tags edge cases), so use esc_url_raw.
 			$url = isset( $row['url'] ) ? esc_url_raw( trim( (string) $row['url'] ) ) : '';
 			Service_Registry::update( $slug, $url );
+
+			// Every outbound AI/media/marketplace call this plugin makes goes
+			// through one of these URLs, so a redirected endpoint is a real
+			// security event — log it specifically (with before/after), not
+			// just as a generic "settings_changed" line with no detail.
+			$after = Service_Registry::url( $slug );
+			if ( $after !== $before && class_exists( Audit_Log::class ) ) {
+				Audit_Log::log_admin(
+					'endpoint_url_changed',
+					$slug,
+					array(
+						'service'  => $slug,
+						'previous' => $before,
+						'new'      => $after,
+					)
+				);
+			}
 		}
 	}
 
