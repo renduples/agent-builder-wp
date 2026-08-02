@@ -1862,25 +1862,170 @@ function ApisTab( { data } ) {
 	);
 }
 
-function EndpointsTab( { data } ) {
+function EndpointsTab( { data, setData, onSave, saving, error, saved, clearSaved } ) {
+	const services = data.services || [];
+	const [ tests, setTests ] = useState( {} );
+
+	const updateServiceUrl = ( slug, url ) => {
+		setData( {
+			...data,
+			services: services.map( ( s ) =>
+				s.slug === slug ? { ...s, url: String( url ) } : s
+			),
+		} );
+	};
+
+	const resetService = ( slug ) => {
+		const svc = services.find( ( s ) => s.slug === slug );
+		updateServiceUrl( slug, svc ? svc.default_url : '' );
+	};
+
+	const testService = ( slug ) => {
+		setTests( ( prev ) => ( {
+			...prev,
+			[ slug ]: { testing: true, ok: null, message: '' },
+		} ) );
+		apiFetch( {
+			path: REST + '/test-service',
+			method: 'POST',
+			data: { slug },
+		} )
+			.then( ( res ) => {
+				setTests( ( prev ) => ( {
+					...prev,
+					[ slug ]: {
+						testing: false,
+						ok: !! res.ok,
+						message: res.message || '',
+					},
+				} ) );
+			} )
+			.catch( ( err ) => {
+				setTests( ( prev ) => ( {
+					...prev,
+					[ slug ]: {
+						testing: false,
+						ok: false,
+						message:
+							err.message ||
+							__( 'Test failed.', 'agent-builder' ),
+					},
+				} ) );
+			} );
+	};
+
 	return (
-		<Panel title={ __( 'Endpoints', 'agent-builder' ) }>
-			<p className="agentic-react-lead">
-				{ data.note ||
-					__(
-						'REST endpoints for integrations.',
+		<>
+			<Panel title={ __( 'Endpoints', 'agent-builder' ) }>
+				<p className="agentic-react-lead">
+					{ data.note ||
+						__(
+							'REST endpoints for integrations.',
+							'agent-builder'
+						) }
+				</p>
+				<p>
+					<strong>{ __( 'Namespace', 'agent-builder' ) }:</strong>{ ' ' }
+					<code>{ data.rest_namespace }</code>
+				</p>
+				<p>
+					<strong>{ __( 'Base URL', 'agent-builder' ) }:</strong>{ ' ' }
+					<code>{ data.rest_url }</code>
+				</p>
+			</Panel>
+			<Panel
+				title={ __( 'Agentic Services', 'agent-builder' ) }
+				footer={
+					<SaveBar onSave={ () => onSave() } saving={ saving } />
+				}
+			>
+				<StatusNotice
+					error={ error }
+					saved={ saved }
+					onDismissSaved={ clearSaved }
+				/>
+				<p className="agentic-react-lead">
+					{ __(
+						'Base URLs the plugin calls for AI chat, knowledge search, and media generation. Leave these on their defaults unless you’re self-hosting a proxy or support asked you to change one.',
 						'agent-builder'
 					) }
-			</p>
-			<p>
-				<strong>{ __( 'Namespace', 'agent-builder' ) }:</strong>{ ' ' }
-				<code>{ data.rest_namespace }</code>
-			</p>
-			<p>
-				<strong>{ __( 'Base URL', 'agent-builder' ) }:</strong>{ ' ' }
-				<code>{ data.rest_url }</code>
-			</p>
-		</Panel>
+				</p>
+				{ services.map( ( svc ) => {
+					const t = tests[ svc.slug ] || {};
+					return (
+						<div
+							key={ svc.slug }
+							style={ {
+								marginBottom: 16,
+								paddingBottom: 16,
+								borderBottom: '1px solid #e0e0e0',
+							} }
+						>
+							<div
+								style={ {
+									display: 'flex',
+									alignItems: 'flex-end',
+									gap: 8,
+								} }
+							>
+								<div style={ { flexGrow: 1 } }>
+									<TextControl
+										label={ svc.name }
+										help={ svc.description }
+										value={ svc.url }
+										onChange={ ( v ) =>
+											updateServiceUrl( svc.slug, v )
+										}
+										__nextHasNoMarginBottom
+										__next40pxDefaultSize
+									/>
+								</div>
+								<Button
+									variant="secondary"
+									isBusy={ t.testing }
+									disabled={ t.testing }
+									onClick={ () => testService( svc.slug ) }
+								>
+									{ t.testing
+										? __( 'Testing…', 'agent-builder' )
+										: __( 'Test', 'agent-builder' ) }
+								</Button>
+							</div>
+							{ null !== ( t.ok ?? null ) && (
+								<p style={ { margin: '6px 0 0' } }>
+									<span
+										style={ {
+											color: t.ok ? '#008a20' : '#cc1818',
+										} }
+									>
+										{ t.ok ? '✓' : '✗' } { t.message }
+									</span>
+								</p>
+							) }
+							{ svc.is_custom && (
+								<p style={ { margin: '6px 0 0' } }>
+									<span className="agentic-react-lead">
+										{ __( 'Default:', 'agent-builder' ) }{ ' ' }
+										<code>{ svc.default_url }</code>
+									</span>{ ' ' }
+									<Button
+										variant="link"
+										onClick={ () =>
+											resetService( svc.slug )
+										}
+									>
+										{ __(
+											'Reset to default',
+											'agent-builder'
+										) }
+									</Button>
+								</p>
+							) }
+						</div>
+					);
+				} ) }
+			</Panel>
+		</>
 	);
 }
 
@@ -2189,7 +2334,7 @@ function SettingsApp() {
 				body = <ApisTab data={ data } />;
 				break;
 			case 'endpoints':
-				body = <EndpointsTab data={ data } />;
+				body = <EndpointsTab { ...common } />;
 				break;
 			case 'license':
 				body = (

@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.36
+Stable tag: 3.3.38
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,13 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.38 - 2026-08-02 =
+* Fix: Saving the new Endpoints → Agentic Services URLs after editing one crashed with a "circular structure" error — the shared Save button wires its click handler directly as the save callback's first argument, so editing a field could route non-plain data into the save payload. Now calls the save handler explicitly with no arguments.
+* Add: Each Agentic service on the Endpoints tab now has a Test button that pings its real health check (or, for the marketplace API, its base URL) and reports reachability inline.
+
+= 3.3.37 - 2026-08-02 =
+* Add: Settings → Endpoints now lists the Agentic services (AI chat, knowledge search, image/video/TTS generation) with their current base URL, so an admin can see and override them the same way LLM provider endpoints already can. This backend support (Service_Registry::update()/reset()) existed but had no settings UI wired to it until now.
 
 = 3.3.36 - 2026-08-02 =
 * Fix: The report_issue tool — documented as available to every agent so any assistant can self-diagnose and offer to file a support report — wasn't actually wired into any of the 8 bundled agents. Added to all of them.

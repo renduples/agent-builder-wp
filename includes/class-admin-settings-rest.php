@@ -50,6 +50,24 @@ class Admin_Settings_REST {
 			)
 		);
 
+		// Connectivity check for one Agentic service (Endpoints tab "Test" button).
+		register_rest_route(
+			'agentic/v1',
+			'/admin-settings/test-service',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'test_service' ),
+				'permission_callback' => array( __CLASS__, 'can_manage' ),
+				'args'                => array(
+					'slug' => array(
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_key',
+					),
+				),
+			)
+		);
+
 		// Pro (and other add-ons) can render classic PHP tab bodies inside the React shell.
 		register_rest_route(
 			'agentic/v1',
@@ -216,6 +234,77 @@ class Admin_Settings_REST {
 	}
 
 	/**
+	 * Connectivity check for one Agentic service, used by the Endpoints tab's
+	 * per-row "Test" button. Uses the *currently saved* URL for that service
+	 * (including any admin override), not necessarily the built-in default.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function test_service( \WP_REST_Request $request ) {
+		$slug = sanitize_key( (string) $request->get_param( 'slug' ) );
+		if ( ! in_array( $slug, Service_Registry::get_slugs(), true ) ) {
+			return new \WP_Error( 'agentic_invalid_service', __( 'Unknown service.', 'agent-builder' ), array( 'status' => 400 ) );
+		}
+
+		// Every service except agentic-api (the marketplace's own WordPress
+		// REST API, not one of the Python inference services) exposes an
+		// unauthenticated GET /health probe.
+		$has_health = 'agentic-api' !== $slug;
+		$url        = $has_health ? Service_Registry::url( $slug, '/health' ) : Service_Registry::url( $slug );
+
+		if ( '' === $url ) {
+			return new \WP_REST_Response(
+				array(
+					'ok'      => false,
+					'message' => __( 'No URL configured for this service.', 'agent-builder' ),
+				),
+				200
+			);
+		}
+
+		$start = microtime( true );
+		$resp  = wp_remote_get( $url, array( 'timeout' => 8 ) );
+		$ms    = (int) round( ( microtime( true ) - $start ) * 1000 );
+
+		if ( is_wp_error( $resp ) ) {
+			return new \WP_REST_Response(
+				array(
+					'ok'      => false,
+					'message' => $resp->get_error_message(),
+				),
+				200
+			);
+		}
+
+		$code = (int) wp_remote_retrieve_response_code( $resp );
+		// A real /health endpoint must say 200. For agentic-api (no /health
+		// route) any non-5xx response at least proves the host is up.
+		$ok = $has_health ? ( 200 === $code ) : ( $code > 0 && $code < 500 );
+
+		return new \WP_REST_Response(
+			array(
+				'ok'          => $ok,
+				'status_code' => $code,
+				'latency_ms'  => $ms,
+				'message'     => $ok
+					? sprintf(
+						/* translators: 1: HTTP status code, 2: response time in milliseconds */
+						__( 'Reachable (HTTP %1$d, %2$dms)', 'agent-builder' ),
+						$code,
+						$ms
+					)
+					: sprintf(
+						/* translators: %d: HTTP status code */
+						__( 'Unexpected response (HTTP %d)', 'agent-builder' ),
+						$code
+					),
+			),
+			200
+		);
+	}
+
+	/**
 	 * Update one tab.
 	 *
 	 * @param \WP_REST_Request $request Request.
@@ -256,6 +345,9 @@ class Admin_Settings_REST {
 				break;
 			case 'instructions':
 				self::save_instructions( $data );
+				break;
+			case 'endpoints':
+				self::save_endpoints( $data );
 				break;
 			default:
 				return new \WP_Error( 'invalid_tab', __( 'Unknown settings tab.', 'agent-builder' ), array( 'status' => 400 ) );
@@ -599,7 +691,30 @@ class Admin_Settings_REST {
 			'rest_namespace' => 'agentic/v1',
 			'rest_url'       => rest_url( 'agentic/v1/' ),
 			'note'           => __( 'REST and webhook endpoints for integrations. Full editor remains available via Advanced tools.', 'agent-builder' ),
+			'services'       => self::data_services_list(),
 		);
+	}
+
+	/**
+	 * Base URLs for the Agentic services this plugin depends on (chat, RAG,
+	 * image/video/TTS generation, the marketplace API), so an admin can see
+	 * and override them the same way LLM provider endpoints already are.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function data_services_list(): array {
+		$rows = array();
+		foreach ( Service_Registry::get_all() as $slug => $svc ) {
+			$rows[] = array(
+				'slug'        => $slug,
+				'name'        => (string) ( $svc['name'] ?? $slug ),
+				'description' => (string) ( $svc['description'] ?? '' ),
+				'url'         => (string) ( $svc['url'] ?? '' ),
+				'default_url' => (string) ( $svc['default_url'] ?? '' ),
+				'is_custom'   => ! empty( $svc['is_custom'] ),
+			);
+		}
+		return $rows;
 	}
 
 	// ── Savers ────────────────────────────────────────────────────────────
@@ -742,6 +857,30 @@ class Admin_Settings_REST {
 		}
 		if ( array_key_exists( 'local_memory_enabled', $data ) ) {
 			update_option( 'agentic_local_memory_enabled', ! empty( $data['local_memory_enabled'] ) ? '1' : '0' );
+		}
+	}
+
+	/**
+	 * Save admin overrides for the Agentic services' base URLs.
+	 *
+	 * @param array<string,mixed> $data Data — expects a 'services' array of {slug, url}.
+	 * @return void
+	 */
+	private static function save_endpoints( array $data ): void {
+		$services = is_array( $data['services'] ?? null ) ? $data['services'] : array();
+		foreach ( $services as $row ) {
+			if ( ! is_array( $row ) || empty( $row['slug'] ) ) {
+				continue;
+			}
+			$slug = sanitize_key( (string) $row['slug'] );
+			if ( ! in_array( $slug, Service_Registry::get_slugs(), true ) ) {
+				continue; // Unknown/custom slug — services are a fixed built-in set.
+			}
+			// Service_Registry::update() already treats an empty string as
+			// "reset to default"; sanitize_text_field() alone would mangle a
+			// URL (stripping slashes-as-tags edge cases), so use esc_url_raw.
+			$url = isset( $row['url'] ) ? esc_url_raw( trim( (string) $row['url'] ) ) : '';
+			Service_Registry::update( $slug, $url );
 		}
 	}
 
