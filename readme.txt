@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.30
+Stable tag: 3.3.31
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.31 - 2026-08-02 =
+* Add: Gemini 3.1/3.5/3.6 Flash (Lite) models are now selectable for the Google and Agentic AI providers, alongside existing 2.5 models. Pricing shown for the new models is a placeholder until official rates are confirmed.
 
 = 3.3.30 - 2026-08-02 =
 * Fix: Google/Gemini requests now capture and replay the `thoughtSignature` field on function-call parts, required by upcoming Gemini 3.x models to avoid a 400 error; no effect on current Gemini 2.5 models.

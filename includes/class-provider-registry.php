@@ -784,6 +784,17 @@ class Provider_Registry {
 			if ( empty( $models ) || ! in_array( 'gemini-2.5-flash', $models, true ) ) {
 				return true;
 			}
+			// Catalog predates the Gemini 3.x additions (see GEMINI-3-MIGRATION-BRIEF.md) — refresh
+			// so existing installs pick up the new models without a manual "Refresh" click.
+			if ( ! in_array( 'gemini-3.5-flash', $models, true ) ) {
+				return true;
+			}
+		}
+
+		if ( 'agentic' === $slug ) {
+			if ( ! empty( $models ) && ! in_array( 'gemini-3.5-flash', $models, true ) ) {
+				return true;
+			}
 		}
 
 		if ( 'openai' === $slug ) {
@@ -940,7 +951,9 @@ class Provider_Registry {
 					'requires_key'  => true,
 					'key_url'       => '',
 					'icon'          => 'agentic',
-					'models'        => array( 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro', 'gemma-4-26b' ),
+					// Gemini 3.x models added alongside 2.5 (not replacing) ahead of the Oct 20, 2026
+					// Vertex AI deprecation; 2.5 keeps working under ELA pricing through Jan 28, 2027.
+					'models'        => array( 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro', 'gemma-4-26b', 'gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.6-flash' ),
 					'model_pricing' => array(), // Populated at runtime via "Get Latest Pricing" from wp_marketplace_pricing.
 					'is_builtin'    => true,
 					'sort_order'    => 0,
@@ -1090,23 +1103,44 @@ class Provider_Registry {
 					'key_url'       => 'https://aistudio.google.com/apikey',
 					'icon'          => 'google',
 					// Stable Gemini API model IDs (avoid -exp / 1.5 aliases that 404 after shutdowns).
-					'models'        => array( 'gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash' ),
+					// Gemini 3.x added alongside 2.5 ahead of the Oct 20, 2026 Vertex AI deprecation
+					// (2.5 keeps working under ELA pricing through Jan 28, 2027 — see
+					// GEMINI-3-MIGRATION-BRIEF.md). default_model deliberately left on 2.5-flash.
+					'models'        => array( 'gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.6-flash' ),
 					'model_pricing' => array(
-						'gemini-2.5-pro'        => array(
+						'gemini-2.5-pro'         => array(
 							'in'  => 1.25,
 							'out' => 10.00,
 						),
-						'gemini-2.5-flash'      => array(
+						'gemini-2.5-flash'       => array(
 							'in'  => 0.30,
 							'out' => 2.50,
 						),
-						'gemini-2.5-flash-lite' => array(
+						'gemini-2.5-flash-lite'  => array(
 							'in'  => 0.10,
 							'out' => 0.40,
 						),
-						'gemini-2.0-flash'      => array(
+						'gemini-2.0-flash'       => array(
 							'in'  => 0.10,
 							'out' => 0.40,
+						),
+						// PLACEHOLDER — mirrored from the 2.5 tier they replace, pending real
+						// Vertex AI Model Garden pricing. Do not treat as accurate billing data.
+						'gemini-3.1-flash-lite'  => array(
+							'in'  => 0.10,
+							'out' => 0.40,
+						),
+						'gemini-3.5-flash-lite'  => array(
+							'in'  => 0.10,
+							'out' => 0.40,
+						),
+						'gemini-3.5-flash'       => array(
+							'in'  => 0.30,
+							'out' => 2.50,
+						),
+						'gemini-3.6-flash'       => array(
+							'in'  => 0.30,
+							'out' => 2.50,
 						),
 					),
 					'is_builtin'    => true,
