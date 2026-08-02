@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.29
+Stable tag: 3.3.30
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.30 - 2026-08-02 =
+* Fix: Google/Gemini requests now capture and replay the `thoughtSignature` field on function-call parts, required by upcoming Gemini 3.x models to avoid a 400 error; no effect on current Gemini 2.5 models.
 
 = 3.3.29 - 2026-08-01 =
 * Fix: WordPress.org Plugin Check compliance — the readme.txt Changelog section had grown past the 5,000-character limit the plugin directory's readme parser truncates at, so the Changelog tab on the plugin page would have shown a cut-off, broken-looking history. Trimmed older entries to one line each (full detail stays in git history); a link to the complete version history was already present and now correctly follows the trimmed section.

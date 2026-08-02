@@ -635,8 +635,8 @@ class LLM_Client {
 		);
 		$tc_list = array();
 		foreach ( $tool_calls_raw as $tc ) {
-			$tc_id     = ! empty( $tc['id'] ) ? $tc['id'] : ( 'call_s_' . count( $tc_list ) );
-			$tc_list[] = array(
+			$tc_id      = ! empty( $tc['id'] ) ? $tc['id'] : ( 'call_s_' . count( $tc_list ) );
+			$tool_call  = array(
 				'id'       => $tc_id,
 				'type'     => 'function',
 				'function' => array(
@@ -644,6 +644,10 @@ class LLM_Client {
 					'arguments' => $tc['arguments_str'],
 				),
 			);
+			if ( ! empty( $tc['thought_signature'] ) ) {
+				$tool_call['thought_signature'] = $tc['thought_signature'];
+			}
+			$tc_list[] = $tool_call;
 		}
 		if ( ! empty( $tc_list ) ) {
 			$message['tool_calls'] = $tc_list;
@@ -754,6 +758,10 @@ class LLM_Client {
 					'name'          => $part['functionCall']['name'] ?? '',
 					'arguments_str' => wp_json_encode( ! empty( $part['functionCall']['args'] ) ? $part['functionCall']['args'] : new \stdClass() ),
 				);
+				// See normalize_google_response() for why this must round-trip verbatim.
+				if ( ! empty( $part['thoughtSignature'] ) ) {
+					$tool_calls_raw[ $idx ]['thought_signature'] = $part['thoughtSignature'];
+				}
 				$finish_reason          = 'tool_calls';
 			}
 		}
@@ -1124,12 +1132,19 @@ class LLM_Client {
 						foreach ( $msg['tool_calls'] as $tc ) {
 							$args_json    = $tc['function']['arguments'] ?? '{}';
 							$decoded_args = json_decode( $args_json, false );
-							$fc_parts[]   = array(
+							$fc_part      = array(
 								'functionCall' => array(
 									'name' => $tc['function']['name'] ?? '',
 									'args' => $decoded_args ? $decoded_args : new \stdClass(),
 								),
 							);
+							// Gemini 3+ requires the thought_signature captured off this exact
+							// functionCall part to be replayed verbatim, or the request 400s.
+							// Absent for pre-3.x models — nothing to replay, nothing sent.
+							if ( ! empty( $tc['thought_signature'] ) ) {
+								$fc_part['thoughtSignature'] = $tc['thought_signature'];
+							}
+							$fc_parts[] = $fc_part;
 						}
 						if ( ! empty( $msg['content'] ) ) {
 							array_unshift( $fc_parts, array( 'text' => $msg['content'] ) );
@@ -1372,8 +1387,8 @@ class LLM_Client {
 			if ( isset( $part['text'] ) ) {
 				$text_parts[] = $part['text'];
 			} elseif ( isset( $part['functionCall'] ) ) {
-				$fc           = $part['functionCall'];
-				$tool_calls[] = array(
+				$fc         = $part['functionCall'];
+				$tool_call  = array(
 					'id'       => 'call_g_' . $tc_index,
 					'type'     => 'function',
 					'function' => array(
@@ -1381,6 +1396,13 @@ class LLM_Client {
 						'arguments' => wp_json_encode( ! empty( $fc['args'] ) ? $fc['args'] : new \stdClass() ),
 					),
 				);
+				// Gemini 3+ attaches an opaque thought_signature to the part carrying the
+				// functionCall; it must be replayed verbatim on the next turn or Google
+				// returns a 400. Carried as extra metadata — absent for pre-3.x models.
+				if ( ! empty( $part['thoughtSignature'] ) ) {
+					$tool_call['thought_signature'] = $part['thoughtSignature'];
+				}
+				$tool_calls[] = $tool_call;
 				++$tc_index;
 			}
 		}
