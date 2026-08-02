@@ -17,7 +17,8 @@
     "analyze_internal_links",
     "get_link_suggestions",
     "optimize_post_title",
-    "update_post_seo"
+    "update_post_seo",
+    "report_issue"
   ],
   "suggested_prompts": [
     "Give me an SEO overview of the site and the top issues to fix first.",

@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.35
+Stable tag: 3.3.36
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.36 - 2026-08-02 =
+* Fix: The report_issue tool — documented as available to every agent so any assistant can self-diagnose and offer to file a support report — wasn't actually wired into any of the 8 bundled agents. Added to all of them.
+* Add: get_image_pricing tool, matching the existing get_video_pricing tool, for checking Agentic Image Generation rates.
 
 = 3.3.35 - 2026-08-02 =
 * Fix: Third-party provider model lists (OpenAI, Anthropic, Google, xAI, Mistral, and others) now refresh from our own curated catalog on agentic-plugin.com — the same source that already powers "Get Latest Pricing" — instead of every site querying each vendor's raw API directly.

@@ -18,6 +18,7 @@
     "get_form_entries",
     "moderate_comment",
     "reply_to_comment",
+    "report_issue",
     "list_okf_concepts",
     "read_okf_concept",
     "search_okf"

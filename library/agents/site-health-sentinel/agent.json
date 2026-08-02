@@ -17,7 +17,8 @@
     "check_plugin_updates",
     "check_core_web_vitals",
     "get_cron_jobs",
-    "get_security_overview"
+    "get_security_overview",
+    "report_issue"
   ],
   "suggested_prompts": [
     "Run a full health check and tell me the top three things to fix.",

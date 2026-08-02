@@ -15,6 +15,7 @@
         "list_posts",
         "get_post_content",
         "get_site_context",
+        "report_issue",
         "get_author_list",
         "analyze_post",
         "search_media_library",

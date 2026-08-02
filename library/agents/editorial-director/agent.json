@@ -15,7 +15,8 @@
     "get_site_writing_stats",
     "list_posts",
     "search_content",
-    "delegate_to_agent"
+    "delegate_to_agent",
+    "report_issue"
   ],
   "suggested_prompts": [
     "Plan this week's content and delegate drafting to the Content Writer.",

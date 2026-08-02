@@ -18,6 +18,7 @@
     "get_author_list",
     "lock_user_account",
     "force_password_reset",
+    "report_issue",
     "list_okf_concepts",
     "read_okf_concept",
     "search_okf"

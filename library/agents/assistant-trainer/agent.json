@@ -13,6 +13,7 @@
     ],
     "tools": [
         "get_user_context",
+        "report_issue",
         "search_capabilities",
         "analyze_requirements",
         "validate_agent_code",
