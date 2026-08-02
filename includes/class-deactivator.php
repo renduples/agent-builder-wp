@@ -38,6 +38,7 @@ final class Deactivator {
 		wp_clear_scheduled_hook( 'agentic_gdpr_cleanup' );
 		wp_clear_scheduled_hook( 'agentic_cleanup_jobs' );
 		wp_clear_scheduled_hook( 'agentic_process_job' );
+		wp_clear_scheduled_hook( 'agentic_refresh_provider_models' );
 		flush_rewrite_rules();
 
 		// Reset the agent-updates opt-in so the consent prompt reappears on next activation.

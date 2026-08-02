@@ -784,17 +784,6 @@ class Provider_Registry {
 			if ( empty( $models ) || ! in_array( 'gemini-2.5-flash', $models, true ) ) {
 				return true;
 			}
-			// Catalog predates the Gemini 3.x additions (see GEMINI-3-MIGRATION-BRIEF.md) — refresh
-			// so existing installs pick up the new models without a manual "Refresh" click.
-			if ( ! in_array( 'gemini-3.5-flash', $models, true ) ) {
-				return true;
-			}
-		}
-
-		if ( 'agentic' === $slug ) {
-			if ( ! empty( $models ) && ! in_array( 'gemini-3.5-flash', $models, true ) ) {
-				return true;
-			}
 		}
 
 		if ( 'openai' === $slug ) {
@@ -808,6 +797,209 @@ class Provider_Registry {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Register the daily live-model-refresh cron so provider model lists stay
+	 * current from each provider's own API instead of depending on hardcoded
+	 * lists that need a plugin update every time a vendor ships a new model.
+	 *
+	 * @return void
+	 */
+	public static function init(): void {
+		add_action( 'agentic_refresh_provider_models', array( self::class, 'cron_refresh_all_live_models' ) );
+
+		if ( ! wp_next_scheduled( 'agentic_refresh_provider_models' ) ) {
+			wp_schedule_event( time(), 'daily', 'agentic_refresh_provider_models' );
+		}
+	}
+
+	/**
+	 * Cron callback: refresh the live model list for every built-in provider
+	 * that has an API key (or, for key-less providers like Ollama, is reachable).
+	 * The hardcoded `models` arrays in builtin_providers() are only a bootstrap
+	 * seed for brand-new installs — this keeps already-configured installs
+	 * current without waiting on a plugin release.
+	 *
+	 * @return void
+	 */
+	public static function cron_refresh_all_live_models(): void {
+		foreach ( self::get_all() as $p ) {
+			if ( ! ( $p['is_builtin'] ?? false ) ) {
+				continue; // Custom providers manage their own model lists.
+			}
+			$slug = (string) ( $p['slug'] ?? '' );
+			if ( 'ollama' !== $slug && empty( $p['api_key'] ) ) {
+				continue; // Nothing to authenticate a live fetch with yet.
+			}
+			$models = self::fetch_live_models_from_api( $slug );
+			if ( ! empty( $models ) ) {
+				self::upsert(
+					array(
+						'slug'   => $slug,
+						'models' => $models,
+					)
+				);
+			}
+		}
+	}
+
+	/**
+	 * Fetch the live model list for a provider straight from its own API.
+	 *
+	 * Shared by the admin "Refresh" action (class-admin-ajax.php) and the
+	 * daily cron above, so there is exactly one place that knows how each
+	 * provider's model-listing endpoint works.
+	 *
+	 * @param string $slug Provider slug.
+	 * @return array<int, string> Model IDs, or an empty array on failure/no key.
+	 */
+	public static function fetch_live_models_from_api( string $slug ): array {
+		$provider = self::get( $slug );
+		if ( ! $provider ) {
+			return array();
+		}
+		$api_key = $provider['api_key'] ?? '';
+		$models  = array();
+
+		switch ( $slug ) {
+			case 'openai':
+			case 'xai':
+			case 'mistral':
+			case 'llama':
+			case 'kimi':
+			case 'deepseek':
+				if ( empty( $api_key ) ) {
+					break;
+				}
+				$list_urls = array(
+					'openai'   => 'https://api.openai.com/v1/models',
+					'xai'      => 'https://api.x.ai/v1/models',
+					'mistral'  => 'https://api.mistral.ai/v1/models',
+					'llama'    => 'https://api.llama.com/v1/models',
+					'kimi'     => 'https://api.moonshot.ai/v1/models',
+					'deepseek' => 'https://api.deepseek.com/models',
+				);
+				$resp      = wp_remote_get(
+					$list_urls[ $slug ],
+					array(
+						'headers' => array( 'Authorization' => 'Bearer ' . $api_key ),
+						'timeout' => 15,
+					)
+				);
+				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
+					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
+					$ids  = wp_list_pluck( $data['data'] ?? array(), 'id' );
+					if ( 'openai' === $slug ) {
+						$ids = array_values(
+							array_filter(
+								$ids,
+								static function ( $id ) {
+									return preg_match( '/^(gpt-|o[0-9]|chatgpt)/i', $id )
+									&& ! preg_match( '/audio|realtime|instruct/i', $id );
+								}
+							)
+						);
+					}
+					$models = array_values( array_filter( $ids ) );
+				}
+				break;
+
+			case 'anthropic':
+				if ( empty( $api_key ) ) {
+					break;
+				}
+				$resp = wp_remote_get(
+					'https://api.anthropic.com/v1/models',
+					array(
+						'headers' => array(
+							'x-api-key'         => $api_key,
+							'anthropic-version' => '2023-06-01',
+						),
+						'timeout' => 15,
+					)
+				);
+				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
+					$data   = json_decode( wp_remote_retrieve_body( $resp ), true );
+					$models = array_values( array_filter( wp_list_pluck( $data['data'] ?? array(), 'id' ) ) );
+				}
+				break;
+
+			case 'google':
+				if ( empty( $api_key ) ) {
+					break;
+				}
+				$resp = wp_remote_get(
+					add_query_arg( 'key', rawurlencode( $api_key ), 'https://generativelanguage.googleapis.com/v1beta/models' ),
+					array( 'timeout' => 15 )
+				);
+				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
+					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
+					foreach ( $data['models'] ?? array() as $m ) {
+						if ( in_array( 'generateContent', $m['supportedGenerationMethods'] ?? array(), true ) ) {
+							$models[] = str_replace( 'models/', '', $m['name'] );
+						}
+					}
+					$models = array_values( array_filter( $models ) );
+				}
+				break;
+
+			case 'cohere':
+				if ( empty( $api_key ) ) {
+					break;
+				}
+				$resp = wp_remote_get(
+					'https://api.cohere.com/v2/models',
+					array(
+						'headers' => array( 'Authorization' => 'Bearer ' . $api_key ),
+						'timeout' => 15,
+					)
+				);
+				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
+					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
+					foreach ( $data['models'] ?? array() as $m ) {
+						if ( in_array( 'chat', $m['endpoints'] ?? array(), true ) ) {
+							$models[] = $m['name'];
+						}
+					}
+					$models = array_values( array_filter( $models ) );
+				}
+				break;
+
+			case 'ollama':
+				$ollama_url = rtrim( get_option( 'agentic_ollama_url', 'http://localhost:11434' ), '/' );
+				$resp       = wp_remote_get( $ollama_url . '/api/tags', array( 'timeout' => 10 ) );
+				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
+					$data   = json_decode( wp_remote_retrieve_body( $resp ), true );
+					$models = array_values( array_filter( wp_list_pluck( $data['models'] ?? array(), 'name' ) ) );
+				}
+				break;
+
+			case 'agentic':
+				$resp = wp_remote_get(
+					Service_Registry::url( 'agentic-chat', '/v1beta/models' ),
+					array(
+						'headers' => array(
+							'Authorization'    => 'Bearer ' . $api_key,
+							'X-Plugin-Version' => AGENT_BUILDER_VERSION,
+						),
+						'timeout' => 15,
+					)
+				);
+				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
+					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
+					foreach ( $data['models'] ?? array() as $m ) {
+						$name = $m['name'] ?? '';
+						if ( ! empty( $name ) ) {
+							$models[] = str_starts_with( $name, 'models/' ) ? substr( $name, 7 ) : $name;
+						}
+					}
+					$models = array_values( array_filter( $models ) );
+				}
+				break;
+		}
+
+		return $models;
 	}
 
 	/**
