@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.32
+Stable tag: 3.3.33
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.33 - 2026-08-02 =
+* Fix: Provider_Registry::upsert() was blanking out a provider's endpoint, name, and default model whenever it was called with only a partial field set (as the model "Refresh" action and the new daily refresh cron both do), instead of leaving untouched fields alone. Partial updates now correctly preserve everything they don't explicitly change.
 
 = 3.3.32 - 2026-08-02 =
 * Fix: Provider model lists now refresh daily straight from each provider's own API (reusing the existing "Refresh" action), instead of relying only on hardcoded lists baked into a plugin release. New models from Google, OpenAI, Anthropic, and others now appear automatically once a valid API key is saved.

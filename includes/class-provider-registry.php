@@ -526,16 +526,24 @@ class Provider_Registry {
 		}
 
 		$existing = self::get( $slug );
+		$input    = $provider; // Caller's original partial input, before defaults are merged in.
 
 		if ( null !== $existing ) {
-			// Preserve is_builtin from the existing row.
+			// Any field not explicitly supplied falls back to the existing row.
+			// Partial updates (e.g. the "refresh models" action or the daily
+			// live-model-refresh cron, both of which only pass slug + models)
+			// must not blank out fields — endpoint, default_model, etc. —
+			// they never intended to touch.
+			$provider = array_merge( $existing, $provider );
+			// Preserve is_builtin — never caller-controlled.
 			$provider['is_builtin'] = $existing['is_builtin'];
-			// Preserve existing api_key when none is supplied.
-			if ( ! array_key_exists( 'api_key', $provider ) || '' === $provider['api_key'] ) {
+			// api_key: an explicitly empty value means "leave unchanged" (the
+			// classic Settings form always submits a blank/masked key input).
+			if ( ! array_key_exists( 'api_key', $input ) || '' === $input['api_key'] ) {
 				$provider['api_key'] = $existing['api_key'];
 			}
-			// Preserve existing model_pricing when none is supplied.
-			if ( ! array_key_exists( 'model_pricing', $provider ) || empty( $provider['model_pricing'] ) ) {
+			// model_pricing: an explicitly empty value means "leave unchanged".
+			if ( ! array_key_exists( 'model_pricing', $input ) || empty( $input['model_pricing'] ) ) {
 				$provider['model_pricing'] = $existing['model_pricing'];
 			}
 		} else {
