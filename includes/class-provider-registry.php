@@ -837,8 +837,8 @@ class Provider_Registry {
 				continue; // Custom providers manage their own model lists.
 			}
 			$slug = (string) ( $p['slug'] ?? '' );
-			if ( 'ollama' !== $slug && empty( $p['api_key'] ) ) {
-				continue; // Nothing to authenticate a live fetch with yet.
+			if ( 'agentic' === $slug && empty( $p['api_key'] ) ) {
+				continue; // The hosted gateway requires its own key to authenticate.
 			}
 			$models = self::fetch_live_models_from_api( $slug );
 			if ( ! empty( $models ) ) {
@@ -853,161 +853,95 @@ class Provider_Registry {
 	}
 
 	/**
-	 * Fetch the live model list for a provider straight from its own API.
+	 * Fetch the live model list for a provider.
 	 *
 	 * Shared by the admin "Refresh" action (class-admin-ajax.php) and the
-	 * daily cron above, so there is exactly one place that knows how each
-	 * provider's model-listing endpoint works.
+	 * daily cron above. Third-party (BYOK) providers are resolved from our
+	 * own curated catalog on agentic-plugin.com — the same source that
+	 * already powers "Get Latest Pricing" — instead of every WordPress site
+	 * independently learning each vendor's raw models API and filtering out
+	 * what doesn't apply (embeddings, audio, deprecated aliases, etc.).
+	 * Ollama has no such thing to query (self-hosted); the "agentic" hosted
+	 * gateway is already our own API, so it's asked directly for real-time
+	 * accuracy.
 	 *
 	 * @param string $slug Provider slug.
-	 * @return array<int, string> Model IDs, or an empty array on failure/no key.
+	 * @return array<int, string> Model IDs, or an empty array on failure.
 	 */
 	public static function fetch_live_models_from_api( string $slug ): array {
 		$provider = self::get( $slug );
 		if ( ! $provider ) {
 			return array();
 		}
-		$api_key = $provider['api_key'] ?? '';
-		$models  = array();
 
-		switch ( $slug ) {
-			case 'openai':
-			case 'xai':
-			case 'mistral':
-			case 'llama':
-			case 'kimi':
-			case 'deepseek':
-				if ( empty( $api_key ) ) {
-					break;
-				}
-				$list_urls = array(
-					'openai'   => 'https://api.openai.com/v1/models',
-					'xai'      => 'https://api.x.ai/v1/models',
-					'mistral'  => 'https://api.mistral.ai/v1/models',
-					'llama'    => 'https://api.llama.com/v1/models',
-					'kimi'     => 'https://api.moonshot.ai/v1/models',
-					'deepseek' => 'https://api.deepseek.com/models',
-				);
-				$resp      = wp_remote_get(
-					$list_urls[ $slug ],
-					array(
-						'headers' => array( 'Authorization' => 'Bearer ' . $api_key ),
-						'timeout' => 15,
-					)
-				);
-				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
-					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
-					$ids  = wp_list_pluck( $data['data'] ?? array(), 'id' );
-					if ( 'openai' === $slug ) {
-						$ids = array_values(
-							array_filter(
-								$ids,
-								static function ( $id ) {
-									return preg_match( '/^(gpt-|o[0-9]|chatgpt)/i', $id )
-									&& ! preg_match( '/audio|realtime|instruct/i', $id );
-								}
-							)
-						);
-					}
-					$models = array_values( array_filter( $ids ) );
-				}
-				break;
-
-			case 'anthropic':
-				if ( empty( $api_key ) ) {
-					break;
-				}
-				$resp = wp_remote_get(
-					'https://api.anthropic.com/v1/models',
-					array(
-						'headers' => array(
-							'x-api-key'         => $api_key,
-							'anthropic-version' => '2023-06-01',
-						),
-						'timeout' => 15,
-					)
-				);
-				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
-					$data   = json_decode( wp_remote_retrieve_body( $resp ), true );
-					$models = array_values( array_filter( wp_list_pluck( $data['data'] ?? array(), 'id' ) ) );
-				}
-				break;
-
-			case 'google':
-				if ( empty( $api_key ) ) {
-					break;
-				}
-				$resp = wp_remote_get(
-					add_query_arg( 'key', rawurlencode( $api_key ), 'https://generativelanguage.googleapis.com/v1beta/models' ),
-					array( 'timeout' => 15 )
-				);
-				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
-					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
-					foreach ( $data['models'] ?? array() as $m ) {
-						if ( in_array( 'generateContent', $m['supportedGenerationMethods'] ?? array(), true ) ) {
-							$models[] = str_replace( 'models/', '', $m['name'] );
-						}
-					}
-					$models = array_values( array_filter( $models ) );
-				}
-				break;
-
-			case 'cohere':
-				if ( empty( $api_key ) ) {
-					break;
-				}
-				$resp = wp_remote_get(
-					'https://api.cohere.com/v2/models',
-					array(
-						'headers' => array( 'Authorization' => 'Bearer ' . $api_key ),
-						'timeout' => 15,
-					)
-				);
-				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
-					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
-					foreach ( $data['models'] ?? array() as $m ) {
-						if ( in_array( 'chat', $m['endpoints'] ?? array(), true ) ) {
-							$models[] = $m['name'];
-						}
-					}
-					$models = array_values( array_filter( $models ) );
-				}
-				break;
-
-			case 'ollama':
-				$ollama_url = rtrim( get_option( 'agentic_ollama_url', 'http://localhost:11434' ), '/' );
-				$resp       = wp_remote_get( $ollama_url . '/api/tags', array( 'timeout' => 10 ) );
-				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
-					$data   = json_decode( wp_remote_retrieve_body( $resp ), true );
-					$models = array_values( array_filter( wp_list_pluck( $data['models'] ?? array(), 'name' ) ) );
-				}
-				break;
-
-			case 'agentic':
-				$resp = wp_remote_get(
-					Service_Registry::url( 'agentic-chat', '/v1beta/models' ),
-					array(
-						'headers' => array(
-							'Authorization'    => 'Bearer ' . $api_key,
-							'X-Plugin-Version' => AGENT_BUILDER_VERSION,
-						),
-						'timeout' => 15,
-					)
-				);
-				if ( ! is_wp_error( $resp ) && 200 === wp_remote_retrieve_response_code( $resp ) ) {
-					$data = json_decode( wp_remote_retrieve_body( $resp ), true );
-					foreach ( $data['models'] ?? array() as $m ) {
-						$name = $m['name'] ?? '';
-						if ( ! empty( $name ) ) {
-							$models[] = str_starts_with( $name, 'models/' ) ? substr( $name, 7 ) : $name;
-						}
-					}
-					$models = array_values( array_filter( $models ) );
-				}
-				break;
+		if ( 'ollama' === $slug ) {
+			$ollama_url = rtrim( get_option( 'agentic_ollama_url', 'http://localhost:11434' ), '/' );
+			$resp       = wp_remote_get( $ollama_url . '/api/tags', array( 'timeout' => 10 ) );
+			if ( is_wp_error( $resp ) || 200 !== wp_remote_retrieve_response_code( $resp ) ) {
+				return array();
+			}
+			$data = json_decode( wp_remote_retrieve_body( $resp ), true );
+			return array_values( array_filter( wp_list_pluck( $data['models'] ?? array(), 'name' ) ) );
 		}
 
-		return $models;
+		if ( 'agentic' === $slug ) {
+			$resp = wp_remote_get(
+				Service_Registry::url( 'agentic-chat', '/v1beta/models' ),
+				array(
+					'headers' => array(
+						'Authorization'    => 'Bearer ' . ( $provider['api_key'] ?? '' ),
+						'X-Plugin-Version' => AGENT_BUILDER_VERSION,
+					),
+					'timeout' => 15,
+				)
+			);
+			if ( is_wp_error( $resp ) || 200 !== wp_remote_retrieve_response_code( $resp ) ) {
+				return array();
+			}
+			$data   = json_decode( wp_remote_retrieve_body( $resp ), true );
+			$models = array();
+			foreach ( $data['models'] ?? array() as $m ) {
+				$name = $m['name'] ?? '';
+				if ( ! empty( $name ) ) {
+					$models[] = str_starts_with( $name, 'models/' ) ? substr( $name, 7 ) : $name;
+				}
+			}
+			return array_values( array_filter( $models ) );
+		}
+
+		// Every other built-in LLM provider (openai, anthropic, google, xai,
+		// mistral, llama, kimi, deepseek, cohere, ...): our own curated catalog.
+		$catalog = self::fetch_curated_catalog();
+		return array_values( array_keys( (array) ( $catalog[ $slug ] ?? array() ) ) );
+	}
+
+	/**
+	 * Fetch (and briefly cache) the curated provider → model → pricing catalog
+	 * from agentic-plugin.com. Single source of truth for both "Get Latest
+	 * Pricing" (class-admin-ajax.php::update_model_pricing()) and live
+	 * model-list refresh above, so a vendor's API changes only need updating
+	 * in one place instead of in every WordPress install.
+	 *
+	 * @return array<string, array<string, array{in: float, out: float}>>
+	 */
+	private static function fetch_curated_catalog(): array {
+		$cached = get_transient( 'agentic_curated_model_catalog' );
+		if ( is_array( $cached ) ) {
+			return $cached;
+		}
+
+		$resp = wp_remote_get(
+			Service_Registry::url( 'agentic-api', '/wp-json/agentic/v1/model-pricing' ),
+			array( 'timeout' => 15 )
+		);
+		if ( is_wp_error( $resp ) || 200 !== wp_remote_retrieve_response_code( $resp ) ) {
+			return array();
+		}
+
+		$body    = json_decode( wp_remote_retrieve_body( $resp ), true );
+		$catalog = (array) ( $body['providers'] ?? array() );
+		set_transient( 'agentic_curated_model_catalog', $catalog, HOUR_IN_SECONDS );
+		return $catalog;
 	}
 
 	/**

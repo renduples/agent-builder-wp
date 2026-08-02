@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.33
+Stable tag: 3.3.35
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -245,7 +245,7 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Data sent:** All data stays on your local machine. No external network requests are made.
 
 = Agentic AI =
-* **Endpoint:** `https://chat.agentic-plugin.com`
+* **Endpoint:** `https://chat.agentic-plugin.com:11435`
 * **When used:** When Agentic AI is selected as the AI provider.
 * **Data sent:** Chat messages, system prompts, license key, and site URL. Free daily credits.
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
@@ -288,6 +288,12 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.35 - 2026-08-02 =
+* Fix: Third-party provider model lists (OpenAI, Anthropic, Google, xAI, Mistral, and others) now refresh from our own curated catalog on agentic-plugin.com — the same source that already powers "Get Latest Pricing" — instead of every site querying each vendor's raw API directly.
+* Fix: Video generation tools could snap a requested duration to 4 seconds, a value the video service always rejects (only 6 or 8 seconds are accepted) — durations now only snap to accepted values.
+* Fix: Image generation/edit/upscale tools now send the site URL to the image service, matching what the video and TTS tools already send (used for per-site usage attribution).
+* Fix: The "Agentic AI" entry in External Services was missing the `:11435` port from its declared endpoint.
 
 = 3.3.33 - 2026-08-02 =
 * Fix: Provider_Registry::upsert() was blanking out a provider's endpoint, name, and default model whenever it was called with only a partial field set (as the model "Refresh" action and the new daily refresh cron both do), instead of leaving untouched fields alone. Partial updates now correctly preserve everything they don't explicitly change.

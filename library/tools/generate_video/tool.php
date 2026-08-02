@@ -42,7 +42,7 @@ class Generate_Video extends \Agentic\Tool_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return 'Generate a video clip from a text prompt using Vertex AI Veo 2 or Veo 3. Supported durations: 4, 6, or 8 seconds (requested value is snapped to the nearest). Returns a CDN URL for immediate embedding. Credit costs: 50 credits/second (veo-2) or 85 credits/second (veo-3 with native audio). 1 credit = $0.01 USD. Requires an active Agentic license.';
+		return 'Generate a video clip from a text prompt using Vertex AI Veo 2 or Veo 3. Supported durations: 6 or 8 seconds (requested value is snapped to the nearest — the service rejects 4-second requests). Returns a CDN URL for immediate embedding. Credit costs: 50 credits/second (veo-2) or 85 credits/second (veo-3 with native audio). 1 credit = $0.01 USD. Requires an active Agentic license.';
 	}
 
 	/**
@@ -74,8 +74,8 @@ class Generate_Video extends \Agentic\Tool_Base {
 				),
 				'duration_seconds' => array(
 					'type'        => 'integer',
-					'description' => 'Desired clip duration in seconds. Veo supports 4, 6, or 8 seconds only — any other value is snapped to the nearest. Default 8.',
-					'minimum'     => 4,
+					'description' => 'Desired clip duration in seconds. The service only accepts 6 or 8 seconds — any other value is snapped to the nearest. Default 8.',
+					'minimum'     => 6,
 					'maximum'     => 8,
 				),
 				'aspect_ratio'     => array(
@@ -114,7 +114,9 @@ class Generate_Video extends \Agentic\Tool_Base {
 		$model           = in_array( $arguments['model'] ?? $default_video_model, array( 'veo-2', 'veo-3' ), true )
 			? ( $arguments['model'] ?? $default_video_model )
 			: $default_video_model;
-		$valid_durations = array( 4, 6, 8 );
+		// Only 6 and 8 are accepted end-to-end — the service's request validation
+		// rejects 4 (and anything below 5) before the business-rule check runs.
+		$valid_durations = array( 6, 8 );
 		$requested_dur   = (int) ( $arguments['duration_seconds'] ?? 8 );
 		$duration        = $valid_durations[ array_search( min( array_map( fn( $d ) => abs( $d - $requested_dur ), $valid_durations ) ), array_map( fn( $d ) => abs( $d - $requested_dur ), $valid_durations ) ) ];
 		$aspect_ratio    = in_array( $arguments['aspect_ratio'] ?? '16:9', array( '16:9', '9:16', '1:1' ), true )

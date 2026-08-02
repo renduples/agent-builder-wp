@@ -148,6 +148,7 @@ class Upscale_Image extends \Agentic\Tool_Base {
 						'user_id'        => $user_id,
 						'image'          => $b64,
 						'upscale_factor' => $factor,
+						'site_url'       => get_site_url(),
 					)
 				),
 			)

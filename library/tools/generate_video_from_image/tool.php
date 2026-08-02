@@ -78,8 +78,8 @@ class Generate_Video_From_Image extends \Agentic\Tool_Base {
 				),
 				'duration_seconds' => array(
 					'type'        => 'integer',
-					'description' => 'Desired clip duration in seconds. Veo supports 4, 6, or 8 seconds only — any other value is snapped to the nearest. Default 8.',
-					'minimum'     => 4,
+					'description' => 'Desired clip duration in seconds. The service only accepts 6 or 8 seconds — any other value is snapped to the nearest. Default 8.',
+					'minimum'     => 6,
 					'maximum'     => 8,
 				),
 				'aspect_ratio'     => array(
@@ -131,7 +131,9 @@ class Generate_Video_From_Image extends \Agentic\Tool_Base {
 			return array( 'error' => 'Could not resolve image data. Check the attachment ID or base64 string.' );
 		}
 
-		$valid_durations = array( 4, 6, 8 );
+		// Only 6 and 8 are accepted end-to-end — the service's request validation
+		// rejects 4 (and anything below 5) before the business-rule check runs.
+		$valid_durations = array( 6, 8 );
 		$requested_dur   = (int) ( $arguments['duration_seconds'] ?? 8 );
 		$duration        = $valid_durations[ array_search( min( array_map( fn( $d ) => abs( $d - $requested_dur ), $valid_durations ) ), array_map( fn( $d ) => abs( $d - $requested_dur ), $valid_durations ), true ) ];
 		$aspect_ratio    = in_array( $arguments['aspect_ratio'] ?? '16:9', array( '16:9', '9:16', '1:1' ), true )

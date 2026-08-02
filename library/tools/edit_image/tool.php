@@ -237,7 +237,8 @@ class Edit_Image extends \Agentic\Tool_Base {
 	 * @return array Decoded response or array with 'error' key.
 	 */
 	private function imagegen_post( string $endpoint, array $config, array $body ): array {
-		$body['user_id'] = $config['user_id'];
+		$body['user_id']  = $config['user_id'];
+		$body['site_url'] = get_site_url();
 
 		$response = wp_remote_post(
 			\Agentic\Service_Registry::url( 'agentic-imagegen', $endpoint ),
