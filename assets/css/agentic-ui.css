@@ -91,7 +91,10 @@
 .agentic-ui-overlay {
 	position: fixed;
 	inset: 0;
-	z-index: 100002;
+	/* Must outrank any feature-specific overlay (e.g. the plugin deactivation
+	   modal at z-index 160000 in admin.css) since agenticUI.confirm()/alert()
+	   can be invoked from within those flows and must render on top of them. */
+	z-index: 160010;
 	display: flex;
 	align-items: center;
 	justify-content: center;
