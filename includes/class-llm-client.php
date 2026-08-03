@@ -635,8 +635,8 @@ class LLM_Client {
 		);
 		$tc_list = array();
 		foreach ( $tool_calls_raw as $tc ) {
-			$tc_id      = ! empty( $tc['id'] ) ? $tc['id'] : ( 'call_s_' . count( $tc_list ) );
-			$tool_call  = array(
+			$tc_id     = ! empty( $tc['id'] ) ? $tc['id'] : ( 'call_s_' . count( $tc_list ) );
+			$tool_call = array(
 				'id'       => $tc_id,
 				'type'     => 'function',
 				'function' => array(
@@ -762,7 +762,7 @@ class LLM_Client {
 				if ( ! empty( $part['thoughtSignature'] ) ) {
 					$tool_calls_raw[ $idx ]['thought_signature'] = $part['thoughtSignature'];
 				}
-				$finish_reason          = 'tool_calls';
+				$finish_reason = 'tool_calls';
 			}
 		}
 		if ( isset( $chunk['usageMetadata'] ) ) {
@@ -1387,8 +1387,8 @@ class LLM_Client {
 			if ( isset( $part['text'] ) ) {
 				$text_parts[] = $part['text'];
 			} elseif ( isset( $part['functionCall'] ) ) {
-				$fc         = $part['functionCall'];
-				$tool_call  = array(
+				$fc        = $part['functionCall'];
+				$tool_call = array(
 					'id'       => 'call_g_' . $tc_index,
 					'type'     => 'function',
 					'function' => array(

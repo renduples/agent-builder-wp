@@ -1242,37 +1242,37 @@ class Provider_Registry {
 					// GEMINI-3-MIGRATION-BRIEF.md). default_model deliberately left on 2.5-flash.
 					'models'        => array( 'gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.6-flash' ),
 					'model_pricing' => array(
-						'gemini-2.5-pro'         => array(
+						'gemini-2.5-pro'        => array(
 							'in'  => 1.25,
 							'out' => 10.00,
 						),
-						'gemini-2.5-flash'       => array(
+						'gemini-2.5-flash'      => array(
 							'in'  => 0.30,
 							'out' => 2.50,
 						),
-						'gemini-2.5-flash-lite'  => array(
+						'gemini-2.5-flash-lite' => array(
 							'in'  => 0.10,
 							'out' => 0.40,
 						),
-						'gemini-2.0-flash'       => array(
+						'gemini-2.0-flash'      => array(
 							'in'  => 0.10,
 							'out' => 0.40,
 						),
 						// PLACEHOLDER — mirrored from the 2.5 tier they replace, pending real
 						// Vertex AI Model Garden pricing. Do not treat as accurate billing data.
-						'gemini-3.1-flash-lite'  => array(
+						'gemini-3.1-flash-lite' => array(
 							'in'  => 0.10,
 							'out' => 0.40,
 						),
-						'gemini-3.5-flash-lite'  => array(
+						'gemini-3.5-flash-lite' => array(
 							'in'  => 0.10,
 							'out' => 0.40,
 						),
-						'gemini-3.5-flash'       => array(
+						'gemini-3.5-flash'      => array(
 							'in'  => 0.30,
 							'out' => 2.50,
 						),
-						'gemini-3.6-flash'       => array(
+						'gemini-3.6-flash'      => array(
 							'in'  => 0.30,
 							'out' => 2.50,
 						),

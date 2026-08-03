@@ -232,8 +232,8 @@ class Dashboard_REST {
 		$pending_approvals = class_exists( Approval_Queue::class )
 			? ( new Approval_Queue() )->get_pending_count()
 			: 0;
-		$file_backups  = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_backups() ) : 0;
-		$table_backups = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_table_backups() ) : 0;
+		$file_backups      = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_backups() ) : 0;
+		$table_backups     = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_table_backups() ) : 0;
 
 		// Quick actions.
 		$catalog = Admin_Menu_Handler::quick_actions_catalog();
@@ -264,7 +264,7 @@ class Dashboard_REST {
 		// with zero setup — before "connect a provider" (bring your own key/model)
 		// or anything else. The &agent= param forces WordPress Assistant open
 		// regardless of any last-used-agent cookie.
-		$steps         = array(
+		$steps = array(
 			array(
 				'id'    => 'chat',
 				'done'  => (int) ( $stats['total_actions'] ?? 0 ) > 0,

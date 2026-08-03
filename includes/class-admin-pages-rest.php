@@ -1305,7 +1305,15 @@ class Admin_Pages_REST {
 		fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
 		if ( class_exists( Security_Log::class ) ) {
-			Security_Log::log_system( 'logs_exported', $tab . '_log', array( 'tab' => $tab, 'period' => $period, 'rows' => count( $rows ) ) );
+			Security_Log::log_system(
+				'logs_exported',
+				$tab . '_log',
+				array(
+					'tab'    => $tab,
+					'period' => $period,
+					'rows'   => count( $rows ),
+				)
+			);
 		}
 
 		exit;
