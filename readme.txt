@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.43
+Stable tag: 3.3.44
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.44 - 2026-08-02 =
+* Fix: languages/agent-builder.pot (the PHP translation source template) hadn't been regenerated since version 2.9.261 and was missing roughly 470 strings added since — including everything from today's wizards and settings work. Regenerated to match 3.3.44.
 
 = 3.3.43 - 2026-08-02 =
 * Fix: The delete_agent tool checked the plugin's own bundled-agent directory instead of where user-created agents actually live, so it could never delete a real custom agent ("not found" every time) and — worse — could find and permanently delete one of the 5 bundled agents that weren't on its protected list. Now points at the correct directory and protects all 8 bundled agents. It also only removed the agent's files, leaving it listed as "active" with nothing there to load — now properly deactivated first.
