@@ -71,16 +71,44 @@ class Delete_Agent extends Tool_Base {
 			return array( 'error' => 'Deletion must be confirmed by setting confirm=true' );
 		}
 
-		$protected = array( 'content-writer', 'wordpress-assistant', 'assistant-trainer' );
+		// All 8 bundled agents ship inside the plugin itself (library/agents/),
+		// never inside AGENTIC_AGENTS_DIR below — so this list is a defense-in-
+		// depth guard, not the only thing standing between this tool and the
+		// plugin's own files.
+		$protected = array(
+			'content-writer',
+			'wordpress-assistant',
+			'assistant-trainer',
+			'editorial-director',
+			'seo-optimizer',
+			'site-health-sentinel',
+			'support-triage',
+			'user-assistant',
+		);
 
 		if ( in_array( $slug, $protected, true ) ) {
 			return array( 'error' => "Cannot delete protected agent: {$slug}" );
 		}
 
-		$agent_dir = \Agentic\Tool_Helpers::get_library_path() . $slug;
+		// User-created agents (via the Agent Wizard or Assistant Trainer's
+		// create_agent_files) live in AGENTIC_AGENTS_DIR, not the plugin's own
+		// library/agents/ — this previously pointed at the latter via
+		// Tool_Helpers::get_library_path(), so it could never find (and
+		// therefore never delete) an actual user-created agent.
+		$agent_dir = AGENTIC_AGENTS_DIR . '/' . $slug;
 
 		if ( ! is_dir( $agent_dir ) ) {
 			return array( 'error' => "Agent '{$slug}' not found" );
+		}
+
+		// Deactivate first (fires deactivation hooks, clears the registry
+		// cache, and removes the slug from the active-agents option) so a
+		// deleted agent doesn't linger as a dangling reference that other
+		// code iterating active agents would then fail to load. A "not
+		// active" error just means it wasn't active to begin with — not a
+		// reason to abort deleting the files.
+		if ( class_exists( '\Agentic_Agent_Registry' ) ) {
+			\Agentic_Agent_Registry::get_instance()->deactivate_agent( $slug );
 		}
 
 		\Agentic\File_Manager::rmdir( $agent_dir, true );

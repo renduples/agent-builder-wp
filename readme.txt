@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.42
+Stable tag: 3.3.43
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.43 - 2026-08-02 =
+* Fix: The delete_agent tool checked the plugin's own bundled-agent directory instead of where user-created agents actually live, so it could never delete a real custom agent ("not found" every time) and — worse — could find and permanently delete one of the 5 bundled agents that weren't on its protected list. Now points at the correct directory and protects all 8 bundled agents. It also only removed the agent's files, leaving it listed as "active" with nothing there to load — now properly deactivated first.
 
 = 3.3.42 - 2026-08-02 =
 * Fix: The Agent Wizard and Knowledge Wizard left zero audit trail — both call their underlying tool/store directly instead of through the normal audited pipeline. Now log agent_installed / knowledge_added with the wizard's actual input. The Deploy Wizard's "Ask AI" launcher surface was the one path there missing the deployment_enabled entry the other three surfaces already get automatically — added.
