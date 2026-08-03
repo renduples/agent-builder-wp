@@ -291,6 +291,21 @@ class Deploy_Wizard_REST {
 			}
 			update_option( Admin_Surfaces::OPTION_SCREENS, $screens, false );
 		}
+
+		// Unlike the other three surfaces, Ask AI launchers are plain global
+		// options, not a Deployments row — so it doesn't get Deployments::
+		// enable()'s automatic 'deployment_enabled' audit entry. Log it
+		// directly so this surface isn't the one silent path.
+		if ( class_exists( Audit_Log::class ) ) {
+			Audit_Log::log_admin(
+				'deployment_enabled',
+				'ask-ai',
+				array(
+					'agent' => $slug,
+					'via'   => 'deploy_wizard',
+				)
+			);
+		}
 	}
 
 	/**

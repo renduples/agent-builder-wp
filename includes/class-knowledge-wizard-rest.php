@@ -218,6 +218,19 @@ class Knowledge_Wizard_REST {
 			return $result;
 		}
 
+		if ( class_exists( Audit_Log::class ) ) {
+			Audit_Log::log_admin(
+				'knowledge_added',
+				$concept_id,
+				array(
+					'title'  => $title,
+					'source' => $source,
+					'tags'   => $tags,
+					'via'    => 'knowledge_wizard',
+				)
+			);
+		}
+
 		return new \WP_REST_Response(
 			array(
 				'success'       => true,

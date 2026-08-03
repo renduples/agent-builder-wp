@@ -348,6 +348,7 @@ class Audit_Log {
 			'agent_installed'          => 'Assistant installed',
 			'agent_deleted'            => 'Assistant deleted',
 			'endpoint_url_changed'     => 'Changed a service endpoint URL',
+			'knowledge_added'          => 'Added knowledge',
 		);
 
 		return $labels[ $action ] ?? ucwords( str_replace( '_', ' ', $action ) );

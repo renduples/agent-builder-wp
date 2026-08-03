@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.41
+Stable tag: 3.3.42
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.42 - 2026-08-02 =
+* Fix: The Agent Wizard and Knowledge Wizard left zero audit trail — both call their underlying tool/store directly instead of through the normal audited pipeline. Now log agent_installed / knowledge_added with the wizard's actual input. The Deploy Wizard's "Ask AI" launcher surface was the one path there missing the deployment_enabled entry the other three surfaces already get automatically — added.
 
 = 3.3.41 - 2026-08-02 =
 * Fix: The CSV export's fputcsv() calls relied on PHP 8.3+'s now-deprecated implicit $escape default, which could leak "Deprecated:" notices into the exported file's content on sites with error display on. Passed explicitly now.

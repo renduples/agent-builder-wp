@@ -1372,6 +1372,12 @@ class Admin_Pages_REST {
 		if ( 'endpoint_url_changed' === $action && ! empty( $details['previous'] ) && ! empty( $details['new'] ) ) {
 			$detail_bits[] = sprintf( '%s → %s', $details['previous'], $details['new'] );
 		}
+		if ( 'knowledge_added' === $action && ! empty( $details['title'] ) ) {
+			$detail_bits[] = sprintf( '"%s" (%s)', $details['title'], $details['source'] ?? 'wizard' );
+		}
+		if ( 'agent_installed' === $action && ! empty( $details['name'] ) ) {
+			$detail_bits[] = sprintf( '%s (%s)', $details['name'], $details['category'] ?? 'admin' );
+		}
 		if ( ! empty( $details['message'] ) && is_string( $details['message'] ) ) {
 			$detail_bits[] = $details['message'];
 		}
@@ -1436,8 +1442,10 @@ class Admin_Pages_REST {
 			'deployment_deleted'         => __( 'Deployment deleted', 'agent-builder' ),
 			'settings_changed'           => __( 'Settings changed', 'agent-builder' ),
 			'endpoint_url_changed'       => __( 'Changed a service endpoint URL', 'agent-builder' ),
+			'knowledge_added'            => __( 'Added knowledge', 'agent-builder' ),
 			'agent_activated'            => __( 'Assistant activated', 'agent-builder' ),
 			'agent_deactivated'          => __( 'Assistant deactivated', 'agent-builder' ),
+			'agent_installed'            => __( 'Assistant created', 'agent-builder' ),
 		);
 		if ( isset( $map[ $action ] ) ) {
 			return $map[ $action ];

@@ -307,6 +307,24 @@ class Agent_Wizard_REST {
 			$response['warning'] = (string) $result['warning'];
 		}
 
+		// The wizard calls create_agent_files directly (not through
+		// Tool_Executor), which is where the generic tool_call audit entry
+		// normally comes from — log it explicitly here so agent creation via
+		// the wizard leaves the same trail as any other admin action.
+		if ( class_exists( Audit_Log::class ) ) {
+			Audit_Log::log_admin(
+				'agent_installed',
+				$slug,
+				array(
+					'name'          => $name,
+					'category'      => $category,
+					'tools_count'   => count( $tool_args ),
+					'default_tools' => $used_default_tools,
+					'via'           => 'agent_wizard',
+				)
+			);
+		}
+
 		return new \WP_REST_Response( $response, 201 );
 	}
 }
