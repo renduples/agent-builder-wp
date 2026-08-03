@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.44
+Stable tag: 3.3.45
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.45 - 2026-08-03 =
+* Fix: The 11 bundled translation files (de_DE, es_ES, fr_FR, it_IT, ja, ko_KR, nl_NL, pl_PL, pt_BR, ru_RU, zh_CN) had only ever had 11 strings translated out of ~1600 — essentially the entire admin UI fell back to English regardless of site locale. Fully translated all strings in all 11 languages and recompiled the .mo files.
 
 = 3.3.44 - 2026-08-02 =
 * Fix: languages/agent-builder.pot (the PHP translation source template) hadn't been regenerated since version 2.9.261 and was missing roughly 470 strings added since — including everything from today's wizards and settings work. Regenerated to match 3.3.44.
