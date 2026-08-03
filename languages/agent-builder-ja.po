@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Agent Builder 2.9.261\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/agent-builder\n"
-"POT-Creation-Date: 2026-08-03T00:38:07+00:00\n"
+"POT-Creation-Date: 2026-08-03T07:20:57+00:00\n"
 "PO-Revision-Date: 2026-08-03T00:38:07+00:00\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -260,11 +260,13 @@ msgstr "アシスタント「%s」を正常にインストールしました。�
 #: includes/class-admin-menu-handler.php:371
 #: includes/class-admin-pages-rest.php:312
 #: includes/class-admin-pages-rest.php:315
-#: includes/class-admin-settings-rest.php:108
+#: includes/class-admin-settings-rest.php:108 src/settings-app/index.js:1452
 msgid "Agents"
 msgstr "エージェント"
 
 #: admin/agents.php:406 admin/agents.php:483
+#: src/dashboard-activity/index.js:142 src/dashboard-app/index.js:311
+#: src/dashboard-app/index.js:752
 msgid "Community Agents"
 msgstr "コミュニティエージェント"
 
@@ -335,7 +337,8 @@ msgstr "停止"
 #: admin/deployment/deployment-scheduled-tasks.php:408
 #: admin/deployment/deployment-scheduled-tasks.php:436
 #: admin/deployment/deployment-shortcodes.php:332 admin/providers.php:413
-#: admin/skills.php:586 admin/train-data.php:174
+#: admin/skills.php:586 admin/train-data.php:174 src/admin-pages/index.js:621
+#: src/admin-pages/index.js:1247
 msgid "Delete"
 msgstr "削除"
 
@@ -351,14 +354,14 @@ msgstr "適用"
 #: admin/deployment/deployment-shortcodes-form.php:43
 #: admin/deployment/deployment-shortcodes.php:249 admin/run-task.php:87
 #: includes/class-gdpr.php:183 includes/class-gdpr.php:458
-#: includes/class-gdpr.php:553
+#: includes/class-gdpr.php:553 src/admin-pages/index.js:1215
 msgid "Agent"
 msgstr "エージェント"
 
 #: admin/agents.php:518 admin/agents.php:694
 #: admin/deployment/deployment-scheduled-tasks.php:295 admin/run-task.php:99
 #: admin/skills.php:180 admin/skills.php:308 admin/skills.php:535
-#: admin/tools.php:321 admin/tools.php:382
+#: admin/tools.php:321 admin/tools.php:382 src/agent-wizard/index.js:718
 msgid "Description"
 msgstr "説明"
 
@@ -487,7 +490,7 @@ msgstr "承認キュー"
 #: includes/class-admin-menu-handler.php:395
 #: includes/class-admin-pages-rest.php:771
 #: includes/class-admin-pages-rest.php:779
-#: includes/class-admin-pages-rest.php:1189
+#: includes/class-admin-pages-rest.php:1189 src/admin-pages/index.js:1949
 msgid "Approvals"
 msgstr "承認"
 
@@ -562,11 +565,11 @@ msgstr "すべて却下"
 msgid "Pending %d"
 msgstr "保留中 %d"
 
-#: admin/approvals.php:219
+#: admin/approvals.php:219 src/admin-pages/index.js:1825
 msgid "Approve"
 msgstr "承認"
 
-#: admin/approvals.php:222
+#: admin/approvals.php:222 src/admin-pages/index.js:1835
 msgid "Reject"
 msgstr "却下"
 
@@ -606,6 +609,7 @@ msgstr "テーブル"
 
 #: admin/approvals.php:275 admin/partials/vector-store-pro.php:198
 #: admin/settings-memory.php:197 admin/train-data.php:193
+#: src/admin-pages/index.js:2202
 msgid "Type"
 msgstr "種類"
 
@@ -626,6 +630,8 @@ msgstr "サイズ"
 #: admin/deployment/deployment-shortcodes.php:255
 #: admin/partials/vector-store-pro.php:203 admin/settings-endpoints.php:128
 #: admin/settings/tab-security.php:321 admin/skills.php:539
+#: src/admin-pages/index.js:585 src/admin-pages/index.js:1217
+#: src/settings-app/index.js:570
 msgid "Actions"
 msgstr "操作"
 
@@ -657,7 +663,9 @@ msgstr "元のファイル"
 #: admin/deployment/deployment-shortcodes.php:252
 #: admin/partials/vector-store-pro.php:201 admin/providers.php:294
 #: admin/settings-llm.php:134 admin/skills.php:533 admin/train-data.php:259
-#: includes/class-gdpr.php:557
+#: includes/class-gdpr.php:557 src/admin-pages/index.js:2203
+#: src/dashboard-app/index.js:127 src/settings-app/index.js:566
+#: src/settings-app/index.js:1819
 msgid "Status"
 msgstr "ステータス"
 
@@ -807,7 +815,8 @@ msgstr "メッセージ数"
 #: admin/conversations.php:222 admin/security-log.php:231 admin/tools.php:200
 #: admin/tools.php:207 includes/class-admin-menu-handler.php:176
 #: includes/class-admin-menu-handler.php:402
-#: includes/class-admin-pages-rest.php:591
+#: includes/class-admin-pages-rest.php:591 src/admin-pages/index.js:2308
+#: src/agent-wizard/index.js:743
 msgid "Tools"
 msgstr "ツール"
 
@@ -976,7 +985,7 @@ msgid "Enable"
 msgstr "有効化"
 
 #: admin/deployment/deployment-admin-bar.php:199
-#: admin/deployment/deployment-modal.php:175
+#: admin/deployment/deployment-modal.php:175 src/deploy-wizard/index.js:322
 msgid "Position"
 msgstr "位置"
 
@@ -996,6 +1005,7 @@ msgid "Bottom Left"
 msgstr "左下"
 
 #: admin/deployment/deployment-admin-bar.php:236
+#: src/deploy-wizard/index.js:133 src/deploy-wizard/index.js:138
 msgid "Everywhere"
 msgstr "すべての場所"
 
@@ -1236,7 +1246,7 @@ msgstr "コマンド"
 #: admin/deployment/deployment-event-listeners.php:204
 #: admin/deployment/deployment-scheduled-tasks.php:287
 #: admin/deployment/deployment-shortcodes-form.php:32
-#: admin/deployment/deployment-shortcodes.php:248
+#: admin/deployment/deployment-shortcodes.php:248 src/admin-pages/index.js:469
 msgid "Label"
 msgstr "ラベル"
 
@@ -1284,7 +1294,7 @@ msgstr "エージェントがインストールされていません。"
 #: admin/deployment/deployment-event-listeners.php:156
 #: admin/deployment/deployment-event-listeners.php:239
 #: admin/deployment/deployment-scheduled-tasks.php:251 admin/skills.php:536
-#: includes/class-approval-queue.php:218
+#: includes/class-approval-queue.php:218 src/settings-app/index.js:1526
 msgid "Assistant"
 msgstr "アシスタント"
 
@@ -1311,6 +1321,8 @@ msgstr "権限の変更は、切り替えた時点で自動的に保存されま
 #: admin/deployment/deployment-cli.php:334
 #: admin/deployment/deployment-event-listeners.php:340
 #: admin/deployment/deployment-scheduled-tasks.php:505
+#: src/dashboard-app/index.js:523 src/interface-settings/index.js:378
+#: src/shared/components.js:93
 msgid "Saving…"
 msgstr "保存中…"
 
@@ -1341,7 +1353,7 @@ msgstr "コメント"
 #: admin/deployment/deployment-event-listeners.php:115 admin/settings.php:623
 #: includes/class-admin-pages-rest.php:341
 #: includes/class-admin-settings-rest.php:110
-#: includes/class-admin-surfaces.php:139
+#: includes/class-admin-surfaces.php:139 src/settings-app/index.js:915
 msgid "Users"
 msgstr "ユーザー"
 
@@ -1436,6 +1448,7 @@ msgstr "トリガーを追加"
 #: admin/deployment/deployment-event-listeners.php:223
 #: admin/deployment/deployment-scheduled-tasks.php:307 admin/run-task.php:133
 #: admin/security-log.php:372 includes/class-chat-assets.php:57
+#: src/dashboard-app/index.js:531
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -1462,7 +1475,8 @@ msgstr "モード"
 #: admin/deployment/deployment-scheduled-tasks.php:327
 #: admin/deployment/deployment-shortcodes.php:251
 #: admin/partials/vector-store-pro.php:197 admin/skills.php:537
-#: admin/tools.php:384
+#: admin/tools.php:384 src/admin-pages/index.js:1056
+#: src/knowledge-wizard/index.js:39
 msgid "Source"
 msgstr "ソース"
 
@@ -1528,7 +1542,7 @@ msgid "Gutenberg block settings saved."
 msgstr "Gutenberg ブロックの設定を保存しました。"
 
 #: admin/deployment/deployment-gutenberg-blocks.php:109
-#: includes/class-gutenberg-blocks.php:264
+#: includes/class-gutenberg-blocks.php:264 assets/js/gutenberg-blocks.js:58
 msgid "Default (from Settings)"
 msgstr "デフォルト (設定から)"
 
@@ -1856,6 +1870,7 @@ msgid "The assistant visitors will chat with."
 msgstr "訪問者がチャットする相手となるアシスタントです。"
 
 #: admin/deployment/deployment-shortcodes-form.php:59
+#: assets/js/gutenberg-blocks.js:295
 msgid "Display Style"
 msgstr "表示スタイル"
 
@@ -1897,11 +1912,12 @@ msgid "Display the agent name and avatar above the chat area."
 msgstr "チャットエリアの上にエージェント名とアバターを表示します。"
 
 #: admin/deployment/deployment-shortcodes-form.php:91
+#: assets/js/gutenberg-blocks.js:324
 msgid "Placeholder Text"
 msgstr "プレースホルダーテキスト"
 
 #: admin/deployment/deployment-shortcodes-form.php:96
-#: templates/modal-widget.php:75
+#: templates/modal-widget.php:75 assets/js/gutenberg-blocks.js:252
 msgid "Type your message..."
 msgstr "メッセージを入力してください..."
 
@@ -1974,19 +1990,22 @@ msgid "Created"
 msgstr "作成日時"
 
 #: admin/deployment/deployment-shortcodes.php:265
+#: assets/js/gutenberg-blocks.js:79
 msgid "Inline"
 msgstr "インライン"
 
 #: admin/deployment/deployment-shortcodes.php:266
+#: assets/js/gutenberg-blocks.js:80
 msgid "Popup"
 msgstr "ポップアップ"
 
 #: admin/deployment/deployment-shortcodes.php:267
+#: assets/js/gutenberg-blocks.js:81
 msgid "Sidebar"
 msgstr "サイドバー"
 
 #: admin/deployment/deployment-shortcodes.php:289 admin/tools.php:318
-#: admin/tools.php:380
+#: admin/tools.php:380 src/admin-pages/index.js:1041
 msgid "Enabled"
 msgstr "有効"
 
@@ -2004,6 +2023,7 @@ msgid "Disable"
 msgstr "無効化"
 
 #: admin/deployment/deployment-shortcodes.php:326 admin/skills.php:585
+#: src/admin-pages/index.js:1237 src/settings-app/index.js:612
 msgid "Edit"
 msgstr "編集"
 
@@ -2076,6 +2096,7 @@ msgid "All assistant interactions via shortcodes are logged in the Audit Log."
 msgstr "ショートコード経由のアシスタントとのやり取りは、すべて監査ログに記録されます。"
 
 #: admin/knowledge-wizard.php:52 includes/class-admin-menu-handler.php:148
+#: src/agent-wizard/index.js:360
 msgid "Add Knowledge"
 msgstr "ナレッジを追加"
 
@@ -2099,13 +2120,14 @@ msgstr "ナレッジウィザードを利用するには JavaScript を有効に
 #: admin/tools.php:103 admin/tools.php:383
 #: includes/class-admin-pages-rest.php:336
 #: includes/class-admin-pages-rest.php:1234
-#: includes/class-admin-settings-rest.php:111
+#: includes/class-admin-settings-rest.php:111 src/settings-app/index.js:684
 msgid "Security"
 msgstr "セキュリティ"
 
 #: admin/logs.php:33 includes/class-admin-menu-handler.php:220
 #: includes/class-admin-menu-handler.php:383
-#: includes/class-admin-pages-rest.php:1150
+#: includes/class-admin-pages-rest.php:1150 src/dashboard-activity/index.js:88
+#: src/dashboard-app/index.js:263
 msgid "Activity"
 msgstr "アクティビティ"
 
@@ -2260,7 +2282,7 @@ msgstr "ソースを読み込んでいます…"
 msgid "Chunks"
 msgstr "チャンク"
 
-#: admin/partials/vector-store-pro.php:200
+#: admin/partials/vector-store-pro.php:200 src/admin-pages/index.js:1958
 msgid "Tokens"
 msgstr "トークン"
 
@@ -2279,6 +2301,7 @@ msgid "Configure the AI providers available on this site."
 msgstr "このサイトで利用できる AI プロバイダーを設定します。"
 
 #: admin/providers.php:73 admin/providers.php:85 admin/providers.php:280
+#: src/settings-app/index.js:559
 msgid "Add Provider"
 msgstr "プロバイダーを追加"
 
@@ -2298,19 +2321,21 @@ msgstr ""
 msgid "Update Provider"
 msgstr "プロバイダーを更新"
 
-#: admin/providers.php:310
+#: admin/providers.php:310 src/settings-app/index.js:584
 msgid "Connected"
 msgstr "接続済み"
 
-#: admin/providers.php:311
+#: admin/providers.php:311 src/settings-app/index.js:588
 msgid "Not connected"
 msgstr "未接続"
 
 #: admin/providers.php:397 admin/settings-endpoints.php:180
+#: assets/js/gutenberg-blocks.js:65 src/dashboard-app/index.js:376
+#: src/settings-app/index.js:618
 msgid "Default"
 msgstr "デフォルト"
 
-#: admin/providers.php:404
+#: admin/providers.php:404 src/settings-app/index.js:657
 msgid "Set Default"
 msgstr "デフォルトに設定"
 
@@ -2490,7 +2515,7 @@ msgstr "違反の多い IP 上位 (%s)"
 msgid "IP Address"
 msgstr "IP アドレス"
 
-#: admin/security-log.php:169
+#: admin/security-log.php:169 src/admin-pages/index.js:1931
 msgid "Events"
 msgstr "イベント"
 
@@ -2694,15 +2719,15 @@ msgstr ""
 "上書きした URL を消去する (または空欄のまま保存する) "
 "と、組み込みのデフォルトにリセットされます。各行の「リセット」リンクからもただちにデフォルトに戻せます。"
 
-#: admin/settings-endpoints.php:126
+#: admin/settings-endpoints.php:126 src/settings-app/index.js:1818
 msgid "Service"
 msgstr "サービス"
 
-#: admin/settings-endpoints.php:127
+#: admin/settings-endpoints.php:127 src/settings-app/index.js:1932
 msgid "Base URL"
 msgstr "ベース URL"
 
-#: admin/settings-endpoints.php:157
+#: admin/settings-endpoints.php:157 src/settings-app/index.js:2008
 msgid "Default:"
 msgstr "デフォルト:"
 
@@ -2797,7 +2822,9 @@ msgstr "料金の最終更新: %s"
 msgid "Get Latest Pricing"
 msgstr "最新の料金を取得"
 
-#: admin/settings-llm.php:131
+#: admin/settings-llm.php:131 assets/js/gutenberg-blocks.js:343
+#: src/agent-wizard/index.js:570 src/dashboard-app/index.js:367
+#: src/settings-app/index.js:569 src/settings-app/index.js:1532
 msgid "Model"
 msgstr "モデル"
 
@@ -2821,6 +2848,7 @@ msgstr ""
 
 #. translators: %s: link to Terms of Service
 #: admin/settings-llm.php:239 includes/class-admin-menu-handler.php:987
+#: src/admin-pages/index.js:160 src/settings-app/index.js:131
 msgid "Terms of Service"
 msgstr "利用規約"
 
@@ -2887,7 +2915,7 @@ msgstr "アシスタントが会話をまたいでコンテキストを蓄積す
 msgid "Entity"
 msgstr "エンティティ"
 
-#: admin/settings-memory.php:199
+#: admin/settings-memory.php:199 src/settings-app/index.js:1820
 msgid "Key"
 msgstr "キー"
 
@@ -2918,6 +2946,7 @@ msgid "Settings saved with %s as Global provider."
 msgstr "%s をグローバルプロバイダーとして設定を保存しました。"
 
 #: admin/settings.php:558 includes/class-admin-ajax.php:1179
+#: src/shared/components.js:115
 msgid "Settings saved."
 msgstr "設定を保存しました。"
 
@@ -2925,24 +2954,27 @@ msgstr "設定を保存しました。"
 #: includes/class-admin-menu-handler.php:229
 #: includes/class-admin-menu-handler.php:423
 #: includes/class-admin-notice-manager.php:108
-#: includes/class-admin-pages-rest.php:1197
+#: includes/class-admin-pages-rest.php:1197 src/settings-app/index.js:2375
 msgid "Settings"
 msgstr "設定"
 
 #: admin/settings.php:620 includes/class-admin-settings-rest.php:107
+#: src/interface-settings/index.js:149 src/settings-app/index.js:251
 msgid "Interface"
 msgstr "インターフェース"
 
 #: admin/settings.php:622 includes/class-admin-menu-handler.php:389
-#: includes/class-admin-settings-rest.php:109
+#: includes/class-admin-settings-rest.php:109 src/settings-app/index.js:550
 msgid "Providers"
 msgstr "プロバイダー"
 
 #: admin/settings.php:625 includes/class-admin-settings-rest.php:112
+#: src/settings-app/index.js:1807
 msgid "APIs"
 msgstr "API"
 
 #: admin/settings.php:626 includes/class-admin-settings-rest.php:113
+#: src/settings-app/index.js:1919
 msgid "Endpoints"
 msgstr "エンドポイント"
 
@@ -2951,14 +2983,19 @@ msgid "Health"
 msgstr "ヘルス"
 
 #: admin/settings.php:648 includes/class-admin-settings-rest.php:123
+#: src/admin-pages/index.js:72 src/dashboard-app/index.js:638
+#: src/interface-settings/index.js:182 src/settings-app/index.js:263
 msgid "Basic"
 msgstr "基本"
 
 #: admin/settings.php:653 includes/class-admin-settings-rest.php:128
+#: src/admin-pages/index.js:83 src/dashboard-app/index.js:473
+#: src/dashboard-app/index.js:649 src/interface-settings/index.js:186
+#: src/settings-app/index.js:265
 msgid "Advanced"
 msgstr "詳細"
 
-#: admin/settings.php:682
+#: admin/settings.php:682 src/settings-app/index.js:169
 msgid "Search settings…"
 msgstr "設定を検索…"
 
@@ -2974,7 +3011,8 @@ msgstr "設定セクション"
 msgid "No settings match your search."
 msgstr "検索条件に一致する設定はありません。"
 
-#: admin/settings.php:763
+#: admin/settings.php:763 src/interface-settings/index.js:379
+#: src/shared/components.js:94
 msgid "Save changes"
 msgstr "変更を保存"
 
@@ -3000,7 +3038,7 @@ msgstr "アシスタントが人をどう呼ぶかを設定します。サイト
 msgid "Personalization"
 msgstr "パーソナライズ"
 
-#: admin/settings/tab-general.php:29
+#: admin/settings/tab-general.php:29 src/settings-app/index.js:307
 msgid "What should agents call administrators?"
 msgstr "エージェントは管理者をどう呼びますか？"
 
@@ -3015,7 +3053,7 @@ msgid ""
 msgstr ""
 "サインイン済みの管理者に対して、エージェントが会話中にどう呼びかけるかを設定します。空欄の場合は WordPress の表示名が使用されます。"
 
-#: admin/settings/tab-general.php:38
+#: admin/settings/tab-general.php:38 src/settings-app/index.js:324
 msgid "What should agents call frontend visitors?"
 msgstr "エージェントはフロントエンドの訪問者をどう呼びますか？"
 
@@ -3067,7 +3105,7 @@ msgid ""
 msgstr ""
 "各アシスタントが訪問者にどう挨拶するかをカスタマイズし、その性格を形づくるコンテキストを追加します。指示はアシスタントのシステムプロンプトに追加されるもので、システムプロンプトを置き換えるものではありません。"
 
-#: admin/settings/tab-security.php:320
+#: admin/settings/tab-security.php:320 src/admin-pages/index.js:1043
 msgid "Tool"
 msgstr "ツール"
 
@@ -3113,7 +3151,8 @@ msgstr "API キーを取得"
 msgid "Connect"
 msgstr "接続"
 
-#: admin/setup.php:464
+#: admin/setup.php:464 src/admin-pages/index.js:610
+#: src/settings-app/index.js:1991
 msgid "Test"
 msgstr "テスト"
 
@@ -3225,6 +3264,7 @@ msgid ""
 msgstr "AI アシスタントにどこまでの権限を与えるかを制御します。設定からいつでも変更できます。"
 
 #: admin/setup.php:852 admin/signup.php:95 admin/signup.php:218
+#: src/settings-app/index.js:697
 msgid "Supervised"
 msgstr "承認制"
 
@@ -3239,6 +3279,7 @@ msgid ""
 msgstr "AI が変更を提案し、保存または公開される前にあなたが確認して承認します。あなたの承認なしには何も行われません。"
 
 #: admin/setup.php:861 admin/signup.php:96 admin/signup.php:222
+#: src/settings-app/index.js:701
 msgid "Autonomous"
 msgstr "自律"
 
@@ -3299,7 +3340,8 @@ msgstr "送信"
 msgid "Exit Wizard"
 msgstr "ウィザードを終了"
 
-#: admin/setup.php:936
+#: admin/setup.php:936 src/agent-wizard/index.js:766
+#: src/deploy-wizard/index.js:390 src/knowledge-wizard/index.js:423
 msgid "Back"
 msgstr "戻る"
 
@@ -3367,7 +3409,10 @@ msgstr "セキュリティモード"
 msgid "Chat Model"
 msgstr "チャットモデル"
 
-#: admin/signup.php:106
+#: admin/signup.php:106 src/admin-pages/index.js:2243
+#: src/agent-wizard/index.js:303 src/deploy-wizard/index.js:193
+#: src/knowledge-wizard/index.js:354 src/settings-app/index.js:2110
+#: src/shared/components.js:71
 msgid "Loading…"
 msgstr "読み込み中…"
 
@@ -3556,6 +3601,8 @@ msgid "Back to Skills"
 msgstr "スキル一覧に戻る"
 
 #: admin/skills.php:174 admin/skills.php:307 admin/skills.php:534
+#: src/admin-pages/index.js:582 src/agent-wizard/index.js:710
+#: src/settings-app/index.js:567
 msgid "Name"
 msgstr "名前"
 
@@ -3597,6 +3644,7 @@ msgid "optional"
 msgstr "省略可"
 
 #: admin/skills.php:218 admin/skills.php:309 admin/skills.php:538
+#: src/admin-pages/index.js:1216 src/dashboard-app/index.js:161
 msgid "Version"
 msgstr "バージョン"
 
@@ -3643,7 +3691,7 @@ msgid "No skills found. Try a different search term."
 msgstr "スキルが見つかりませんでした。別のキーワードでお試しください。"
 
 #: admin/skills.php:310 includes/class-approval-queue.php:217
-#: includes/class-gdpr.php:462
+#: includes/class-gdpr.php:462 src/admin-pages/index.js:1279
 msgid "Action"
 msgstr "操作"
 
@@ -3864,7 +3912,7 @@ msgstr "クリックしてこのアビリティを無効化"
 msgid "Click to enable this ability"
 msgstr "クリックしてこのアビリティを有効化"
 
-#: admin/tools.php:350 admin/tools.php:487
+#: admin/tools.php:350 admin/tools.php:487 src/admin-pages/index.js:851
 msgid "None"
 msgstr "なし"
 
@@ -3910,7 +3958,8 @@ msgstr ""
 msgid "No tools found. Activate assistants to see their available tools."
 msgstr "ツールが見つかりません。アシスタントを有効化すると、利用できるツールが表示されます。"
 
-#: admin/tools.php:385
+#: admin/tools.php:385 src/admin-pages/index.js:1046
+#: src/agent-wizard/index.js:441 src/agent-wizard/index.js:722
 msgid "Category"
 msgstr "カテゴリー"
 
@@ -3936,7 +3985,7 @@ msgstr "このツールが有効な間、WordPress のアビリティ (MCP、RES
 msgid "Read Only"
 msgstr "読み取り専用"
 
-#: admin/tools.php:425
+#: admin/tools.php:425 src/admin-pages/index.js:852
 msgid "Low"
 msgstr "低"
 
@@ -4047,11 +4096,12 @@ msgstr ""
 msgid "Wiki"
 msgstr "ウィキ"
 
-#: admin/train-data.php:34
+#: admin/train-data.php:34 src/agent-wizard/index.js:726
+#: src/settings-app/index.js:1729
 msgid "Instructions"
 msgstr "指示"
 
-#: admin/train-data.php:35
+#: admin/train-data.php:35 src/settings-app/index.js:1310
 msgid "Memory"
 msgstr "メモリー"
 
@@ -4095,7 +4145,8 @@ msgstr "エージェント: %s"
 
 #: admin/train-data.php:65 includes/class-admin-menu-handler.php:167
 #: includes/class-admin-menu-handler.php:377
-#: includes/class-admin-pages-rest.php:1599
+#: includes/class-admin-pages-rest.php:1599 src/agent-wizard/index.js:34
+#: src/agent-wizard/index.js:751 src/settings-app/index.js:298
 msgid "Knowledge"
 msgstr "ナレッジ"
 
@@ -4157,7 +4208,7 @@ msgstr "コンセプト"
 msgid "No concepts yet. Create a FAQ, policy, or product fact to get started."
 msgstr "コンセプトはまだありません。FAQ、ポリシー、製品情報を作成して始めましょう。"
 
-#: admin/train-data.php:172
+#: admin/train-data.php:172 src/admin-pages/index.js:2201
 msgid "Concept"
 msgstr "コンセプト"
 
@@ -4165,7 +4216,7 @@ msgstr "コンセプト"
 msgid "Save concept"
 msgstr "コンセプトを保存"
 
-#: admin/train-data.php:181
+#: admin/train-data.php:181 src/knowledge-wizard/index.js:392
 msgid "Title"
 msgstr "タイトル"
 
@@ -4377,7 +4428,7 @@ msgstr "Pro プランを見る"
 msgid "How Vector Store works"
 msgstr "ベクトルストアの仕組み"
 
-#: agent-builder.php:436
+#: agent-builder.php:436 src/settings-app/index.js:1018
 msgid "AI Agents"
 msgstr "AI エージェント"
 
@@ -4606,7 +4657,7 @@ msgstr "Agent Builder — 公開"
 
 #: includes/class-admin-menu-handler.php:118
 #: includes/class-admin-menu-handler.php:416
-#: includes/class-admin-pages-rest.php:1529
+#: includes/class-admin-pages-rest.php:1529 src/deploy-wizard/index.js:410
 msgid "Publish"
 msgstr "公開"
 
@@ -4665,7 +4716,8 @@ msgstr "エージェントチャット"
 
 #: includes/class-admin-menu-handler.php:441
 #: includes/class-admin-settings-rest.php:116
-#: includes/class-admin-settings-rest.php:154
+#: includes/class-admin-settings-rest.php:154 src/dashboard-app/index.js:140
+#: src/settings-app/index.js:2342
 msgid "License"
 msgstr "ライセンス"
 
@@ -4720,17 +4772,18 @@ msgid "Agent Marketplace"
 msgstr "エージェントマーケットプレイス"
 
 #: includes/class-admin-menu-handler.php:917
-#: includes/class-admin-pages-rest.php:1562
+#: includes/class-admin-pages-rest.php:1562 src/admin-pages/index.js:108
+#: src/admin-pages/index.js:423 src/settings-app/index.js:79
 msgid "Upgrade to Pro"
 msgstr "Pro にアップグレード"
 
-#: includes/class-admin-menu-handler.php:922
+#: includes/class-admin-menu-handler.php:922 src/settings-app/index.js:86
 msgid ""
 "Settings control how assistants behave on this site. Changes are stored "
 "locally and take effect for new conversations."
 msgstr "設定は、このサイトでのアシスタントの動作を制御します。変更はローカルに保存され、新しい会話から反映されます。"
 
-#: includes/class-admin-menu-handler.php:924
+#: includes/class-admin-menu-handler.php:924 src/admin-pages/index.js:115
 msgid ""
 "Assistants only use the tools you allow. Higher-risk actions still follow "
 "Approvals and your safety settings."
@@ -4811,27 +4864,33 @@ msgid ""
 "Providers tab for everyday use."
 msgstr "高度な連携と API エンドポイントです。日常的な利用には「プロバイダー」タブの接続済みプロバイダーをおすすめします。"
 
-#: includes/class-admin-menu-handler.php:978
+#: includes/class-admin-menu-handler.php:978 src/admin-pages/index.js:128
+#: src/settings-app/index.js:99
 msgid "Need help?"
 msgstr "お困りですか？"
 
-#: includes/class-admin-menu-handler.php:979
+#: includes/class-admin-menu-handler.php:979 src/admin-pages/index.js:130
+#: src/settings-app/index.js:101
 msgid "Visit our Support Center"
 msgstr "サポートセンターを見る"
 
-#: includes/class-admin-menu-handler.php:981
+#: includes/class-admin-menu-handler.php:981 src/admin-pages/index.js:134
+#: src/settings-app/index.js:105
 msgid "Documentation"
 msgstr "ドキュメント"
 
-#: includes/class-admin-menu-handler.php:989
+#: includes/class-admin-menu-handler.php:989 src/admin-pages/index.js:171
+#: src/settings-app/index.js:142
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-#: includes/class-admin-menu-handler.php:991
+#: includes/class-admin-menu-handler.php:991 src/admin-pages/index.js:181
+#: src/settings-app/index.js:152
 msgid "GDPR Policy"
 msgstr "GDPR ポリシー"
 
 #: includes/class-admin-menu-handler.php:1159
+#: assets/js/gutenberg-blocks.js:160
 msgid "Online"
 msgstr "オンライン"
 
@@ -5224,7 +5283,7 @@ msgid ""
 "system events. No technical jargon required."
 msgstr "アシスタントの作業 — 使用したツール、承認、重要なシステムイベント — をシンプルな時系列で表示します。専門用語は不要です。"
 
-#: includes/class-admin-pages-rest.php:1185
+#: includes/class-admin-pages-rest.php:1185 src/admin-pages/index.js:1941
 msgid "Tools used"
 msgstr "使用したツール"
 
@@ -5432,7 +5491,7 @@ msgid ""
 "when you open a deployment action from here."
 msgstr "ここからデプロイ操作を開くと、完全なデプロイエディター (ショートコードビルダー、CLI、モーダル) を引き続き利用できます。"
 
-#: includes/class-admin-pages-rest.php:1562
+#: includes/class-admin-pages-rest.php:1562 src/dashboard-app/index.js:476
 msgid "Pro"
 msgstr "Pro"
 
@@ -5501,10 +5560,12 @@ msgid "Unknown settings tab."
 msgstr "不明な設定タブです。"
 
 #: includes/class-admin-settings-rest.php:410
+#: src/interface-settings/index.js:30
 msgid "Theme default"
 msgstr "テーマのデフォルト"
 
 #: includes/class-admin-settings-rest.php:414
+#: src/interface-settings/index.js:31
 msgid "System UI"
 msgstr "システム UI"
 
@@ -5716,11 +5777,11 @@ msgstr "データは「送信」を押したときにのみ、設定済みの AI
 msgid "Dismiss this launcher"
 msgstr "このランチャーを閉じる"
 
-#: includes/class-admin-vnav.php:73
+#: includes/class-admin-vnav.php:73 src/admin-list/index.js:47
 msgid "Search…"
 msgstr "検索…"
 
-#: includes/class-admin-vnav.php:74
+#: includes/class-admin-vnav.php:74 src/admin-pages/index.js:267
 msgid "Sections"
 msgstr "セクション"
 
@@ -5970,7 +6031,8 @@ msgid ""
 "An AI assistant wants to make a change that needs your OK before it runs."
 msgstr "AI アシスタントが、実行前にあなたの承認を必要とする変更を行おうとしています。"
 
-#: includes/class-approval-queue.php:219
+#: includes/class-approval-queue.php:219 src/admin-pages/index.js:584
+#: src/admin-pages/index.js:1053
 msgid "Risk"
 msgstr "リスク"
 
@@ -6004,7 +6066,7 @@ msgstr "OK"
 msgid "Confirm"
 msgstr "確認"
 
-#: includes/class-chat-assets.php:58
+#: includes/class-chat-assets.php:58 src/admin-pages/index.js:1585
 msgid "Dismiss"
 msgstr "閉じる"
 
@@ -7651,3 +7713,1767 @@ msgstr "アシスタントを選択"
 #: templates/modal-widget.php:114
 msgid "Chat with AI"
 msgstr "AI とチャット"
+
+#: assets/js/gutenberg-blocks.js:211
+msgid "Hello! I'm "
+msgstr "こんにちは！私は"
+
+#: assets/js/gutenberg-blocks.js:211
+msgid "How can I help you today?"
+msgstr "本日はどのようなご用件でしょうか？"
+
+#: assets/js/gutenberg-blocks.js:226
+msgid "Floating mode — appears as a popup button on the frontend"
+msgstr "フローティングモード — フロントエンドにポップアップボタンとして表示されます"
+
+#: assets/js/gutenberg-blocks.js:293 src/interface-settings/index.js:224
+msgid "Appearance"
+msgstr "外観"
+
+#: assets/js/gutenberg-blocks.js:301
+msgid "Height"
+msgstr "高さ"
+
+#: assets/js/gutenberg-blocks.js:304
+msgid "CSS height value (e.g. 500px, 60vh)."
+msgstr "CSS の高さの値（例: 500px、60vh）。"
+
+#: assets/js/gutenberg-blocks.js:307
+msgid "Theme"
+msgstr "テーマ"
+
+#: assets/js/gutenberg-blocks.js:313
+msgid "Show Header"
+msgstr "ヘッダーを表示"
+
+#: assets/js/gutenberg-blocks.js:318
+msgid "Floating Button"
+msgstr "フローティングボタン"
+
+#: assets/js/gutenberg-blocks.js:321
+msgid "Display as a floating chat button instead of inline."
+msgstr "インラインではなく、フローティングのチャットボタンとして表示します。"
+
+#: assets/js/gutenberg-blocks.js:332
+msgid "LLM Settings"
+msgstr "LLM 設定"
+
+#: assets/js/gutenberg-blocks.js:334 src/dashboard-app/index.js:359
+#: src/settings-app/index.js:1529
+msgid "Provider"
+msgstr "プロバイダー"
+
+#: assets/js/gutenberg-blocks.js:340
+msgid "Override the LLM provider for this block."
+msgstr "このブロックの LLM プロバイダーを上書きします。"
+
+#: assets/js/gutenberg-blocks.js:347
+msgid "Select a provider first to see available models."
+msgstr "利用可能なモデルを表示するには、先にプロバイダーを選択してください。"
+
+#: src/admin-list/index.js:31
+msgid "Items"
+msgstr "アイテム"
+
+#: src/admin-list/index.js:58
+msgid "No items found."
+msgstr "アイテムが見つかりませんでした。"
+
+#: src/admin-pages/index.js:21
+msgid "Safe to run automatically — read-only, no approval needed."
+msgstr "自動実行しても安全です — 読み取り専用で、承認は不要です。"
+
+#: src/admin-pages/index.js:22
+msgid ""
+"Runs automatically by default; may read data that includes personal "
+"information."
+msgstr "デフォルトで自動実行されます。個人情報を含むデータを読み取る場合があります。"
+
+#: src/admin-pages/index.js:23
+msgid ""
+"Changes something — assistants pause for your in-chat confirmation first."
+msgstr "変更を伴います — アシスタントはまずチャット内での確認を求めて一時停止します。"
+
+#: src/admin-pages/index.js:24
+msgid ""
+"A significant or bulk change — waits in the Approvals queue for you to allow"
+" it."
+msgstr "重大または一括の変更です — 承認キューであなたの許可を待ちます。"
+
+#: src/admin-pages/index.js:25
+msgid ""
+"Too risky to allow at all — hidden from assistants entirely, cannot be "
+"enabled."
+msgstr "許可するにはリスクが高すぎます — アシスタントからは完全に非表示となり、有効化できません。"
+
+#: src/admin-pages/index.js:28
+msgid ""
+"An assistant tried to run this specific action and paused here first. "
+"Nothing happens until you decide — approve to let it run once, or reject to "
+"cancel it."
+msgstr ""
+"アシスタントがこの操作を実行しようとして、ここで一時停止しました。あなたが判断するまで何も起こりません — "
+"承認すると一度だけ実行され、拒否するとキャンセルされます。"
+
+#: src/admin-pages/index.js:86
+msgid ""
+"Only changes this screen. Other screens and your site-wide default (Settings"
+" → Interface) are unaffected."
+msgstr "この画面にのみ適用されます。他の画面やサイト全体のデフォルト（設定 → インターフェース）には影響しません。"
+
+#: src/admin-pages/index.js:231
+msgid "Could not load page."
+msgstr "ページを読み込めませんでした。"
+
+#: src/admin-pages/index.js:343
+msgid "Site-local tool saved."
+msgstr "サイトローカルツールを保存しました。"
+
+#: src/admin-pages/index.js:349
+msgid "Could not save tool (Pro required)."
+msgstr "ツールを保存できませんでした（Pro が必要です）。"
+
+#: src/admin-pages/index.js:358
+msgid "Delete this site-local tool?"
+msgstr "このサイトローカルツールを削除しますか？"
+
+#: src/admin-pages/index.js:370 src/admin-pages/index.js:1174
+msgid "Delete failed."
+msgstr "削除に失敗しました。"
+
+#: src/admin-pages/index.js:380
+msgid "Test arguments must be valid JSON."
+msgstr "テスト引数は有効な JSON である必要があります。"
+
+#: src/admin-pages/index.js:396 src/settings-app/index.js:1911
+msgid "Test failed."
+msgstr "テストに失敗しました。"
+
+#: src/admin-pages/index.js:417
+msgid ""
+"Site-local tool builder is a Pro feature. Free includes using shipped tools,"
+" risk/approvals, and developer Tool_Base packages."
+msgstr ""
+"サイトローカルツールビルダーは Pro 機能です。無料版には、標準搭載ツールの利用、リスク/承認、開発者向け Tool_Base "
+"パッケージが含まれます。"
+
+#: src/admin-pages/index.js:429
+msgid "Docs: Free vs Pro"
+msgstr "ドキュメント: 無料版と Pro 版の比較"
+
+#: src/admin-pages/index.js:450
+msgid "Add site-local tool"
+msgstr "サイトローカルツールを追加"
+
+#: src/admin-pages/index.js:452
+msgid ""
+"Declarative handlers only — no PHP. Empty agent list = available to all "
+"active agents."
+msgstr "宣言的ハンドラーのみで、PHP は不要です。エージェントリストが空の場合、有効なすべてのエージェントで利用できます。"
+
+#: src/admin-pages/index.js:460
+msgid "Name (snake_case)"
+msgstr "名前（snake_case）"
+
+#: src/admin-pages/index.js:477
+msgid "Description (for the LLM)"
+msgstr "説明（LLM 向け）"
+
+#: src/admin-pages/index.js:487 src/admin-pages/index.js:583
+msgid "Handler"
+msgstr "ハンドラー"
+
+#: src/admin-pages/index.js:500
+msgid "Risk level"
+msgstr "リスクレベル"
+
+#: src/admin-pages/index.js:517
+msgid "Allowed option keys (comma-separated)"
+msgstr "許可するオプションキー（カンマ区切り）"
+
+#: src/admin-pages/index.js:534
+msgid "Extra allowed hosts (comma-separated; site host always allowed)"
+msgstr "追加で許可するホスト（カンマ区切り。サイトのホストは常に許可されます）"
+
+#: src/admin-pages/index.js:549
+msgid "Agents (optional)"
+msgstr "エージェント（任意）"
+
+#: src/admin-pages/index.js:571
+msgid "Save site-local tool"
+msgstr "サイトローカルツールを保存"
+
+#: src/admin-pages/index.js:577
+msgid "Your site-local tools"
+msgstr "サイトローカルツール一覧"
+
+#: src/admin-pages/index.js:631
+msgid "Test arguments (JSON object)"
+msgstr "テスト引数（JSON オブジェクト）"
+
+#. translators: 1: enabled count, 2: disabled count
+#: src/admin-pages/index.js:680
+msgid "Profile applied: %1$d tools on, %2$d tools off."
+msgstr "プロファイルを適用しました: %1$d 個のツールを有効化、%2$d 個のツールを無効化しました。"
+
+#: src/admin-pages/index.js:693
+msgid "Could not apply profile."
+msgstr "プロファイルを適用できませんでした。"
+
+#: src/admin-pages/index.js:705
+msgid ""
+"These profiles control which tools every assistant may use. Approvals still "
+"apply for riskier actions."
+msgstr "これらのプロファイルは、すべてのアシスタントが使用できるツールを制御します。リスクの高い操作には引き続き承認が必要です。"
+
+#: src/admin-pages/index.js:709
+msgid "Switch to Advanced for the full tool-by-tool list:"
+msgstr "ツールごとの完全なリストを表示するには、詳細表示に切り替えてください:"
+
+#: src/admin-pages/index.js:733
+msgid ""
+"Tools were customized outside a profile. Choose a card below to reset to a "
+"simple safety level."
+msgstr "ツールがプロファイル外でカスタマイズされています。以下のカードを選択すると、シンプルな安全レベルにリセットできます。"
+
+#. translators: %s: risk level
+#: src/admin-pages/index.js:776
+msgid "Up to %s risk"
+msgstr "リスク %s まで"
+
+#: src/admin-pages/index.js:783 src/admin-pages/index.js:1658
+msgid "Current"
+msgstr "現在"
+
+#. translators: 1: enabled tools, 2: disabled tools, 3: max risk
+#: src/admin-pages/index.js:793
+msgid "Right now: %1$d tools on, %2$d off · highest enabled risk: %3$s"
+msgstr "現在: %1$d 個のツールが有効、%2$d 個が無効 · 有効な最高リスク: %3$s"
+
+#: src/admin-pages/index.js:850
+msgid "All risks"
+msgstr "すべてのリスク"
+
+#: src/admin-pages/index.js:853
+msgid "Medium"
+msgstr "中"
+
+#: src/admin-pages/index.js:854
+msgid "High"
+msgstr "高"
+
+#: src/admin-pages/index.js:855
+msgid "Extreme"
+msgstr "極高"
+
+#: src/admin-pages/index.js:928
+msgid "Toggle failed."
+msgstr "切り替えに失敗しました。"
+
+#: src/admin-pages/index.js:953
+msgid "You are in Advanced view (full tool list)."
+msgstr "現在は詳細表示です（すべてのツールを表示）。"
+
+#: src/admin-pages/index.js:967
+msgid "Search tools…"
+msgstr "ツールを検索…"
+
+#: src/admin-pages/index.js:972
+msgid "1 tool"
+msgstr "1 個のツール"
+
+#: src/admin-pages/index.js:973
+msgid "tools"
+msgstr "個のツール"
+
+#: src/admin-pages/index.js:982
+msgid "Custom tools (Pro)"
+msgstr "カスタムツール（Pro）"
+
+#: src/admin-pages/index.js:987
+msgid "Filter by risk"
+msgstr "リスクで絞り込み"
+
+#: src/admin-pages/index.js:1026
+msgid "No tools match this search or risk filter."
+msgstr "この検索条件またはリスクフィルターに一致するツールはありません。"
+
+#: src/admin-pages/index.js:1030
+msgid "No tools in this category."
+msgstr "このカテゴリーにツールはありません。"
+
+#: src/admin-pages/index.js:1114
+msgid "none"
+msgstr "なし"
+
+#: src/admin-pages/index.js:1161
+msgid "Delete this skill? This cannot be undone."
+msgstr "このスキルを削除しますか？この操作は取り消せません。"
+
+#: src/admin-pages/index.js:1214
+msgid "Skill"
+msgstr "スキル"
+
+#: src/admin-pages/index.js:1294
+msgid "Recording your approval…"
+msgstr "承認を記録しています…"
+
+#: src/admin-pages/index.js:1299
+msgid "Running the approved action…"
+msgstr "承認された操作を実行しています…"
+
+#: src/admin-pages/index.js:1304
+msgid "Confirming result…"
+msgstr "結果を確認しています…"
+
+#: src/admin-pages/index.js:1319
+msgid "Rejecting this request…"
+msgstr "このリクエストを拒否しています…"
+
+#: src/admin-pages/index.js:1355 src/admin-pages/index.js:1372
+msgid "Rejected — the action will not run."
+msgstr "拒否しました — この操作は実行されません。"
+
+#: src/admin-pages/index.js:1362
+msgid "Request rejected"
+msgstr "リクエストを拒否しました"
+
+#: src/admin-pages/index.js:1385
+msgid "Approved, but the action could not be started."
+msgstr "承認しましたが、操作を開始できませんでした。"
+
+#: src/admin-pages/index.js:1391
+msgid "Action completed successfully."
+msgstr "操作が正常に完了しました。"
+
+#: src/admin-pages/index.js:1396
+msgid "Action ran but reported a problem."
+msgstr "操作は実行されましたが、問題が報告されました。"
+
+#: src/admin-pages/index.js:1415
+msgid "Approval recorded"
+msgstr "承認を記録しました"
+
+#: src/admin-pages/index.js:1433
+msgid "Done — assistant task finished"
+msgstr "完了 — アシスタントのタスクが終了しました"
+
+#: src/admin-pages/index.js:1437
+msgid "Finished with errors — check detail below"
+msgstr "エラーが発生して終了しました — 以下の詳細をご確認ください"
+
+#: src/admin-pages/index.js:1449
+msgid "Approved and completed."
+msgstr "承認され、完了しました。"
+
+#: src/admin-pages/index.js:1461
+msgid "Could not update that item."
+msgstr "その項目を更新できませんでした。"
+
+#: src/admin-pages/index.js:1486
+msgid ""
+"Check the box to accept the increased risk before choosing “Trust more”."
+msgstr "「より信頼する」を選択する前に、リスクの増加に同意するチェックボックスをオンにしてください。"
+
+#: src/admin-pages/index.js:1509
+msgid "Preferences saved."
+msgstr "設定を保存しました。"
+
+#: src/admin-pages/index.js:1515
+msgid "Could not save preferences."
+msgstr "設定を保存できませんでした。"
+
+#: src/admin-pages/index.js:1526
+msgid "Advanced view shows technical detail."
+msgstr "詳細表示では技術的な情報が表示されます。"
+
+#: src/admin-pages/index.js:1530
+msgid "Simple view for non-technical admins."
+msgstr "技術者以外の管理者向けのシンプルな表示です。"
+
+#: src/admin-pages/index.js:1572
+msgid "Complete"
+msgstr "完了"
+
+#: src/admin-pages/index.js:1573
+msgid "Needs attention"
+msgstr "要対応"
+
+#: src/admin-pages/index.js:1574 src/admin-pages/index.js:1824
+msgid "Working…"
+msgstr "処理中…"
+
+#: src/admin-pages/index.js:1613
+msgid "Preferences"
+msgstr "環境設定"
+
+#: src/admin-pages/index.js:1615
+msgid ""
+"Choose how closely you want to watch assistants, and whether we should email"
+" you when something is waiting."
+msgstr "アシスタントをどの程度細かく監視するか、また承認待ちが発生したときにメールで通知するかどうかを選択してください。"
+
+#: src/admin-pages/index.js:1675
+msgid ""
+"I understand assistants may change my site with less waiting, and I accept "
+"that increased risk."
+msgstr "アシスタントが待機時間を短縮してサイトを変更する場合があることを理解し、そのリスクの増加を受け入れます。"
+
+#: src/admin-pages/index.js:1690
+msgid "Save “Trust more” preference"
+msgstr "「より信頼する」設定を保存"
+
+#: src/admin-pages/index.js:1708
+msgid "Email me when an action is waiting for approval"
+msgstr "操作が承認待ちになったらメールで通知する"
+
+#: src/admin-pages/index.js:1717
+msgid "Send alerts to"
+msgstr "通知の送信先"
+
+#: src/admin-pages/index.js:1735
+msgid "Save email preferences"
+msgstr "メール設定を保存"
+
+#: src/admin-pages/index.js:1743
+msgid "Waiting for you"
+msgstr "承認待ち"
+
+#: src/admin-pages/index.js:1753
+msgid "You’re all caught up"
+msgstr "承認待ちの項目はありません"
+
+#: src/admin-pages/index.js:1757
+msgid ""
+"Approvals pause any action an assistant rates as risky until you say yes — "
+"nothing waiting here means nothing is on hold right now."
+msgstr ""
+"承認機能は、アシスタントがリスクありと判断した操作を、あなたが許可するまで一時停止します — ここに何も表示されていない場合、保留中の操作はありません。"
+
+#: src/admin-pages/index.js:1763
+msgid ""
+"When an assistant needs permission for a bigger change, it will show up here"
+msgstr "アシスタントが大きな変更の許可を必要とする場合、ここに表示されます"
+
+#: src/admin-pages/index.js:1768
+msgid " — and we’ll email you."
+msgstr " — メールでもお知らせします。"
+
+#: src/admin-pages/index.js:1844
+msgid ""
+"Assistants back up files and database tables automatically before changing "
+"them."
+msgstr "アシスタントは、ファイルやデータベーステーブルを変更する前に自動でバックアップを作成します。"
+
+#: src/admin-pages/index.js:1849
+msgid "View backups and restore"
+msgstr "バックアップの表示と復元"
+
+#: src/admin-pages/index.js:1854
+msgid "· Need batch approve tools?"
+msgstr "· 一括承認ツールが必要ですか？"
+
+#: src/admin-pages/index.js:1856
+msgid "Open classic queue"
+msgstr "クラシックキューを開く"
+
+#: src/admin-pages/index.js:1913
+msgid ""
+"This is a friendly activity feed. Technical names stay in Advanced detail "
+"when useful."
+msgstr "これは分かりやすいアクティビティフィードです。技術的な名称は、必要に応じて詳細表示で確認できます。"
+
+#: src/admin-pages/index.js:1971
+msgid "Time period"
+msgstr "期間"
+
+#: src/admin-pages/index.js:1992
+msgid "Activity type"
+msgstr "アクティビティの種類"
+
+#: src/admin-pages/index.js:2024
+msgid "Search activity…"
+msgstr "アクティビティを検索…"
+
+#: src/admin-pages/index.js:2029
+msgid "1 event"
+msgstr "1 件のイベント"
+
+#: src/admin-pages/index.js:2030
+msgid "events"
+msgstr "件のイベント"
+
+#: src/admin-pages/index.js:2036
+msgid ""
+"Download this log as a CSV file — handy to attach when emailing support "
+"about an issue."
+msgstr "このログを CSV ファイルとしてダウンロードします — 問題についてサポートにメールする際の添付に便利です。"
+
+#: src/admin-pages/index.js:2041
+msgid "Export CSV"
+msgstr "CSV をエクスポート"
+
+#: src/admin-pages/index.js:2050
+msgid "Nothing here yet"
+msgstr "まだ何もありません"
+
+#: src/admin-pages/index.js:2055
+msgid "No events match this filter. Try another period or clear search."
+msgstr "このフィルターに一致するイベントはありません。別の期間を選択するか、検索条件をクリアしてください。"
+
+#: src/admin-pages/index.js:2059
+msgid "When assistants chat or use tools, their activity will show up here."
+msgstr "アシスタントがチャットしたりツールを使用したりすると、そのアクティビティがここに表示されます。"
+
+#: src/admin-pages/index.js:2172
+msgid "Pro active"
+msgstr "Pro 有効"
+
+#: src/admin-pages/index.js:2178
+msgid "View pricing"
+msgstr "価格を見る"
+
+#: src/admin-pages/index.js:2194
+msgid "Open full Knowledge editor"
+msgstr "完全なナレッジエディターを開く"
+
+#: src/admin-pages/index.js:2254
+msgid "Unavailable."
+msgstr "利用できません。"
+
+#: src/admin-pages/index.js:2303
+msgid "Unknown page."
+msgstr "不明なページです。"
+
+#: src/agent-wizard/index.js:31
+msgid "Basics"
+msgstr "基本情報"
+
+#: src/agent-wizard/index.js:32
+msgid "Persona"
+msgstr "ペルソナ"
+
+#: src/agent-wizard/index.js:33
+msgid "Capabilities"
+msgstr "機能"
+
+#: src/agent-wizard/index.js:35
+msgid "Review"
+msgstr "確認"
+
+#: src/agent-wizard/index.js:135 src/deploy-wizard/index.js:118
+msgid "Could not load the wizard."
+msgstr "ウィザードを読み込めませんでした。"
+
+#: src/agent-wizard/index.js:176 src/agent-wizard/index.js:181
+msgid "Could not load your content."
+msgstr "コンテンツを読み込めませんでした。"
+
+#: src/agent-wizard/index.js:194
+msgid "%s pages/posts"
+msgstr "%s 件の固定ページ/投稿"
+
+#: src/agent-wizard/index.js:197
+msgid "%s files"
+msgstr "%s 件のファイル"
+
+#: src/agent-wizard/index.js:199 src/agent-wizard/index.js:729
+#: src/agent-wizard/index.js:747
+msgid "(none)"
+msgstr "（なし）"
+
+#: src/agent-wizard/index.js:283
+msgid "Something went wrong creating the agent."
+msgstr "エージェントの作成中に問題が発生しました。"
+
+#. translators: %s: the new agent's name.
+#: src/agent-wizard/index.js:316
+msgid "%s is ready!"
+msgstr "%s の準備が整いました！"
+
+#: src/agent-wizard/index.js:322
+msgid ""
+"Your agent has been created and activated. Add knowledge to make it smarter,"
+" or start chatting right away."
+msgstr "エージェントを作成し、有効化しました。ナレッジを追加してさらに賢くするか、すぐにチャットを開始できます。"
+
+#: src/agent-wizard/index.js:326
+msgid ""
+"Your agent was created. Activate it from the Agents page, then add knowledge"
+" or start chatting."
+msgstr "エージェントを作成しました。エージェントページで有効化してから、ナレッジを追加するかチャットを開始してください。"
+
+#: src/agent-wizard/index.js:337
+msgid "Training your assistant on your knowledge… %s"
+msgstr "ナレッジでアシスタントを学習させています… %s"
+
+#: src/agent-wizard/index.js:338
+msgid "Knowledge training finished — %s sources trained."
+msgstr "ナレッジの学習が完了しました — %s 件のソースを学習しました。"
+
+#: src/agent-wizard/index.js:348
+msgid ""
+"A safe set of read-only tools was added so your agent works right away. You "
+"can change its tools later from the Agents page."
+msgstr "エージェントがすぐに動作するよう、安全な読み取り専用ツールのセットが追加されました。ツールは後からエージェントページで変更できます。"
+
+#: src/agent-wizard/index.js:365
+msgid "Open Chat"
+msgstr "チャットを開く"
+
+#: src/agent-wizard/index.js:370
+msgid "Publish This Agent"
+msgstr "このエージェントを公開"
+
+#: src/agent-wizard/index.js:378
+msgid "Fine-tune Persona"
+msgstr "ペルソナを調整"
+
+#: src/agent-wizard/index.js:383
+msgid "View all Agents"
+msgstr "すべてのエージェントを表示"
+
+#: src/agent-wizard/index.js:407
+msgid "Agent name"
+msgstr "エージェント名"
+
+#: src/agent-wizard/index.js:408
+msgid "A friendly name, e.g. \"Support Helper\"."
+msgstr "分かりやすい名前です（例: 「Support Helper」）。"
+
+#: src/agent-wizard/index.js:417
+msgid "Identifier (slug)"
+msgstr "識別子（スラッグ）"
+
+#: src/agent-wizard/index.js:418
+msgid "Used in URLs and files. Auto-filled from the name."
+msgstr "URL やファイルで使用されます。名前から自動入力されます。"
+
+#: src/agent-wizard/index.js:427
+msgid "What does this agent do?"
+msgstr "このエージェントは何をしますか？"
+
+#: src/agent-wizard/index.js:431
+msgid "A short description shown in the agents list."
+msgstr "エージェント一覧に表示される短い説明です。"
+
+#: src/agent-wizard/index.js:457
+msgid "Icon"
+msgstr "アイコン"
+
+#: src/agent-wizard/index.js:470
+msgid "Instructions (system prompt)"
+msgstr "指示（システムプロンプト）"
+
+#: src/agent-wizard/index.js:474
+msgid ""
+"Describe how the agent should behave, its tone, and what it should focus on."
+msgstr "エージェントの振る舞い、口調、重点を置くべき事項を記述してください。"
+
+#: src/agent-wizard/index.js:483
+msgid "Welcome message (optional)"
+msgstr "ウェルカムメッセージ（任意）"
+
+#: src/agent-wizard/index.js:487
+msgid "The greeting shown when a chat starts."
+msgstr "チャット開始時に表示される挨拶です。"
+
+#: src/agent-wizard/index.js:496
+msgid "Suggested prompts (optional)"
+msgstr "提案プロンプト（任意）"
+
+#: src/agent-wizard/index.js:505
+msgid "e.g. Summarize my latest posts"
+msgstr "例: 最新の投稿を要約して"
+
+#: src/agent-wizard/index.js:524
+msgid "+ Add another prompt"
+msgstr "+ プロンプトを追加"
+
+#: src/agent-wizard/index.js:536
+msgid "AI provider"
+msgstr "AI プロバイダー"
+
+#: src/agent-wizard/index.js:544
+msgid "(needs API key)"
+msgstr "（API キーが必要）"
+
+#: src/agent-wizard/index.js:560
+msgid "Leave as-is to use your site default."
+msgstr "サイトのデフォルトを使用する場合は、そのままにしてください。"
+
+#: src/agent-wizard/index.js:583 src/agent-wizard/index.js:739
+msgid "Autonomy"
+msgstr "自律性"
+
+#: src/agent-wizard/index.js:587
+msgid "Supervised — asks before taking actions (recommended)"
+msgstr "監督あり — 操作の前に確認します（推奨）"
+
+#: src/agent-wizard/index.js:594
+msgid "Autonomous — acts on its own"
+msgstr "自律 — 自身の判断で操作します"
+
+#: src/agent-wizard/index.js:601
+msgid "Disabled — replies only, never acts"
+msgstr "無効 — 返信のみで、操作は行いません"
+
+#: src/agent-wizard/index.js:611
+msgid ""
+"This only controls how often the agent pauses to ask you. Higher-risk "
+"actions still queue for your approval, and the riskiest actions are always "
+"blocked, no matter which autonomy level you pick."
+msgstr ""
+"これは、エージェントが確認のために一時停止する頻度のみを制御します。どの自律性レベルを選んでも、リスクの高い操作は引き続き承認待ちとなり、最もリスクの高い操作は常にブロックされます。"
+
+#: src/agent-wizard/index.js:619
+msgid "Tools this agent can use (optional)"
+msgstr "このエージェントが使用できるツール（任意）"
+
+#: src/agent-wizard/index.js:625
+msgid ""
+"If you don’t pick any, a safe set of read-only tools is added so your agent "
+"works right away."
+msgstr "何も選択しない場合、エージェントがすぐに動作するよう、安全な読み取り専用ツールのセットが追加されます。"
+
+#: src/agent-wizard/index.js:663
+msgid ""
+"Knowledge (RAG) uses the Agentic AI service. Connect your license to train "
+"assistants on your content — you can also add knowledge later from the "
+"Knowledge page."
+msgstr ""
+"ナレッジ（RAG）は Agentic AI サービスを使用します。ライセンスを接続すると、ご自身のコンテンツでアシスタントを学習させられます — "
+"ナレッジは後からナレッジページで追加することもできます。"
+
+#: src/agent-wizard/index.js:668
+msgid ""
+"Optionally give your assistants knowledge to draw on. Selected pages, posts "
+"and files are embedded into your shared Vector Store after the agent is "
+"created — training runs in the background."
+msgstr ""
+"必要に応じて、アシスタントが参照できるナレッジを追加できます。選択した固定ページ、投稿、ファイルは、エージェントの作成後に共有ベクトルストアへ埋め込まれます"
+" — 学習はバックグラウンドで実行されます。"
+
+#: src/agent-wizard/index.js:670
+msgid "Upload files (PDF or text)"
+msgstr "ファイルをアップロード（PDF またはテキスト）"
+
+#: src/agent-wizard/index.js:678
+msgid "%s file(s) selected."
+msgstr "%s 件のファイルを選択しました。"
+
+#: src/agent-wizard/index.js:680
+msgid "Train on your site content"
+msgstr "サイトのコンテンツで学習する"
+
+#: src/agent-wizard/index.js:685
+msgid "Loading your content…"
+msgstr "コンテンツを読み込んでいます…"
+
+#: src/agent-wizard/index.js:688
+msgid "No published pages or posts found."
+msgstr "公開済みの固定ページまたは投稿が見つかりませんでした。"
+
+#: src/agent-wizard/index.js:695
+msgid "trained"
+msgstr "学習済み"
+
+#: src/agent-wizard/index.js:714
+msgid "Identifier"
+msgstr "識別子"
+
+#: src/agent-wizard/index.js:733
+msgid "Provider / Model"
+msgstr "プロバイダー / モデル"
+
+#: src/agent-wizard/index.js:777 src/deploy-wizard/index.js:401
+#: src/knowledge-wizard/index.js:434
+msgid "Continue"
+msgstr "続ける"
+
+#: src/agent-wizard/index.js:786
+msgid "Create agent"
+msgstr "エージェントを作成"
+
+#: src/dashboard-activity/index.js:93 src/dashboard-app/index.js:269
+msgid "View Activity →"
+msgstr "アクティビティを表示 →"
+
+#: src/dashboard-activity/index.js:99
+msgid "Could not load activity."
+msgstr "アクティビティを読み込めませんでした。"
+
+#: src/dashboard-activity/index.js:106 src/dashboard-app/index.js:275
+msgid "Total Actions"
+msgstr "総アクション数"
+
+#: src/dashboard-activity/index.js:111 src/dashboard-app/index.js:280
+msgid "Tokens Used"
+msgstr "使用トークン数"
+
+#: src/dashboard-activity/index.js:119 src/dashboard-app/index.js:288
+msgid "Est. Cost"
+msgstr "推定コスト"
+
+#: src/dashboard-activity/index.js:120 src/dashboard-app/index.js:289
+msgid "Estimated Usage"
+msgstr "推定使用量"
+
+#: src/dashboard-activity/index.js:127 src/dashboard-app/index.js:296
+msgid "Active Agents"
+msgstr "有効なエージェント"
+
+#: src/dashboard-activity/index.js:132 src/dashboard-app/index.js:301
+msgid "Uploaded Agents"
+msgstr "アップロードされたエージェント"
+
+#: src/dashboard-activity/index.js:137 src/dashboard-app/index.js:306
+msgid "User-Created Agents"
+msgstr "ユーザー作成のエージェント"
+
+#: src/dashboard-app/index.js:67
+msgid "Drag to rearrange"
+msgstr "ドラッグして並べ替え"
+
+#: src/dashboard-app/index.js:75
+msgid "Drag to rearrange dashboard card"
+msgstr "ドラッグしてダッシュボードカードを並べ替え"
+
+#: src/dashboard-app/index.js:134
+msgid "Manage License →"
+msgstr "ライセンスを管理 →"
+
+#: src/dashboard-app/index.js:156
+msgid "Renew"
+msgstr "更新"
+
+#: src/dashboard-app/index.js:164
+msgid "Schema"
+msgstr "スキーマ"
+
+#: src/dashboard-app/index.js:168
+msgid "Pending Jobs"
+msgstr "保留中のジョブ"
+
+#: src/dashboard-app/index.js:174
+msgid "abandoned — auto-recovered"
+msgstr "中断 — 自動復旧しました"
+
+#: src/dashboard-app/index.js:182
+msgid "Running Jobs"
+msgstr "実行中のジョブ"
+
+#: src/dashboard-app/index.js:188
+msgid "stuck — auto-recovered"
+msgstr "停止 — 自動復旧しました"
+
+#: src/dashboard-app/index.js:192
+msgid "Completed Jobs"
+msgstr "完了したジョブ"
+
+#: src/dashboard-app/index.js:210
+msgid "Approvals & Backups"
+msgstr "承認とバックアップ"
+
+#: src/dashboard-app/index.js:216
+msgid "View Approvals →"
+msgstr "承認を表示 →"
+
+#: src/dashboard-app/index.js:221
+msgid "Pending Approvals"
+msgstr "承認待ち"
+
+#: src/dashboard-app/index.js:227
+msgid "Files Backed Up"
+msgstr "バックアップ済みファイル"
+
+#: src/dashboard-app/index.js:233
+msgid "DB Tables Backed Up"
+msgstr "バックアップ済み DB テーブル"
+
+#. translators: %s: number of pending approvals.
+#: src/dashboard-app/index.js:244
+msgid "%s waiting for your OK."
+msgstr "%s 件があなたの承認を待っています。"
+
+#: src/dashboard-app/index.js:326
+msgid "Connected Providers"
+msgstr "接続済みプロバイダー"
+
+#: src/dashboard-app/index.js:332
+msgid "Manage Providers →"
+msgstr "プロバイダーを管理 →"
+
+#: src/dashboard-app/index.js:338
+msgid "No AI providers connected."
+msgstr "接続されている AI プロバイダーはありません。"
+
+#: src/dashboard-app/index.js:340
+msgid "Run the Setup Wizard"
+msgstr "セットアップウィザードを実行"
+
+#: src/dashboard-app/index.js:441
+msgid "Quick Actions"
+msgstr "クイックアクション"
+
+#: src/dashboard-app/index.js:448
+msgid "Manage Actions →"
+msgstr "アクションを管理 →"
+
+#: src/dashboard-app/index.js:454
+msgid "Chatbot offline —"
+msgstr "チャットボットはオフラインです —"
+
+#: src/dashboard-app/index.js:456
+msgid "Configure now"
+msgstr "今すぐ設定"
+
+#: src/dashboard-app/index.js:464
+msgid ""
+"Choose which links appear in Quick Actions. Setup Wizard is always "
+"available."
+msgstr "クイックアクションに表示するリンクを選択してください。セットアップウィザードは常に利用できます。"
+
+#: src/dashboard-app/index.js:479
+msgid "Required"
+msgstr "必須"
+
+#: src/dashboard-app/index.js:524
+msgid "Save Quick Actions"
+msgstr "クイックアクションを保存"
+
+#: src/dashboard-app/index.js:577 src/interface-settings/index.js:336
+#: src/settings-app/index.js:1687
+msgid ""
+"EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and "
+"disconnect providers. Continue?"
+msgstr "緊急停止: エージェントを無効化して状態を記録し、すべてのジョブをキャンセルし、プロバイダーの接続を解除します。続行しますか？"
+
+#: src/dashboard-app/index.js:581 src/interface-settings/index.js:340
+#: src/settings-app/index.js:1691
+msgid "Turn off emergency stop?"
+msgstr "緊急停止を解除しますか？"
+
+#: src/dashboard-app/index.js:591
+msgid "Emergency stop restore finished with warnings:"
+msgstr "緊急停止からの復旧が警告付きで完了しました:"
+
+#: src/dashboard-app/index.js:614
+msgid "Interface Settings"
+msgstr "インターフェース設定"
+
+#: src/dashboard-app/index.js:620
+msgid "Manage Interface →"
+msgstr "インターフェースを管理 →"
+
+#: src/dashboard-app/index.js:627
+msgid "Default interface:"
+msgstr "デフォルトのインターフェース:"
+
+#: src/dashboard-app/index.js:652
+msgid ""
+"Used by any screen you have not set individually. Tools, Approvals, and "
+"Activity each have their own Basic/Advanced switch now."
+msgstr "個別に設定していないすべての画面で使用されます。ツール、承認、アクティビティには、それぞれ独自の基本/詳細の切り替えがあります。"
+
+#: src/dashboard-app/index.js:664 src/settings-app/index.js:234
+msgid ""
+"Reset every screen back to your default interface? Any screen you switched "
+"individually will lose that override."
+msgstr "すべての画面をデフォルトのインターフェースに戻しますか？個別に切り替えた画面は、その設定が失われます。"
+
+#: src/dashboard-app/index.js:680 src/settings-app/index.js:281
+msgid "Reset all screens to my default"
+msgstr "すべての画面をデフォルトに戻す"
+
+#: src/dashboard-app/index.js:690 src/interface-settings/index.js:318
+#: src/settings-app/index.js:1672
+msgid "Disable All Agents"
+msgstr "すべてのエージェントを無効化"
+
+#: src/dashboard-app/index.js:693
+msgid "ACTIVE"
+msgstr "有効"
+
+#: src/dashboard-app/index.js:711 src/interface-settings/index.js:322
+#: src/settings-app/index.js:1676
+msgid "Emergency stop"
+msgstr "緊急停止"
+
+#: src/dashboard-app/index.js:713 src/interface-settings/index.js:324
+#: src/settings-app/index.js:1678
+msgid ""
+": deactivate and log agent states, cancels all jobs and disconnects "
+"providers."
+msgstr ": エージェントを無効化して状態を記録し、すべてのジョブをキャンセルして、プロバイダーの接続を解除します。"
+
+#: src/dashboard-app/index.js:724
+msgid "Automatic Agent Updates"
+msgstr "エージェントの自動更新"
+
+#: src/dashboard-app/index.js:742
+msgid "Keep installed agents updated automatically. Opt out any time."
+msgstr "インストール済みのエージェントを自動で最新の状態に保ちます。いつでも解除できます。"
+
+#: src/dashboard-app/index.js:763
+msgid "Browse marketplace →"
+msgstr "マーケットプレイスを見る →"
+
+#: src/dashboard-app/index.js:767
+msgid ""
+"Discover and install community agents from the Agent Builder marketplace."
+msgstr "Agent Builder マーケットプレイスからコミュニティ製エージェントを探してインストールできます。"
+
+#: src/dashboard-app/index.js:785
+msgid "Getting Started"
+msgstr "はじめに"
+
+#. translators: 1: done count, 2: total
+#: src/dashboard-app/index.js:790
+msgid "%1$d of %2$d steps complete"
+msgstr "%2$d ステップ中 %1$d ステップ完了"
+
+#: src/dashboard-app/index.js:876
+msgid "Could not load dashboard."
+msgstr "ダッシュボードを読み込めませんでした。"
+
+#: src/dashboard-app/index.js:1010
+msgid "Loading dashboard…"
+msgstr "ダッシュボードを読み込んでいます…"
+
+#: src/dashboard-app/index.js:1020
+msgid "Dashboard unavailable."
+msgstr "ダッシュボードを利用できません。"
+
+#: src/dashboard-app/index.js:1107
+msgid "Saving layout…"
+msgstr "レイアウトを保存しています…"
+
+#: src/dashboard-app/index.js:1117
+msgid "Reset layout"
+msgstr "レイアウトをリセット"
+
+#: src/dashboard-app/index.js:1121
+msgid "Drag ⋮⋮ to rearrange cards"
+msgstr "⋮⋮ をドラッグしてカードを並べ替え"
+
+#: src/dashboard-app/index.js:1130
+msgid "Emergency stop is ACTIVE"
+msgstr "緊急停止が有効です"
+
+#: src/dashboard-app/index.js:1136
+msgid ""
+"All agents are deactivated, jobs are cancelled, and LLM providers are "
+"disconnected. Chat and agent activation are blocked."
+msgstr ""
+"すべてのエージェントが無効化され、ジョブはキャンセルされ、LLM "
+"プロバイダーの接続は解除されています。チャットとエージェントの有効化はブロックされています。"
+
+#: src/dashboard-app/index.js:1141
+msgid "Manage Interface"
+msgstr "インターフェースを管理"
+
+#: src/deploy-wizard/index.js:33
+msgid "Chat widget"
+msgstr "チャットウィジェット"
+
+#: src/deploy-wizard/index.js:34
+msgid "A floating chat bubble visitors can open on your site."
+msgstr "訪問者がサイト上で開ける、フローティングのチャットバブルです。"
+
+#: src/deploy-wizard/index.js:38
+msgid "Admin bar"
+msgstr "管理バー"
+
+#: src/deploy-wizard/index.js:39
+msgid "A quick-chat menu in the WordPress toolbar for logged-in admins."
+msgstr "ログイン中の管理者向けに、WordPress ツールバーへ表示されるクイックチャットメニューです。"
+
+#: src/deploy-wizard/index.js:43
+msgid "Ask AI launcher"
+msgstr "「Ask AI」ランチャー"
+
+#: src/deploy-wizard/index.js:44
+msgid "A contextual \"Ask AI\" prompt on admin screens like Plugins or Media."
+msgstr "プラグインやメディアなどの管理画面に表示される、コンテキストに応じた「Ask AI」プロンプトです。"
+
+#: src/deploy-wizard/index.js:48
+msgid "Gutenberg block"
+msgstr "Gutenberg ブロック"
+
+#: src/deploy-wizard/index.js:49
+msgid "Makes this agent insertable as a block in any post or page."
+msgstr "このエージェントを、任意の投稿や固定ページにブロックとして挿入できるようにします。"
+
+#: src/deploy-wizard/index.js:54
+msgid "Agent & surface"
+msgstr "エージェントと表示先"
+
+#: src/deploy-wizard/index.js:55
+msgid "Configure"
+msgstr "設定"
+
+#: src/deploy-wizard/index.js:134
+msgid "Admin only"
+msgstr "管理画面のみ"
+
+#: src/deploy-wizard/index.js:135 src/deploy-wizard/index.js:139
+msgid "Front end only"
+msgstr "フロントエンドのみ"
+
+#: src/deploy-wizard/index.js:140
+msgid "Single posts/pages only"
+msgstr "個別投稿/固定ページのみ"
+
+#: src/deploy-wizard/index.js:141
+msgid "Homepage only"
+msgstr "ホームページのみ"
+
+#: src/deploy-wizard/index.js:173
+msgid "Something went wrong publishing this agent."
+msgstr "このエージェントの公開中に問題が発生しました。"
+
+#: src/deploy-wizard/index.js:201
+msgid ""
+"No active agents yet. Activate or train an agent first, then come back to "
+"publish it."
+msgstr "有効なエージェントがまだありません。まずエージェントを有効化または学習させてから、あらためて公開してください。"
+
+#: src/deploy-wizard/index.js:206
+msgid "Go to Agents"
+msgstr "エージェントへ移動"
+
+#. translators: 1: agent name, 2: surface name.
+#: src/deploy-wizard/index.js:222
+msgid "%1$s is published on %2$s!"
+msgstr "%1$s を %2$s に公開しました！"
+
+#: src/deploy-wizard/index.js:228
+msgid "Fine-tune this further, or publish on another surface."
+msgstr "さらに調整するか、別の表示先に公開できます。"
+
+#: src/deploy-wizard/index.js:242
+msgid "Publish on another surface"
+msgstr "別の表示先に公開"
+
+#: src/deploy-wizard/index.js:247
+msgid "Manage in Publish"
+msgstr "公開設定で管理"
+
+#: src/deploy-wizard/index.js:252 src/knowledge-wizard/index.js:245
+msgid "Back to Dashboard"
+msgstr "ダッシュボードに戻る"
+
+#: src/deploy-wizard/index.js:276
+msgid "Which agent?"
+msgstr "どのエージェントですか？"
+
+#: src/deploy-wizard/index.js:286
+msgid "Where should people reach it?"
+msgstr "どこで利用できるようにしますか？"
+
+#: src/deploy-wizard/index.js:312
+msgid ""
+"Nothing else to configure — saving makes this agent available to insert as a"
+" block from any post or page editor."
+msgstr ""
+"他に設定する項目はありません — 保存すると、このエージェントを任意の投稿・固定ページエディターからブロックとして挿入できるようになります。"
+
+#: src/deploy-wizard/index.js:325
+msgid "Bottom right"
+msgstr "右下"
+
+#: src/deploy-wizard/index.js:326
+msgid "Bottom left"
+msgstr "左下"
+
+#: src/deploy-wizard/index.js:332
+msgid "Show on"
+msgstr "表示する場所"
+
+#: src/deploy-wizard/index.js:340
+msgid "Only show to logged-in visitors"
+msgstr "ログイン中の訪問者にのみ表示する"
+
+#. translators: %s: agent name.
+#: src/deploy-wizard/index.js:354
+msgid ""
+"Ask AI launchers are already turned on for some admin screens. Saving makes "
+"%s the agent that answers them, replacing the current choice — the screens "
+"themselves stay as configured."
+msgstr ""
+"一部の管理画面では、すでに「Ask AI」ランチャーが有効になっています。保存すると、現在の選択に代わって %s が応答するエージェントになります — "
+"画面自体の設定は変更されません。"
+
+#: src/deploy-wizard/index.js:365
+msgid "Which admin screens?"
+msgstr "どの管理画面ですか？"
+
+#: src/interface-settings/index.js:81
+msgid "Could not load interface settings."
+msgstr "インターフェース設定を読み込めませんでした。"
+
+#: src/interface-settings/index.js:125
+msgid "Could not save interface settings."
+msgstr "インターフェース設定を保存できませんでした。"
+
+#: src/interface-settings/index.js:139
+msgid "Loading interface settings…"
+msgstr "インターフェース設定を読み込んでいます…"
+
+#: src/interface-settings/index.js:169
+msgid "Interface settings saved."
+msgstr "インターフェース設定を保存しました。"
+
+#: src/interface-settings/index.js:174
+msgid "Interface mode"
+msgstr "インターフェースモード"
+
+#: src/interface-settings/index.js:175
+msgid ""
+"Basic keeps the menu focused on everyday tasks. Advanced reveals developer "
+"tools such as Skills, APIs and Endpoints."
+msgstr "基本では、メニューを日常的な操作に絞って表示します。詳細では、スキル、API、エンドポイントなどの開発者向けツールが表示されます。"
+
+#: src/interface-settings/index.js:195 src/settings-app/index.js:527
+msgid "Show the Getting Started checklist on the dashboard"
+msgstr "ダッシュボードに「はじめに」チェックリストを表示する"
+
+#: src/interface-settings/index.js:199
+msgid "Turn this off once you are set up to hide the onboarding checklist."
+msgstr "セットアップが完了したらオフにして、オンボーディングのチェックリストを非表示にできます。"
+
+#: src/interface-settings/index.js:233
+msgid "Global look and feel for chat surfaces."
+msgstr "チャット画面全体の外観です。"
+
+#: src/interface-settings/index.js:239
+msgid "Fine-tune chat themes →"
+msgstr "チャットテーマを調整 →"
+
+#: src/interface-settings/index.js:245 src/settings-app/index.js:467
+msgid "Chat font"
+msgstr "チャットのフォント"
+
+#: src/interface-settings/index.js:246
+msgid ""
+"Font used across the chat interface. Choose “Theme default” to inherit from "
+"the selected theme."
+msgstr "チャットインターフェース全体で使用するフォントです。選択中のテーマから継承するには「テーマのデフォルト」を選択してください。"
+
+#: src/interface-settings/index.js:259 src/settings-app/index.js:479
+msgid "Use theme accent colour"
+msgstr "テーマのアクセントカラーを使用する"
+
+#: src/interface-settings/index.js:263
+msgid ""
+"When off, the colour below overrides the chat theme accent on every chat "
+"surface."
+msgstr "オフの場合、以下の色がすべてのチャット画面でチャットテーマのアクセントカラーを上書きします。"
+
+#: src/interface-settings/index.js:277 src/settings-app/index.js:500
+msgid "Accent colour"
+msgstr "アクセントカラー"
+
+#. translators: %s: hex colour value
+#: src/interface-settings/index.js:280
+msgid "Selected: %s"
+msgstr "選択中: %s"
+
+#: src/interface-settings/index.js:360
+msgid ""
+"Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until"
+" you turn this off."
+msgstr "緊急停止が有効です。解除するまで、チャット、ジョブ、エージェントの有効化はブロックされます。"
+
+#: src/knowledge-wizard/index.js:33
+msgid "Paste text"
+msgstr "テキストを貼り付け"
+
+#: src/knowledge-wizard/index.js:34
+msgid "Upload a file"
+msgstr "ファイルをアップロード"
+
+#: src/knowledge-wizard/index.js:35
+msgid "Pick existing pages"
+msgstr "既存のページを選択"
+
+#: src/knowledge-wizard/index.js:40
+msgid "Title & tags"
+msgstr "タイトルとタグ"
+
+#: src/knowledge-wizard/index.js:104
+msgid "Could not load pages."
+msgstr "ページを読み込めませんでした。"
+
+#: src/knowledge-wizard/index.js:126
+msgid "Please choose a plain text or Markdown file (.txt or .md)."
+msgstr "プレーンテキストまたは Markdown ファイル（.txt または .md）を選択してください。"
+
+#: src/knowledge-wizard/index.js:143
+msgid "Could not read that file."
+msgstr "そのファイルを読み込めませんでした。"
+
+#: src/knowledge-wizard/index.js:188
+msgid "Something went wrong saving this knowledge."
+msgstr "このナレッジの保存中に問題が発生しました。"
+
+#. translators: %s: the knowledge title.
+#: src/knowledge-wizard/index.js:205
+msgid "\"%s\" is saved!"
+msgstr "「%s」を保存しました！"
+
+#: src/knowledge-wizard/index.js:210
+msgid ""
+"Your agents can now use this. Add another, or review it in the full "
+"Knowledge Wiki."
+msgstr "エージェントがこのナレッジを利用できるようになりました。別のナレッジを追加するか、ナレッジ Wiki で確認してください。"
+
+#: src/knowledge-wizard/index.js:230
+msgid "Add another"
+msgstr "別のものを追加"
+
+#: src/knowledge-wizard/index.js:240
+msgid "View Knowledge Wiki"
+msgstr "ナレッジ Wiki を表示"
+
+#: src/knowledge-wizard/index.js:269
+msgid "Where is this knowledge coming from?"
+msgstr "このナレッジの取得元はどこですか？"
+
+#: src/knowledge-wizard/index.js:290
+msgid "Paste the text"
+msgstr "テキストを貼り付けてください"
+
+#: src/knowledge-wizard/index.js:291
+msgid ""
+"A fact, policy, FAQ answer — anything you want your agents to know is true."
+msgstr "事実、ポリシー、FAQ の回答など、エージェントに正しい情報として覚えさせたい内容です。"
+
+#: src/knowledge-wizard/index.js:304
+msgid "Upload a text or Markdown file"
+msgstr "テキストまたは Markdown ファイルをアップロード"
+
+#. translators: %s: file name.
+#: src/knowledge-wizard/index.js:322
+msgid "Loaded \"%s\" — you can review and edit the text below."
+msgstr "「%s」を読み込みました — 以下でテキストを確認・編集できます。"
+
+#: src/knowledge-wizard/index.js:340
+msgid "Search your pages and posts"
+msgstr "固定ページと投稿を検索"
+
+#: src/knowledge-wizard/index.js:343
+msgid "Leave blank to see recent pages"
+msgstr "空欄のままにすると最近のページが表示されます"
+
+#: src/knowledge-wizard/index.js:359
+msgid "No matching pages or posts."
+msgstr "一致する固定ページまたは投稿はありません。"
+
+#. translators: %s: number of selected pages.
+#: src/knowledge-wizard/index.js:379
+msgid "%s page(s)/post(s) selected."
+msgstr "%s 件の固定ページ/投稿を選択しました。"
+
+#: src/knowledge-wizard/index.js:393
+msgid "A short, clear name, e.g. \"Return policy\" or \"Support hours\"."
+msgstr "短く分かりやすい名前です（例: 「返品ポリシー」「サポート時間」）。"
+
+#: src/knowledge-wizard/index.js:402
+msgid "Tags (optional)"
+msgstr "タグ（任意）"
+
+#: src/knowledge-wizard/index.js:403
+msgid "Comma-separated, e.g. billing, returns, policy."
+msgstr "カンマ区切りで入力します（例: 請求、返品、ポリシー）。"
+
+#: src/knowledge-wizard/index.js:443
+msgid "Save knowledge"
+msgstr "ナレッジを保存"
+
+#: src/settings-app/index.js:46
+msgid "Could not load settings."
+msgstr "設定を読み込めませんでした。"
+
+#: src/settings-app/index.js:260
+msgid "Default interface mode"
+msgstr "デフォルトのインターフェースモード"
+
+#: src/settings-app/index.js:270
+msgid ""
+"Used by any screen you have not set individually. Tools, Approvals, and "
+"Activity each have their own Basic/Advanced switch now — this is just the "
+"starting point for screens you have not touched."
+msgstr ""
+"個別に設定していないすべての画面で使用されます。ツール、承認、アクティビティには、それぞれ独自の基本/詳細の切り替えがあります — "
+"これは未設定の画面に適用される初期値です。"
+
+#: src/settings-app/index.js:291
+msgid "How assistants address people"
+msgstr "アシスタントによる呼びかけ方"
+
+#: src/settings-app/index.js:293
+msgid "Site knowledge and standing guidance are under"
+msgstr "サイトのナレッジと常設の指示は次の場所にあります:"
+
+#: src/settings-app/index.js:301
+msgid "Per-agent personality is under Knowledge → Instructions."
+msgstr "エージェントごとの個性は、ナレッジ → 指示で設定します。"
+
+#: src/settings-app/index.js:315
+msgid "Leave blank to use the WordPress display name."
+msgstr "空欄のままにすると、WordPress の表示名が使用されます。"
+
+#: src/settings-app/index.js:336
+msgid "Chat theme"
+msgstr "チャットテーマ"
+
+#: src/settings-app/index.js:338
+msgid ""
+"Visual theme for admin chat and frontend shortcodes. Click a preview to "
+"select."
+msgstr "管理画面のチャットとフロントエンドのショートコードで使用するビジュアルテーマです。プレビューをクリックして選択してください。"
+
+#: src/settings-app/index.js:405
+msgid "AI Assistant"
+msgstr "AI アシスタント"
+
+#: src/settings-app/index.js:425
+msgid "Hello! How can I help?"
+msgstr "こんにちは！どのようなご用件でしょうか？"
+
+#: src/settings-app/index.js:446
+msgid "Update my homepage"
+msgstr "ホームページを更新して"
+
+#: src/settings-app/index.js:552
+msgid ""
+"Configure the AI providers available on this site. Only a connected provider"
+" can be set as the site default."
+msgstr "このサイトで利用できる AI プロバイダーを設定します。サイトのデフォルトに設定できるのは、接続済みのプロバイダーのみです。"
+
+#: src/settings-app/index.js:568
+msgid "Slug"
+msgstr "スラッグ"
+
+#: src/settings-app/index.js:672
+msgid ""
+"API keys: use Edit on a provider. Setting a default updates the global "
+"provider and model used by assistants."
+msgstr ""
+"API キー: プロバイダーの「編集」から設定します。デフォルトを設定すると、アシスタントが使用するグローバルなプロバイダーとモデルが更新されます。"
+
+#: src/settings-app/index.js:693
+msgid "Default agent mode"
+msgstr "デフォルトのエージェントモード"
+
+#: src/settings-app/index.js:705
+msgid "Read-only"
+msgstr "読み取り専用"
+
+#: src/settings-app/index.js:717
+msgid "Message scanning"
+msgstr "メッセージスキャン"
+
+#: src/settings-app/index.js:726
+msgid "Require chat consent"
+msgstr "チャットの同意を必須にする"
+
+#: src/settings-app/index.js:736
+msgid "Consent text"
+msgstr "同意文"
+
+#: src/settings-app/index.js:748
+msgid "Conversation retention (days)"
+msgstr "会話の保持期間（日）"
+
+#: src/settings-app/index.js:765
+msgid "Audit log retention (days)"
+msgstr "監査ログの保持期間（日）"
+
+#: src/settings-app/index.js:778
+msgid "Request Rate Limits"
+msgstr "リクエストのレート制限"
+
+#: src/settings-app/index.js:780
+msgid ""
+"IP-based throttle applied before role-based daily quotas. Protects against "
+"rapid-fire requests."
+msgstr "ロール別の 1 日あたりの割り当てより前に適用される、IP ベースの制限です。短時間に集中するリクエストを防ぎます。"
+
+#: src/settings-app/index.js:786
+msgid "Authenticated users (requests per minute)"
+msgstr "認証済みユーザー（1 分あたりのリクエスト数）"
+
+#: src/settings-app/index.js:803
+msgid "Anonymous visitors (requests per minute)"
+msgstr "匿名の訪問者（1 分あたりのリクエスト数）"
+
+#: src/settings-app/index.js:924
+msgid ""
+"Control which WordPress roles can administer the plugin and interact with AI"
+" agents. Administrators always retain full access."
+msgstr "プラグインを管理し、AI エージェントを利用できる WordPress のロールを制御します。管理者は常に完全なアクセス権を保持します。"
+
+#: src/settings-app/index.js:930
+msgid ""
+"These rules apply site-wide. A user needs at least one ticked box to access "
+"the corresponding feature. Removing a role from all plugin privileges will "
+"hide the Agent Builder menu from that role entirely."
+msgstr ""
+"これらのルールはサイト全体に適用されます。対応する機能を利用するには、少なくとも 1 "
+"つのチェックボックスがオンになっている必要があります。すべてのプラグイン権限からロールを外すと、そのロールには Agent Builder "
+"のメニューが一切表示されなくなります。"
+
+#: src/settings-app/index.js:937
+msgid "Plugin Administration"
+msgstr "プラグインの管理"
+
+#: src/settings-app/index.js:939
+msgid "Who can access and configure the Agent Builder admin pages."
+msgstr "Agent Builder の管理ページにアクセスし、設定できるユーザーを指定します。"
+
+#: src/settings-app/index.js:949
+msgid "Permission"
+msgstr "権限"
+
+#: src/settings-app/index.js:994 src/settings-app/index.js:1112
+msgid "Administrators always have full access"
+msgstr "管理者は常に完全なアクセス権を持ちます"
+
+#: src/settings-app/index.js:1020
+msgid ""
+"Who can chat with and interact with installed AI agents, and how much they "
+"may use per day."
+msgstr "インストール済みの AI エージェントとチャットして操作できるユーザーと、1 日あたりの利用量を指定します。"
+
+#: src/settings-app/index.js:1030
+msgid "Permission / Limit"
+msgstr "権限 / 上限"
+
+#: src/settings-app/index.js:1036
+msgid "Visitor"
+msgstr "訪問者"
+
+#: src/settings-app/index.js:1038
+msgid "Not logged in"
+msgstr "未ログイン"
+
+#: src/settings-app/index.js:1078
+msgid "Allow non-logged-in visitors to use frontend chat"
+msgstr "未ログインの訪問者にフロントエンドチャットの利用を許可する"
+
+#: src/settings-app/index.js:1135
+msgid "Daily Limits"
+msgstr "1 日あたりの上限"
+
+#: src/settings-app/index.js:1141
+msgid ""
+"0 = unlimited, resets at midnight UTC. Administrators are never limited."
+msgstr "0 = 無制限。UTC の午前 0 時にリセットされます。管理者が制限されることはありません。"
+
+#: src/settings-app/index.js:1152
+msgid "Queries / day"
+msgstr "1 日あたりのクエリ数"
+
+#: src/settings-app/index.js:1159 src/settings-app/index.js:1163
+msgid "Max AI chat messages per user per day."
+msgstr "ユーザーごとの 1 日あたりの AI チャットメッセージ数の上限です。"
+
+#: src/settings-app/index.js:1224
+msgid "Tokens / day"
+msgstr "1 日あたりのトークン数"
+
+#: src/settings-app/index.js:1231 src/settings-app/index.js:1235
+msgid "Max AI tokens consumed per user per day."
+msgstr "ユーザーごとの 1 日あたりに消費できる AI トークン数の上限です。"
+
+#: src/settings-app/index.js:1298
+msgid ""
+"How enforcement works: these settings control WordPress admin menu "
+"visibility, admin bar chat access, the REST chat API, and AJAX task "
+"triggers. Unchecked roles are blocked at the server, not just hidden in the "
+"UI. Request rate limits are under Security."
+msgstr ""
+"適用の仕組み: これらの設定は、WordPress 管理メニューの表示、管理バーからのチャットアクセス、REST チャット API、AJAX "
+"タスクのトリガーを制御します。チェックが外れたロールは、UI "
+"で非表示になるだけでなく、サーバー側でブロックされます。リクエストのレート制限は「セキュリティ」にあります。"
+
+#: src/settings-app/index.js:1319
+msgid "Persistent key-value memory agents use across conversations."
+msgstr "エージェントが会話をまたいで使用する、永続的なキーバリュー形式のメモリです。"
+
+#: src/settings-app/index.js:1325
+msgid "Default memory TTL (days)"
+msgstr "メモリのデフォルト TTL（日）"
+
+#: src/settings-app/index.js:1326
+msgid "0 = never expires"
+msgstr "0 = 無期限"
+
+#: src/settings-app/index.js:1340
+msgid "Enable local browser memory"
+msgstr "ブラウザーのローカルメモリを有効にする"
+
+#: src/settings-app/index.js:1413
+msgid "(default)"
+msgstr "（デフォルト）"
+
+#: src/settings-app/index.js:1461
+msgid ""
+"Chat capabilities and per-agent provider/model. Set the site default "
+"provider on the Providers tab. Theme is under Interface."
+msgstr ""
+"チャット機能と、エージェントごとのプロバイダー/モデルを設定します。サイトのデフォルトプロバイダーは「プロバイダー」タブで設定します。テーマは「インターフェース」にあります。"
+
+#: src/settings-app/index.js:1466
+msgid "Chat features"
+msgstr "チャット機能"
+
+#: src/settings-app/index.js:1468
+msgid "Features available in agent chat."
+msgstr "エージェントのチャットで利用できる機能です。"
+
+#: src/settings-app/index.js:1474
+msgid "Audio input"
+msgstr "音声入力"
+
+#: src/settings-app/index.js:1481
+msgid "Text-to-speech"
+msgstr "音声読み上げ"
+
+#: src/settings-app/index.js:1488
+msgid "Vision / image input"
+msgstr "画像入力（ビジョン）"
+
+#: src/settings-app/index.js:1497
+msgid "White-label branding"
+msgstr "ホワイトラベルブランディング"
+
+#: src/settings-app/index.js:1498
+msgid "Hide “Powered by Agent Builder” in the chat footer."
+msgstr "チャットのフッターから「Powered by Agent Builder」を非表示にします。"
+
+#: src/settings-app/index.js:1509
+msgid "Active agent overrides"
+msgstr "有効なエージェントの個別設定"
+
+#: src/settings-app/index.js:1511
+msgid ""
+"Each row starts on the site default provider and model (Providers tab). "
+"Change only the assistants that need a different setup."
+msgstr "各行は、サイトのデフォルトのプロバイダーとモデル（「プロバイダー」タブ）が初期値です。別の設定が必要なアシスタントのみ変更してください。"
+
+#: src/settings-app/index.js:1518
+msgid "No active agents."
+msgstr "有効なエージェントはありません。"
+
+#: src/settings-app/index.js:1552
+msgid "provider"
+msgstr "プロバイダー"
+
+#: src/settings-app/index.js:1606
+msgid "model"
+msgstr "モデル"
+
+#: src/settings-app/index.js:1738
+msgid "Customise greetings and personality notes per assistant."
+msgstr "アシスタントごとに、挨拶や個性に関するメモをカスタマイズします。"
+
+#: src/settings-app/index.js:1744
+msgid "No assistants installed."
+msgstr "インストール済みのアシスタントはありません。"
+
+#: src/settings-app/index.js:1748
+msgid "Select assistant"
+msgstr "アシスタントを選択"
+
+#: src/settings-app/index.js:1761
+msgid "Welcome message"
+msgstr "ウェルカムメッセージ"
+
+#: src/settings-app/index.js:1774
+msgid "Persona notes"
+msgstr "ペルソナのメモ"
+
+#: src/settings-app/index.js:1785
+msgid "Response style"
+msgstr "応答スタイル"
+
+#: src/settings-app/index.js:1809
+msgid "Third-party API keys used by agent tools."
+msgstr "エージェントのツールが使用するサードパーティの API キーです。"
+
+#: src/settings-app/index.js:1831
+msgid "Get a key"
+msgstr "キーを取得"
+
+#: src/settings-app/index.js:1847
+msgid "Configured"
+msgstr "設定済み"
+
+#: src/settings-app/index.js:1848
+msgid "Not configured"
+msgstr "未設定"
+
+#: src/settings-app/index.js:1922
+msgid "REST endpoints for integrations."
+msgstr "連携用の REST エンドポイントです。"
+
+#: src/settings-app/index.js:1928
+msgid "Namespace"
+msgstr "名前空間"
+
+#: src/settings-app/index.js:1937
+msgid "Agentic Services"
+msgstr "Agentic Services"
+
+#: src/settings-app/index.js:1948
+msgid ""
+"Base URLs the plugin calls for AI chat, knowledge search, and media "
+"generation. Leave these on their defaults unless you’re self-hosting a proxy"
+" or support asked you to change one."
+msgstr ""
+"プラグインが AI チャット、ナレッジ検索、メディア生成のために呼び出すベース URL "
+"です。プロキシを自己ホストしている場合や、サポートから変更を指示された場合を除き、デフォルトのままにしてください。"
+
+#: src/settings-app/index.js:1990
+msgid "Testing…"
+msgstr "テストしています…"
+
+#: src/settings-app/index.js:2017
+msgid "Reset to default"
+msgstr "デフォルトに戻す"
+
+#: src/settings-app/index.js:2071
+msgid "Could not load this settings panel."
+msgstr "この設定パネルを読み込めませんでした。"
+
+#: src/settings-app/index.js:2223
+msgid "Settings saved with warnings:"
+msgstr "設定を保存しましたが、警告があります:"
+
+#: src/settings-app/index.js:2257
+msgid "Could not save settings."
+msgstr "設定を保存できませんでした。"
+
+#: src/settings-app/index.js:2267
+msgid "Loading settings…"
+msgstr "設定を読み込んでいます…"
+
+#: src/settings-app/index.js:2278
+msgid "Settings unavailable."
+msgstr "設定を利用できません。"
+
+#: src/settings-app/index.js:2343
+msgid "Activate Agent Builder Pro to manage your license key here."
+msgstr "ここでライセンスキーを管理するには、Agent Builder Pro を有効化してください。"
+
+#: src/settings-app/index.js:2354
+msgid "This tab is available via the classic view or an add-on."
+msgstr "このタブは、クラシック表示またはアドオンから利用できます。"
+
+#: src/shared/components.js:154
+msgid "More info"
+msgstr "詳細情報"

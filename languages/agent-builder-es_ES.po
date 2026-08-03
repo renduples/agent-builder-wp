@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Agent Builder 2.9.261\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/agent-builder\n"
-"POT-Creation-Date: 2026-08-03T00:38:07+00:00\n"
+"POT-Creation-Date: 2026-08-03T07:20:57+00:00\n"
 "PO-Revision-Date: 2026-08-03T00:38:07+00:00\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: es_ES <LL@li.org>\n"
@@ -292,11 +292,13 @@ msgstr ""
 #: includes/class-admin-menu-handler.php:371
 #: includes/class-admin-pages-rest.php:312
 #: includes/class-admin-pages-rest.php:315
-#: includes/class-admin-settings-rest.php:108
+#: includes/class-admin-settings-rest.php:108 src/settings-app/index.js:1452
 msgid "Agents"
 msgstr "Agentes"
 
 #: admin/agents.php:406 admin/agents.php:483
+#: src/dashboard-activity/index.js:142 src/dashboard-app/index.js:311
+#: src/dashboard-app/index.js:752
 msgid "Community Agents"
 msgstr "Agentes de la comunidad"
 
@@ -369,7 +371,8 @@ msgstr "Desactivar"
 #: admin/deployment/deployment-scheduled-tasks.php:408
 #: admin/deployment/deployment-scheduled-tasks.php:436
 #: admin/deployment/deployment-shortcodes.php:332 admin/providers.php:413
-#: admin/skills.php:586 admin/train-data.php:174
+#: admin/skills.php:586 admin/train-data.php:174 src/admin-pages/index.js:621
+#: src/admin-pages/index.js:1247
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -385,14 +388,14 @@ msgstr "Aplicar"
 #: admin/deployment/deployment-shortcodes-form.php:43
 #: admin/deployment/deployment-shortcodes.php:249 admin/run-task.php:87
 #: includes/class-gdpr.php:183 includes/class-gdpr.php:458
-#: includes/class-gdpr.php:553
+#: includes/class-gdpr.php:553 src/admin-pages/index.js:1215
 msgid "Agent"
 msgstr "Agente"
 
 #: admin/agents.php:518 admin/agents.php:694
 #: admin/deployment/deployment-scheduled-tasks.php:295 admin/run-task.php:99
 #: admin/skills.php:180 admin/skills.php:308 admin/skills.php:535
-#: admin/tools.php:321 admin/tools.php:382
+#: admin/tools.php:321 admin/tools.php:382 src/agent-wizard/index.js:718
 msgid "Description"
 msgstr "Descripción"
 
@@ -526,7 +529,7 @@ msgstr "Cola de aprobaciones"
 #: includes/class-admin-menu-handler.php:395
 #: includes/class-admin-pages-rest.php:771
 #: includes/class-admin-pages-rest.php:779
-#: includes/class-admin-pages-rest.php:1189
+#: includes/class-admin-pages-rest.php:1189 src/admin-pages/index.js:1949
 msgid "Approvals"
 msgstr "Aprobaciones"
 
@@ -606,11 +609,11 @@ msgstr "Rechazar todo"
 msgid "Pending %d"
 msgstr "Pendientes %d"
 
-#: admin/approvals.php:219
+#: admin/approvals.php:219 src/admin-pages/index.js:1825
 msgid "Approve"
 msgstr "Aprobar"
 
-#: admin/approvals.php:222
+#: admin/approvals.php:222 src/admin-pages/index.js:1835
 msgid "Reject"
 msgstr "Rechazar"
 
@@ -656,6 +659,7 @@ msgstr "Tabla"
 
 #: admin/approvals.php:275 admin/partials/vector-store-pro.php:198
 #: admin/settings-memory.php:197 admin/train-data.php:193
+#: src/admin-pages/index.js:2202
 msgid "Type"
 msgstr "Tipo"
 
@@ -676,6 +680,8 @@ msgstr "Tamaño"
 #: admin/deployment/deployment-shortcodes.php:255
 #: admin/partials/vector-store-pro.php:203 admin/settings-endpoints.php:128
 #: admin/settings/tab-security.php:321 admin/skills.php:539
+#: src/admin-pages/index.js:585 src/admin-pages/index.js:1217
+#: src/settings-app/index.js:570
 msgid "Actions"
 msgstr "Acciones"
 
@@ -708,7 +714,9 @@ msgstr "Archivo original"
 #: admin/deployment/deployment-shortcodes.php:252
 #: admin/partials/vector-store-pro.php:201 admin/providers.php:294
 #: admin/settings-llm.php:134 admin/skills.php:533 admin/train-data.php:259
-#: includes/class-gdpr.php:557
+#: includes/class-gdpr.php:557 src/admin-pages/index.js:2203
+#: src/dashboard-app/index.js:127 src/settings-app/index.js:566
+#: src/settings-app/index.js:1819
 msgid "Status"
 msgstr "Estado"
 
@@ -868,7 +876,8 @@ msgstr "Msjs"
 #: admin/conversations.php:222 admin/security-log.php:231 admin/tools.php:200
 #: admin/tools.php:207 includes/class-admin-menu-handler.php:176
 #: includes/class-admin-menu-handler.php:402
-#: includes/class-admin-pages-rest.php:591
+#: includes/class-admin-pages-rest.php:591 src/admin-pages/index.js:2308
+#: src/agent-wizard/index.js:743
 msgid "Tools"
 msgstr "Herramientas"
 
@@ -1045,7 +1054,7 @@ msgid "Enable"
 msgstr "Activar"
 
 #: admin/deployment/deployment-admin-bar.php:199
-#: admin/deployment/deployment-modal.php:175
+#: admin/deployment/deployment-modal.php:175 src/deploy-wizard/index.js:322
 msgid "Position"
 msgstr "Posición"
 
@@ -1065,6 +1074,7 @@ msgid "Bottom Left"
 msgstr "Abajo a la izquierda"
 
 #: admin/deployment/deployment-admin-bar.php:236
+#: src/deploy-wizard/index.js:133 src/deploy-wizard/index.js:138
 msgid "Everywhere"
 msgstr "En todas partes"
 
@@ -1339,7 +1349,7 @@ msgstr "Comando"
 #: admin/deployment/deployment-event-listeners.php:204
 #: admin/deployment/deployment-scheduled-tasks.php:287
 #: admin/deployment/deployment-shortcodes-form.php:32
-#: admin/deployment/deployment-shortcodes.php:248
+#: admin/deployment/deployment-shortcodes.php:248 src/admin-pages/index.js:469
 msgid "Label"
 msgstr "Etiqueta"
 
@@ -1388,7 +1398,7 @@ msgstr "No hay agentes instalados."
 #: admin/deployment/deployment-event-listeners.php:156
 #: admin/deployment/deployment-event-listeners.php:239
 #: admin/deployment/deployment-scheduled-tasks.php:251 admin/skills.php:536
-#: includes/class-approval-queue.php:218
+#: includes/class-approval-queue.php:218 src/settings-app/index.js:1526
 msgid "Assistant"
 msgstr "Asistente"
 
@@ -1417,6 +1427,8 @@ msgstr ""
 #: admin/deployment/deployment-cli.php:334
 #: admin/deployment/deployment-event-listeners.php:340
 #: admin/deployment/deployment-scheduled-tasks.php:505
+#: src/dashboard-app/index.js:523 src/interface-settings/index.js:378
+#: src/shared/components.js:93
 msgid "Saving…"
 msgstr "Guardando…"
 
@@ -1447,7 +1459,7 @@ msgstr "Comentarios"
 #: admin/deployment/deployment-event-listeners.php:115 admin/settings.php:623
 #: includes/class-admin-pages-rest.php:341
 #: includes/class-admin-settings-rest.php:110
-#: includes/class-admin-surfaces.php:139
+#: includes/class-admin-surfaces.php:139 src/settings-app/index.js:915
 msgid "Users"
 msgstr "Usuarios"
 
@@ -1547,6 +1559,7 @@ msgstr "Añadir disparador"
 #: admin/deployment/deployment-event-listeners.php:223
 #: admin/deployment/deployment-scheduled-tasks.php:307 admin/run-task.php:133
 #: admin/security-log.php:372 includes/class-chat-assets.php:57
+#: src/dashboard-app/index.js:531
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1575,7 +1588,8 @@ msgstr "Modo"
 #: admin/deployment/deployment-scheduled-tasks.php:327
 #: admin/deployment/deployment-shortcodes.php:251
 #: admin/partials/vector-store-pro.php:197 admin/skills.php:537
-#: admin/tools.php:384
+#: admin/tools.php:384 src/admin-pages/index.js:1056
+#: src/knowledge-wizard/index.js:39
 msgid "Source"
 msgstr "Origen"
 
@@ -1643,7 +1657,7 @@ msgid "Gutenberg block settings saved."
 msgstr "Ajustes de los bloques de Gutenberg guardados."
 
 #: admin/deployment/deployment-gutenberg-blocks.php:109
-#: includes/class-gutenberg-blocks.php:264
+#: includes/class-gutenberg-blocks.php:264 assets/js/gutenberg-blocks.js:58
 msgid "Default (from Settings)"
 msgstr "Por defecto (de los ajustes)"
 
@@ -2006,6 +2020,7 @@ msgid "The assistant visitors will chat with."
 msgstr "El asistente con el que chatearán los visitantes."
 
 #: admin/deployment/deployment-shortcodes-form.php:59
+#: assets/js/gutenberg-blocks.js:295
 msgid "Display Style"
 msgstr "Estilo de visualización"
 
@@ -2049,11 +2064,12 @@ msgid "Display the agent name and avatar above the chat area."
 msgstr "Mostrar el nombre y el avatar del agente encima del área de chat."
 
 #: admin/deployment/deployment-shortcodes-form.php:91
+#: assets/js/gutenberg-blocks.js:324
 msgid "Placeholder Text"
 msgstr "Texto del marcador de posición"
 
 #: admin/deployment/deployment-shortcodes-form.php:96
-#: templates/modal-widget.php:75
+#: templates/modal-widget.php:75 assets/js/gutenberg-blocks.js:252
 msgid "Type your message..."
 msgstr "Escriba su mensaje..."
 
@@ -2131,19 +2147,22 @@ msgid "Created"
 msgstr "Creado"
 
 #: admin/deployment/deployment-shortcodes.php:265
+#: assets/js/gutenberg-blocks.js:79
 msgid "Inline"
 msgstr "En línea"
 
 #: admin/deployment/deployment-shortcodes.php:266
+#: assets/js/gutenberg-blocks.js:80
 msgid "Popup"
 msgstr "Ventana emergente"
 
 #: admin/deployment/deployment-shortcodes.php:267
+#: assets/js/gutenberg-blocks.js:81
 msgid "Sidebar"
 msgstr "Barra lateral"
 
 #: admin/deployment/deployment-shortcodes.php:289 admin/tools.php:318
-#: admin/tools.php:380
+#: admin/tools.php:380 src/admin-pages/index.js:1041
 msgid "Enabled"
 msgstr "Activado"
 
@@ -2161,6 +2180,7 @@ msgid "Disable"
 msgstr "Desactivar"
 
 #: admin/deployment/deployment-shortcodes.php:326 admin/skills.php:585
+#: src/admin-pages/index.js:1237 src/settings-app/index.js:612
 msgid "Edit"
 msgstr "Editar"
 
@@ -2241,6 +2261,7 @@ msgstr ""
 "en el registro de auditoría."
 
 #: admin/knowledge-wizard.php:52 includes/class-admin-menu-handler.php:148
+#: src/agent-wizard/index.js:360
 msgid "Add Knowledge"
 msgstr "Añadir conocimiento"
 
@@ -2268,13 +2289,14 @@ msgstr ""
 #: admin/tools.php:103 admin/tools.php:383
 #: includes/class-admin-pages-rest.php:336
 #: includes/class-admin-pages-rest.php:1234
-#: includes/class-admin-settings-rest.php:111
+#: includes/class-admin-settings-rest.php:111 src/settings-app/index.js:684
 msgid "Security"
 msgstr "Seguridad"
 
 #: admin/logs.php:33 includes/class-admin-menu-handler.php:220
 #: includes/class-admin-menu-handler.php:383
-#: includes/class-admin-pages-rest.php:1150
+#: includes/class-admin-pages-rest.php:1150 src/dashboard-activity/index.js:88
+#: src/dashboard-app/index.js:263
 msgid "Activity"
 msgstr "Actividad"
 
@@ -2436,7 +2458,7 @@ msgstr "Cargando fuentes…"
 msgid "Chunks"
 msgstr "Fragmentos"
 
-#: admin/partials/vector-store-pro.php:200
+#: admin/partials/vector-store-pro.php:200 src/admin-pages/index.js:1958
 msgid "Tokens"
 msgstr "Tokens"
 
@@ -2457,6 +2479,7 @@ msgid "Configure the AI providers available on this site."
 msgstr "Configure los proveedores de IA disponibles en este sitio."
 
 #: admin/providers.php:73 admin/providers.php:85 admin/providers.php:280
+#: src/settings-app/index.js:559
 msgid "Add Provider"
 msgstr "Añadir proveedor"
 
@@ -2476,19 +2499,21 @@ msgstr ""
 msgid "Update Provider"
 msgstr "Actualizar proveedor"
 
-#: admin/providers.php:310
+#: admin/providers.php:310 src/settings-app/index.js:584
 msgid "Connected"
 msgstr "Conectado"
 
-#: admin/providers.php:311
+#: admin/providers.php:311 src/settings-app/index.js:588
 msgid "Not connected"
 msgstr "No conectado"
 
 #: admin/providers.php:397 admin/settings-endpoints.php:180
+#: assets/js/gutenberg-blocks.js:65 src/dashboard-app/index.js:376
+#: src/settings-app/index.js:618
 msgid "Default"
 msgstr "Por defecto"
 
-#: admin/providers.php:404
+#: admin/providers.php:404 src/settings-app/index.js:657
 msgid "Set Default"
 msgstr "Establecer por defecto"
 
@@ -2673,7 +2698,7 @@ msgstr "Principales IP infractoras (%s)"
 msgid "IP Address"
 msgstr "Dirección IP"
 
-#: admin/security-log.php:169
+#: admin/security-log.php:169 src/admin-pages/index.js:1931
 msgid "Events"
 msgstr "Eventos"
 
@@ -2881,15 +2906,15 @@ msgstr ""
 "valor por defecto integrado. El enlace Restablecer que hay junto a cada fila"
 " también restaura el valor por defecto de inmediato."
 
-#: admin/settings-endpoints.php:126
+#: admin/settings-endpoints.php:126 src/settings-app/index.js:1818
 msgid "Service"
 msgstr "Servicio"
 
-#: admin/settings-endpoints.php:127
+#: admin/settings-endpoints.php:127 src/settings-app/index.js:1932
 msgid "Base URL"
 msgstr "URL base"
 
-#: admin/settings-endpoints.php:157
+#: admin/settings-endpoints.php:157 src/settings-app/index.js:2008
 msgid "Default:"
 msgstr "Por defecto:"
 
@@ -2994,7 +3019,9 @@ msgstr "Precios actualizados por última vez: %s"
 msgid "Get Latest Pricing"
 msgstr "Obtener los últimos precios"
 
-#: admin/settings-llm.php:131
+#: admin/settings-llm.php:131 assets/js/gutenberg-blocks.js:343
+#: src/agent-wizard/index.js:570 src/dashboard-app/index.js:367
+#: src/settings-app/index.js:569 src/settings-app/index.js:1532
 msgid "Model"
 msgstr "Modelo"
 
@@ -3018,6 +3045,7 @@ msgstr ""
 
 #. translators: %s: link to Terms of Service
 #: admin/settings-llm.php:239 includes/class-admin-menu-handler.php:987
+#: src/admin-pages/index.js:160 src/settings-app/index.js:131
 msgid "Terms of Service"
 msgstr "Términos del servicio"
 
@@ -3088,7 +3116,7 @@ msgstr ""
 msgid "Entity"
 msgstr "Entidad"
 
-#: admin/settings-memory.php:199
+#: admin/settings-memory.php:199 src/settings-app/index.js:1820
 msgid "Key"
 msgstr "Clave"
 
@@ -3119,6 +3147,7 @@ msgid "Settings saved with %s as Global provider."
 msgstr "Ajustes guardados con %s como proveedor global."
 
 #: admin/settings.php:558 includes/class-admin-ajax.php:1179
+#: src/shared/components.js:115
 msgid "Settings saved."
 msgstr "Ajustes guardados."
 
@@ -3126,24 +3155,27 @@ msgstr "Ajustes guardados."
 #: includes/class-admin-menu-handler.php:229
 #: includes/class-admin-menu-handler.php:423
 #: includes/class-admin-notice-manager.php:108
-#: includes/class-admin-pages-rest.php:1197
+#: includes/class-admin-pages-rest.php:1197 src/settings-app/index.js:2375
 msgid "Settings"
 msgstr "Ajustes"
 
 #: admin/settings.php:620 includes/class-admin-settings-rest.php:107
+#: src/interface-settings/index.js:149 src/settings-app/index.js:251
 msgid "Interface"
 msgstr "Interfaz"
 
 #: admin/settings.php:622 includes/class-admin-menu-handler.php:389
-#: includes/class-admin-settings-rest.php:109
+#: includes/class-admin-settings-rest.php:109 src/settings-app/index.js:550
 msgid "Providers"
 msgstr "Proveedores"
 
 #: admin/settings.php:625 includes/class-admin-settings-rest.php:112
+#: src/settings-app/index.js:1807
 msgid "APIs"
 msgstr "APIs"
 
 #: admin/settings.php:626 includes/class-admin-settings-rest.php:113
+#: src/settings-app/index.js:1919
 msgid "Endpoints"
 msgstr "Endpoints"
 
@@ -3152,14 +3184,19 @@ msgid "Health"
 msgstr "Salud"
 
 #: admin/settings.php:648 includes/class-admin-settings-rest.php:123
+#: src/admin-pages/index.js:72 src/dashboard-app/index.js:638
+#: src/interface-settings/index.js:182 src/settings-app/index.js:263
 msgid "Basic"
 msgstr "Básico"
 
 #: admin/settings.php:653 includes/class-admin-settings-rest.php:128
+#: src/admin-pages/index.js:83 src/dashboard-app/index.js:473
+#: src/dashboard-app/index.js:649 src/interface-settings/index.js:186
+#: src/settings-app/index.js:265
 msgid "Advanced"
 msgstr "Avanzado"
 
-#: admin/settings.php:682
+#: admin/settings.php:682 src/settings-app/index.js:169
 msgid "Search settings…"
 msgstr "Buscar en los ajustes…"
 
@@ -3175,7 +3212,8 @@ msgstr "Secciones de ajustes"
 msgid "No settings match your search."
 msgstr "Ningún ajuste coincide con su búsqueda."
 
-#: admin/settings.php:763
+#: admin/settings.php:763 src/interface-settings/index.js:379
+#: src/shared/components.js:94
 msgid "Save changes"
 msgstr "Guardar los cambios"
 
@@ -3205,7 +3243,7 @@ msgstr ""
 msgid "Personalization"
 msgstr "Personalización"
 
-#: admin/settings/tab-general.php:29
+#: admin/settings/tab-general.php:29 src/settings-app/index.js:307
 msgid "What should agents call administrators?"
 msgstr "¿Cómo deben llamar los agentes a los administradores?"
 
@@ -3222,7 +3260,7 @@ msgstr ""
 "durante la conversación. Déjelo vacío para usar el nombre público de "
 "WordPress."
 
-#: admin/settings/tab-general.php:38
+#: admin/settings/tab-general.php:38 src/settings-app/index.js:324
 msgid "What should agents call frontend visitors?"
 msgstr "¿Cómo deben llamar los agentes a los visitantes del sitio público?"
 
@@ -3281,7 +3319,7 @@ msgstr ""
 " dé forma a su personalidad. Las instrucciones se añaden al prompt de "
 "sistema del asistente; no lo sustituyen."
 
-#: admin/settings/tab-security.php:320
+#: admin/settings/tab-security.php:320 src/admin-pages/index.js:1043
 msgid "Tool"
 msgstr "Herramienta"
 
@@ -3330,7 +3368,8 @@ msgstr "Obtener la clave de API"
 msgid "Connect"
 msgstr "Conectar"
 
-#: admin/setup.php:464
+#: admin/setup.php:464 src/admin-pages/index.js:610
+#: src/settings-app/index.js:1991
 msgid "Test"
 msgstr "Probar"
 
@@ -3453,6 +3492,7 @@ msgstr ""
 "cualquier momento en los ajustes."
 
 #: admin/setup.php:852 admin/signup.php:95 admin/signup.php:218
+#: src/settings-app/index.js:697
 msgid "Supervised"
 msgstr "Supervisado"
 
@@ -3469,6 +3509,7 @@ msgstr ""
 "publique nada. No ocurre nada sin su visto bueno."
 
 #: admin/setup.php:861 admin/signup.php:96 admin/signup.php:222
+#: src/settings-app/index.js:701
 msgid "Autonomous"
 msgstr "Autónomo"
 
@@ -3535,7 +3576,8 @@ msgstr "Enviar"
 msgid "Exit Wizard"
 msgstr "Salir del asistente"
 
-#: admin/setup.php:936
+#: admin/setup.php:936 src/agent-wizard/index.js:766
+#: src/deploy-wizard/index.js:390 src/knowledge-wizard/index.js:423
 msgid "Back"
 msgstr "Atrás"
 
@@ -3605,7 +3647,10 @@ msgstr "Modo de seguridad"
 msgid "Chat Model"
 msgstr "Modelo de chat"
 
-#: admin/signup.php:106
+#: admin/signup.php:106 src/admin-pages/index.js:2243
+#: src/agent-wizard/index.js:303 src/deploy-wizard/index.js:193
+#: src/knowledge-wizard/index.js:354 src/settings-app/index.js:2110
+#: src/shared/components.js:71
 msgid "Loading…"
 msgstr "Cargando…"
 
@@ -3807,6 +3852,8 @@ msgid "Back to Skills"
 msgstr "Volver a Habilidades"
 
 #: admin/skills.php:174 admin/skills.php:307 admin/skills.php:534
+#: src/admin-pages/index.js:582 src/agent-wizard/index.js:710
+#: src/settings-app/index.js:567
 msgid "Name"
 msgstr "Nombre"
 
@@ -3851,6 +3898,7 @@ msgid "optional"
 msgstr "opcional"
 
 #: admin/skills.php:218 admin/skills.php:309 admin/skills.php:538
+#: src/admin-pages/index.js:1216 src/dashboard-app/index.js:161
 msgid "Version"
 msgstr "Versión"
 
@@ -3905,7 +3953,7 @@ msgstr ""
 "No se han encontrado habilidades. Pruebe con otro término de búsqueda."
 
 #: admin/skills.php:310 includes/class-approval-queue.php:217
-#: includes/class-gdpr.php:462
+#: includes/class-gdpr.php:462 src/admin-pages/index.js:1279
 msgid "Action"
 msgstr "Acción"
 
@@ -4150,7 +4198,7 @@ msgstr "Haga clic para desactivar esta capacidad"
 msgid "Click to enable this ability"
 msgstr "Haga clic para activar esta capacidad"
 
-#: admin/tools.php:350 admin/tools.php:487
+#: admin/tools.php:350 admin/tools.php:487 src/admin-pages/index.js:851
 msgid "None"
 msgstr "Ninguno"
 
@@ -4208,7 +4256,8 @@ msgstr ""
 "No se han encontrado herramientas. Active asistentes para ver las "
 "herramientas disponibles."
 
-#: admin/tools.php:385
+#: admin/tools.php:385 src/admin-pages/index.js:1046
+#: src/agent-wizard/index.js:441 src/agent-wizard/index.js:722
 msgid "Category"
 msgstr "Categoría"
 
@@ -4236,7 +4285,7 @@ msgstr ""
 msgid "Read Only"
 msgstr "Solo lectura"
 
-#: admin/tools.php:425
+#: admin/tools.php:425 src/admin-pages/index.js:852
 msgid "Low"
 msgstr "Bajo"
 
@@ -4372,11 +4421,12 @@ msgstr ""
 msgid "Wiki"
 msgstr "Wiki"
 
-#: admin/train-data.php:34
+#: admin/train-data.php:34 src/agent-wizard/index.js:726
+#: src/settings-app/index.js:1729
 msgid "Instructions"
 msgstr "Instrucciones"
 
-#: admin/train-data.php:35
+#: admin/train-data.php:35 src/settings-app/index.js:1310
 msgid "Memory"
 msgstr "Memoria"
 
@@ -4428,7 +4478,8 @@ msgstr "Agente: %s"
 
 #: admin/train-data.php:65 includes/class-admin-menu-handler.php:167
 #: includes/class-admin-menu-handler.php:377
-#: includes/class-admin-pages-rest.php:1599
+#: includes/class-admin-pages-rest.php:1599 src/agent-wizard/index.js:34
+#: src/agent-wizard/index.js:751 src/settings-app/index.js:298
 msgid "Knowledge"
 msgstr "Conocimiento"
 
@@ -4494,7 +4545,7 @@ msgstr ""
 "Todavía no hay conceptos. Cree una FAQ, una política o un dato de producto "
 "para empezar."
 
-#: admin/train-data.php:172
+#: admin/train-data.php:172 src/admin-pages/index.js:2201
 msgid "Concept"
 msgstr "Concepto"
 
@@ -4502,7 +4553,7 @@ msgstr "Concepto"
 msgid "Save concept"
 msgstr "Guardar el concepto"
 
-#: admin/train-data.php:181
+#: admin/train-data.php:181 src/knowledge-wizard/index.js:392
 msgid "Title"
 msgstr "Título"
 
@@ -4737,7 +4788,7 @@ msgstr "Ver los planes Pro"
 msgid "How Vector Store works"
 msgstr "Cómo funciona el almacén vectorial"
 
-#: agent-builder.php:436
+#: agent-builder.php:436 src/settings-app/index.js:1018
 msgid "AI Agents"
 msgstr "Agentes de IA"
 
@@ -4974,7 +5025,7 @@ msgstr "Agent Builder — Publicar"
 
 #: includes/class-admin-menu-handler.php:118
 #: includes/class-admin-menu-handler.php:416
-#: includes/class-admin-pages-rest.php:1529
+#: includes/class-admin-pages-rest.php:1529 src/deploy-wizard/index.js:410
 msgid "Publish"
 msgstr "Publicar"
 
@@ -5033,7 +5084,8 @@ msgstr "Chat con agentes"
 
 #: includes/class-admin-menu-handler.php:441
 #: includes/class-admin-settings-rest.php:116
-#: includes/class-admin-settings-rest.php:154
+#: includes/class-admin-settings-rest.php:154 src/dashboard-app/index.js:140
+#: src/settings-app/index.js:2342
 msgid "License"
 msgstr "Licencia"
 
@@ -5091,11 +5143,12 @@ msgid "Agent Marketplace"
 msgstr "Mercado de agentes"
 
 #: includes/class-admin-menu-handler.php:917
-#: includes/class-admin-pages-rest.php:1562
+#: includes/class-admin-pages-rest.php:1562 src/admin-pages/index.js:108
+#: src/admin-pages/index.js:423 src/settings-app/index.js:79
 msgid "Upgrade to Pro"
 msgstr "Mejorar a Pro"
 
-#: includes/class-admin-menu-handler.php:922
+#: includes/class-admin-menu-handler.php:922 src/settings-app/index.js:86
 msgid ""
 "Settings control how assistants behave on this site. Changes are stored "
 "locally and take effect for new conversations."
@@ -5103,7 +5156,7 @@ msgstr ""
 "Los ajustes controlan cómo se comportan los asistentes en este sitio. Los "
 "cambios se guardan localmente y se aplican a las nuevas conversaciones."
 
-#: includes/class-admin-menu-handler.php:924
+#: includes/class-admin-menu-handler.php:924 src/admin-pages/index.js:115
 msgid ""
 "Assistants only use the tools you allow. Higher-risk actions still follow "
 "Approvals and your safety settings."
@@ -5212,27 +5265,33 @@ msgstr ""
 "Integraciones avanzadas y endpoints de API. Para el uso diario, es "
 "preferible usar los proveedores conectados de la pestaña Proveedores."
 
-#: includes/class-admin-menu-handler.php:978
+#: includes/class-admin-menu-handler.php:978 src/admin-pages/index.js:128
+#: src/settings-app/index.js:99
 msgid "Need help?"
 msgstr "¿Necesita ayuda?"
 
-#: includes/class-admin-menu-handler.php:979
+#: includes/class-admin-menu-handler.php:979 src/admin-pages/index.js:130
+#: src/settings-app/index.js:101
 msgid "Visit our Support Center"
 msgstr "Visite nuestro centro de soporte"
 
-#: includes/class-admin-menu-handler.php:981
+#: includes/class-admin-menu-handler.php:981 src/admin-pages/index.js:134
+#: src/settings-app/index.js:105
 msgid "Documentation"
 msgstr "Documentación"
 
-#: includes/class-admin-menu-handler.php:989
+#: includes/class-admin-menu-handler.php:989 src/admin-pages/index.js:171
+#: src/settings-app/index.js:142
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
 
-#: includes/class-admin-menu-handler.php:991
+#: includes/class-admin-menu-handler.php:991 src/admin-pages/index.js:181
+#: src/settings-app/index.js:152
 msgid "GDPR Policy"
 msgstr "Política de RGPD"
 
 #: includes/class-admin-menu-handler.php:1159
+#: assets/js/gutenberg-blocks.js:160
 msgid "Online"
 msgstr "En línea"
 
@@ -5668,7 +5727,7 @@ msgstr ""
 "Una cronología sencilla del trabajo de los asistentes: herramientas usadas, "
 "aprobaciones y eventos importantes del sistema. Sin jerga técnica."
 
-#: includes/class-admin-pages-rest.php:1185
+#: includes/class-admin-pages-rest.php:1185 src/admin-pages/index.js:1941
 msgid "Tools used"
 msgstr "Herramientas usadas"
 
@@ -5882,7 +5941,7 @@ msgstr ""
 "El editor completo de despliegues (creador de shortcodes, CLI, modales) "
 "sigue disponible cuando abre una acción de despliegue desde aquí."
 
-#: includes/class-admin-pages-rest.php:1562
+#: includes/class-admin-pages-rest.php:1562 src/dashboard-app/index.js:476
 msgid "Pro"
 msgstr "Pro"
 
@@ -5951,10 +6010,12 @@ msgid "Unknown settings tab."
 msgstr "Pestaña de ajustes desconocida."
 
 #: includes/class-admin-settings-rest.php:410
+#: src/interface-settings/index.js:30
 msgid "Theme default"
 msgstr "Valor por defecto del tema"
 
 #: includes/class-admin-settings-rest.php:414
+#: src/interface-settings/index.js:31
 msgid "System UI"
 msgstr "Interfaz del sistema"
 
@@ -6198,11 +6259,11 @@ msgstr ""
 msgid "Dismiss this launcher"
 msgstr "Descartar este lanzador"
 
-#: includes/class-admin-vnav.php:73
+#: includes/class-admin-vnav.php:73 src/admin-list/index.js:47
 msgid "Search…"
 msgstr "Buscar…"
 
-#: includes/class-admin-vnav.php:74
+#: includes/class-admin-vnav.php:74 src/admin-pages/index.js:267
 msgid "Sections"
 msgstr "Secciones"
 
@@ -6473,7 +6534,8 @@ msgstr ""
 "Un asistente de IA quiere realizar un cambio que necesita su visto bueno "
 "antes de ejecutarse."
 
-#: includes/class-approval-queue.php:219
+#: includes/class-approval-queue.php:219 src/admin-pages/index.js:584
+#: src/admin-pages/index.js:1053
 msgid "Risk"
 msgstr "Riesgo"
 
@@ -6509,7 +6571,7 @@ msgstr "Aceptar"
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: includes/class-chat-assets.php:58
+#: includes/class-chat-assets.php:58 src/admin-pages/index.js:1585
 msgid "Dismiss"
 msgstr "Descartar"
 
@@ -8294,3 +8356,1916 @@ msgstr "Elija un asistente"
 #: templates/modal-widget.php:114
 msgid "Chat with AI"
 msgstr "Chatear con la IA"
+
+#: assets/js/gutenberg-blocks.js:211
+msgid "Hello! I'm "
+msgstr "¡Hola! Soy "
+
+#: assets/js/gutenberg-blocks.js:211
+msgid "How can I help you today?"
+msgstr "¿En qué puedo ayudarle hoy?"
+
+#: assets/js/gutenberg-blocks.js:226
+msgid "Floating mode — appears as a popup button on the frontend"
+msgstr "Modo flotante — aparece como un botón emergente en la parte pública"
+
+#: assets/js/gutenberg-blocks.js:293 src/interface-settings/index.js:224
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: assets/js/gutenberg-blocks.js:301
+msgid "Height"
+msgstr "Altura"
+
+#: assets/js/gutenberg-blocks.js:304
+msgid "CSS height value (e.g. 500px, 60vh)."
+msgstr "Valor de altura CSS (p. ej. 500px, 60vh)."
+
+#: assets/js/gutenberg-blocks.js:307
+msgid "Theme"
+msgstr "Tema"
+
+#: assets/js/gutenberg-blocks.js:313
+msgid "Show Header"
+msgstr "Mostrar la cabecera"
+
+#: assets/js/gutenberg-blocks.js:318
+msgid "Floating Button"
+msgstr "Botón flotante"
+
+#: assets/js/gutenberg-blocks.js:321
+msgid "Display as a floating chat button instead of inline."
+msgstr "Mostrar como un botón de chat flotante en lugar de en línea."
+
+#: assets/js/gutenberg-blocks.js:332
+msgid "LLM Settings"
+msgstr "Ajustes del LLM"
+
+#: assets/js/gutenberg-blocks.js:334 src/dashboard-app/index.js:359
+#: src/settings-app/index.js:1529
+msgid "Provider"
+msgstr "Proveedor"
+
+#: assets/js/gutenberg-blocks.js:340
+msgid "Override the LLM provider for this block."
+msgstr "Sustituye el proveedor de LLM para este bloque."
+
+#: assets/js/gutenberg-blocks.js:347
+msgid "Select a provider first to see available models."
+msgstr "Seleccione primero un proveedor para ver los modelos disponibles."
+
+#: src/admin-list/index.js:31
+msgid "Items"
+msgstr "Elementos"
+
+#: src/admin-list/index.js:58
+msgid "No items found."
+msgstr "No se han encontrado elementos."
+
+#: src/admin-pages/index.js:21
+msgid "Safe to run automatically — read-only, no approval needed."
+msgstr ""
+"Seguro para ejecutarse automáticamente — es de solo lectura y no necesita "
+"aprobación."
+
+#: src/admin-pages/index.js:22
+msgid ""
+"Runs automatically by default; may read data that includes personal "
+"information."
+msgstr ""
+"Se ejecuta automáticamente de forma predeterminada; puede leer datos que "
+"incluyan información personal."
+
+#: src/admin-pages/index.js:23
+msgid ""
+"Changes something — assistants pause for your in-chat confirmation first."
+msgstr ""
+"Cambia algo — los asistentes se detienen antes para pedirle confirmación en "
+"el chat."
+
+#: src/admin-pages/index.js:24
+msgid ""
+"A significant or bulk change — waits in the Approvals queue for you to allow"
+" it."
+msgstr ""
+"Un cambio importante o masivo — espera en la cola de aprobaciones a que "
+"usted lo permita."
+
+#: src/admin-pages/index.js:25
+msgid ""
+"Too risky to allow at all — hidden from assistants entirely, cannot be "
+"enabled."
+msgstr ""
+"Demasiado arriesgado para permitirlo — está totalmente oculto a los "
+"asistentes y no se puede activar."
+
+#: src/admin-pages/index.js:28
+msgid ""
+"An assistant tried to run this specific action and paused here first. "
+"Nothing happens until you decide — approve to let it run once, or reject to "
+"cancel it."
+msgstr ""
+"Un asistente ha intentado ejecutar esta acción concreta y se ha detenido "
+"aquí antes. No ocurrirá nada hasta que usted decida — apruébela para "
+"permitir que se ejecute una vez o rechácela para cancelarla."
+
+#: src/admin-pages/index.js:86
+msgid ""
+"Only changes this screen. Other screens and your site-wide default (Settings"
+" → Interface) are unaffected."
+msgstr ""
+"Solo cambia esta pantalla. Las demás pantallas y su valor predeterminado "
+"para todo el sitio (Ajustes → Interfaz) no se ven afectados."
+
+#: src/admin-pages/index.js:231
+msgid "Could not load page."
+msgstr "No se ha podido cargar la página."
+
+#: src/admin-pages/index.js:343
+msgid "Site-local tool saved."
+msgstr "Herramienta local del sitio guardada."
+
+#: src/admin-pages/index.js:349
+msgid "Could not save tool (Pro required)."
+msgstr "No se ha podido guardar la herramienta (se requiere Pro)."
+
+#: src/admin-pages/index.js:358
+msgid "Delete this site-local tool?"
+msgstr "¿Borrar esta herramienta local del sitio?"
+
+#: src/admin-pages/index.js:370 src/admin-pages/index.js:1174
+msgid "Delete failed."
+msgstr "El borrado ha fallado."
+
+#: src/admin-pages/index.js:380
+msgid "Test arguments must be valid JSON."
+msgstr "Los argumentos de prueba deben ser JSON válido."
+
+#: src/admin-pages/index.js:396 src/settings-app/index.js:1911
+msgid "Test failed."
+msgstr "La prueba ha fallado."
+
+#: src/admin-pages/index.js:417
+msgid ""
+"Site-local tool builder is a Pro feature. Free includes using shipped tools,"
+" risk/approvals, and developer Tool_Base packages."
+msgstr ""
+"El constructor de herramientas locales del sitio es una función Pro. La "
+"versión gratuita incluye el uso de las herramientas incluidas, los riesgos y"
+" aprobaciones, y los paquetes Tool_Base para desarrolladores."
+
+#: src/admin-pages/index.js:429
+msgid "Docs: Free vs Pro"
+msgstr "Documentación: Gratis vs. Pro"
+
+#: src/admin-pages/index.js:450
+msgid "Add site-local tool"
+msgstr "Añadir herramienta local del sitio"
+
+#: src/admin-pages/index.js:452
+msgid ""
+"Declarative handlers only — no PHP. Empty agent list = available to all "
+"active agents."
+msgstr ""
+"Solo manejadores declarativos — sin PHP. Una lista de agentes vacía = "
+"disponible para todos los agentes activos."
+
+#: src/admin-pages/index.js:460
+msgid "Name (snake_case)"
+msgstr "Nombre (snake_case)"
+
+#: src/admin-pages/index.js:477
+msgid "Description (for the LLM)"
+msgstr "Descripción (para el LLM)"
+
+#: src/admin-pages/index.js:487 src/admin-pages/index.js:583
+msgid "Handler"
+msgstr "Manejador"
+
+#: src/admin-pages/index.js:500
+msgid "Risk level"
+msgstr "Nivel de riesgo"
+
+#: src/admin-pages/index.js:517
+msgid "Allowed option keys (comma-separated)"
+msgstr "Claves de opciones permitidas (separadas por comas)"
+
+#: src/admin-pages/index.js:534
+msgid "Extra allowed hosts (comma-separated; site host always allowed)"
+msgstr ""
+"Hosts adicionales permitidos (separados por comas; el host del sitio siempre"
+" está permitido)"
+
+#: src/admin-pages/index.js:549
+msgid "Agents (optional)"
+msgstr "Agentes (opcional)"
+
+#: src/admin-pages/index.js:571
+msgid "Save site-local tool"
+msgstr "Guardar la herramienta local del sitio"
+
+#: src/admin-pages/index.js:577
+msgid "Your site-local tools"
+msgstr "Sus herramientas locales del sitio"
+
+#: src/admin-pages/index.js:631
+msgid "Test arguments (JSON object)"
+msgstr "Argumentos de prueba (objeto JSON)"
+
+#. translators: 1: enabled count, 2: disabled count
+#: src/admin-pages/index.js:680
+msgid "Profile applied: %1$d tools on, %2$d tools off."
+msgstr ""
+"Perfil aplicado: %1$d herramientas activadas, %2$d herramientas "
+"desactivadas."
+
+#: src/admin-pages/index.js:693
+msgid "Could not apply profile."
+msgstr "No se ha podido aplicar el perfil."
+
+#: src/admin-pages/index.js:705
+msgid ""
+"These profiles control which tools every assistant may use. Approvals still "
+"apply for riskier actions."
+msgstr ""
+"Estos perfiles controlan qué herramientas puede usar cada asistente. Las "
+"aprobaciones se siguen aplicando a las acciones más arriesgadas."
+
+#: src/admin-pages/index.js:709
+msgid "Switch to Advanced for the full tool-by-tool list:"
+msgstr ""
+"Cambie a la vista avanzada para ver la lista completa herramienta por "
+"herramienta:"
+
+#: src/admin-pages/index.js:733
+msgid ""
+"Tools were customized outside a profile. Choose a card below to reset to a "
+"simple safety level."
+msgstr ""
+"Las herramientas se han personalizado fuera de un perfil. Elija una tarjeta "
+"a continuación para restablecer un nivel de seguridad sencillo."
+
+#. translators: %s: risk level
+#: src/admin-pages/index.js:776
+msgid "Up to %s risk"
+msgstr "Hasta riesgo %s"
+
+#: src/admin-pages/index.js:783 src/admin-pages/index.js:1658
+msgid "Current"
+msgstr "Actual"
+
+#. translators: 1: enabled tools, 2: disabled tools, 3: max risk
+#: src/admin-pages/index.js:793
+msgid "Right now: %1$d tools on, %2$d off · highest enabled risk: %3$s"
+msgstr ""
+"Ahora mismo: %1$d herramientas activadas, %2$d desactivadas · riesgo máximo "
+"activado: %3$s"
+
+#: src/admin-pages/index.js:850
+msgid "All risks"
+msgstr "Todos los riesgos"
+
+#: src/admin-pages/index.js:853
+msgid "Medium"
+msgstr "Medio"
+
+#: src/admin-pages/index.js:854
+msgid "High"
+msgstr "Alto"
+
+#: src/admin-pages/index.js:855
+msgid "Extreme"
+msgstr "Extremo"
+
+#: src/admin-pages/index.js:928
+msgid "Toggle failed."
+msgstr "No se ha podido cambiar el estado."
+
+#: src/admin-pages/index.js:953
+msgid "You are in Advanced view (full tool list)."
+msgstr "Está en la vista avanzada (lista completa de herramientas)."
+
+#: src/admin-pages/index.js:967
+msgid "Search tools…"
+msgstr "Buscar herramientas…"
+
+#: src/admin-pages/index.js:972
+msgid "1 tool"
+msgstr "1 herramienta"
+
+#: src/admin-pages/index.js:973
+msgid "tools"
+msgstr "herramientas"
+
+#: src/admin-pages/index.js:982
+msgid "Custom tools (Pro)"
+msgstr "Herramientas personalizadas (Pro)"
+
+#: src/admin-pages/index.js:987
+msgid "Filter by risk"
+msgstr "Filtrar por riesgo"
+
+#: src/admin-pages/index.js:1026
+msgid "No tools match this search or risk filter."
+msgstr "Ninguna herramienta coincide con esta búsqueda o filtro de riesgo."
+
+#: src/admin-pages/index.js:1030
+msgid "No tools in this category."
+msgstr "No hay herramientas en esta categoría."
+
+#: src/admin-pages/index.js:1114
+msgid "none"
+msgstr "ninguno"
+
+#: src/admin-pages/index.js:1161
+msgid "Delete this skill? This cannot be undone."
+msgstr "¿Borrar esta habilidad? Esta acción no se puede deshacer."
+
+#: src/admin-pages/index.js:1214
+msgid "Skill"
+msgstr "Habilidad"
+
+#: src/admin-pages/index.js:1294
+msgid "Recording your approval…"
+msgstr "Registrando su aprobación…"
+
+#: src/admin-pages/index.js:1299
+msgid "Running the approved action…"
+msgstr "Ejecutando la acción aprobada…"
+
+#: src/admin-pages/index.js:1304
+msgid "Confirming result…"
+msgstr "Confirmando el resultado…"
+
+#: src/admin-pages/index.js:1319
+msgid "Rejecting this request…"
+msgstr "Rechazando esta solicitud…"
+
+#: src/admin-pages/index.js:1355 src/admin-pages/index.js:1372
+msgid "Rejected — the action will not run."
+msgstr "Rechazada — la acción no se ejecutará."
+
+#: src/admin-pages/index.js:1362
+msgid "Request rejected"
+msgstr "Solicitud rechazada"
+
+#: src/admin-pages/index.js:1385
+msgid "Approved, but the action could not be started."
+msgstr "Aprobada, pero no se ha podido iniciar la acción."
+
+#: src/admin-pages/index.js:1391
+msgid "Action completed successfully."
+msgstr "La acción se ha completado correctamente."
+
+#: src/admin-pages/index.js:1396
+msgid "Action ran but reported a problem."
+msgstr "La acción se ha ejecutado, pero ha informado de un problema."
+
+#: src/admin-pages/index.js:1415
+msgid "Approval recorded"
+msgstr "Aprobación registrada"
+
+#: src/admin-pages/index.js:1433
+msgid "Done — assistant task finished"
+msgstr "Listo — la tarea del asistente ha finalizado"
+
+#: src/admin-pages/index.js:1437
+msgid "Finished with errors — check detail below"
+msgstr "Finalizada con errores — consulte los detalles a continuación"
+
+#: src/admin-pages/index.js:1449
+msgid "Approved and completed."
+msgstr "Aprobada y completada."
+
+#: src/admin-pages/index.js:1461
+msgid "Could not update that item."
+msgstr "No se ha podido actualizar ese elemento."
+
+#: src/admin-pages/index.js:1486
+msgid ""
+"Check the box to accept the increased risk before choosing “Trust more”."
+msgstr ""
+"Marque la casilla para aceptar el mayor riesgo antes de elegir «Confiar "
+"más»."
+
+#: src/admin-pages/index.js:1509
+msgid "Preferences saved."
+msgstr "Preferencias guardadas."
+
+#: src/admin-pages/index.js:1515
+msgid "Could not save preferences."
+msgstr "No se han podido guardar las preferencias."
+
+#: src/admin-pages/index.js:1526
+msgid "Advanced view shows technical detail."
+msgstr "La vista avanzada muestra los detalles técnicos."
+
+#: src/admin-pages/index.js:1530
+msgid "Simple view for non-technical admins."
+msgstr "Vista sencilla para administradores sin perfil técnico."
+
+#: src/admin-pages/index.js:1572
+msgid "Complete"
+msgstr "Completado"
+
+#: src/admin-pages/index.js:1573
+msgid "Needs attention"
+msgstr "Necesita atención"
+
+#: src/admin-pages/index.js:1574 src/admin-pages/index.js:1824
+msgid "Working…"
+msgstr "Procesando…"
+
+#: src/admin-pages/index.js:1613
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: src/admin-pages/index.js:1615
+msgid ""
+"Choose how closely you want to watch assistants, and whether we should email"
+" you when something is waiting."
+msgstr ""
+"Elija con qué nivel de detalle quiere supervisar a los asistentes y si "
+"quiere recibir un correo electrónico cuando haya algo pendiente."
+
+#: src/admin-pages/index.js:1675
+msgid ""
+"I understand assistants may change my site with less waiting, and I accept "
+"that increased risk."
+msgstr ""
+"Entiendo que los asistentes podrán cambiar mi sitio con menos espera y "
+"acepto ese mayor riesgo."
+
+#: src/admin-pages/index.js:1690
+msgid "Save “Trust more” preference"
+msgstr "Guardar la preferencia «Confiar más»"
+
+#: src/admin-pages/index.js:1708
+msgid "Email me when an action is waiting for approval"
+msgstr ""
+"Enviarme un correo electrónico cuando una acción esté pendiente de "
+"aprobación"
+
+#: src/admin-pages/index.js:1717
+msgid "Send alerts to"
+msgstr "Enviar los avisos a"
+
+#: src/admin-pages/index.js:1735
+msgid "Save email preferences"
+msgstr "Guardar las preferencias de correo electrónico"
+
+#: src/admin-pages/index.js:1743
+msgid "Waiting for you"
+msgstr "Pendiente de su revisión"
+
+#: src/admin-pages/index.js:1753
+msgid "You’re all caught up"
+msgstr "Está todo al día"
+
+#: src/admin-pages/index.js:1757
+msgid ""
+"Approvals pause any action an assistant rates as risky until you say yes — "
+"nothing waiting here means nothing is on hold right now."
+msgstr ""
+"Las aprobaciones detienen cualquier acción que un asistente considere "
+"arriesgada hasta que usted dé el visto bueno — que no haya nada aquí "
+"significa que ahora mismo no hay nada en espera."
+
+#: src/admin-pages/index.js:1763
+msgid ""
+"When an assistant needs permission for a bigger change, it will show up here"
+msgstr ""
+"Cuando un asistente necesite permiso para un cambio mayor, aparecerá aquí"
+
+#: src/admin-pages/index.js:1768
+msgid " — and we’ll email you."
+msgstr " — y le enviaremos un correo electrónico."
+
+#: src/admin-pages/index.js:1844
+msgid ""
+"Assistants back up files and database tables automatically before changing "
+"them."
+msgstr ""
+"Los asistentes hacen una copia de seguridad de los archivos y las tablas de "
+"la base de datos automáticamente antes de modificarlos."
+
+#: src/admin-pages/index.js:1849
+msgid "View backups and restore"
+msgstr "Ver las copias de seguridad y restaurar"
+
+#: src/admin-pages/index.js:1854
+msgid "· Need batch approve tools?"
+msgstr "· ¿Necesita herramientas de aprobación por lotes?"
+
+#: src/admin-pages/index.js:1856
+msgid "Open classic queue"
+msgstr "Abrir la cola clásica"
+
+#: src/admin-pages/index.js:1913
+msgid ""
+"This is a friendly activity feed. Technical names stay in Advanced detail "
+"when useful."
+msgstr ""
+"Este es un registro de actividad sencillo. Los nombres técnicos se mantienen"
+" en el detalle avanzado cuando resultan útiles."
+
+#: src/admin-pages/index.js:1971
+msgid "Time period"
+msgstr "Periodo de tiempo"
+
+#: src/admin-pages/index.js:1992
+msgid "Activity type"
+msgstr "Tipo de actividad"
+
+#: src/admin-pages/index.js:2024
+msgid "Search activity…"
+msgstr "Buscar en la actividad…"
+
+#: src/admin-pages/index.js:2029
+msgid "1 event"
+msgstr "1 evento"
+
+#: src/admin-pages/index.js:2030
+msgid "events"
+msgstr "eventos"
+
+#: src/admin-pages/index.js:2036
+msgid ""
+"Download this log as a CSV file — handy to attach when emailing support "
+"about an issue."
+msgstr ""
+"Descargue este registro como archivo CSV — resulta útil para adjuntarlo al "
+"escribir al soporte sobre un problema."
+
+#: src/admin-pages/index.js:2041
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+#: src/admin-pages/index.js:2050
+msgid "Nothing here yet"
+msgstr "Aún no hay nada aquí"
+
+#: src/admin-pages/index.js:2055
+msgid "No events match this filter. Try another period or clear search."
+msgstr ""
+"Ningún evento coincide con este filtro. Pruebe con otro periodo o borre la "
+"búsqueda."
+
+#: src/admin-pages/index.js:2059
+msgid "When assistants chat or use tools, their activity will show up here."
+msgstr ""
+"Cuando los asistentes chateen o usen herramientas, su actividad aparecerá "
+"aquí."
+
+#: src/admin-pages/index.js:2172
+msgid "Pro active"
+msgstr "Pro activo"
+
+#: src/admin-pages/index.js:2178
+msgid "View pricing"
+msgstr "Ver los precios"
+
+#: src/admin-pages/index.js:2194
+msgid "Open full Knowledge editor"
+msgstr "Abrir el editor completo de conocimiento"
+
+#: src/admin-pages/index.js:2254
+msgid "Unavailable."
+msgstr "No disponible."
+
+#: src/admin-pages/index.js:2303
+msgid "Unknown page."
+msgstr "Página desconocida."
+
+#: src/agent-wizard/index.js:31
+msgid "Basics"
+msgstr "Datos básicos"
+
+#: src/agent-wizard/index.js:32
+msgid "Persona"
+msgstr "Personalidad"
+
+#: src/agent-wizard/index.js:33
+msgid "Capabilities"
+msgstr "Capacidades"
+
+#: src/agent-wizard/index.js:35
+msgid "Review"
+msgstr "Revisión"
+
+#: src/agent-wizard/index.js:135 src/deploy-wizard/index.js:118
+msgid "Could not load the wizard."
+msgstr "No se ha podido cargar el asistente de configuración."
+
+#: src/agent-wizard/index.js:176 src/agent-wizard/index.js:181
+msgid "Could not load your content."
+msgstr "No se ha podido cargar su contenido."
+
+#: src/agent-wizard/index.js:194
+msgid "%s pages/posts"
+msgstr "%s páginas/entradas"
+
+#: src/agent-wizard/index.js:197
+msgid "%s files"
+msgstr "%s archivos"
+
+#: src/agent-wizard/index.js:199 src/agent-wizard/index.js:729
+#: src/agent-wizard/index.js:747
+msgid "(none)"
+msgstr "(ninguno)"
+
+#: src/agent-wizard/index.js:283
+msgid "Something went wrong creating the agent."
+msgstr "Se ha producido un error al crear el agente."
+
+#. translators: %s: the new agent's name.
+#: src/agent-wizard/index.js:316
+msgid "%s is ready!"
+msgstr "¡%s está listo!"
+
+#: src/agent-wizard/index.js:322
+msgid ""
+"Your agent has been created and activated. Add knowledge to make it smarter,"
+" or start chatting right away."
+msgstr ""
+"Su agente se ha creado y activado. Añada conocimiento para hacerlo más "
+"inteligente o empiece a chatear ahora mismo."
+
+#: src/agent-wizard/index.js:326
+msgid ""
+"Your agent was created. Activate it from the Agents page, then add knowledge"
+" or start chatting."
+msgstr ""
+"Su agente se ha creado. Actívelo desde la página Agentes y después añada "
+"conocimiento o empiece a chatear."
+
+#: src/agent-wizard/index.js:337
+msgid "Training your assistant on your knowledge… %s"
+msgstr "Entrenando a su asistente con su conocimiento… %s"
+
+#: src/agent-wizard/index.js:338
+msgid "Knowledge training finished — %s sources trained."
+msgstr ""
+"El entrenamiento de conocimiento ha finalizado — %s fuentes entrenadas."
+
+#: src/agent-wizard/index.js:348
+msgid ""
+"A safe set of read-only tools was added so your agent works right away. You "
+"can change its tools later from the Agents page."
+msgstr ""
+"Se ha añadido un conjunto seguro de herramientas de solo lectura para que su"
+" agente funcione desde el primer momento. Puede cambiar sus herramientas más"
+" adelante desde la página Agentes."
+
+#: src/agent-wizard/index.js:365
+msgid "Open Chat"
+msgstr "Abrir el chat"
+
+#: src/agent-wizard/index.js:370
+msgid "Publish This Agent"
+msgstr "Publicar este agente"
+
+#: src/agent-wizard/index.js:378
+msgid "Fine-tune Persona"
+msgstr "Ajustar la personalidad"
+
+#: src/agent-wizard/index.js:383
+msgid "View all Agents"
+msgstr "Ver todos los agentes"
+
+#: src/agent-wizard/index.js:407
+msgid "Agent name"
+msgstr "Nombre del agente"
+
+#: src/agent-wizard/index.js:408
+msgid "A friendly name, e.g. \"Support Helper\"."
+msgstr "Un nombre descriptivo, p. ej. «Ayudante de soporte»."
+
+#: src/agent-wizard/index.js:417
+msgid "Identifier (slug)"
+msgstr "Identificador (slug)"
+
+#: src/agent-wizard/index.js:418
+msgid "Used in URLs and files. Auto-filled from the name."
+msgstr ""
+"Se usa en las URL y los archivos. Se rellena automáticamente a partir del "
+"nombre."
+
+#: src/agent-wizard/index.js:427
+msgid "What does this agent do?"
+msgstr "¿Qué hace este agente?"
+
+#: src/agent-wizard/index.js:431
+msgid "A short description shown in the agents list."
+msgstr "Una breve descripción que se muestra en la lista de agentes."
+
+#: src/agent-wizard/index.js:457
+msgid "Icon"
+msgstr "Icono"
+
+#: src/agent-wizard/index.js:470
+msgid "Instructions (system prompt)"
+msgstr "Instrucciones (prompt de sistema)"
+
+#: src/agent-wizard/index.js:474
+msgid ""
+"Describe how the agent should behave, its tone, and what it should focus on."
+msgstr ""
+"Describa cómo debe comportarse el agente, su tono y en qué debe centrarse."
+
+#: src/agent-wizard/index.js:483
+msgid "Welcome message (optional)"
+msgstr "Mensaje de bienvenida (opcional)"
+
+#: src/agent-wizard/index.js:487
+msgid "The greeting shown when a chat starts."
+msgstr "El saludo que se muestra al iniciar un chat."
+
+#: src/agent-wizard/index.js:496
+msgid "Suggested prompts (optional)"
+msgstr "Prompts sugeridos (opcional)"
+
+#: src/agent-wizard/index.js:505
+msgid "e.g. Summarize my latest posts"
+msgstr "p. ej. Resume mis últimas entradas"
+
+#: src/agent-wizard/index.js:524
+msgid "+ Add another prompt"
+msgstr "+ Añadir otro prompt"
+
+#: src/agent-wizard/index.js:536
+msgid "AI provider"
+msgstr "Proveedor de IA"
+
+#: src/agent-wizard/index.js:544
+msgid "(needs API key)"
+msgstr "(necesita clave de API)"
+
+#: src/agent-wizard/index.js:560
+msgid "Leave as-is to use your site default."
+msgstr "Déjelo tal cual para usar el valor predeterminado de su sitio."
+
+#: src/agent-wizard/index.js:583 src/agent-wizard/index.js:739
+msgid "Autonomy"
+msgstr "Autonomía"
+
+#: src/agent-wizard/index.js:587
+msgid "Supervised — asks before taking actions (recommended)"
+msgstr "Supervisado — pregunta antes de realizar acciones (recomendado)"
+
+#: src/agent-wizard/index.js:594
+msgid "Autonomous — acts on its own"
+msgstr "Autónomo — actúa por su cuenta"
+
+#: src/agent-wizard/index.js:601
+msgid "Disabled — replies only, never acts"
+msgstr "Desactivado — solo responde, nunca actúa"
+
+#: src/agent-wizard/index.js:611
+msgid ""
+"This only controls how often the agent pauses to ask you. Higher-risk "
+"actions still queue for your approval, and the riskiest actions are always "
+"blocked, no matter which autonomy level you pick."
+msgstr ""
+"Esto solo controla con qué frecuencia el agente se detiene para preguntarle."
+" Las acciones de mayor riesgo siguen poniéndose en cola para su aprobación y"
+" las más arriesgadas siempre se bloquean, sea cual sea el nivel de autonomía"
+" que elija."
+
+#: src/agent-wizard/index.js:619
+msgid "Tools this agent can use (optional)"
+msgstr "Herramientas que puede usar este agente (opcional)"
+
+#: src/agent-wizard/index.js:625
+msgid ""
+"If you don’t pick any, a safe set of read-only tools is added so your agent "
+"works right away."
+msgstr ""
+"Si no elige ninguna, se añadirá un conjunto seguro de herramientas de solo "
+"lectura para que su agente funcione desde el primer momento."
+
+#: src/agent-wizard/index.js:663
+msgid ""
+"Knowledge (RAG) uses the Agentic AI service. Connect your license to train "
+"assistants on your content — you can also add knowledge later from the "
+"Knowledge page."
+msgstr ""
+"El conocimiento (RAG) usa el servicio Agentic AI. Conecte su licencia para "
+"entrenar a los asistentes con su contenido — también puede añadir "
+"conocimiento más adelante desde la página Conocimiento."
+
+#: src/agent-wizard/index.js:668
+msgid ""
+"Optionally give your assistants knowledge to draw on. Selected pages, posts "
+"and files are embedded into your shared Vector Store after the agent is "
+"created — training runs in the background."
+msgstr ""
+"Si lo desea, proporcione a sus asistentes conocimiento en el que apoyarse. "
+"Las páginas, entradas y archivos seleccionados se incorporan a su Vector "
+"Store compartido después de crear el agente — el entrenamiento se ejecuta en"
+" segundo plano."
+
+#: src/agent-wizard/index.js:670
+msgid "Upload files (PDF or text)"
+msgstr "Subir archivos (PDF o texto)"
+
+#: src/agent-wizard/index.js:678
+msgid "%s file(s) selected."
+msgstr "%s archivo(s) seleccionado(s)."
+
+#: src/agent-wizard/index.js:680
+msgid "Train on your site content"
+msgstr "Entrenar con el contenido de su sitio"
+
+#: src/agent-wizard/index.js:685
+msgid "Loading your content…"
+msgstr "Cargando su contenido…"
+
+#: src/agent-wizard/index.js:688
+msgid "No published pages or posts found."
+msgstr "No se han encontrado páginas ni entradas publicadas."
+
+#: src/agent-wizard/index.js:695
+msgid "trained"
+msgstr "entrenado"
+
+#: src/agent-wizard/index.js:714
+msgid "Identifier"
+msgstr "Identificador"
+
+#: src/agent-wizard/index.js:733
+msgid "Provider / Model"
+msgstr "Proveedor / Modelo"
+
+#: src/agent-wizard/index.js:777 src/deploy-wizard/index.js:401
+#: src/knowledge-wizard/index.js:434
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/agent-wizard/index.js:786
+msgid "Create agent"
+msgstr "Crear agente"
+
+#: src/dashboard-activity/index.js:93 src/dashboard-app/index.js:269
+msgid "View Activity →"
+msgstr "Ver la actividad →"
+
+#: src/dashboard-activity/index.js:99
+msgid "Could not load activity."
+msgstr "No se ha podido cargar la actividad."
+
+#: src/dashboard-activity/index.js:106 src/dashboard-app/index.js:275
+msgid "Total Actions"
+msgstr "Acciones totales"
+
+#: src/dashboard-activity/index.js:111 src/dashboard-app/index.js:280
+msgid "Tokens Used"
+msgstr "Tokens usados"
+
+#: src/dashboard-activity/index.js:119 src/dashboard-app/index.js:288
+msgid "Est. Cost"
+msgstr "Coste est."
+
+#: src/dashboard-activity/index.js:120 src/dashboard-app/index.js:289
+msgid "Estimated Usage"
+msgstr "Uso estimado"
+
+#: src/dashboard-activity/index.js:127 src/dashboard-app/index.js:296
+msgid "Active Agents"
+msgstr "Agentes activos"
+
+#: src/dashboard-activity/index.js:132 src/dashboard-app/index.js:301
+msgid "Uploaded Agents"
+msgstr "Agentes subidos"
+
+#: src/dashboard-activity/index.js:137 src/dashboard-app/index.js:306
+msgid "User-Created Agents"
+msgstr "Agentes creados por el usuario"
+
+#: src/dashboard-app/index.js:67
+msgid "Drag to rearrange"
+msgstr "Arrastre para reorganizar"
+
+#: src/dashboard-app/index.js:75
+msgid "Drag to rearrange dashboard card"
+msgstr "Arrastre para reorganizar la tarjeta del escritorio"
+
+#: src/dashboard-app/index.js:134
+msgid "Manage License →"
+msgstr "Gestionar la licencia →"
+
+#: src/dashboard-app/index.js:156
+msgid "Renew"
+msgstr "Renovar"
+
+#: src/dashboard-app/index.js:164
+msgid "Schema"
+msgstr "Esquema"
+
+#: src/dashboard-app/index.js:168
+msgid "Pending Jobs"
+msgstr "Trabajos pendientes"
+
+#: src/dashboard-app/index.js:174
+msgid "abandoned — auto-recovered"
+msgstr "abandonados — recuperados automáticamente"
+
+#: src/dashboard-app/index.js:182
+msgid "Running Jobs"
+msgstr "Trabajos en ejecución"
+
+#: src/dashboard-app/index.js:188
+msgid "stuck — auto-recovered"
+msgstr "bloqueados — recuperados automáticamente"
+
+#: src/dashboard-app/index.js:192
+msgid "Completed Jobs"
+msgstr "Trabajos completados"
+
+#: src/dashboard-app/index.js:210
+msgid "Approvals & Backups"
+msgstr "Aprobaciones y copias de seguridad"
+
+#: src/dashboard-app/index.js:216
+msgid "View Approvals →"
+msgstr "Ver las aprobaciones →"
+
+#: src/dashboard-app/index.js:221
+msgid "Pending Approvals"
+msgstr "Aprobaciones pendientes"
+
+#: src/dashboard-app/index.js:227
+msgid "Files Backed Up"
+msgstr "Archivos con copia de seguridad"
+
+#: src/dashboard-app/index.js:233
+msgid "DB Tables Backed Up"
+msgstr "Tablas de BD con copia de seguridad"
+
+#. translators: %s: number of pending approvals.
+#: src/dashboard-app/index.js:244
+msgid "%s waiting for your OK."
+msgstr "%s pendientes de su visto bueno."
+
+#: src/dashboard-app/index.js:326
+msgid "Connected Providers"
+msgstr "Proveedores conectados"
+
+#: src/dashboard-app/index.js:332
+msgid "Manage Providers →"
+msgstr "Gestionar los proveedores →"
+
+#: src/dashboard-app/index.js:338
+msgid "No AI providers connected."
+msgstr "No hay proveedores de IA conectados."
+
+#: src/dashboard-app/index.js:340
+msgid "Run the Setup Wizard"
+msgstr "Ejecutar el asistente de configuración"
+
+#: src/dashboard-app/index.js:441
+msgid "Quick Actions"
+msgstr "Acciones rápidas"
+
+#: src/dashboard-app/index.js:448
+msgid "Manage Actions →"
+msgstr "Gestionar las acciones →"
+
+#: src/dashboard-app/index.js:454
+msgid "Chatbot offline —"
+msgstr "Chatbot desconectado —"
+
+#: src/dashboard-app/index.js:456
+msgid "Configure now"
+msgstr "Configurar ahora"
+
+#: src/dashboard-app/index.js:464
+msgid ""
+"Choose which links appear in Quick Actions. Setup Wizard is always "
+"available."
+msgstr ""
+"Elija qué enlaces aparecen en Acciones rápidas. El asistente de "
+"configuración siempre está disponible."
+
+#: src/dashboard-app/index.js:479
+msgid "Required"
+msgstr "Obligatorio"
+
+#: src/dashboard-app/index.js:524
+msgid "Save Quick Actions"
+msgstr "Guardar las acciones rápidas"
+
+#: src/dashboard-app/index.js:577 src/interface-settings/index.js:336
+#: src/settings-app/index.js:1687
+msgid ""
+"EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and "
+"disconnect providers. Continue?"
+msgstr ""
+"PARADA DE EMERGENCIA: desactiva y registra el estado de los agentes, cancela"
+" todos los trabajos y desconecta los proveedores. ¿Continuar?"
+
+#: src/dashboard-app/index.js:581 src/interface-settings/index.js:340
+#: src/settings-app/index.js:1691
+msgid "Turn off emergency stop?"
+msgstr "¿Desactivar la parada de emergencia?"
+
+#: src/dashboard-app/index.js:591
+msgid "Emergency stop restore finished with warnings:"
+msgstr ""
+"La restauración tras la parada de emergencia ha finalizado con avisos:"
+
+#: src/dashboard-app/index.js:614
+msgid "Interface Settings"
+msgstr "Ajustes de la interfaz"
+
+#: src/dashboard-app/index.js:620
+msgid "Manage Interface →"
+msgstr "Gestionar la interfaz →"
+
+#: src/dashboard-app/index.js:627
+msgid "Default interface:"
+msgstr "Interfaz predeterminada:"
+
+#: src/dashboard-app/index.js:652
+msgid ""
+"Used by any screen you have not set individually. Tools, Approvals, and "
+"Activity each have their own Basic/Advanced switch now."
+msgstr ""
+"Se usa en cualquier pantalla que no haya configurado de forma individual. "
+"Ahora Herramientas, Aprobaciones y Actividad tienen cada una su propio "
+"selector Básico/Avanzado."
+
+#: src/dashboard-app/index.js:664 src/settings-app/index.js:234
+msgid ""
+"Reset every screen back to your default interface? Any screen you switched "
+"individually will lose that override."
+msgstr ""
+"¿Restablecer todas las pantallas a su interfaz predeterminada? Cualquier "
+"pantalla que haya cambiado individualmente perderá esa personalización."
+
+#: src/dashboard-app/index.js:680 src/settings-app/index.js:281
+msgid "Reset all screens to my default"
+msgstr "Restablecer todas las pantallas a mi valor predeterminado"
+
+#: src/dashboard-app/index.js:690 src/interface-settings/index.js:318
+#: src/settings-app/index.js:1672
+msgid "Disable All Agents"
+msgstr "Desactivar todos los agentes"
+
+#: src/dashboard-app/index.js:693
+msgid "ACTIVE"
+msgstr "ACTIVO"
+
+#: src/dashboard-app/index.js:711 src/interface-settings/index.js:322
+#: src/settings-app/index.js:1676
+msgid "Emergency stop"
+msgstr "Parada de emergencia"
+
+#: src/dashboard-app/index.js:713 src/interface-settings/index.js:324
+#: src/settings-app/index.js:1678
+msgid ""
+": deactivate and log agent states, cancels all jobs and disconnects "
+"providers."
+msgstr ""
+": desactiva y registra el estado de los agentes, cancela todos los trabajos "
+"y desconecta los proveedores."
+
+#: src/dashboard-app/index.js:724
+msgid "Automatic Agent Updates"
+msgstr "Actualizaciones automáticas de agentes"
+
+#: src/dashboard-app/index.js:742
+msgid "Keep installed agents updated automatically. Opt out any time."
+msgstr ""
+"Mantenga los agentes instalados actualizados automáticamente. Puede "
+"desactivarlo en cualquier momento."
+
+#: src/dashboard-app/index.js:763
+msgid "Browse marketplace →"
+msgstr "Explorar el marketplace →"
+
+#: src/dashboard-app/index.js:767
+msgid ""
+"Discover and install community agents from the Agent Builder marketplace."
+msgstr ""
+"Descubra e instale agentes de la comunidad desde el marketplace de Agent "
+"Builder."
+
+#: src/dashboard-app/index.js:785
+msgid "Getting Started"
+msgstr "Primeros pasos"
+
+#. translators: 1: done count, 2: total
+#: src/dashboard-app/index.js:790
+msgid "%1$d of %2$d steps complete"
+msgstr "%1$d de %2$d pasos completados"
+
+#: src/dashboard-app/index.js:876
+msgid "Could not load dashboard."
+msgstr "No se ha podido cargar el escritorio."
+
+#: src/dashboard-app/index.js:1010
+msgid "Loading dashboard…"
+msgstr "Cargando el escritorio…"
+
+#: src/dashboard-app/index.js:1020
+msgid "Dashboard unavailable."
+msgstr "El escritorio no está disponible."
+
+#: src/dashboard-app/index.js:1107
+msgid "Saving layout…"
+msgstr "Guardando la disposición…"
+
+#: src/dashboard-app/index.js:1117
+msgid "Reset layout"
+msgstr "Restablecer la disposición"
+
+#: src/dashboard-app/index.js:1121
+msgid "Drag ⋮⋮ to rearrange cards"
+msgstr "Arrastre ⋮⋮ para reorganizar las tarjetas"
+
+#: src/dashboard-app/index.js:1130
+msgid "Emergency stop is ACTIVE"
+msgstr "La parada de emergencia está ACTIVA"
+
+#: src/dashboard-app/index.js:1136
+msgid ""
+"All agents are deactivated, jobs are cancelled, and LLM providers are "
+"disconnected. Chat and agent activation are blocked."
+msgstr ""
+"Todos los agentes están desactivados, los trabajos cancelados y los "
+"proveedores de LLM desconectados. El chat y la activación de agentes están "
+"bloqueados."
+
+#: src/dashboard-app/index.js:1141
+msgid "Manage Interface"
+msgstr "Gestionar la interfaz"
+
+#: src/deploy-wizard/index.js:33
+msgid "Chat widget"
+msgstr "Widget de chat"
+
+#: src/deploy-wizard/index.js:34
+msgid "A floating chat bubble visitors can open on your site."
+msgstr ""
+"Una burbuja de chat flotante que los visitantes pueden abrir en su sitio."
+
+#: src/deploy-wizard/index.js:38
+msgid "Admin bar"
+msgstr "Barra de administración"
+
+#: src/deploy-wizard/index.js:39
+msgid "A quick-chat menu in the WordPress toolbar for logged-in admins."
+msgstr ""
+"Un menú de chat rápido en la barra de herramientas de WordPress para los "
+"administradores que hayan iniciado sesión."
+
+#: src/deploy-wizard/index.js:43
+msgid "Ask AI launcher"
+msgstr "Lanzador «Preguntar a la IA»"
+
+#: src/deploy-wizard/index.js:44
+msgid "A contextual \"Ask AI\" prompt on admin screens like Plugins or Media."
+msgstr ""
+"Un aviso contextual «Preguntar a la IA» en pantallas de administración como "
+"Plugins o Medios."
+
+#: src/deploy-wizard/index.js:48
+msgid "Gutenberg block"
+msgstr "Bloque de Gutenberg"
+
+#: src/deploy-wizard/index.js:49
+msgid "Makes this agent insertable as a block in any post or page."
+msgstr ""
+"Permite insertar este agente como bloque en cualquier entrada o página."
+
+#: src/deploy-wizard/index.js:54
+msgid "Agent & surface"
+msgstr "Agente y ubicación"
+
+#: src/deploy-wizard/index.js:55
+msgid "Configure"
+msgstr "Configurar"
+
+#: src/deploy-wizard/index.js:134
+msgid "Admin only"
+msgstr "Solo en la administración"
+
+#: src/deploy-wizard/index.js:135 src/deploy-wizard/index.js:139
+msgid "Front end only"
+msgstr "Solo en la parte pública"
+
+#: src/deploy-wizard/index.js:140
+msgid "Single posts/pages only"
+msgstr "Solo en entradas/páginas individuales"
+
+#: src/deploy-wizard/index.js:141
+msgid "Homepage only"
+msgstr "Solo en la página de inicio"
+
+#: src/deploy-wizard/index.js:173
+msgid "Something went wrong publishing this agent."
+msgstr "Se ha producido un error al publicar este agente."
+
+#: src/deploy-wizard/index.js:201
+msgid ""
+"No active agents yet. Activate or train an agent first, then come back to "
+"publish it."
+msgstr ""
+"Aún no hay agentes activos. Active o entrene primero un agente y después "
+"vuelva aquí para publicarlo."
+
+#: src/deploy-wizard/index.js:206
+msgid "Go to Agents"
+msgstr "Ir a Agentes"
+
+#. translators: 1: agent name, 2: surface name.
+#: src/deploy-wizard/index.js:222
+msgid "%1$s is published on %2$s!"
+msgstr "¡%1$s está publicado en %2$s!"
+
+#: src/deploy-wizard/index.js:228
+msgid "Fine-tune this further, or publish on another surface."
+msgstr "Puede seguir ajustándolo o publicarlo en otra ubicación."
+
+#: src/deploy-wizard/index.js:242
+msgid "Publish on another surface"
+msgstr "Publicar en otra ubicación"
+
+#: src/deploy-wizard/index.js:247
+msgid "Manage in Publish"
+msgstr "Gestionar en Publicación"
+
+#: src/deploy-wizard/index.js:252 src/knowledge-wizard/index.js:245
+msgid "Back to Dashboard"
+msgstr "Volver al escritorio"
+
+#: src/deploy-wizard/index.js:276
+msgid "Which agent?"
+msgstr "¿Qué agente?"
+
+#: src/deploy-wizard/index.js:286
+msgid "Where should people reach it?"
+msgstr "¿Dónde podrán acceder a él las personas?"
+
+#: src/deploy-wizard/index.js:312
+msgid ""
+"Nothing else to configure — saving makes this agent available to insert as a"
+" block from any post or page editor."
+msgstr ""
+"No hay nada más que configurar — al guardar, este agente quedará disponible "
+"para insertarlo como bloque desde el editor de cualquier entrada o página."
+
+#: src/deploy-wizard/index.js:325
+msgid "Bottom right"
+msgstr "Abajo a la derecha"
+
+#: src/deploy-wizard/index.js:326
+msgid "Bottom left"
+msgstr "Abajo a la izquierda"
+
+#: src/deploy-wizard/index.js:332
+msgid "Show on"
+msgstr "Mostrar en"
+
+#: src/deploy-wizard/index.js:340
+msgid "Only show to logged-in visitors"
+msgstr "Mostrar solo a los visitantes que hayan iniciado sesión"
+
+#. translators: %s: agent name.
+#: src/deploy-wizard/index.js:354
+msgid ""
+"Ask AI launchers are already turned on for some admin screens. Saving makes "
+"%s the agent that answers them, replacing the current choice — the screens "
+"themselves stay as configured."
+msgstr ""
+"Los lanzadores «Preguntar a la IA» ya están activados en algunas pantallas "
+"de administración. Al guardar, %s pasará a ser el agente que las atienda, "
+"sustituyendo a la selección actual — las pantallas se mantienen tal y como "
+"están configuradas."
+
+#: src/deploy-wizard/index.js:365
+msgid "Which admin screens?"
+msgstr "¿Qué pantallas de administración?"
+
+#: src/interface-settings/index.js:81
+msgid "Could not load interface settings."
+msgstr "No se han podido cargar los ajustes de la interfaz."
+
+#: src/interface-settings/index.js:125
+msgid "Could not save interface settings."
+msgstr "No se han podido guardar los ajustes de la interfaz."
+
+#: src/interface-settings/index.js:139
+msgid "Loading interface settings…"
+msgstr "Cargando los ajustes de la interfaz…"
+
+#: src/interface-settings/index.js:169
+msgid "Interface settings saved."
+msgstr "Ajustes de la interfaz guardados."
+
+#: src/interface-settings/index.js:174
+msgid "Interface mode"
+msgstr "Modo de interfaz"
+
+#: src/interface-settings/index.js:175
+msgid ""
+"Basic keeps the menu focused on everyday tasks. Advanced reveals developer "
+"tools such as Skills, APIs and Endpoints."
+msgstr ""
+"El modo básico mantiene el menú centrado en las tareas del día a día. El "
+"modo avanzado muestra herramientas para desarrolladores como Habilidades, "
+"API y Endpoints."
+
+#: src/interface-settings/index.js:195 src/settings-app/index.js:527
+msgid "Show the Getting Started checklist on the dashboard"
+msgstr "Mostrar la lista de primeros pasos en el escritorio"
+
+#: src/interface-settings/index.js:199
+msgid "Turn this off once you are set up to hide the onboarding checklist."
+msgstr ""
+"Desactive esta opción cuando termine la configuración para ocultar la lista "
+"de bienvenida."
+
+#: src/interface-settings/index.js:233
+msgid "Global look and feel for chat surfaces."
+msgstr "Aspecto general de las interfaces de chat."
+
+#: src/interface-settings/index.js:239
+msgid "Fine-tune chat themes →"
+msgstr "Ajustar los temas de chat →"
+
+#: src/interface-settings/index.js:245 src/settings-app/index.js:467
+msgid "Chat font"
+msgstr "Fuente del chat"
+
+#: src/interface-settings/index.js:246
+msgid ""
+"Font used across the chat interface. Choose “Theme default” to inherit from "
+"the selected theme."
+msgstr ""
+"Fuente usada en toda la interfaz de chat. Elija «Predeterminada del tema» "
+"para heredarla del tema seleccionado."
+
+#: src/interface-settings/index.js:259 src/settings-app/index.js:479
+msgid "Use theme accent colour"
+msgstr "Usar el color de acento del tema"
+
+#: src/interface-settings/index.js:263
+msgid ""
+"When off, the colour below overrides the chat theme accent on every chat "
+"surface."
+msgstr ""
+"Cuando está desactivado, el color de abajo sustituye al acento del tema de "
+"chat en todas las interfaces de chat."
+
+#: src/interface-settings/index.js:277 src/settings-app/index.js:500
+msgid "Accent colour"
+msgstr "Color de acento"
+
+#. translators: %s: hex colour value
+#: src/interface-settings/index.js:280
+msgid "Selected: %s"
+msgstr "Seleccionado: %s"
+
+#: src/interface-settings/index.js:360
+msgid ""
+"Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until"
+" you turn this off."
+msgstr ""
+"La parada de emergencia está ACTIVA. El chat, los trabajos y la activación "
+"de agentes están bloqueados hasta que la desactive."
+
+#: src/knowledge-wizard/index.js:33
+msgid "Paste text"
+msgstr "Pegar texto"
+
+#: src/knowledge-wizard/index.js:34
+msgid "Upload a file"
+msgstr "Subir un archivo"
+
+#: src/knowledge-wizard/index.js:35
+msgid "Pick existing pages"
+msgstr "Elegir páginas existentes"
+
+#: src/knowledge-wizard/index.js:40
+msgid "Title & tags"
+msgstr "Título y etiquetas"
+
+#: src/knowledge-wizard/index.js:104
+msgid "Could not load pages."
+msgstr "No se han podido cargar las páginas."
+
+#: src/knowledge-wizard/index.js:126
+msgid "Please choose a plain text or Markdown file (.txt or .md)."
+msgstr "Elija un archivo de texto plano o Markdown (.txt o .md)."
+
+#: src/knowledge-wizard/index.js:143
+msgid "Could not read that file."
+msgstr "No se ha podido leer ese archivo."
+
+#: src/knowledge-wizard/index.js:188
+msgid "Something went wrong saving this knowledge."
+msgstr "Se ha producido un error al guardar este conocimiento."
+
+#. translators: %s: the knowledge title.
+#: src/knowledge-wizard/index.js:205
+msgid "\"%s\" is saved!"
+msgstr "¡«%s» se ha guardado!"
+
+#: src/knowledge-wizard/index.js:210
+msgid ""
+"Your agents can now use this. Add another, or review it in the full "
+"Knowledge Wiki."
+msgstr ""
+"Sus agentes ya pueden usarlo. Añada otro o revíselo en el wiki de "
+"conocimiento completo."
+
+#: src/knowledge-wizard/index.js:230
+msgid "Add another"
+msgstr "Añadir otro"
+
+#: src/knowledge-wizard/index.js:240
+msgid "View Knowledge Wiki"
+msgstr "Ver el wiki de conocimiento"
+
+#: src/knowledge-wizard/index.js:269
+msgid "Where is this knowledge coming from?"
+msgstr "¿De dónde procede este conocimiento?"
+
+#: src/knowledge-wizard/index.js:290
+msgid "Paste the text"
+msgstr "Pegue el texto"
+
+#: src/knowledge-wizard/index.js:291
+msgid ""
+"A fact, policy, FAQ answer — anything you want your agents to know is true."
+msgstr ""
+"Un dato, una política, una respuesta de las FAQ — cualquier cosa que quiera "
+"que sus agentes den por cierta."
+
+#: src/knowledge-wizard/index.js:304
+msgid "Upload a text or Markdown file"
+msgstr "Suba un archivo de texto o Markdown"
+
+#. translators: %s: file name.
+#: src/knowledge-wizard/index.js:322
+msgid "Loaded \"%s\" — you can review and edit the text below."
+msgstr "Se ha cargado «%s» — puede revisar y editar el texto a continuación."
+
+#: src/knowledge-wizard/index.js:340
+msgid "Search your pages and posts"
+msgstr "Busque en sus páginas y entradas"
+
+#: src/knowledge-wizard/index.js:343
+msgid "Leave blank to see recent pages"
+msgstr "Déjelo en blanco para ver las páginas recientes"
+
+#: src/knowledge-wizard/index.js:359
+msgid "No matching pages or posts."
+msgstr "No hay páginas ni entradas que coincidan."
+
+#. translators: %s: number of selected pages.
+#: src/knowledge-wizard/index.js:379
+msgid "%s page(s)/post(s) selected."
+msgstr "%s página(s)/entrada(s) seleccionada(s)."
+
+#: src/knowledge-wizard/index.js:393
+msgid "A short, clear name, e.g. \"Return policy\" or \"Support hours\"."
+msgstr ""
+"Un nombre breve y claro, p. ej. «Política de devoluciones» u «Horario de "
+"soporte»."
+
+#: src/knowledge-wizard/index.js:402
+msgid "Tags (optional)"
+msgstr "Etiquetas (opcional)"
+
+#: src/knowledge-wizard/index.js:403
+msgid "Comma-separated, e.g. billing, returns, policy."
+msgstr "Separadas por comas, p. ej. facturación, devoluciones, política."
+
+#: src/knowledge-wizard/index.js:443
+msgid "Save knowledge"
+msgstr "Guardar el conocimiento"
+
+#: src/settings-app/index.js:46
+msgid "Could not load settings."
+msgstr "No se han podido cargar los ajustes."
+
+#: src/settings-app/index.js:260
+msgid "Default interface mode"
+msgstr "Modo de interfaz predeterminado"
+
+#: src/settings-app/index.js:270
+msgid ""
+"Used by any screen you have not set individually. Tools, Approvals, and "
+"Activity each have their own Basic/Advanced switch now — this is just the "
+"starting point for screens you have not touched."
+msgstr ""
+"Se usa en cualquier pantalla que no haya configurado de forma individual. "
+"Ahora Herramientas, Aprobaciones y Actividad tienen cada una su propio "
+"selector Básico/Avanzado — esto es solo el punto de partida para las "
+"pantallas que no haya modificado."
+
+#: src/settings-app/index.js:291
+msgid "How assistants address people"
+msgstr "Cómo se dirigen los asistentes a las personas"
+
+#: src/settings-app/index.js:293
+msgid "Site knowledge and standing guidance are under"
+msgstr "El conocimiento del sitio y las directrices permanentes están en"
+
+#: src/settings-app/index.js:301
+msgid "Per-agent personality is under Knowledge → Instructions."
+msgstr "La personalidad de cada agente está en Conocimiento → Instrucciones."
+
+#: src/settings-app/index.js:315
+msgid "Leave blank to use the WordPress display name."
+msgstr "Déjelo en blanco para usar el nombre público de WordPress."
+
+#: src/settings-app/index.js:336
+msgid "Chat theme"
+msgstr "Tema del chat"
+
+#: src/settings-app/index.js:338
+msgid ""
+"Visual theme for admin chat and frontend shortcodes. Click a preview to "
+"select."
+msgstr ""
+"Tema visual para el chat de la administración y los shortcodes de la parte "
+"pública. Haga clic en una vista previa para seleccionarlo."
+
+#: src/settings-app/index.js:405
+msgid "AI Assistant"
+msgstr "Asistente de IA"
+
+#: src/settings-app/index.js:425
+msgid "Hello! How can I help?"
+msgstr "¡Hola! ¿En qué puedo ayudarle?"
+
+#: src/settings-app/index.js:446
+msgid "Update my homepage"
+msgstr "Actualiza mi página de inicio"
+
+#: src/settings-app/index.js:552
+msgid ""
+"Configure the AI providers available on this site. Only a connected provider"
+" can be set as the site default."
+msgstr ""
+"Configure los proveedores de IA disponibles en este sitio. Solo un proveedor"
+" conectado puede establecerse como predeterminado del sitio."
+
+#: src/settings-app/index.js:568
+msgid "Slug"
+msgstr "Slug"
+
+#: src/settings-app/index.js:672
+msgid ""
+"API keys: use Edit on a provider. Setting a default updates the global "
+"provider and model used by assistants."
+msgstr ""
+"Claves de API: use Editar en un proveedor. Al establecer un valor "
+"predeterminado se actualizan el proveedor y el modelo globales que usan los "
+"asistentes."
+
+#: src/settings-app/index.js:693
+msgid "Default agent mode"
+msgstr "Modo de agente predeterminado"
+
+#: src/settings-app/index.js:705
+msgid "Read-only"
+msgstr "Solo lectura"
+
+#: src/settings-app/index.js:717
+msgid "Message scanning"
+msgstr "Análisis de mensajes"
+
+#: src/settings-app/index.js:726
+msgid "Require chat consent"
+msgstr "Requerir consentimiento para el chat"
+
+#: src/settings-app/index.js:736
+msgid "Consent text"
+msgstr "Texto del consentimiento"
+
+#: src/settings-app/index.js:748
+msgid "Conversation retention (days)"
+msgstr "Retención de conversaciones (días)"
+
+#: src/settings-app/index.js:765
+msgid "Audit log retention (days)"
+msgstr "Retención del registro de auditoría (días)"
+
+#: src/settings-app/index.js:778
+msgid "Request Rate Limits"
+msgstr "Límites de frecuencia de solicitudes"
+
+#: src/settings-app/index.js:780
+msgid ""
+"IP-based throttle applied before role-based daily quotas. Protects against "
+"rapid-fire requests."
+msgstr ""
+"Limitación basada en IP que se aplica antes de las cuotas diarias por "
+"perfil. Protege frente a ráfagas de solicitudes."
+
+#: src/settings-app/index.js:786
+msgid "Authenticated users (requests per minute)"
+msgstr "Usuarios identificados (solicitudes por minuto)"
+
+#: src/settings-app/index.js:803
+msgid "Anonymous visitors (requests per minute)"
+msgstr "Visitantes anónimos (solicitudes por minuto)"
+
+#: src/settings-app/index.js:924
+msgid ""
+"Control which WordPress roles can administer the plugin and interact with AI"
+" agents. Administrators always retain full access."
+msgstr ""
+"Controle qué perfiles de WordPress pueden administrar el plugin e "
+"interactuar con los agentes de IA. Los administradores conservan siempre el "
+"acceso completo."
+
+#: src/settings-app/index.js:930
+msgid ""
+"These rules apply site-wide. A user needs at least one ticked box to access "
+"the corresponding feature. Removing a role from all plugin privileges will "
+"hide the Agent Builder menu from that role entirely."
+msgstr ""
+"Estas reglas se aplican a todo el sitio. Un usuario necesita al menos una "
+"casilla marcada para acceder a la función correspondiente. Si retira a un "
+"perfil todos los privilegios del plugin, el menú de Agent Builder quedará "
+"totalmente oculto para ese perfil."
+
+#: src/settings-app/index.js:937
+msgid "Plugin Administration"
+msgstr "Administración del plugin"
+
+#: src/settings-app/index.js:939
+msgid "Who can access and configure the Agent Builder admin pages."
+msgstr ""
+"Quién puede acceder a las páginas de administración de Agent Builder y "
+"configurarlas."
+
+#: src/settings-app/index.js:949
+msgid "Permission"
+msgstr "Permiso"
+
+#: src/settings-app/index.js:994 src/settings-app/index.js:1112
+msgid "Administrators always have full access"
+msgstr "Los administradores siempre tienen acceso completo"
+
+#: src/settings-app/index.js:1020
+msgid ""
+"Who can chat with and interact with installed AI agents, and how much they "
+"may use per day."
+msgstr ""
+"Quién puede chatear e interactuar con los agentes de IA instalados y cuánto "
+"puede usarlos al día."
+
+#: src/settings-app/index.js:1030
+msgid "Permission / Limit"
+msgstr "Permiso / Límite"
+
+#: src/settings-app/index.js:1036
+msgid "Visitor"
+msgstr "Visitante"
+
+#: src/settings-app/index.js:1038
+msgid "Not logged in"
+msgstr "Sin sesión iniciada"
+
+#: src/settings-app/index.js:1078
+msgid "Allow non-logged-in visitors to use frontend chat"
+msgstr ""
+"Permitir que los visitantes sin sesión iniciada usen el chat de la parte "
+"pública"
+
+#: src/settings-app/index.js:1135
+msgid "Daily Limits"
+msgstr "Límites diarios"
+
+#: src/settings-app/index.js:1141
+msgid ""
+"0 = unlimited, resets at midnight UTC. Administrators are never limited."
+msgstr ""
+"0 = sin límite, se reinicia a medianoche UTC. Los administradores nunca "
+"tienen límite."
+
+#: src/settings-app/index.js:1152
+msgid "Queries / day"
+msgstr "Consultas / día"
+
+#: src/settings-app/index.js:1159 src/settings-app/index.js:1163
+msgid "Max AI chat messages per user per day."
+msgstr "Número máximo de mensajes de chat de IA por usuario y día."
+
+#: src/settings-app/index.js:1224
+msgid "Tokens / day"
+msgstr "Tokens / día"
+
+#: src/settings-app/index.js:1231 src/settings-app/index.js:1235
+msgid "Max AI tokens consumed per user per day."
+msgstr "Número máximo de tokens de IA consumidos por usuario y día."
+
+#: src/settings-app/index.js:1298
+msgid ""
+"How enforcement works: these settings control WordPress admin menu "
+"visibility, admin bar chat access, the REST chat API, and AJAX task "
+"triggers. Unchecked roles are blocked at the server, not just hidden in the "
+"UI. Request rate limits are under Security."
+msgstr ""
+"Cómo se aplica: estos ajustes controlan la visibilidad del menú de "
+"administración de WordPress, el acceso al chat desde la barra de "
+"administración, la API REST de chat y los disparadores de tareas AJAX. Los "
+"perfiles sin marcar se bloquean en el servidor, no solo se ocultan en la "
+"interfaz. Los límites de frecuencia de solicitudes están en Seguridad."
+
+#: src/settings-app/index.js:1319
+msgid "Persistent key-value memory agents use across conversations."
+msgstr ""
+"Memoria persistente de clave-valor que los agentes usan entre "
+"conversaciones."
+
+#: src/settings-app/index.js:1325
+msgid "Default memory TTL (days)"
+msgstr "TTL de memoria predeterminado (días)"
+
+#: src/settings-app/index.js:1326
+msgid "0 = never expires"
+msgstr "0 = nunca caduca"
+
+#: src/settings-app/index.js:1340
+msgid "Enable local browser memory"
+msgstr "Activar la memoria local del navegador"
+
+#: src/settings-app/index.js:1413
+msgid "(default)"
+msgstr "(predeterminado)"
+
+#: src/settings-app/index.js:1461
+msgid ""
+"Chat capabilities and per-agent provider/model. Set the site default "
+"provider on the Providers tab. Theme is under Interface."
+msgstr ""
+"Capacidades del chat y proveedor/modelo de cada agente. Establezca el "
+"proveedor predeterminado del sitio en la pestaña Proveedores. El tema está "
+"en Interfaz."
+
+#: src/settings-app/index.js:1466
+msgid "Chat features"
+msgstr "Funciones del chat"
+
+#: src/settings-app/index.js:1468
+msgid "Features available in agent chat."
+msgstr "Funciones disponibles en el chat con agentes."
+
+#: src/settings-app/index.js:1474
+msgid "Audio input"
+msgstr "Entrada de audio"
+
+#: src/settings-app/index.js:1481
+msgid "Text-to-speech"
+msgstr "Texto a voz"
+
+#: src/settings-app/index.js:1488
+msgid "Vision / image input"
+msgstr "Visión / entrada de imágenes"
+
+#: src/settings-app/index.js:1497
+msgid "White-label branding"
+msgstr "Marca blanca"
+
+#: src/settings-app/index.js:1498
+msgid "Hide “Powered by Agent Builder” in the chat footer."
+msgstr "Ocultar «Powered by Agent Builder» en el pie del chat."
+
+#: src/settings-app/index.js:1509
+msgid "Active agent overrides"
+msgstr "Ajustes personalizados de los agentes activos"
+
+#: src/settings-app/index.js:1511
+msgid ""
+"Each row starts on the site default provider and model (Providers tab). "
+"Change only the assistants that need a different setup."
+msgstr ""
+"Cada fila parte del proveedor y el modelo predeterminados del sitio (pestaña"
+" Proveedores). Cambie solo los asistentes que necesiten una configuración "
+"diferente."
+
+#: src/settings-app/index.js:1518
+msgid "No active agents."
+msgstr "No hay agentes activos."
+
+#: src/settings-app/index.js:1552
+msgid "provider"
+msgstr "proveedor"
+
+#: src/settings-app/index.js:1606
+msgid "model"
+msgstr "modelo"
+
+#: src/settings-app/index.js:1738
+msgid "Customise greetings and personality notes per assistant."
+msgstr ""
+"Personalice los saludos y las notas de personalidad de cada asistente."
+
+#: src/settings-app/index.js:1744
+msgid "No assistants installed."
+msgstr "No hay asistentes instalados."
+
+#: src/settings-app/index.js:1748
+msgid "Select assistant"
+msgstr "Seleccionar asistente"
+
+#: src/settings-app/index.js:1761
+msgid "Welcome message"
+msgstr "Mensaje de bienvenida"
+
+#: src/settings-app/index.js:1774
+msgid "Persona notes"
+msgstr "Notas de personalidad"
+
+#: src/settings-app/index.js:1785
+msgid "Response style"
+msgstr "Estilo de respuesta"
+
+#: src/settings-app/index.js:1809
+msgid "Third-party API keys used by agent tools."
+msgstr "Claves de API de terceros que usan las herramientas de los agentes."
+
+#: src/settings-app/index.js:1831
+msgid "Get a key"
+msgstr "Obtener una clave"
+
+#: src/settings-app/index.js:1847
+msgid "Configured"
+msgstr "Configurada"
+
+#: src/settings-app/index.js:1848
+msgid "Not configured"
+msgstr "Sin configurar"
+
+#: src/settings-app/index.js:1922
+msgid "REST endpoints for integrations."
+msgstr "Endpoints REST para integraciones."
+
+#: src/settings-app/index.js:1928
+msgid "Namespace"
+msgstr "Espacio de nombres"
+
+#: src/settings-app/index.js:1937
+msgid "Agentic Services"
+msgstr "Agentic Services"
+
+#: src/settings-app/index.js:1948
+msgid ""
+"Base URLs the plugin calls for AI chat, knowledge search, and media "
+"generation. Leave these on their defaults unless you’re self-hosting a proxy"
+" or support asked you to change one."
+msgstr ""
+"URL base a las que el plugin llama para el chat de IA, la búsqueda en el "
+"conocimiento y la generación de medios. Déjelas con sus valores "
+"predeterminados salvo que aloje su propio proxy o el soporte le haya pedido "
+"que cambie alguna."
+
+#: src/settings-app/index.js:1990
+msgid "Testing…"
+msgstr "Probando…"
+
+#: src/settings-app/index.js:2017
+msgid "Reset to default"
+msgstr "Restablecer el valor predeterminado"
+
+#: src/settings-app/index.js:2071
+msgid "Could not load this settings panel."
+msgstr "No se ha podido cargar este panel de ajustes."
+
+#: src/settings-app/index.js:2223
+msgid "Settings saved with warnings:"
+msgstr "Ajustes guardados con avisos:"
+
+#: src/settings-app/index.js:2257
+msgid "Could not save settings."
+msgstr "No se han podido guardar los ajustes."
+
+#: src/settings-app/index.js:2267
+msgid "Loading settings…"
+msgstr "Cargando los ajustes…"
+
+#: src/settings-app/index.js:2278
+msgid "Settings unavailable."
+msgstr "Los ajustes no están disponibles."
+
+#: src/settings-app/index.js:2343
+msgid "Activate Agent Builder Pro to manage your license key here."
+msgstr "Active Agent Builder Pro para gestionar aquí su clave de licencia."
+
+#: src/settings-app/index.js:2354
+msgid "This tab is available via the classic view or an add-on."
+msgstr ""
+"Esta pestaña está disponible a través de la vista clásica o de una "
+"extensión."
+
+#: src/shared/components.js:154
+msgid "More info"
+msgstr "Más información"

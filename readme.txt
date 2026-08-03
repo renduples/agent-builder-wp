@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.45
+Stable tag: 3.3.46
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -288,6 +288,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.46 - 2026-08-03 =
+* Fix: The React admin UI (settings, wizards, dashboard, activity log) had `wp_set_script_translations()` correctly wired but no JS translation files behind it, so it rendered in English regardless of site locale — the .pot only ever covered PHP strings. Extracted the ~400 JS-sourced strings, translated them into all 11 bundled locales, and generated the per-script JSON files (`agent-builder-{locale}-agentic-{handle}.json`) WordPress needs to load them.
 
 = 3.3.45 - 2026-08-03 =
 * Fix: The 11 bundled translation files (de_DE, es_ES, fr_FR, it_IT, ja, ko_KR, nl_NL, pl_PL, pt_BR, ru_RU, zh_CN) had only ever had 11 strings translated out of ~1600 — essentially the entire admin UI fell back to English regardless of site locale. Fully translated all strings in all 11 languages and recompiled the .mo files.

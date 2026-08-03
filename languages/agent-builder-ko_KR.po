@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Agent Builder 2.9.261\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/agent-builder\n"
-"POT-Creation-Date: 2026-08-03T00:38:07+00:00\n"
+"POT-Creation-Date: 2026-08-03T07:20:57+00:00\n"
 "PO-Revision-Date: 2026-08-03T00:38:07+00:00\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ko_KR <LL@li.org>\n"
@@ -259,11 +259,13 @@ msgstr "어시스턴트 \"%s\"이(가) 성공적으로 설치되었습니다. �
 #: includes/class-admin-menu-handler.php:371
 #: includes/class-admin-pages-rest.php:312
 #: includes/class-admin-pages-rest.php:315
-#: includes/class-admin-settings-rest.php:108
+#: includes/class-admin-settings-rest.php:108 src/settings-app/index.js:1452
 msgid "Agents"
 msgstr "에이전트"
 
 #: admin/agents.php:406 admin/agents.php:483
+#: src/dashboard-activity/index.js:142 src/dashboard-app/index.js:311
+#: src/dashboard-app/index.js:752
 msgid "Community Agents"
 msgstr "커뮤니티 에이전트"
 
@@ -334,7 +336,8 @@ msgstr "비활성화"
 #: admin/deployment/deployment-scheduled-tasks.php:408
 #: admin/deployment/deployment-scheduled-tasks.php:436
 #: admin/deployment/deployment-shortcodes.php:332 admin/providers.php:413
-#: admin/skills.php:586 admin/train-data.php:174
+#: admin/skills.php:586 admin/train-data.php:174 src/admin-pages/index.js:621
+#: src/admin-pages/index.js:1247
 msgid "Delete"
 msgstr "삭제"
 
@@ -350,14 +353,14 @@ msgstr "적용"
 #: admin/deployment/deployment-shortcodes-form.php:43
 #: admin/deployment/deployment-shortcodes.php:249 admin/run-task.php:87
 #: includes/class-gdpr.php:183 includes/class-gdpr.php:458
-#: includes/class-gdpr.php:553
+#: includes/class-gdpr.php:553 src/admin-pages/index.js:1215
 msgid "Agent"
 msgstr "에이전트"
 
 #: admin/agents.php:518 admin/agents.php:694
 #: admin/deployment/deployment-scheduled-tasks.php:295 admin/run-task.php:99
 #: admin/skills.php:180 admin/skills.php:308 admin/skills.php:535
-#: admin/tools.php:321 admin/tools.php:382
+#: admin/tools.php:321 admin/tools.php:382 src/agent-wizard/index.js:718
 msgid "Description"
 msgstr "설명"
 
@@ -485,7 +488,7 @@ msgstr "승인 대기열"
 #: includes/class-admin-menu-handler.php:395
 #: includes/class-admin-pages-rest.php:771
 #: includes/class-admin-pages-rest.php:779
-#: includes/class-admin-pages-rest.php:1189
+#: includes/class-admin-pages-rest.php:1189 src/admin-pages/index.js:1949
 msgid "Approvals"
 msgstr "승인"
 
@@ -560,11 +563,11 @@ msgstr "모두 거부"
 msgid "Pending %d"
 msgstr "대기 중 %d"
 
-#: admin/approvals.php:219
+#: admin/approvals.php:219 src/admin-pages/index.js:1825
 msgid "Approve"
 msgstr "승인"
 
-#: admin/approvals.php:222
+#: admin/approvals.php:222 src/admin-pages/index.js:1835
 msgid "Reject"
 msgstr "거부"
 
@@ -605,6 +608,7 @@ msgstr "테이블"
 
 #: admin/approvals.php:275 admin/partials/vector-store-pro.php:198
 #: admin/settings-memory.php:197 admin/train-data.php:193
+#: src/admin-pages/index.js:2202
 msgid "Type"
 msgstr "유형"
 
@@ -625,6 +629,8 @@ msgstr "크기"
 #: admin/deployment/deployment-shortcodes.php:255
 #: admin/partials/vector-store-pro.php:203 admin/settings-endpoints.php:128
 #: admin/settings/tab-security.php:321 admin/skills.php:539
+#: src/admin-pages/index.js:585 src/admin-pages/index.js:1217
+#: src/settings-app/index.js:570
 msgid "Actions"
 msgstr "작업"
 
@@ -656,7 +662,9 @@ msgstr "원본 파일"
 #: admin/deployment/deployment-shortcodes.php:252
 #: admin/partials/vector-store-pro.php:201 admin/providers.php:294
 #: admin/settings-llm.php:134 admin/skills.php:533 admin/train-data.php:259
-#: includes/class-gdpr.php:557
+#: includes/class-gdpr.php:557 src/admin-pages/index.js:2203
+#: src/dashboard-app/index.js:127 src/settings-app/index.js:566
+#: src/settings-app/index.js:1819
 msgid "Status"
 msgstr "상태"
 
@@ -805,7 +813,8 @@ msgstr "메시지"
 #: admin/conversations.php:222 admin/security-log.php:231 admin/tools.php:200
 #: admin/tools.php:207 includes/class-admin-menu-handler.php:176
 #: includes/class-admin-menu-handler.php:402
-#: includes/class-admin-pages-rest.php:591
+#: includes/class-admin-pages-rest.php:591 src/admin-pages/index.js:2308
+#: src/agent-wizard/index.js:743
 msgid "Tools"
 msgstr "도구"
 
@@ -973,7 +982,7 @@ msgid "Enable"
 msgstr "활성화"
 
 #: admin/deployment/deployment-admin-bar.php:199
-#: admin/deployment/deployment-modal.php:175
+#: admin/deployment/deployment-modal.php:175 src/deploy-wizard/index.js:322
 msgid "Position"
 msgstr "위치"
 
@@ -993,6 +1002,7 @@ msgid "Bottom Left"
 msgstr "왼쪽 아래"
 
 #: admin/deployment/deployment-admin-bar.php:236
+#: src/deploy-wizard/index.js:133 src/deploy-wizard/index.js:138
 msgid "Everywhere"
 msgstr "모든 곳"
 
@@ -1233,7 +1243,7 @@ msgstr "명령"
 #: admin/deployment/deployment-event-listeners.php:204
 #: admin/deployment/deployment-scheduled-tasks.php:287
 #: admin/deployment/deployment-shortcodes-form.php:32
-#: admin/deployment/deployment-shortcodes.php:248
+#: admin/deployment/deployment-shortcodes.php:248 src/admin-pages/index.js:469
 msgid "Label"
 msgstr "레이블"
 
@@ -1281,7 +1291,7 @@ msgstr "설치된 에이전트가 없습니다."
 #: admin/deployment/deployment-event-listeners.php:156
 #: admin/deployment/deployment-event-listeners.php:239
 #: admin/deployment/deployment-scheduled-tasks.php:251 admin/skills.php:536
-#: includes/class-approval-queue.php:218
+#: includes/class-approval-queue.php:218 src/settings-app/index.js:1526
 msgid "Assistant"
 msgstr "어시스턴트"
 
@@ -1308,6 +1318,8 @@ msgstr "권한 변경 사항은 토글할 때 자동으로 저장됩니다."
 #: admin/deployment/deployment-cli.php:334
 #: admin/deployment/deployment-event-listeners.php:340
 #: admin/deployment/deployment-scheduled-tasks.php:505
+#: src/dashboard-app/index.js:523 src/interface-settings/index.js:378
+#: src/shared/components.js:93
 msgid "Saving…"
 msgstr "저장 중…"
 
@@ -1338,7 +1350,7 @@ msgstr "댓글"
 #: admin/deployment/deployment-event-listeners.php:115 admin/settings.php:623
 #: includes/class-admin-pages-rest.php:341
 #: includes/class-admin-settings-rest.php:110
-#: includes/class-admin-surfaces.php:139
+#: includes/class-admin-surfaces.php:139 src/settings-app/index.js:915
 msgid "Users"
 msgstr "사용자"
 
@@ -1433,6 +1445,7 @@ msgstr "트리거 추가"
 #: admin/deployment/deployment-event-listeners.php:223
 #: admin/deployment/deployment-scheduled-tasks.php:307 admin/run-task.php:133
 #: admin/security-log.php:372 includes/class-chat-assets.php:57
+#: src/dashboard-app/index.js:531
 msgid "Cancel"
 msgstr "취소"
 
@@ -1459,7 +1472,8 @@ msgstr "모드"
 #: admin/deployment/deployment-scheduled-tasks.php:327
 #: admin/deployment/deployment-shortcodes.php:251
 #: admin/partials/vector-store-pro.php:197 admin/skills.php:537
-#: admin/tools.php:384
+#: admin/tools.php:384 src/admin-pages/index.js:1056
+#: src/knowledge-wizard/index.js:39
 msgid "Source"
 msgstr "출처"
 
@@ -1524,7 +1538,7 @@ msgid "Gutenberg block settings saved."
 msgstr "구텐베르크 블록 설정이 저장되었습니다."
 
 #: admin/deployment/deployment-gutenberg-blocks.php:109
-#: includes/class-gutenberg-blocks.php:264
+#: includes/class-gutenberg-blocks.php:264 assets/js/gutenberg-blocks.js:58
 msgid "Default (from Settings)"
 msgstr "기본값(설정에서 가져옴)"
 
@@ -1851,6 +1865,7 @@ msgid "The assistant visitors will chat with."
 msgstr "방문자가 대화하게 될 어시스턴트입니다."
 
 #: admin/deployment/deployment-shortcodes-form.php:59
+#: assets/js/gutenberg-blocks.js:295
 msgid "Display Style"
 msgstr "표시 스타일"
 
@@ -1892,11 +1907,12 @@ msgid "Display the agent name and avatar above the chat area."
 msgstr "채팅 영역 위에 에이전트 이름과 아바타를 표시합니다."
 
 #: admin/deployment/deployment-shortcodes-form.php:91
+#: assets/js/gutenberg-blocks.js:324
 msgid "Placeholder Text"
 msgstr "플레이스홀더 텍스트"
 
 #: admin/deployment/deployment-shortcodes-form.php:96
-#: templates/modal-widget.php:75
+#: templates/modal-widget.php:75 assets/js/gutenberg-blocks.js:252
 msgid "Type your message..."
 msgstr "메시지를 입력하세요..."
 
@@ -1969,19 +1985,22 @@ msgid "Created"
 msgstr "생성일"
 
 #: admin/deployment/deployment-shortcodes.php:265
+#: assets/js/gutenberg-blocks.js:79
 msgid "Inline"
 msgstr "인라인"
 
 #: admin/deployment/deployment-shortcodes.php:266
+#: assets/js/gutenberg-blocks.js:80
 msgid "Popup"
 msgstr "팝업"
 
 #: admin/deployment/deployment-shortcodes.php:267
+#: assets/js/gutenberg-blocks.js:81
 msgid "Sidebar"
 msgstr "사이드바"
 
 #: admin/deployment/deployment-shortcodes.php:289 admin/tools.php:318
-#: admin/tools.php:380
+#: admin/tools.php:380 src/admin-pages/index.js:1041
 msgid "Enabled"
 msgstr "활성화됨"
 
@@ -1999,6 +2018,7 @@ msgid "Disable"
 msgstr "비활성화"
 
 #: admin/deployment/deployment-shortcodes.php:326 admin/skills.php:585
+#: src/admin-pages/index.js:1237 src/settings-app/index.js:612
 msgid "Edit"
 msgstr "편집"
 
@@ -2072,6 +2092,7 @@ msgid "All assistant interactions via shortcodes are logged in the Audit Log."
 msgstr "숏코드를 통한 모든 어시스턴트 상호작용은 감사 로그에 기록됩니다."
 
 #: admin/knowledge-wizard.php:52 includes/class-admin-menu-handler.php:148
+#: src/agent-wizard/index.js:360
 msgid "Add Knowledge"
 msgstr "지식 추가"
 
@@ -2096,13 +2117,14 @@ msgstr "지식 마법사를 사용하려면 자바스크립트를 활성화해�
 #: admin/tools.php:103 admin/tools.php:383
 #: includes/class-admin-pages-rest.php:336
 #: includes/class-admin-pages-rest.php:1234
-#: includes/class-admin-settings-rest.php:111
+#: includes/class-admin-settings-rest.php:111 src/settings-app/index.js:684
 msgid "Security"
 msgstr "보안"
 
 #: admin/logs.php:33 includes/class-admin-menu-handler.php:220
 #: includes/class-admin-menu-handler.php:383
-#: includes/class-admin-pages-rest.php:1150
+#: includes/class-admin-pages-rest.php:1150 src/dashboard-activity/index.js:88
+#: src/dashboard-app/index.js:263
 msgid "Activity"
 msgstr "활동"
 
@@ -2256,7 +2278,7 @@ msgstr "소스를 불러오는 중…"
 msgid "Chunks"
 msgstr "청크"
 
-#: admin/partials/vector-store-pro.php:200
+#: admin/partials/vector-store-pro.php:200 src/admin-pages/index.js:1958
 msgid "Tokens"
 msgstr "토큰"
 
@@ -2275,6 +2297,7 @@ msgid "Configure the AI providers available on this site."
 msgstr "이 사이트에서 사용할 수 있는 AI 제공업체를 구성합니다."
 
 #: admin/providers.php:73 admin/providers.php:85 admin/providers.php:280
+#: src/settings-app/index.js:559
 msgid "Add Provider"
 msgstr "제공업체 추가"
 
@@ -2294,19 +2317,21 @@ msgstr ""
 msgid "Update Provider"
 msgstr "제공업체 업데이트"
 
-#: admin/providers.php:310
+#: admin/providers.php:310 src/settings-app/index.js:584
 msgid "Connected"
 msgstr "연결됨"
 
-#: admin/providers.php:311
+#: admin/providers.php:311 src/settings-app/index.js:588
 msgid "Not connected"
 msgstr "연결되지 않음"
 
 #: admin/providers.php:397 admin/settings-endpoints.php:180
+#: assets/js/gutenberg-blocks.js:65 src/dashboard-app/index.js:376
+#: src/settings-app/index.js:618
 msgid "Default"
 msgstr "기본값"
 
-#: admin/providers.php:404
+#: admin/providers.php:404 src/settings-app/index.js:657
 msgid "Set Default"
 msgstr "기본값으로 설정"
 
@@ -2484,7 +2509,7 @@ msgstr "위반이 가장 많은 IP (%s)"
 msgid "IP Address"
 msgstr "IP 주소"
 
-#: admin/security-log.php:169
+#: admin/security-log.php:169 src/admin-pages/index.js:1931
 msgid "Events"
 msgstr "이벤트"
 
@@ -2687,15 +2712,15 @@ msgstr ""
 "재정의한 URL을 지우거나 빈 필드로 저장하면 기본 제공 기본값으로 되돌아갑니다. 각 행 옆의 초기화 링크를 사용해도 즉시 기본값이 "
 "복원됩니다."
 
-#: admin/settings-endpoints.php:126
+#: admin/settings-endpoints.php:126 src/settings-app/index.js:1818
 msgid "Service"
 msgstr "서비스"
 
-#: admin/settings-endpoints.php:127
+#: admin/settings-endpoints.php:127 src/settings-app/index.js:1932
 msgid "Base URL"
 msgstr "기본 URL"
 
-#: admin/settings-endpoints.php:157
+#: admin/settings-endpoints.php:157 src/settings-app/index.js:2008
 msgid "Default:"
 msgstr "기본값:"
 
@@ -2791,7 +2816,9 @@ msgstr "요금 최종 업데이트: %s"
 msgid "Get Latest Pricing"
 msgstr "최신 요금 가져오기"
 
-#: admin/settings-llm.php:131
+#: admin/settings-llm.php:131 assets/js/gutenberg-blocks.js:343
+#: src/agent-wizard/index.js:570 src/dashboard-app/index.js:367
+#: src/settings-app/index.js:569 src/settings-app/index.js:1532
 msgid "Model"
 msgstr "모델"
 
@@ -2815,6 +2842,7 @@ msgstr ""
 
 #. translators: %s: link to Terms of Service
 #: admin/settings-llm.php:239 includes/class-admin-menu-handler.php:987
+#: src/admin-pages/index.js:160 src/settings-app/index.js:131
 msgid "Terms of Service"
 msgstr "서비스 이용약관"
 
@@ -2880,7 +2908,7 @@ msgstr "어시스턴트가 대화를 거치며 컨텍스트를 축적하면 에�
 msgid "Entity"
 msgstr "엔터티"
 
-#: admin/settings-memory.php:199
+#: admin/settings-memory.php:199 src/settings-app/index.js:1820
 msgid "Key"
 msgstr "키"
 
@@ -2911,6 +2939,7 @@ msgid "Settings saved with %s as Global provider."
 msgstr "%s을(를) 전역 제공업체로 하여 설정이 저장되었습니다."
 
 #: admin/settings.php:558 includes/class-admin-ajax.php:1179
+#: src/shared/components.js:115
 msgid "Settings saved."
 msgstr "설정이 저장되었습니다."
 
@@ -2918,24 +2947,27 @@ msgstr "설정이 저장되었습니다."
 #: includes/class-admin-menu-handler.php:229
 #: includes/class-admin-menu-handler.php:423
 #: includes/class-admin-notice-manager.php:108
-#: includes/class-admin-pages-rest.php:1197
+#: includes/class-admin-pages-rest.php:1197 src/settings-app/index.js:2375
 msgid "Settings"
 msgstr "설정"
 
 #: admin/settings.php:620 includes/class-admin-settings-rest.php:107
+#: src/interface-settings/index.js:149 src/settings-app/index.js:251
 msgid "Interface"
 msgstr "인터페이스"
 
 #: admin/settings.php:622 includes/class-admin-menu-handler.php:389
-#: includes/class-admin-settings-rest.php:109
+#: includes/class-admin-settings-rest.php:109 src/settings-app/index.js:550
 msgid "Providers"
 msgstr "제공업체"
 
 #: admin/settings.php:625 includes/class-admin-settings-rest.php:112
+#: src/settings-app/index.js:1807
 msgid "APIs"
 msgstr "API"
 
 #: admin/settings.php:626 includes/class-admin-settings-rest.php:113
+#: src/settings-app/index.js:1919
 msgid "Endpoints"
 msgstr "엔드포인트"
 
@@ -2944,14 +2976,19 @@ msgid "Health"
 msgstr "상태"
 
 #: admin/settings.php:648 includes/class-admin-settings-rest.php:123
+#: src/admin-pages/index.js:72 src/dashboard-app/index.js:638
+#: src/interface-settings/index.js:182 src/settings-app/index.js:263
 msgid "Basic"
 msgstr "기본"
 
 #: admin/settings.php:653 includes/class-admin-settings-rest.php:128
+#: src/admin-pages/index.js:83 src/dashboard-app/index.js:473
+#: src/dashboard-app/index.js:649 src/interface-settings/index.js:186
+#: src/settings-app/index.js:265
 msgid "Advanced"
 msgstr "고급"
 
-#: admin/settings.php:682
+#: admin/settings.php:682 src/settings-app/index.js:169
 msgid "Search settings…"
 msgstr "설정 검색…"
 
@@ -2967,7 +3004,8 @@ msgstr "설정 섹션"
 msgid "No settings match your search."
 msgstr "검색과 일치하는 설정이 없습니다."
 
-#: admin/settings.php:763
+#: admin/settings.php:763 src/interface-settings/index.js:379
+#: src/shared/components.js:94
 msgid "Save changes"
 msgstr "변경 사항 저장"
 
@@ -2993,7 +3031,7 @@ msgstr "어시스턴트가 사람을 부르는 방식입니다. 사이트 정보
 msgid "Personalization"
 msgstr "개인화"
 
-#: admin/settings/tab-general.php:29
+#: admin/settings/tab-general.php:29 src/settings-app/index.js:307
 msgid "What should agents call administrators?"
 msgstr "에이전트가 관리자를 어떻게 불러야 합니까?"
 
@@ -3007,7 +3045,7 @@ msgid ""
 "use the WordPress display name."
 msgstr "에이전트가 대화에서 로그인한 관리자를 부르는 방식입니다. 비워 두면 워드프레스 표시 이름이 사용됩니다."
 
-#: admin/settings/tab-general.php:38
+#: admin/settings/tab-general.php:38 src/settings-app/index.js:324
 msgid "What should agents call frontend visitors?"
 msgstr "에이전트가 프런트엔드 방문자를 어떻게 불러야 합니까?"
 
@@ -3059,7 +3097,7 @@ msgstr ""
 "각 어시스턴트가 방문자에게 인사하는 방식을 사용자 지정하고 성격을 형성하는 컨텍스트를 추가하십시오. 지침은 어시스턴트의 시스템 프롬프트에"
 " 덧붙여지며 이를 대체하지 않습니다."
 
-#: admin/settings/tab-security.php:320
+#: admin/settings/tab-security.php:320 src/admin-pages/index.js:1043
 msgid "Tool"
 msgstr "도구"
 
@@ -3105,7 +3143,8 @@ msgstr "API 키 발급"
 msgid "Connect"
 msgstr "연결"
 
-#: admin/setup.php:464
+#: admin/setup.php:464 src/admin-pages/index.js:610
+#: src/settings-app/index.js:1991
 msgid "Test"
 msgstr "테스트"
 
@@ -3217,6 +3256,7 @@ msgid ""
 msgstr "AI 어시스턴트에게 부여할 권한 수준을 제어합니다. 설정에서 언제든지 변경할 수 있습니다."
 
 #: admin/setup.php:852 admin/signup.php:95 admin/signup.php:218
+#: src/settings-app/index.js:697
 msgid "Supervised"
 msgstr "감독 모드"
 
@@ -3232,6 +3272,7 @@ msgstr ""
 "AI가 변경 사항을 제안하면 저장하거나 발행하기 전에 사용자가 검토하고 승인합니다. 승인 없이는 아무 일도 일어나지 않습니다."
 
 #: admin/setup.php:861 admin/signup.php:96 admin/signup.php:222
+#: src/settings-app/index.js:701
 msgid "Autonomous"
 msgstr "자율 모드"
 
@@ -3292,7 +3333,8 @@ msgstr "전송"
 msgid "Exit Wizard"
 msgstr "마법사 종료"
 
-#: admin/setup.php:936
+#: admin/setup.php:936 src/agent-wizard/index.js:766
+#: src/deploy-wizard/index.js:390 src/knowledge-wizard/index.js:423
 msgid "Back"
 msgstr "뒤로"
 
@@ -3360,7 +3402,10 @@ msgstr "보안 모드"
 msgid "Chat Model"
 msgstr "채팅 모델"
 
-#: admin/signup.php:106
+#: admin/signup.php:106 src/admin-pages/index.js:2243
+#: src/agent-wizard/index.js:303 src/deploy-wizard/index.js:193
+#: src/knowledge-wizard/index.js:354 src/settings-app/index.js:2110
+#: src/shared/components.js:71
 msgid "Loading…"
 msgstr "불러오는 중…"
 
@@ -3549,6 +3594,8 @@ msgid "Back to Skills"
 msgstr "스킬로 돌아가기"
 
 #: admin/skills.php:174 admin/skills.php:307 admin/skills.php:534
+#: src/admin-pages/index.js:582 src/agent-wizard/index.js:710
+#: src/settings-app/index.js:567
 msgid "Name"
 msgstr "이름"
 
@@ -3589,6 +3636,7 @@ msgid "optional"
 msgstr "선택 사항"
 
 #: admin/skills.php:218 admin/skills.php:309 admin/skills.php:538
+#: src/admin-pages/index.js:1216 src/dashboard-app/index.js:161
 msgid "Version"
 msgstr "버전"
 
@@ -3635,7 +3683,7 @@ msgid "No skills found. Try a different search term."
 msgstr "스킬을 찾을 수 없습니다. 다른 검색어로 시도하십시오."
 
 #: admin/skills.php:310 includes/class-approval-queue.php:217
-#: includes/class-gdpr.php:462
+#: includes/class-gdpr.php:462 src/admin-pages/index.js:1279
 msgid "Action"
 msgstr "작업"
 
@@ -3855,7 +3903,7 @@ msgstr "클릭하여 이 어빌리티를 비활성화"
 msgid "Click to enable this ability"
 msgstr "클릭하여 이 어빌리티를 활성화"
 
-#: admin/tools.php:350 admin/tools.php:487
+#: admin/tools.php:350 admin/tools.php:487 src/admin-pages/index.js:851
 msgid "None"
 msgstr "없음"
 
@@ -3901,7 +3949,8 @@ msgstr ""
 msgid "No tools found. Activate assistants to see their available tools."
 msgstr "도구를 찾을 수 없습니다. 어시스턴트를 활성화하면 사용 가능한 도구가 표시됩니다."
 
-#: admin/tools.php:385
+#: admin/tools.php:385 src/admin-pages/index.js:1046
+#: src/agent-wizard/index.js:441 src/agent-wizard/index.js:722
 msgid "Category"
 msgstr "카테고리"
 
@@ -3927,7 +3976,7 @@ msgstr "이 도구가 활성화되어 있는 동안 워드프레스 어빌리티
 msgid "Read Only"
 msgstr "읽기 전용"
 
-#: admin/tools.php:425
+#: admin/tools.php:425 src/admin-pages/index.js:852
 msgid "Low"
 msgstr "낮음"
 
@@ -4038,11 +4087,12 @@ msgstr ""
 msgid "Wiki"
 msgstr "위키"
 
-#: admin/train-data.php:34
+#: admin/train-data.php:34 src/agent-wizard/index.js:726
+#: src/settings-app/index.js:1729
 msgid "Instructions"
 msgstr "지침"
 
-#: admin/train-data.php:35
+#: admin/train-data.php:35 src/settings-app/index.js:1310
 msgid "Memory"
 msgstr "메모리"
 
@@ -4086,7 +4136,8 @@ msgstr "에이전트: %s"
 
 #: admin/train-data.php:65 includes/class-admin-menu-handler.php:167
 #: includes/class-admin-menu-handler.php:377
-#: includes/class-admin-pages-rest.php:1599
+#: includes/class-admin-pages-rest.php:1599 src/agent-wizard/index.js:34
+#: src/agent-wizard/index.js:751 src/settings-app/index.js:298
 msgid "Knowledge"
 msgstr "지식"
 
@@ -4147,7 +4198,7 @@ msgstr "개념"
 msgid "No concepts yet. Create a FAQ, policy, or product fact to get started."
 msgstr "아직 개념이 없습니다. FAQ, 정책, 제품 정보를 만들어 시작하십시오."
 
-#: admin/train-data.php:172
+#: admin/train-data.php:172 src/admin-pages/index.js:2201
 msgid "Concept"
 msgstr "개념"
 
@@ -4155,7 +4206,7 @@ msgstr "개념"
 msgid "Save concept"
 msgstr "개념 저장"
 
-#: admin/train-data.php:181
+#: admin/train-data.php:181 src/knowledge-wizard/index.js:392
 msgid "Title"
 msgstr "제목"
 
@@ -4368,7 +4419,7 @@ msgstr "Pro 요금제 보기"
 msgid "How Vector Store works"
 msgstr "벡터 스토어 작동 방식"
 
-#: agent-builder.php:436
+#: agent-builder.php:436 src/settings-app/index.js:1018
 msgid "AI Agents"
 msgstr "AI 에이전트"
 
@@ -4597,7 +4648,7 @@ msgstr "Agent Builder — 게시"
 
 #: includes/class-admin-menu-handler.php:118
 #: includes/class-admin-menu-handler.php:416
-#: includes/class-admin-pages-rest.php:1529
+#: includes/class-admin-pages-rest.php:1529 src/deploy-wizard/index.js:410
 msgid "Publish"
 msgstr "게시"
 
@@ -4656,7 +4707,8 @@ msgstr "에이전트 채팅"
 
 #: includes/class-admin-menu-handler.php:441
 #: includes/class-admin-settings-rest.php:116
-#: includes/class-admin-settings-rest.php:154
+#: includes/class-admin-settings-rest.php:154 src/dashboard-app/index.js:140
+#: src/settings-app/index.js:2342
 msgid "License"
 msgstr "라이선스"
 
@@ -4711,17 +4763,18 @@ msgid "Agent Marketplace"
 msgstr "에이전트 마켓플레이스"
 
 #: includes/class-admin-menu-handler.php:917
-#: includes/class-admin-pages-rest.php:1562
+#: includes/class-admin-pages-rest.php:1562 src/admin-pages/index.js:108
+#: src/admin-pages/index.js:423 src/settings-app/index.js:79
 msgid "Upgrade to Pro"
 msgstr "Pro로 업그레이드"
 
-#: includes/class-admin-menu-handler.php:922
+#: includes/class-admin-menu-handler.php:922 src/settings-app/index.js:86
 msgid ""
 "Settings control how assistants behave on this site. Changes are stored "
 "locally and take effect for new conversations."
 msgstr "설정은 이 사이트에서 어시스턴트가 동작하는 방식을 제어합니다. 변경 사항은 로컬에 저장되며 새 대화부터 적용됩니다."
 
-#: includes/class-admin-menu-handler.php:924
+#: includes/class-admin-menu-handler.php:924 src/admin-pages/index.js:115
 msgid ""
 "Assistants only use the tools you allow. Higher-risk actions still follow "
 "Approvals and your safety settings."
@@ -4802,27 +4855,33 @@ msgid ""
 "Providers tab for everyday use."
 msgstr "고급 연동 및 API 엔드포인트입니다. 일상적인 사용에는 제공업체 탭의 연결된 제공업체를 우선 사용하십시오."
 
-#: includes/class-admin-menu-handler.php:978
+#: includes/class-admin-menu-handler.php:978 src/admin-pages/index.js:128
+#: src/settings-app/index.js:99
 msgid "Need help?"
 msgstr "도움이 필요하십니까?"
 
-#: includes/class-admin-menu-handler.php:979
+#: includes/class-admin-menu-handler.php:979 src/admin-pages/index.js:130
+#: src/settings-app/index.js:101
 msgid "Visit our Support Center"
 msgstr "지원 센터 방문하기"
 
-#: includes/class-admin-menu-handler.php:981
+#: includes/class-admin-menu-handler.php:981 src/admin-pages/index.js:134
+#: src/settings-app/index.js:105
 msgid "Documentation"
 msgstr "문서"
 
-#: includes/class-admin-menu-handler.php:989
+#: includes/class-admin-menu-handler.php:989 src/admin-pages/index.js:171
+#: src/settings-app/index.js:142
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
-#: includes/class-admin-menu-handler.php:991
+#: includes/class-admin-menu-handler.php:991 src/admin-pages/index.js:181
+#: src/settings-app/index.js:152
 msgid "GDPR Policy"
 msgstr "GDPR 정책"
 
 #: includes/class-admin-menu-handler.php:1159
+#: assets/js/gutenberg-blocks.js:160
 msgid "Online"
 msgstr "온라인"
 
@@ -5220,7 +5279,7 @@ msgid ""
 "system events. No technical jargon required."
 msgstr "어시스턴트 작업의 간단한 타임라인입니다. 사용한 도구, 승인, 중요한 시스템 이벤트를 기술 용어 없이 확인할 수 있습니다."
 
-#: includes/class-admin-pages-rest.php:1185
+#: includes/class-admin-pages-rest.php:1185 src/admin-pages/index.js:1941
 msgid "Tools used"
 msgstr "사용한 도구"
 
@@ -5429,7 +5488,7 @@ msgid ""
 "when you open a deployment action from here."
 msgstr "여기에서 배포 작업을 열면 전체 배포 편집기(숏코드 빌더, CLI, 모달)를 계속 사용할 수 있습니다."
 
-#: includes/class-admin-pages-rest.php:1562
+#: includes/class-admin-pages-rest.php:1562 src/dashboard-app/index.js:476
 msgid "Pro"
 msgstr "Pro"
 
@@ -5498,10 +5557,12 @@ msgid "Unknown settings tab."
 msgstr "알 수 없는 설정 탭입니다."
 
 #: includes/class-admin-settings-rest.php:410
+#: src/interface-settings/index.js:30
 msgid "Theme default"
 msgstr "테마 기본값"
 
 #: includes/class-admin-settings-rest.php:414
+#: src/interface-settings/index.js:31
 msgid "System UI"
 msgstr "시스템 UI"
 
@@ -5718,11 +5779,11 @@ msgstr "데이터는 전송을 누를 때만 구성된 AI 제공업체로 전송
 msgid "Dismiss this launcher"
 msgstr "이 런처 닫기"
 
-#: includes/class-admin-vnav.php:73
+#: includes/class-admin-vnav.php:73 src/admin-list/index.js:47
 msgid "Search…"
 msgstr "검색…"
 
-#: includes/class-admin-vnav.php:74
+#: includes/class-admin-vnav.php:74 src/admin-pages/index.js:267
 msgid "Sections"
 msgstr "섹션"
 
@@ -5971,7 +6032,8 @@ msgid ""
 "An AI assistant wants to make a change that needs your OK before it runs."
 msgstr "AI 어시스턴트가 실행 전에 승인이 필요한 변경을 하려고 합니다."
 
-#: includes/class-approval-queue.php:219
+#: includes/class-approval-queue.php:219 src/admin-pages/index.js:584
+#: src/admin-pages/index.js:1053
 msgid "Risk"
 msgstr "위험"
 
@@ -6005,7 +6067,7 @@ msgstr "확인"
 msgid "Confirm"
 msgstr "확인"
 
-#: includes/class-chat-assets.php:58
+#: includes/class-chat-assets.php:58 src/admin-pages/index.js:1585
 msgid "Dismiss"
 msgstr "닫기"
 
@@ -7650,3 +7712,1768 @@ msgstr "어시스턴트 선택"
 #: templates/modal-widget.php:114
 msgid "Chat with AI"
 msgstr "AI와 대화하기"
+
+#: assets/js/gutenberg-blocks.js:211
+msgid "Hello! I'm "
+msgstr "안녕하세요! 저는 "
+
+#: assets/js/gutenberg-blocks.js:211
+msgid "How can I help you today?"
+msgstr "오늘 무엇을 도와드릴까요?"
+
+#: assets/js/gutenberg-blocks.js:226
+msgid "Floating mode — appears as a popup button on the frontend"
+msgstr "플로팅 모드 — 프런트엔드에 팝업 버튼으로 표시됩니다"
+
+#: assets/js/gutenberg-blocks.js:293 src/interface-settings/index.js:224
+msgid "Appearance"
+msgstr "모양"
+
+#: assets/js/gutenberg-blocks.js:301
+msgid "Height"
+msgstr "높이"
+
+#: assets/js/gutenberg-blocks.js:304
+msgid "CSS height value (e.g. 500px, 60vh)."
+msgstr "CSS 높이 값입니다(예: 500px, 60vh)."
+
+#: assets/js/gutenberg-blocks.js:307
+msgid "Theme"
+msgstr "테마"
+
+#: assets/js/gutenberg-blocks.js:313
+msgid "Show Header"
+msgstr "헤더 표시"
+
+#: assets/js/gutenberg-blocks.js:318
+msgid "Floating Button"
+msgstr "플로팅 버튼"
+
+#: assets/js/gutenberg-blocks.js:321
+msgid "Display as a floating chat button instead of inline."
+msgstr "인라인 대신 플로팅 채팅 버튼으로 표시합니다."
+
+#: assets/js/gutenberg-blocks.js:332
+msgid "LLM Settings"
+msgstr "LLM 설정"
+
+#: assets/js/gutenberg-blocks.js:334 src/dashboard-app/index.js:359
+#: src/settings-app/index.js:1529
+msgid "Provider"
+msgstr "제공업체"
+
+#: assets/js/gutenberg-blocks.js:340
+msgid "Override the LLM provider for this block."
+msgstr "이 블록에 사용할 LLM 제공업체를 재정의합니다."
+
+#: assets/js/gutenberg-blocks.js:347
+msgid "Select a provider first to see available models."
+msgstr "사용 가능한 모델을 보려면 먼저 제공업체를 선택하세요."
+
+#: src/admin-list/index.js:31
+msgid "Items"
+msgstr "항목"
+
+#: src/admin-list/index.js:58
+msgid "No items found."
+msgstr "항목을 찾을 수 없습니다."
+
+#: src/admin-pages/index.js:21
+msgid "Safe to run automatically — read-only, no approval needed."
+msgstr "자동으로 실행해도 안전합니다 — 읽기 전용이며 승인이 필요하지 않습니다."
+
+#: src/admin-pages/index.js:22
+msgid ""
+"Runs automatically by default; may read data that includes personal "
+"information."
+msgstr "기본적으로 자동 실행됩니다. 개인정보가 포함된 데이터를 읽을 수 있습니다."
+
+#: src/admin-pages/index.js:23
+msgid ""
+"Changes something — assistants pause for your in-chat confirmation first."
+msgstr "무언가를 변경합니다 — 어시스턴트가 먼저 채팅에서 확인을 요청하며 대기합니다."
+
+#: src/admin-pages/index.js:24
+msgid ""
+"A significant or bulk change — waits in the Approvals queue for you to allow"
+" it."
+msgstr "중대하거나 대량의 변경입니다 — 사용자가 허용할 때까지 승인 대기열에서 대기합니다."
+
+#: src/admin-pages/index.js:25
+msgid ""
+"Too risky to allow at all — hidden from assistants entirely, cannot be "
+"enabled."
+msgstr "허용하기에는 너무 위험합니다 — 어시스턴트에게 완전히 숨겨지며 활성화할 수 없습니다."
+
+#: src/admin-pages/index.js:28
+msgid ""
+"An assistant tried to run this specific action and paused here first. "
+"Nothing happens until you decide — approve to let it run once, or reject to "
+"cancel it."
+msgstr ""
+"어시스턴트가 이 작업을 실행하려고 시도했으며 먼저 여기에서 대기 중입니다. 사용자가 결정하기 전까지는 아무 일도 일어나지 않습니다 — "
+"승인하면 한 번 실행되고, 거부하면 취소됩니다."
+
+#: src/admin-pages/index.js:86
+msgid ""
+"Only changes this screen. Other screens and your site-wide default (Settings"
+" → Interface) are unaffected."
+msgstr "이 화면에만 적용됩니다. 다른 화면과 사이트 전체 기본값(설정 → 인터페이스)에는 영향을 주지 않습니다."
+
+#: src/admin-pages/index.js:231
+msgid "Could not load page."
+msgstr "페이지를 불러오지 못했습니다."
+
+#: src/admin-pages/index.js:343
+msgid "Site-local tool saved."
+msgstr "사이트 로컬 도구를 저장했습니다."
+
+#: src/admin-pages/index.js:349
+msgid "Could not save tool (Pro required)."
+msgstr "도구를 저장하지 못했습니다(Pro 필요)."
+
+#: src/admin-pages/index.js:358
+msgid "Delete this site-local tool?"
+msgstr "이 사이트 로컬 도구를 삭제할까요?"
+
+#: src/admin-pages/index.js:370 src/admin-pages/index.js:1174
+msgid "Delete failed."
+msgstr "삭제하지 못했습니다."
+
+#: src/admin-pages/index.js:380
+msgid "Test arguments must be valid JSON."
+msgstr "테스트 인수는 유효한 JSON이어야 합니다."
+
+#: src/admin-pages/index.js:396 src/settings-app/index.js:1911
+msgid "Test failed."
+msgstr "테스트에 실패했습니다."
+
+#: src/admin-pages/index.js:417
+msgid ""
+"Site-local tool builder is a Pro feature. Free includes using shipped tools,"
+" risk/approvals, and developer Tool_Base packages."
+msgstr ""
+"사이트 로컬 도구 빌더는 Pro 기능입니다. 무료 버전에는 기본 제공 도구 사용, 위험도/승인, 개발자용 Tool_Base 패키지가 "
+"포함됩니다."
+
+#: src/admin-pages/index.js:429
+msgid "Docs: Free vs Pro"
+msgstr "문서: 무료 vs Pro"
+
+#: src/admin-pages/index.js:450
+msgid "Add site-local tool"
+msgstr "사이트 로컬 도구 추가"
+
+#: src/admin-pages/index.js:452
+msgid ""
+"Declarative handlers only — no PHP. Empty agent list = available to all "
+"active agents."
+msgstr ""
+"선언적 핸들러만 지원합니다 — PHP는 사용할 수 없습니다. 에이전트 목록이 비어 있으면 모든 활성 에이전트에서 사용할 수 있습니다."
+
+#: src/admin-pages/index.js:460
+msgid "Name (snake_case)"
+msgstr "이름(snake_case)"
+
+#: src/admin-pages/index.js:477
+msgid "Description (for the LLM)"
+msgstr "설명(LLM용)"
+
+#: src/admin-pages/index.js:487 src/admin-pages/index.js:583
+msgid "Handler"
+msgstr "핸들러"
+
+#: src/admin-pages/index.js:500
+msgid "Risk level"
+msgstr "위험 수준"
+
+#: src/admin-pages/index.js:517
+msgid "Allowed option keys (comma-separated)"
+msgstr "허용된 옵션 키(쉼표로 구분)"
+
+#: src/admin-pages/index.js:534
+msgid "Extra allowed hosts (comma-separated; site host always allowed)"
+msgstr "추가 허용 호스트(쉼표로 구분, 사이트 호스트는 항상 허용됨)"
+
+#: src/admin-pages/index.js:549
+msgid "Agents (optional)"
+msgstr "에이전트(선택 사항)"
+
+#: src/admin-pages/index.js:571
+msgid "Save site-local tool"
+msgstr "사이트 로컬 도구 저장"
+
+#: src/admin-pages/index.js:577
+msgid "Your site-local tools"
+msgstr "사이트 로컬 도구 목록"
+
+#: src/admin-pages/index.js:631
+msgid "Test arguments (JSON object)"
+msgstr "테스트 인수(JSON 객체)"
+
+#. translators: 1: enabled count, 2: disabled count
+#: src/admin-pages/index.js:680
+msgid "Profile applied: %1$d tools on, %2$d tools off."
+msgstr "프로필이 적용되었습니다: 도구 %1$d개 켜짐, %2$d개 꺼짐."
+
+#: src/admin-pages/index.js:693
+msgid "Could not apply profile."
+msgstr "프로필을 적용하지 못했습니다."
+
+#: src/admin-pages/index.js:705
+msgid ""
+"These profiles control which tools every assistant may use. Approvals still "
+"apply for riskier actions."
+msgstr "이 프로필은 모든 어시스턴트가 사용할 수 있는 도구를 제어합니다. 위험도가 높은 작업에는 여전히 승인이 적용됩니다."
+
+#: src/admin-pages/index.js:709
+msgid "Switch to Advanced for the full tool-by-tool list:"
+msgstr "도구별 전체 목록을 보려면 고급 보기로 전환하세요:"
+
+#: src/admin-pages/index.js:733
+msgid ""
+"Tools were customized outside a profile. Choose a card below to reset to a "
+"simple safety level."
+msgstr "프로필 외부에서 도구가 사용자 지정되었습니다. 아래 카드를 선택하여 간단한 안전 수준으로 재설정하세요."
+
+#. translators: %s: risk level
+#: src/admin-pages/index.js:776
+msgid "Up to %s risk"
+msgstr "최대 %s 위험까지"
+
+#: src/admin-pages/index.js:783 src/admin-pages/index.js:1658
+msgid "Current"
+msgstr "현재"
+
+#. translators: 1: enabled tools, 2: disabled tools, 3: max risk
+#: src/admin-pages/index.js:793
+msgid "Right now: %1$d tools on, %2$d off · highest enabled risk: %3$s"
+msgstr "현재: 도구 %1$d개 켜짐, %2$d개 꺼짐 · 활성화된 최고 위험 수준: %3$s"
+
+#: src/admin-pages/index.js:850
+msgid "All risks"
+msgstr "모든 위험 수준"
+
+#: src/admin-pages/index.js:853
+msgid "Medium"
+msgstr "중간"
+
+#: src/admin-pages/index.js:854
+msgid "High"
+msgstr "높음"
+
+#: src/admin-pages/index.js:855
+msgid "Extreme"
+msgstr "매우 높음"
+
+#: src/admin-pages/index.js:928
+msgid "Toggle failed."
+msgstr "전환하지 못했습니다."
+
+#: src/admin-pages/index.js:953
+msgid "You are in Advanced view (full tool list)."
+msgstr "현재 고급 보기입니다(전체 도구 목록)."
+
+#: src/admin-pages/index.js:967
+msgid "Search tools…"
+msgstr "도구 검색…"
+
+#: src/admin-pages/index.js:972
+msgid "1 tool"
+msgstr "도구 1개"
+
+#: src/admin-pages/index.js:973
+msgid "tools"
+msgstr "개의 도구"
+
+#: src/admin-pages/index.js:982
+msgid "Custom tools (Pro)"
+msgstr "사용자 지정 도구(Pro)"
+
+#: src/admin-pages/index.js:987
+msgid "Filter by risk"
+msgstr "위험 수준으로 필터링"
+
+#: src/admin-pages/index.js:1026
+msgid "No tools match this search or risk filter."
+msgstr "이 검색어 또는 위험 수준 필터와 일치하는 도구가 없습니다."
+
+#: src/admin-pages/index.js:1030
+msgid "No tools in this category."
+msgstr "이 카테고리에는 도구가 없습니다."
+
+#: src/admin-pages/index.js:1114
+msgid "none"
+msgstr "없음"
+
+#: src/admin-pages/index.js:1161
+msgid "Delete this skill? This cannot be undone."
+msgstr "이 스킬을 삭제할까요? 이 작업은 되돌릴 수 없습니다."
+
+#: src/admin-pages/index.js:1214
+msgid "Skill"
+msgstr "스킬"
+
+#: src/admin-pages/index.js:1294
+msgid "Recording your approval…"
+msgstr "승인을 기록하는 중…"
+
+#: src/admin-pages/index.js:1299
+msgid "Running the approved action…"
+msgstr "승인된 작업을 실행하는 중…"
+
+#: src/admin-pages/index.js:1304
+msgid "Confirming result…"
+msgstr "결과를 확인하는 중…"
+
+#: src/admin-pages/index.js:1319
+msgid "Rejecting this request…"
+msgstr "이 요청을 거부하는 중…"
+
+#: src/admin-pages/index.js:1355 src/admin-pages/index.js:1372
+msgid "Rejected — the action will not run."
+msgstr "거부되었습니다 — 이 작업은 실행되지 않습니다."
+
+#: src/admin-pages/index.js:1362
+msgid "Request rejected"
+msgstr "요청이 거부되었습니다"
+
+#: src/admin-pages/index.js:1385
+msgid "Approved, but the action could not be started."
+msgstr "승인되었지만 작업을 시작하지 못했습니다."
+
+#: src/admin-pages/index.js:1391
+msgid "Action completed successfully."
+msgstr "작업이 성공적으로 완료되었습니다."
+
+#: src/admin-pages/index.js:1396
+msgid "Action ran but reported a problem."
+msgstr "작업이 실행되었지만 문제가 보고되었습니다."
+
+#: src/admin-pages/index.js:1415
+msgid "Approval recorded"
+msgstr "승인이 기록되었습니다"
+
+#: src/admin-pages/index.js:1433
+msgid "Done — assistant task finished"
+msgstr "완료 — 어시스턴트 작업이 끝났습니다"
+
+#: src/admin-pages/index.js:1437
+msgid "Finished with errors — check detail below"
+msgstr "오류와 함께 완료되었습니다 — 아래 세부 정보를 확인하세요"
+
+#: src/admin-pages/index.js:1449
+msgid "Approved and completed."
+msgstr "승인 후 완료되었습니다."
+
+#: src/admin-pages/index.js:1461
+msgid "Could not update that item."
+msgstr "해당 항목을 업데이트하지 못했습니다."
+
+#: src/admin-pages/index.js:1486
+msgid ""
+"Check the box to accept the increased risk before choosing “Trust more”."
+msgstr "“더 신뢰하기”를 선택하기 전에 체크박스를 선택하여 위험 증가에 동의하세요."
+
+#: src/admin-pages/index.js:1509
+msgid "Preferences saved."
+msgstr "환경설정을 저장했습니다."
+
+#: src/admin-pages/index.js:1515
+msgid "Could not save preferences."
+msgstr "환경설정을 저장하지 못했습니다."
+
+#: src/admin-pages/index.js:1526
+msgid "Advanced view shows technical detail."
+msgstr "고급 보기는 기술적인 세부 정보를 표시합니다."
+
+#: src/admin-pages/index.js:1530
+msgid "Simple view for non-technical admins."
+msgstr "기술에 익숙하지 않은 관리자를 위한 간단한 보기입니다."
+
+#: src/admin-pages/index.js:1572
+msgid "Complete"
+msgstr "완료"
+
+#: src/admin-pages/index.js:1573
+msgid "Needs attention"
+msgstr "확인 필요"
+
+#: src/admin-pages/index.js:1574 src/admin-pages/index.js:1824
+msgid "Working…"
+msgstr "처리 중…"
+
+#: src/admin-pages/index.js:1613
+msgid "Preferences"
+msgstr "환경설정"
+
+#: src/admin-pages/index.js:1615
+msgid ""
+"Choose how closely you want to watch assistants, and whether we should email"
+" you when something is waiting."
+msgstr "어시스턴트를 얼마나 면밀히 감독할지, 그리고 대기 중인 항목이 있을 때 이메일로 알릴지 선택하세요."
+
+#: src/admin-pages/index.js:1675
+msgid ""
+"I understand assistants may change my site with less waiting, and I accept "
+"that increased risk."
+msgstr "어시스턴트가 더 적은 대기 시간으로 내 사이트를 변경할 수 있다는 점을 이해하며, 그에 따른 위험 증가에 동의합니다."
+
+#: src/admin-pages/index.js:1690
+msgid "Save “Trust more” preference"
+msgstr "“더 신뢰하기” 환경설정 저장"
+
+#: src/admin-pages/index.js:1708
+msgid "Email me when an action is waiting for approval"
+msgstr "작업이 승인 대기 중일 때 이메일로 알림 받기"
+
+#: src/admin-pages/index.js:1717
+msgid "Send alerts to"
+msgstr "알림 수신 주소"
+
+#: src/admin-pages/index.js:1735
+msgid "Save email preferences"
+msgstr "이메일 환경설정 저장"
+
+#: src/admin-pages/index.js:1743
+msgid "Waiting for you"
+msgstr "확인 대기 중"
+
+#: src/admin-pages/index.js:1753
+msgid "You’re all caught up"
+msgstr "모두 처리했습니다"
+
+#: src/admin-pages/index.js:1757
+msgid ""
+"Approvals pause any action an assistant rates as risky until you say yes — "
+"nothing waiting here means nothing is on hold right now."
+msgstr ""
+"승인은 어시스턴트가 위험하다고 판단한 작업을 사용자가 허용할 때까지 일시 중지합니다 — 여기에 대기 중인 항목이 없다면 현재 보류된 "
+"작업이 없다는 뜻입니다."
+
+#: src/admin-pages/index.js:1763
+msgid ""
+"When an assistant needs permission for a bigger change, it will show up here"
+msgstr "어시스턴트가 더 큰 변경에 대한 권한이 필요할 때 여기에 표시됩니다"
+
+#: src/admin-pages/index.js:1768
+msgid " — and we’ll email you."
+msgstr " — 그리고 이메일로 알려드립니다."
+
+#: src/admin-pages/index.js:1844
+msgid ""
+"Assistants back up files and database tables automatically before changing "
+"them."
+msgstr "어시스턴트는 파일과 데이터베이스 테이블을 변경하기 전에 자동으로 백업합니다."
+
+#: src/admin-pages/index.js:1849
+msgid "View backups and restore"
+msgstr "백업 보기 및 복원"
+
+#: src/admin-pages/index.js:1854
+msgid "· Need batch approve tools?"
+msgstr "· 일괄 승인 도구가 필요하신가요?"
+
+#: src/admin-pages/index.js:1856
+msgid "Open classic queue"
+msgstr "클래식 대기열 열기"
+
+#: src/admin-pages/index.js:1913
+msgid ""
+"This is a friendly activity feed. Technical names stay in Advanced detail "
+"when useful."
+msgstr "이것은 이해하기 쉬운 활동 피드입니다. 기술적인 명칭은 필요할 때 고급 세부 정보에서 확인할 수 있습니다."
+
+#: src/admin-pages/index.js:1971
+msgid "Time period"
+msgstr "기간"
+
+#: src/admin-pages/index.js:1992
+msgid "Activity type"
+msgstr "활동 유형"
+
+#: src/admin-pages/index.js:2024
+msgid "Search activity…"
+msgstr "활동 검색…"
+
+#: src/admin-pages/index.js:2029
+msgid "1 event"
+msgstr "이벤트 1개"
+
+#: src/admin-pages/index.js:2030
+msgid "events"
+msgstr "개의 이벤트"
+
+#: src/admin-pages/index.js:2036
+msgid ""
+"Download this log as a CSV file — handy to attach when emailing support "
+"about an issue."
+msgstr "이 로그를 CSV 파일로 다운로드합니다 — 문제에 관해 지원팀에 이메일을 보낼 때 첨부하면 유용합니다."
+
+#: src/admin-pages/index.js:2041
+msgid "Export CSV"
+msgstr "CSV 내보내기"
+
+#: src/admin-pages/index.js:2050
+msgid "Nothing here yet"
+msgstr "아직 항목이 없습니다"
+
+#: src/admin-pages/index.js:2055
+msgid "No events match this filter. Try another period or clear search."
+msgstr "이 필터와 일치하는 이벤트가 없습니다. 다른 기간을 선택하거나 검색어를 지우세요."
+
+#: src/admin-pages/index.js:2059
+msgid "When assistants chat or use tools, their activity will show up here."
+msgstr "어시스턴트가 대화하거나 도구를 사용하면 해당 활동이 여기에 표시됩니다."
+
+#: src/admin-pages/index.js:2172
+msgid "Pro active"
+msgstr "Pro 활성화됨"
+
+#: src/admin-pages/index.js:2178
+msgid "View pricing"
+msgstr "요금제 보기"
+
+#: src/admin-pages/index.js:2194
+msgid "Open full Knowledge editor"
+msgstr "전체 지식 편집기 열기"
+
+#: src/admin-pages/index.js:2254
+msgid "Unavailable."
+msgstr "사용할 수 없습니다."
+
+#: src/admin-pages/index.js:2303
+msgid "Unknown page."
+msgstr "알 수 없는 페이지입니다."
+
+#: src/agent-wizard/index.js:31
+msgid "Basics"
+msgstr "기본 정보"
+
+#: src/agent-wizard/index.js:32
+msgid "Persona"
+msgstr "페르소나"
+
+#: src/agent-wizard/index.js:33
+msgid "Capabilities"
+msgstr "기능"
+
+#: src/agent-wizard/index.js:35
+msgid "Review"
+msgstr "검토"
+
+#: src/agent-wizard/index.js:135 src/deploy-wizard/index.js:118
+msgid "Could not load the wizard."
+msgstr "마법사를 불러오지 못했습니다."
+
+#: src/agent-wizard/index.js:176 src/agent-wizard/index.js:181
+msgid "Could not load your content."
+msgstr "콘텐츠를 불러오지 못했습니다."
+
+#: src/agent-wizard/index.js:194
+msgid "%s pages/posts"
+msgstr "페이지/글 %s개"
+
+#: src/agent-wizard/index.js:197
+msgid "%s files"
+msgstr "파일 %s개"
+
+#: src/agent-wizard/index.js:199 src/agent-wizard/index.js:729
+#: src/agent-wizard/index.js:747
+msgid "(none)"
+msgstr "(없음)"
+
+#: src/agent-wizard/index.js:283
+msgid "Something went wrong creating the agent."
+msgstr "에이전트를 생성하는 중 문제가 발생했습니다."
+
+#. translators: %s: the new agent's name.
+#: src/agent-wizard/index.js:316
+msgid "%s is ready!"
+msgstr "%s이(가) 준비되었습니다!"
+
+#: src/agent-wizard/index.js:322
+msgid ""
+"Your agent has been created and activated. Add knowledge to make it smarter,"
+" or start chatting right away."
+msgstr "에이전트가 생성되어 활성화되었습니다. 지식을 추가해 더 똑똑하게 만들거나, 지금 바로 대화를 시작하세요."
+
+#: src/agent-wizard/index.js:326
+msgid ""
+"Your agent was created. Activate it from the Agents page, then add knowledge"
+" or start chatting."
+msgstr "에이전트가 생성되었습니다. 에이전트 페이지에서 활성화한 다음 지식을 추가하거나 대화를 시작하세요."
+
+#: src/agent-wizard/index.js:337
+msgid "Training your assistant on your knowledge… %s"
+msgstr "지식으로 어시스턴트를 학습시키는 중… %s"
+
+#: src/agent-wizard/index.js:338
+msgid "Knowledge training finished — %s sources trained."
+msgstr "지식 학습이 완료되었습니다 — 소스 %s개를 학습했습니다."
+
+#: src/agent-wizard/index.js:348
+msgid ""
+"A safe set of read-only tools was added so your agent works right away. You "
+"can change its tools later from the Agents page."
+msgstr ""
+"에이전트가 바로 작동하도록 안전한 읽기 전용 도구 세트가 추가되었습니다. 도구는 나중에 에이전트 페이지에서 변경할 수 있습니다."
+
+#: src/agent-wizard/index.js:365
+msgid "Open Chat"
+msgstr "채팅 열기"
+
+#: src/agent-wizard/index.js:370
+msgid "Publish This Agent"
+msgstr "이 에이전트 게시"
+
+#: src/agent-wizard/index.js:378
+msgid "Fine-tune Persona"
+msgstr "페르소나 세부 조정"
+
+#: src/agent-wizard/index.js:383
+msgid "View all Agents"
+msgstr "모든 에이전트 보기"
+
+#: src/agent-wizard/index.js:407
+msgid "Agent name"
+msgstr "에이전트 이름"
+
+#: src/agent-wizard/index.js:408
+msgid "A friendly name, e.g. \"Support Helper\"."
+msgstr "알아보기 쉬운 이름입니다(예: \"고객 지원 도우미\")."
+
+#: src/agent-wizard/index.js:417
+msgid "Identifier (slug)"
+msgstr "식별자(슬러그)"
+
+#: src/agent-wizard/index.js:418
+msgid "Used in URLs and files. Auto-filled from the name."
+msgstr "URL과 파일에 사용됩니다. 이름에서 자동으로 채워집니다."
+
+#: src/agent-wizard/index.js:427
+msgid "What does this agent do?"
+msgstr "이 에이전트는 어떤 일을 하나요?"
+
+#: src/agent-wizard/index.js:431
+msgid "A short description shown in the agents list."
+msgstr "에이전트 목록에 표시되는 짧은 설명입니다."
+
+#: src/agent-wizard/index.js:457
+msgid "Icon"
+msgstr "아이콘"
+
+#: src/agent-wizard/index.js:470
+msgid "Instructions (system prompt)"
+msgstr "지침(시스템 프롬프트)"
+
+#: src/agent-wizard/index.js:474
+msgid ""
+"Describe how the agent should behave, its tone, and what it should focus on."
+msgstr "에이전트가 어떻게 행동해야 하는지, 어떤 어조를 사용해야 하는지, 무엇에 집중해야 하는지 설명하세요."
+
+#: src/agent-wizard/index.js:483
+msgid "Welcome message (optional)"
+msgstr "환영 메시지(선택 사항)"
+
+#: src/agent-wizard/index.js:487
+msgid "The greeting shown when a chat starts."
+msgstr "대화가 시작될 때 표시되는 인사말입니다."
+
+#: src/agent-wizard/index.js:496
+msgid "Suggested prompts (optional)"
+msgstr "추천 프롬프트(선택 사항)"
+
+#: src/agent-wizard/index.js:505
+msgid "e.g. Summarize my latest posts"
+msgstr "예: 최근 글을 요약해 주세요"
+
+#: src/agent-wizard/index.js:524
+msgid "+ Add another prompt"
+msgstr "+ 프롬프트 추가"
+
+#: src/agent-wizard/index.js:536
+msgid "AI provider"
+msgstr "AI 제공업체"
+
+#: src/agent-wizard/index.js:544
+msgid "(needs API key)"
+msgstr "(API 키 필요)"
+
+#: src/agent-wizard/index.js:560
+msgid "Leave as-is to use your site default."
+msgstr "사이트 기본값을 사용하려면 그대로 두세요."
+
+#: src/agent-wizard/index.js:583 src/agent-wizard/index.js:739
+msgid "Autonomy"
+msgstr "자율성"
+
+#: src/agent-wizard/index.js:587
+msgid "Supervised — asks before taking actions (recommended)"
+msgstr "감독형 — 작업을 수행하기 전에 확인합니다(권장)"
+
+#: src/agent-wizard/index.js:594
+msgid "Autonomous — acts on its own"
+msgstr "자율형 — 스스로 작업을 수행합니다"
+
+#: src/agent-wizard/index.js:601
+msgid "Disabled — replies only, never acts"
+msgstr "비활성화 — 답변만 하고 작업은 수행하지 않습니다"
+
+#: src/agent-wizard/index.js:611
+msgid ""
+"This only controls how often the agent pauses to ask you. Higher-risk "
+"actions still queue for your approval, and the riskiest actions are always "
+"blocked, no matter which autonomy level you pick."
+msgstr ""
+"이 설정은 에이전트가 얼마나 자주 확인을 요청하며 멈추는지만 제어합니다. 어떤 자율성 수준을 선택하더라도 위험도가 높은 작업은 여전히 "
+"승인 대기열에 들어가며, 가장 위험한 작업은 항상 차단됩니다."
+
+#: src/agent-wizard/index.js:619
+msgid "Tools this agent can use (optional)"
+msgstr "이 에이전트가 사용할 수 있는 도구(선택 사항)"
+
+#: src/agent-wizard/index.js:625
+msgid ""
+"If you don’t pick any, a safe set of read-only tools is added so your agent "
+"works right away."
+msgstr "아무것도 선택하지 않으면 에이전트가 바로 작동하도록 안전한 읽기 전용 도구 세트가 추가됩니다."
+
+#: src/agent-wizard/index.js:663
+msgid ""
+"Knowledge (RAG) uses the Agentic AI service. Connect your license to train "
+"assistants on your content — you can also add knowledge later from the "
+"Knowledge page."
+msgstr ""
+"지식(RAG)은 Agentic AI 서비스를 사용합니다. 라이선스를 연결하여 콘텐츠로 어시스턴트를 학습시키세요 — 지식은 나중에 지식 "
+"페이지에서 추가할 수도 있습니다."
+
+#: src/agent-wizard/index.js:668
+msgid ""
+"Optionally give your assistants knowledge to draw on. Selected pages, posts "
+"and files are embedded into your shared Vector Store after the agent is "
+"created — training runs in the background."
+msgstr ""
+"선택적으로 어시스턴트가 참고할 지식을 제공할 수 있습니다. 선택한 페이지, 글, 파일은 에이전트가 생성된 후 공유 벡터 스토어에 "
+"임베딩됩니다 — 학습은 백그라운드에서 실행됩니다."
+
+#: src/agent-wizard/index.js:670
+msgid "Upload files (PDF or text)"
+msgstr "파일 업로드(PDF 또는 텍스트)"
+
+#: src/agent-wizard/index.js:678
+msgid "%s file(s) selected."
+msgstr "파일 %s개를 선택했습니다."
+
+#: src/agent-wizard/index.js:680
+msgid "Train on your site content"
+msgstr "사이트 콘텐츠로 학습"
+
+#: src/agent-wizard/index.js:685
+msgid "Loading your content…"
+msgstr "콘텐츠를 불러오는 중…"
+
+#: src/agent-wizard/index.js:688
+msgid "No published pages or posts found."
+msgstr "발행된 페이지나 글을 찾을 수 없습니다."
+
+#: src/agent-wizard/index.js:695
+msgid "trained"
+msgstr "학습됨"
+
+#: src/agent-wizard/index.js:714
+msgid "Identifier"
+msgstr "식별자"
+
+#: src/agent-wizard/index.js:733
+msgid "Provider / Model"
+msgstr "제공업체 / 모델"
+
+#: src/agent-wizard/index.js:777 src/deploy-wizard/index.js:401
+#: src/knowledge-wizard/index.js:434
+msgid "Continue"
+msgstr "계속"
+
+#: src/agent-wizard/index.js:786
+msgid "Create agent"
+msgstr "에이전트 생성"
+
+#: src/dashboard-activity/index.js:93 src/dashboard-app/index.js:269
+msgid "View Activity →"
+msgstr "활동 보기 →"
+
+#: src/dashboard-activity/index.js:99
+msgid "Could not load activity."
+msgstr "활동을 불러오지 못했습니다."
+
+#: src/dashboard-activity/index.js:106 src/dashboard-app/index.js:275
+msgid "Total Actions"
+msgstr "전체 작업 수"
+
+#: src/dashboard-activity/index.js:111 src/dashboard-app/index.js:280
+msgid "Tokens Used"
+msgstr "사용된 토큰"
+
+#: src/dashboard-activity/index.js:119 src/dashboard-app/index.js:288
+msgid "Est. Cost"
+msgstr "예상 비용"
+
+#: src/dashboard-activity/index.js:120 src/dashboard-app/index.js:289
+msgid "Estimated Usage"
+msgstr "예상 사용량"
+
+#: src/dashboard-activity/index.js:127 src/dashboard-app/index.js:296
+msgid "Active Agents"
+msgstr "활성 에이전트"
+
+#: src/dashboard-activity/index.js:132 src/dashboard-app/index.js:301
+msgid "Uploaded Agents"
+msgstr "업로드된 에이전트"
+
+#: src/dashboard-activity/index.js:137 src/dashboard-app/index.js:306
+msgid "User-Created Agents"
+msgstr "사용자 생성 에이전트"
+
+#: src/dashboard-app/index.js:67
+msgid "Drag to rearrange"
+msgstr "드래그하여 순서 변경"
+
+#: src/dashboard-app/index.js:75
+msgid "Drag to rearrange dashboard card"
+msgstr "드래그하여 대시보드 카드 순서 변경"
+
+#: src/dashboard-app/index.js:134
+msgid "Manage License →"
+msgstr "라이선스 관리 →"
+
+#: src/dashboard-app/index.js:156
+msgid "Renew"
+msgstr "갱신"
+
+#: src/dashboard-app/index.js:164
+msgid "Schema"
+msgstr "스키마"
+
+#: src/dashboard-app/index.js:168
+msgid "Pending Jobs"
+msgstr "대기 중인 작업"
+
+#: src/dashboard-app/index.js:174
+msgid "abandoned — auto-recovered"
+msgstr "중단됨 — 자동 복구됨"
+
+#: src/dashboard-app/index.js:182
+msgid "Running Jobs"
+msgstr "실행 중인 작업"
+
+#: src/dashboard-app/index.js:188
+msgid "stuck — auto-recovered"
+msgstr "멈춤 — 자동 복구됨"
+
+#: src/dashboard-app/index.js:192
+msgid "Completed Jobs"
+msgstr "완료된 작업"
+
+#: src/dashboard-app/index.js:210
+msgid "Approvals & Backups"
+msgstr "승인 및 백업"
+
+#: src/dashboard-app/index.js:216
+msgid "View Approvals →"
+msgstr "승인 보기 →"
+
+#: src/dashboard-app/index.js:221
+msgid "Pending Approvals"
+msgstr "대기 중인 승인"
+
+#: src/dashboard-app/index.js:227
+msgid "Files Backed Up"
+msgstr "백업된 파일"
+
+#: src/dashboard-app/index.js:233
+msgid "DB Tables Backed Up"
+msgstr "백업된 DB 테이블"
+
+#. translators: %s: number of pending approvals.
+#: src/dashboard-app/index.js:244
+msgid "%s waiting for your OK."
+msgstr "%s개가 확인을 기다리고 있습니다."
+
+#: src/dashboard-app/index.js:326
+msgid "Connected Providers"
+msgstr "연결된 제공업체"
+
+#: src/dashboard-app/index.js:332
+msgid "Manage Providers →"
+msgstr "제공업체 관리 →"
+
+#: src/dashboard-app/index.js:338
+msgid "No AI providers connected."
+msgstr "연결된 AI 제공업체가 없습니다."
+
+#: src/dashboard-app/index.js:340
+msgid "Run the Setup Wizard"
+msgstr "설정 마법사 실행"
+
+#: src/dashboard-app/index.js:441
+msgid "Quick Actions"
+msgstr "빠른 작업"
+
+#: src/dashboard-app/index.js:448
+msgid "Manage Actions →"
+msgstr "작업 관리 →"
+
+#: src/dashboard-app/index.js:454
+msgid "Chatbot offline —"
+msgstr "챗봇 오프라인 —"
+
+#: src/dashboard-app/index.js:456
+msgid "Configure now"
+msgstr "지금 설정"
+
+#: src/dashboard-app/index.js:464
+msgid ""
+"Choose which links appear in Quick Actions. Setup Wizard is always "
+"available."
+msgstr "빠른 작업에 표시할 링크를 선택하세요. 설정 마법사는 항상 표시됩니다."
+
+#: src/dashboard-app/index.js:479
+msgid "Required"
+msgstr "필수"
+
+#: src/dashboard-app/index.js:524
+msgid "Save Quick Actions"
+msgstr "빠른 작업 저장"
+
+#: src/dashboard-app/index.js:577 src/interface-settings/index.js:336
+#: src/settings-app/index.js:1687
+msgid ""
+"EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and "
+"disconnect providers. Continue?"
+msgstr "비상 정지: 에이전트를 비활성화하고 상태를 기록하며, 모든 작업을 취소하고 제공업체 연결을 해제합니다. 계속할까요?"
+
+#: src/dashboard-app/index.js:581 src/interface-settings/index.js:340
+#: src/settings-app/index.js:1691
+msgid "Turn off emergency stop?"
+msgstr "비상 정지를 해제할까요?"
+
+#: src/dashboard-app/index.js:591
+msgid "Emergency stop restore finished with warnings:"
+msgstr "비상 정지 복구가 경고와 함께 완료되었습니다:"
+
+#: src/dashboard-app/index.js:614
+msgid "Interface Settings"
+msgstr "인터페이스 설정"
+
+#: src/dashboard-app/index.js:620
+msgid "Manage Interface →"
+msgstr "인터페이스 관리 →"
+
+#: src/dashboard-app/index.js:627
+msgid "Default interface:"
+msgstr "기본 인터페이스:"
+
+#: src/dashboard-app/index.js:652
+msgid ""
+"Used by any screen you have not set individually. Tools, Approvals, and "
+"Activity each have their own Basic/Advanced switch now."
+msgstr ""
+"개별적으로 설정하지 않은 모든 화면에 적용됩니다. 이제 도구, 승인, 활동 화면에는 각각 자체 기본/고급 전환 스위치가 있습니다."
+
+#: src/dashboard-app/index.js:664 src/settings-app/index.js:234
+msgid ""
+"Reset every screen back to your default interface? Any screen you switched "
+"individually will lose that override."
+msgstr "모든 화면을 기본 인터페이스로 재설정할까요? 개별적으로 전환한 화면의 재정의 설정이 사라집니다."
+
+#: src/dashboard-app/index.js:680 src/settings-app/index.js:281
+msgid "Reset all screens to my default"
+msgstr "모든 화면을 기본값으로 재설정"
+
+#: src/dashboard-app/index.js:690 src/interface-settings/index.js:318
+#: src/settings-app/index.js:1672
+msgid "Disable All Agents"
+msgstr "모든 에이전트 비활성화"
+
+#: src/dashboard-app/index.js:693
+msgid "ACTIVE"
+msgstr "활성"
+
+#: src/dashboard-app/index.js:711 src/interface-settings/index.js:322
+#: src/settings-app/index.js:1676
+msgid "Emergency stop"
+msgstr "비상 정지"
+
+#: src/dashboard-app/index.js:713 src/interface-settings/index.js:324
+#: src/settings-app/index.js:1678
+msgid ""
+": deactivate and log agent states, cancels all jobs and disconnects "
+"providers."
+msgstr ": 에이전트를 비활성화하고 상태를 기록하며, 모든 작업을 취소하고 제공업체 연결을 해제합니다."
+
+#: src/dashboard-app/index.js:724
+msgid "Automatic Agent Updates"
+msgstr "에이전트 자동 업데이트"
+
+#: src/dashboard-app/index.js:742
+msgid "Keep installed agents updated automatically. Opt out any time."
+msgstr "설치된 에이전트를 자동으로 최신 상태로 유지합니다. 언제든지 해제할 수 있습니다."
+
+#: src/dashboard-app/index.js:763
+msgid "Browse marketplace →"
+msgstr "마켓플레이스 둘러보기 →"
+
+#: src/dashboard-app/index.js:767
+msgid ""
+"Discover and install community agents from the Agent Builder marketplace."
+msgstr "Agent Builder 마켓플레이스에서 커뮤니티 에이전트를 찾아 설치하세요."
+
+#: src/dashboard-app/index.js:785
+msgid "Getting Started"
+msgstr "시작하기"
+
+#. translators: 1: done count, 2: total
+#: src/dashboard-app/index.js:790
+msgid "%1$d of %2$d steps complete"
+msgstr "%2$d단계 중 %1$d단계 완료"
+
+#: src/dashboard-app/index.js:876
+msgid "Could not load dashboard."
+msgstr "대시보드를 불러오지 못했습니다."
+
+#: src/dashboard-app/index.js:1010
+msgid "Loading dashboard…"
+msgstr "대시보드를 불러오는 중…"
+
+#: src/dashboard-app/index.js:1020
+msgid "Dashboard unavailable."
+msgstr "대시보드를 사용할 수 없습니다."
+
+#: src/dashboard-app/index.js:1107
+msgid "Saving layout…"
+msgstr "레이아웃을 저장하는 중…"
+
+#: src/dashboard-app/index.js:1117
+msgid "Reset layout"
+msgstr "레이아웃 재설정"
+
+#: src/dashboard-app/index.js:1121
+msgid "Drag ⋮⋮ to rearrange cards"
+msgstr "⋮⋮ 을 드래그하여 카드 순서를 변경하세요"
+
+#: src/dashboard-app/index.js:1130
+msgid "Emergency stop is ACTIVE"
+msgstr "비상 정지가 활성 상태입니다"
+
+#: src/dashboard-app/index.js:1136
+msgid ""
+"All agents are deactivated, jobs are cancelled, and LLM providers are "
+"disconnected. Chat and agent activation are blocked."
+msgstr "모든 에이전트가 비활성화되고 작업이 취소되었으며 LLM 제공업체 연결이 해제되었습니다. 채팅과 에이전트 활성화가 차단됩니다."
+
+#: src/dashboard-app/index.js:1141
+msgid "Manage Interface"
+msgstr "인터페이스 관리"
+
+#: src/deploy-wizard/index.js:33
+msgid "Chat widget"
+msgstr "채팅 위젯"
+
+#: src/deploy-wizard/index.js:34
+msgid "A floating chat bubble visitors can open on your site."
+msgstr "방문자가 사이트에서 열 수 있는 플로팅 채팅 버블입니다."
+
+#: src/deploy-wizard/index.js:38
+msgid "Admin bar"
+msgstr "관리자 바"
+
+#: src/deploy-wizard/index.js:39
+msgid "A quick-chat menu in the WordPress toolbar for logged-in admins."
+msgstr "로그인한 관리자를 위한 WordPress 툴바의 빠른 채팅 메뉴입니다."
+
+#: src/deploy-wizard/index.js:43
+msgid "Ask AI launcher"
+msgstr "Ask AI 실행기"
+
+#: src/deploy-wizard/index.js:44
+msgid "A contextual \"Ask AI\" prompt on admin screens like Plugins or Media."
+msgstr "플러그인이나 미디어 같은 관리자 화면에 표시되는 상황별 \"Ask AI\" 프롬프트입니다."
+
+#: src/deploy-wizard/index.js:48
+msgid "Gutenberg block"
+msgstr "Gutenberg 블록"
+
+#: src/deploy-wizard/index.js:49
+msgid "Makes this agent insertable as a block in any post or page."
+msgstr "이 에이전트를 모든 글이나 페이지에 블록으로 삽입할 수 있게 합니다."
+
+#: src/deploy-wizard/index.js:54
+msgid "Agent & surface"
+msgstr "에이전트 및 표시 위치"
+
+#: src/deploy-wizard/index.js:55
+msgid "Configure"
+msgstr "설정"
+
+#: src/deploy-wizard/index.js:134
+msgid "Admin only"
+msgstr "관리자 화면에만"
+
+#: src/deploy-wizard/index.js:135 src/deploy-wizard/index.js:139
+msgid "Front end only"
+msgstr "프런트엔드에만"
+
+#: src/deploy-wizard/index.js:140
+msgid "Single posts/pages only"
+msgstr "개별 글/페이지에만"
+
+#: src/deploy-wizard/index.js:141
+msgid "Homepage only"
+msgstr "홈페이지에만"
+
+#: src/deploy-wizard/index.js:173
+msgid "Something went wrong publishing this agent."
+msgstr "이 에이전트를 게시하는 중 문제가 발생했습니다."
+
+#: src/deploy-wizard/index.js:201
+msgid ""
+"No active agents yet. Activate or train an agent first, then come back to "
+"publish it."
+msgstr "아직 활성 에이전트가 없습니다. 먼저 에이전트를 활성화하거나 학습시킨 후 다시 돌아와 게시하세요."
+
+#: src/deploy-wizard/index.js:206
+msgid "Go to Agents"
+msgstr "에이전트로 이동"
+
+#. translators: 1: agent name, 2: surface name.
+#: src/deploy-wizard/index.js:222
+msgid "%1$s is published on %2$s!"
+msgstr "%1$s이(가) %2$s에 게시되었습니다!"
+
+#: src/deploy-wizard/index.js:228
+msgid "Fine-tune this further, or publish on another surface."
+msgstr "세부 설정을 더 조정하거나 다른 위치에 게시하세요."
+
+#: src/deploy-wizard/index.js:242
+msgid "Publish on another surface"
+msgstr "다른 위치에 게시"
+
+#: src/deploy-wizard/index.js:247
+msgid "Manage in Publish"
+msgstr "게시에서 관리"
+
+#: src/deploy-wizard/index.js:252 src/knowledge-wizard/index.js:245
+msgid "Back to Dashboard"
+msgstr "대시보드로 돌아가기"
+
+#: src/deploy-wizard/index.js:276
+msgid "Which agent?"
+msgstr "어떤 에이전트인가요?"
+
+#: src/deploy-wizard/index.js:286
+msgid "Where should people reach it?"
+msgstr "사용자가 어디에서 이용할 수 있게 할까요?"
+
+#: src/deploy-wizard/index.js:312
+msgid ""
+"Nothing else to configure — saving makes this agent available to insert as a"
+" block from any post or page editor."
+msgstr "추가로 설정할 항목이 없습니다 — 저장하면 이 에이전트를 모든 글 또는 페이지 편집기에서 블록으로 삽입할 수 있습니다."
+
+#: src/deploy-wizard/index.js:325
+msgid "Bottom right"
+msgstr "오른쪽 아래"
+
+#: src/deploy-wizard/index.js:326
+msgid "Bottom left"
+msgstr "왼쪽 아래"
+
+#: src/deploy-wizard/index.js:332
+msgid "Show on"
+msgstr "표시 위치"
+
+#: src/deploy-wizard/index.js:340
+msgid "Only show to logged-in visitors"
+msgstr "로그인한 방문자에게만 표시"
+
+#. translators: %s: agent name.
+#: src/deploy-wizard/index.js:354
+msgid ""
+"Ask AI launchers are already turned on for some admin screens. Saving makes "
+"%s the agent that answers them, replacing the current choice — the screens "
+"themselves stay as configured."
+msgstr ""
+"일부 관리자 화면에서는 Ask AI 실행기가 이미 켜져 있습니다. 저장하면 %s이(가) 해당 화면에서 응답하는 에이전트가 되어 현재 "
+"선택을 대체합니다 — 화면 설정 자체는 그대로 유지됩니다."
+
+#: src/deploy-wizard/index.js:365
+msgid "Which admin screens?"
+msgstr "어떤 관리자 화면인가요?"
+
+#: src/interface-settings/index.js:81
+msgid "Could not load interface settings."
+msgstr "인터페이스 설정을 불러오지 못했습니다."
+
+#: src/interface-settings/index.js:125
+msgid "Could not save interface settings."
+msgstr "인터페이스 설정을 저장하지 못했습니다."
+
+#: src/interface-settings/index.js:139
+msgid "Loading interface settings…"
+msgstr "인터페이스 설정을 불러오는 중…"
+
+#: src/interface-settings/index.js:169
+msgid "Interface settings saved."
+msgstr "인터페이스 설정을 저장했습니다."
+
+#: src/interface-settings/index.js:174
+msgid "Interface mode"
+msgstr "인터페이스 모드"
+
+#: src/interface-settings/index.js:175
+msgid ""
+"Basic keeps the menu focused on everyday tasks. Advanced reveals developer "
+"tools such as Skills, APIs and Endpoints."
+msgstr "기본 모드는 메뉴를 일상적인 작업 위주로 유지합니다. 고급 모드는 스킬, API, 엔드포인트 같은 개발자 도구를 표시합니다."
+
+#: src/interface-settings/index.js:195 src/settings-app/index.js:527
+msgid "Show the Getting Started checklist on the dashboard"
+msgstr "대시보드에 시작하기 체크리스트 표시"
+
+#: src/interface-settings/index.js:199
+msgid "Turn this off once you are set up to hide the onboarding checklist."
+msgstr "설정을 마친 후 이 옵션을 끄면 온보딩 체크리스트가 숨겨집니다."
+
+#: src/interface-settings/index.js:233
+msgid "Global look and feel for chat surfaces."
+msgstr "채팅 화면 전반의 전체적인 디자인입니다."
+
+#: src/interface-settings/index.js:239
+msgid "Fine-tune chat themes →"
+msgstr "채팅 테마 세부 조정 →"
+
+#: src/interface-settings/index.js:245 src/settings-app/index.js:467
+msgid "Chat font"
+msgstr "채팅 글꼴"
+
+#: src/interface-settings/index.js:246
+msgid ""
+"Font used across the chat interface. Choose “Theme default” to inherit from "
+"the selected theme."
+msgstr "채팅 인터페이스 전반에 사용되는 글꼴입니다. 선택한 테마의 글꼴을 그대로 사용하려면 “테마 기본값”을 선택하세요."
+
+#: src/interface-settings/index.js:259 src/settings-app/index.js:479
+msgid "Use theme accent colour"
+msgstr "테마 강조 색상 사용"
+
+#: src/interface-settings/index.js:263
+msgid ""
+"When off, the colour below overrides the chat theme accent on every chat "
+"surface."
+msgstr "이 옵션을 끄면 아래 색상이 모든 채팅 화면에서 채팅 테마의 강조 색상을 대체합니다."
+
+#: src/interface-settings/index.js:277 src/settings-app/index.js:500
+msgid "Accent colour"
+msgstr "강조 색상"
+
+#. translators: %s: hex colour value
+#: src/interface-settings/index.js:280
+msgid "Selected: %s"
+msgstr "선택됨: %s"
+
+#: src/interface-settings/index.js:360
+msgid ""
+"Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until"
+" you turn this off."
+msgstr "비상 정지가 활성 상태입니다. 이 기능을 해제할 때까지 채팅, 작업, 에이전트 활성화가 차단됩니다."
+
+#: src/knowledge-wizard/index.js:33
+msgid "Paste text"
+msgstr "텍스트 붙여넣기"
+
+#: src/knowledge-wizard/index.js:34
+msgid "Upload a file"
+msgstr "파일 업로드"
+
+#: src/knowledge-wizard/index.js:35
+msgid "Pick existing pages"
+msgstr "기존 페이지 선택"
+
+#: src/knowledge-wizard/index.js:40
+msgid "Title & tags"
+msgstr "제목 및 태그"
+
+#: src/knowledge-wizard/index.js:104
+msgid "Could not load pages."
+msgstr "페이지를 불러오지 못했습니다."
+
+#: src/knowledge-wizard/index.js:126
+msgid "Please choose a plain text or Markdown file (.txt or .md)."
+msgstr "일반 텍스트 또는 마크다운 파일(.txt 또는 .md)을 선택하세요."
+
+#: src/knowledge-wizard/index.js:143
+msgid "Could not read that file."
+msgstr "해당 파일을 읽지 못했습니다."
+
+#: src/knowledge-wizard/index.js:188
+msgid "Something went wrong saving this knowledge."
+msgstr "이 지식을 저장하는 중 문제가 발생했습니다."
+
+#. translators: %s: the knowledge title.
+#: src/knowledge-wizard/index.js:205
+msgid "\"%s\" is saved!"
+msgstr "\"%s\"이(가) 저장되었습니다!"
+
+#: src/knowledge-wizard/index.js:210
+msgid ""
+"Your agents can now use this. Add another, or review it in the full "
+"Knowledge Wiki."
+msgstr "이제 에이전트가 이 지식을 사용할 수 있습니다. 다른 지식을 추가하거나 전체 지식 위키에서 검토하세요."
+
+#: src/knowledge-wizard/index.js:230
+msgid "Add another"
+msgstr "다른 항목 추가"
+
+#: src/knowledge-wizard/index.js:240
+msgid "View Knowledge Wiki"
+msgstr "지식 위키 보기"
+
+#: src/knowledge-wizard/index.js:269
+msgid "Where is this knowledge coming from?"
+msgstr "이 지식의 출처는 무엇인가요?"
+
+#: src/knowledge-wizard/index.js:290
+msgid "Paste the text"
+msgstr "텍스트를 붙여넣으세요"
+
+#: src/knowledge-wizard/index.js:291
+msgid ""
+"A fact, policy, FAQ answer — anything you want your agents to know is true."
+msgstr "사실, 정책, FAQ 답변 등 에이전트가 참으로 알기를 원하는 모든 내용을 입력하세요."
+
+#: src/knowledge-wizard/index.js:304
+msgid "Upload a text or Markdown file"
+msgstr "텍스트 또는 마크다운 파일 업로드"
+
+#. translators: %s: file name.
+#: src/knowledge-wizard/index.js:322
+msgid "Loaded \"%s\" — you can review and edit the text below."
+msgstr "\"%s\"을(를) 불러왔습니다 — 아래에서 텍스트를 검토하고 편집할 수 있습니다."
+
+#: src/knowledge-wizard/index.js:340
+msgid "Search your pages and posts"
+msgstr "페이지 및 글 검색"
+
+#: src/knowledge-wizard/index.js:343
+msgid "Leave blank to see recent pages"
+msgstr "비워 두면 최근 페이지가 표시됩니다"
+
+#: src/knowledge-wizard/index.js:359
+msgid "No matching pages or posts."
+msgstr "일치하는 페이지나 글이 없습니다."
+
+#. translators: %s: number of selected pages.
+#: src/knowledge-wizard/index.js:379
+msgid "%s page(s)/post(s) selected."
+msgstr "페이지/글 %s개를 선택했습니다."
+
+#: src/knowledge-wizard/index.js:393
+msgid "A short, clear name, e.g. \"Return policy\" or \"Support hours\"."
+msgstr "짧고 명확한 이름입니다(예: \"반품 정책\" 또는 \"지원 시간\")."
+
+#: src/knowledge-wizard/index.js:402
+msgid "Tags (optional)"
+msgstr "태그(선택 사항)"
+
+#: src/knowledge-wizard/index.js:403
+msgid "Comma-separated, e.g. billing, returns, policy."
+msgstr "쉼표로 구분합니다(예: 결제, 반품, 정책)."
+
+#: src/knowledge-wizard/index.js:443
+msgid "Save knowledge"
+msgstr "지식 저장"
+
+#: src/settings-app/index.js:46
+msgid "Could not load settings."
+msgstr "설정을 불러오지 못했습니다."
+
+#: src/settings-app/index.js:260
+msgid "Default interface mode"
+msgstr "기본 인터페이스 모드"
+
+#: src/settings-app/index.js:270
+msgid ""
+"Used by any screen you have not set individually. Tools, Approvals, and "
+"Activity each have their own Basic/Advanced switch now — this is just the "
+"starting point for screens you have not touched."
+msgstr ""
+"개별적으로 설정하지 않은 모든 화면에 적용됩니다. 이제 도구, 승인, 활동 화면에는 각각 자체 기본/고급 전환 스위치가 있습니다 — 이 "
+"설정은 아직 변경하지 않은 화면의 시작값일 뿐입니다."
+
+#: src/settings-app/index.js:291
+msgid "How assistants address people"
+msgstr "어시스턴트가 사용자를 부르는 방식"
+
+#: src/settings-app/index.js:293
+msgid "Site knowledge and standing guidance are under"
+msgstr "사이트 지식과 상시 지침은 다음 위치에 있습니다:"
+
+#: src/settings-app/index.js:301
+msgid "Per-agent personality is under Knowledge → Instructions."
+msgstr "에이전트별 성격 설정은 지식 → 지침에 있습니다."
+
+#: src/settings-app/index.js:315
+msgid "Leave blank to use the WordPress display name."
+msgstr "비워 두면 WordPress 표시 이름이 사용됩니다."
+
+#: src/settings-app/index.js:336
+msgid "Chat theme"
+msgstr "채팅 테마"
+
+#: src/settings-app/index.js:338
+msgid ""
+"Visual theme for admin chat and frontend shortcodes. Click a preview to "
+"select."
+msgstr "관리자 채팅과 프런트엔드 숏코드에 적용되는 시각 테마입니다. 미리보기를 클릭하여 선택하세요."
+
+#: src/settings-app/index.js:405
+msgid "AI Assistant"
+msgstr "AI 어시스턴트"
+
+#: src/settings-app/index.js:425
+msgid "Hello! How can I help?"
+msgstr "안녕하세요! 무엇을 도와드릴까요?"
+
+#: src/settings-app/index.js:446
+msgid "Update my homepage"
+msgstr "홈페이지를 업데이트해 주세요"
+
+#: src/settings-app/index.js:552
+msgid ""
+"Configure the AI providers available on this site. Only a connected provider"
+" can be set as the site default."
+msgstr "이 사이트에서 사용할 수 있는 AI 제공업체를 설정합니다. 연결된 제공업체만 사이트 기본값으로 지정할 수 있습니다."
+
+#: src/settings-app/index.js:568
+msgid "Slug"
+msgstr "슬러그"
+
+#: src/settings-app/index.js:672
+msgid ""
+"API keys: use Edit on a provider. Setting a default updates the global "
+"provider and model used by assistants."
+msgstr "API 키: 제공업체에서 편집을 사용하세요. 기본값을 지정하면 어시스턴트가 사용하는 전역 제공업체와 모델이 업데이트됩니다."
+
+#: src/settings-app/index.js:693
+msgid "Default agent mode"
+msgstr "기본 에이전트 모드"
+
+#: src/settings-app/index.js:705
+msgid "Read-only"
+msgstr "읽기 전용"
+
+#: src/settings-app/index.js:717
+msgid "Message scanning"
+msgstr "메시지 검사"
+
+#: src/settings-app/index.js:726
+msgid "Require chat consent"
+msgstr "채팅 동의 필수"
+
+#: src/settings-app/index.js:736
+msgid "Consent text"
+msgstr "동의 문구"
+
+#: src/settings-app/index.js:748
+msgid "Conversation retention (days)"
+msgstr "대화 보관 기간(일)"
+
+#: src/settings-app/index.js:765
+msgid "Audit log retention (days)"
+msgstr "감사 로그 보관 기간(일)"
+
+#: src/settings-app/index.js:778
+msgid "Request Rate Limits"
+msgstr "요청 속도 제한"
+
+#: src/settings-app/index.js:780
+msgid ""
+"IP-based throttle applied before role-based daily quotas. Protects against "
+"rapid-fire requests."
+msgstr "역할 기반 일일 할당량보다 먼저 적용되는 IP 기반 제한입니다. 짧은 시간에 몰리는 요청으로부터 사이트를 보호합니다."
+
+#: src/settings-app/index.js:786
+msgid "Authenticated users (requests per minute)"
+msgstr "로그인한 사용자(분당 요청 수)"
+
+#: src/settings-app/index.js:803
+msgid "Anonymous visitors (requests per minute)"
+msgstr "비로그인 방문자(분당 요청 수)"
+
+#: src/settings-app/index.js:924
+msgid ""
+"Control which WordPress roles can administer the plugin and interact with AI"
+" agents. Administrators always retain full access."
+msgstr ""
+"어떤 WordPress 역할이 플러그인을 관리하고 AI 에이전트와 상호작용할 수 있는지 제어합니다. 관리자는 항상 모든 권한을 "
+"유지합니다."
+
+#: src/settings-app/index.js:930
+msgid ""
+"These rules apply site-wide. A user needs at least one ticked box to access "
+"the corresponding feature. Removing a role from all plugin privileges will "
+"hide the Agent Builder menu from that role entirely."
+msgstr ""
+"이 규칙은 사이트 전체에 적용됩니다. 사용자가 해당 기능을 이용하려면 최소 한 개의 체크박스가 선택되어 있어야 합니다. 어떤 역할에서 "
+"모든 플러그인 권한을 제거하면 해당 역할에게 Agent Builder 메뉴가 완전히 숨겨집니다."
+
+#: src/settings-app/index.js:937
+msgid "Plugin Administration"
+msgstr "플러그인 관리"
+
+#: src/settings-app/index.js:939
+msgid "Who can access and configure the Agent Builder admin pages."
+msgstr "Agent Builder 관리 페이지에 접근하고 설정할 수 있는 대상입니다."
+
+#: src/settings-app/index.js:949
+msgid "Permission"
+msgstr "권한"
+
+#: src/settings-app/index.js:994 src/settings-app/index.js:1112
+msgid "Administrators always have full access"
+msgstr "관리자는 항상 모든 권한을 가집니다"
+
+#: src/settings-app/index.js:1020
+msgid ""
+"Who can chat with and interact with installed AI agents, and how much they "
+"may use per day."
+msgstr "설치된 AI 에이전트와 대화하고 상호작용할 수 있는 대상과 하루 사용 한도입니다."
+
+#: src/settings-app/index.js:1030
+msgid "Permission / Limit"
+msgstr "권한 / 한도"
+
+#: src/settings-app/index.js:1036
+msgid "Visitor"
+msgstr "방문자"
+
+#: src/settings-app/index.js:1038
+msgid "Not logged in"
+msgstr "로그인하지 않음"
+
+#: src/settings-app/index.js:1078
+msgid "Allow non-logged-in visitors to use frontend chat"
+msgstr "로그인하지 않은 방문자가 프런트엔드 채팅을 사용하도록 허용"
+
+#: src/settings-app/index.js:1135
+msgid "Daily Limits"
+msgstr "일일 한도"
+
+#: src/settings-app/index.js:1141
+msgid ""
+"0 = unlimited, resets at midnight UTC. Administrators are never limited."
+msgstr "0 = 무제한이며 UTC 자정에 초기화됩니다. 관리자에게는 제한이 적용되지 않습니다."
+
+#: src/settings-app/index.js:1152
+msgid "Queries / day"
+msgstr "일일 질의 수"
+
+#: src/settings-app/index.js:1159 src/settings-app/index.js:1163
+msgid "Max AI chat messages per user per day."
+msgstr "사용자당 하루 최대 AI 채팅 메시지 수입니다."
+
+#: src/settings-app/index.js:1224
+msgid "Tokens / day"
+msgstr "일일 토큰 수"
+
+#: src/settings-app/index.js:1231 src/settings-app/index.js:1235
+msgid "Max AI tokens consumed per user per day."
+msgstr "사용자당 하루 최대 AI 토큰 사용량입니다."
+
+#: src/settings-app/index.js:1298
+msgid ""
+"How enforcement works: these settings control WordPress admin menu "
+"visibility, admin bar chat access, the REST chat API, and AJAX task "
+"triggers. Unchecked roles are blocked at the server, not just hidden in the "
+"UI. Request rate limits are under Security."
+msgstr ""
+"적용 방식: 이 설정은 WordPress 관리자 메뉴 표시, 관리자 바 채팅 접근, REST 채팅 API, AJAX 작업 트리거를 "
+"제어합니다. 선택되지 않은 역할은 UI에서 숨겨질 뿐 아니라 서버에서 차단됩니다. 요청 속도 제한은 보안 탭에 있습니다."
+
+#: src/settings-app/index.js:1319
+msgid "Persistent key-value memory agents use across conversations."
+msgstr "에이전트가 여러 대화에 걸쳐 사용하는 영구 키-값 메모리입니다."
+
+#: src/settings-app/index.js:1325
+msgid "Default memory TTL (days)"
+msgstr "기본 메모리 TTL(일)"
+
+#: src/settings-app/index.js:1326
+msgid "0 = never expires"
+msgstr "0 = 만료되지 않음"
+
+#: src/settings-app/index.js:1340
+msgid "Enable local browser memory"
+msgstr "로컬 브라우저 메모리 사용"
+
+#: src/settings-app/index.js:1413
+msgid "(default)"
+msgstr "(기본값)"
+
+#: src/settings-app/index.js:1461
+msgid ""
+"Chat capabilities and per-agent provider/model. Set the site default "
+"provider on the Providers tab. Theme is under Interface."
+msgstr ""
+"채팅 기능과 에이전트별 제공업체/모델입니다. 사이트 기본 제공업체는 제공업체 탭에서 설정하세요. 테마는 인터페이스에 있습니다."
+
+#: src/settings-app/index.js:1466
+msgid "Chat features"
+msgstr "채팅 기능"
+
+#: src/settings-app/index.js:1468
+msgid "Features available in agent chat."
+msgstr "에이전트 채팅에서 사용할 수 있는 기능입니다."
+
+#: src/settings-app/index.js:1474
+msgid "Audio input"
+msgstr "음성 입력"
+
+#: src/settings-app/index.js:1481
+msgid "Text-to-speech"
+msgstr "음성 합성(TTS)"
+
+#: src/settings-app/index.js:1488
+msgid "Vision / image input"
+msgstr "비전 / 이미지 입력"
+
+#: src/settings-app/index.js:1497
+msgid "White-label branding"
+msgstr "화이트 라벨 브랜딩"
+
+#: src/settings-app/index.js:1498
+msgid "Hide “Powered by Agent Builder” in the chat footer."
+msgstr "채팅 푸터의 “Powered by Agent Builder” 문구를 숨깁니다."
+
+#: src/settings-app/index.js:1509
+msgid "Active agent overrides"
+msgstr "활성 에이전트 재정의"
+
+#: src/settings-app/index.js:1511
+msgid ""
+"Each row starts on the site default provider and model (Providers tab). "
+"Change only the assistants that need a different setup."
+msgstr "각 행은 사이트 기본 제공업체와 모델(제공업체 탭)로 시작합니다. 다른 설정이 필요한 어시스턴트만 변경하세요."
+
+#: src/settings-app/index.js:1518
+msgid "No active agents."
+msgstr "활성 에이전트가 없습니다."
+
+#: src/settings-app/index.js:1552
+msgid "provider"
+msgstr "제공업체"
+
+#: src/settings-app/index.js:1606
+msgid "model"
+msgstr "모델"
+
+#: src/settings-app/index.js:1738
+msgid "Customise greetings and personality notes per assistant."
+msgstr "어시스턴트별로 인사말과 성격 메모를 사용자 지정합니다."
+
+#: src/settings-app/index.js:1744
+msgid "No assistants installed."
+msgstr "설치된 어시스턴트가 없습니다."
+
+#: src/settings-app/index.js:1748
+msgid "Select assistant"
+msgstr "어시스턴트 선택"
+
+#: src/settings-app/index.js:1761
+msgid "Welcome message"
+msgstr "환영 메시지"
+
+#: src/settings-app/index.js:1774
+msgid "Persona notes"
+msgstr "페르소나 메모"
+
+#: src/settings-app/index.js:1785
+msgid "Response style"
+msgstr "응답 스타일"
+
+#: src/settings-app/index.js:1809
+msgid "Third-party API keys used by agent tools."
+msgstr "에이전트 도구가 사용하는 서드파티 API 키입니다."
+
+#: src/settings-app/index.js:1831
+msgid "Get a key"
+msgstr "키 발급받기"
+
+#: src/settings-app/index.js:1847
+msgid "Configured"
+msgstr "설정됨"
+
+#: src/settings-app/index.js:1848
+msgid "Not configured"
+msgstr "설정되지 않음"
+
+#: src/settings-app/index.js:1922
+msgid "REST endpoints for integrations."
+msgstr "연동을 위한 REST 엔드포인트입니다."
+
+#: src/settings-app/index.js:1928
+msgid "Namespace"
+msgstr "네임스페이스"
+
+#: src/settings-app/index.js:1937
+msgid "Agentic Services"
+msgstr "Agentic 서비스"
+
+#: src/settings-app/index.js:1948
+msgid ""
+"Base URLs the plugin calls for AI chat, knowledge search, and media "
+"generation. Leave these on their defaults unless you’re self-hosting a proxy"
+" or support asked you to change one."
+msgstr ""
+"플러그인이 AI 채팅, 지식 검색, 미디어 생성을 위해 호출하는 기본 URL입니다. 프록시를 직접 호스팅하거나 지원팀에서 변경을 요청한 "
+"경우가 아니라면 기본값으로 두세요."
+
+#: src/settings-app/index.js:1990
+msgid "Testing…"
+msgstr "테스트하는 중…"
+
+#: src/settings-app/index.js:2017
+msgid "Reset to default"
+msgstr "기본값으로 재설정"
+
+#: src/settings-app/index.js:2071
+msgid "Could not load this settings panel."
+msgstr "이 설정 패널을 불러오지 못했습니다."
+
+#: src/settings-app/index.js:2223
+msgid "Settings saved with warnings:"
+msgstr "설정이 경고와 함께 저장되었습니다:"
+
+#: src/settings-app/index.js:2257
+msgid "Could not save settings."
+msgstr "설정을 저장하지 못했습니다."
+
+#: src/settings-app/index.js:2267
+msgid "Loading settings…"
+msgstr "설정을 불러오는 중…"
+
+#: src/settings-app/index.js:2278
+msgid "Settings unavailable."
+msgstr "설정을 사용할 수 없습니다."
+
+#: src/settings-app/index.js:2343
+msgid "Activate Agent Builder Pro to manage your license key here."
+msgstr "여기에서 라이선스 키를 관리하려면 Agent Builder Pro를 활성화하세요."
+
+#: src/settings-app/index.js:2354
+msgid "This tab is available via the classic view or an add-on."
+msgstr "이 탭은 클래식 보기 또는 애드온을 통해 사용할 수 있습니다."
+
+#: src/shared/components.js:154
+msgid "More info"
+msgstr "자세히 보기"
