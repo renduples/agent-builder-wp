@@ -384,7 +384,7 @@ function ProvidersCard( { data, dnd } ) {
 	);
 }
 
-function QuickActionsCard( { data, onSaveQuickActions, dnd } ) {
+function QuickActionsCard( { data, onSaveQuickActions, mutate, dnd } ) {
 	const [ manage, setManage ] = useState( false );
 	const [ selected, setSelected ] = useState( () =>
 		( data.quick_actions || [] )
@@ -392,6 +392,35 @@ function QuickActionsCard( { data, onSaveQuickActions, dnd } ) {
 			.map( ( a ) => a.slug )
 	);
 	const [ saving, setSaving ] = useState( false );
+	const [ busy, setBusy ] = useState( false );
+
+	const setEmergency = ( enable ) => {
+		const msg = enable
+			? __(
+					'EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?',
+					'agent-builder'
+			  )
+			: __( 'Turn off emergency stop?', 'agent-builder' );
+		if ( ! window.confirm( msg ) ) {
+			return;
+		}
+		setBusy( true );
+		mutate( { action_name: 'set_emergency_stop', enable } )
+			.then( ( d ) => {
+				const warnings = Array.isArray( d?.warnings ) ? d.warnings : [];
+				if ( warnings.length ) {
+					window.alert(
+						__(
+							'Emergency stop restore finished with warnings:',
+							'agent-builder'
+						) +
+							'\n\n' +
+							warnings.join( '\n' )
+					);
+				}
+			} )
+			.finally( () => setBusy( false ) );
+	};
 
 	useEffect( () => {
 		setSelected(
@@ -558,6 +587,39 @@ function QuickActionsCard( { data, onSaveQuickActions, dnd } ) {
 					) ) }
 				</div>
 			) }
+
+			<div className="agentic-quick-actions-emergency">
+				<div className="agentic-updates-row">
+					<span className="agentic-mode-label agentic-emergency-label">
+						{ __( 'Disable All Agents', 'agent-builder' ) }
+						{ data.emergency_stop && (
+							<span className="agentic-emergency-badge">
+								{ __( 'ACTIVE', 'agent-builder' ) }
+							</span>
+						) }
+					</span>
+					<label className="agentic-switch">
+						<input
+							type="checkbox"
+							checked={ !! data.emergency_stop }
+							disabled={ busy }
+							onChange={ ( e ) =>
+								setEmergency( e.target.checked )
+							}
+						/>
+						<span className="agentic-switch-slider" />
+					</label>
+				</div>
+				<span className="agentic-mode-hint agentic-emergency-stop-hint">
+					<strong className="agentic-emergency-stop-text">
+						{ __( 'Emergency stop', 'agent-builder' ) }
+					</strong>
+					{ __(
+						': deactivate and log agent states, cancels all jobs and disconnects providers.',
+						'agent-builder'
+					) }
+				</span>
+			</div>
 		</Card>
 	);
 }
@@ -570,34 +632,6 @@ function InterfaceCard( { data, mutate, dnd } ) {
 		mutate( { action_name: 'set_ui_mode', mode } ).finally( () =>
 			setBusy( false )
 		);
-	};
-
-	const setEmergency = ( enable ) => {
-		const msg = enable
-			? __(
-					'EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?',
-					'agent-builder'
-			  )
-			: __( 'Turn off emergency stop?', 'agent-builder' );
-		if ( ! window.confirm( msg ) ) {
-			return;
-		}
-		setBusy( true );
-		mutate( { action_name: 'set_emergency_stop', enable } )
-			.then( ( d ) => {
-				const warnings = Array.isArray( d?.warnings ) ? d.warnings : [];
-				if ( warnings.length ) {
-					window.alert(
-						__(
-							'Emergency stop restore finished with warnings:',
-							'agent-builder'
-						) +
-							'\n\n' +
-							warnings.join( '\n' )
-					);
-				}
-			} )
-			.finally( () => setBusy( false ) );
 	};
 
 	const setUpdates = ( enable ) => {
@@ -682,39 +716,6 @@ function InterfaceCard( { data, mutate, dnd } ) {
 						'agent-builder'
 					) }
 				</button>
-			</div>
-
-			<div className="agentic-interface-section agentic-updates-toggle">
-				<div className="agentic-updates-row">
-					<span className="agentic-mode-label agentic-emergency-label">
-						{ __( 'Disable All Agents', 'agent-builder' ) }
-						{ data.emergency_stop && (
-							<span className="agentic-emergency-badge">
-								{ __( 'ACTIVE', 'agent-builder' ) }
-							</span>
-						) }
-					</span>
-					<label className="agentic-switch">
-						<input
-							type="checkbox"
-							checked={ !! data.emergency_stop }
-							disabled={ busy }
-							onChange={ ( e ) =>
-								setEmergency( e.target.checked )
-							}
-						/>
-						<span className="agentic-switch-slider" />
-					</label>
-				</div>
-				<span className="agentic-mode-hint agentic-emergency-stop-hint">
-					<strong className="agentic-emergency-stop-text">
-						{ __( 'Emergency stop', 'agent-builder' ) }
-					</strong>
-					{ __(
-						': deactivate and log agent states, cancels all jobs and disconnects providers.',
-						'agent-builder'
-					) }
-				</span>
 			</div>
 
 			{ data.has_agent_updates_class ? (
@@ -1063,6 +1064,7 @@ function DashboardApp() {
 						key={ id }
 						data={ data }
 						onSaveQuickActions={ saveQuickActions }
+						mutate={ mutate }
 						dnd={ dnd }
 					/>
 				);

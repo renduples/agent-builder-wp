@@ -480,6 +480,13 @@
 	min-height: 26px;
 }
 
+/* Emergency stop toggle, pinned below Quick Actions — always shown, not part of the removable action list */
+.agentic-quick-actions-emergency {
+	margin-top: 14px;
+	padding-top: 14px;
+	border-top: 1px solid #e0e0e0;
+}
+
 /* Interface card sections — one separator with even spacing */
 .agentic-settings-card .agentic-interface-section {
 	margin: 0;

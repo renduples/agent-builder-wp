@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.48
+Stable tag: 3.3.49
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.49 - 2026-08-04 =
+* Change: Moved the "Disable All Agents" (Emergency Stop) toggle from the Interface Settings card to the Quick Actions card, pinned below the action buttons. It always shows there and isn't part of the "Manage Actions" list, so it can't be hidden or removed like the other quick actions.
 
 = 3.3.48 - 2026-08-04 =
 * Clarified the deactivation dialog's optional feedback step: it now states up front that answering is voluntary/opt-in and that nothing is sent unless you click "Submit & deactivate" (vs. "Skip & deactivate," which sends nothing). Also documented the feedback endpoint in External Services, which previously listed every other agentic-plugin.com endpoint except this one.
