@@ -298,7 +298,129 @@ class Admin_Pages_REST {
 			return new \WP_REST_Response( array( 'ok' => true ), 200 );
 		}
 
+		if ( 'test_provider' === $action ) {
+			return self::test_provider( $request );
+		}
+
 		return new \WP_Error( 'unknown_action', __( 'Unknown action.', 'agent-builder' ), array( 'status' => 400 ) );
+	}
+
+	/**
+	 * Test connectivity for an already-configured provider.
+	 *
+	 * Reuses the same request-building helpers as Rest_Api::test_api_key()
+	 * (the setup-wizard "test before saving" flow), but reads the already
+	 * stored, decrypted API key server-side instead of requiring the browser
+	 * to hold it, and resolves the model against the provider actually being
+	 * tested — not the site's active-default model — since the two can
+	 * differ for any provider that isn't the current default. Endpoint
+	 * templates that embed the model (e.g. Google's %MODEL%) would otherwise
+	 * silently point at a model the tested provider doesn't have.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response
+	 */
+	private static function test_provider( \WP_REST_Request $request ): \WP_REST_Response {
+		$slug = sanitize_key( (string) $request->get_param( 'slug' ) );
+		$p    = class_exists( Provider_Registry::class ) ? Provider_Registry::get( $slug ) : null;
+
+		if ( ! $p ) {
+			return new \WP_REST_Response(
+				array(
+					'ok'      => false,
+					'message' => __( 'Unknown provider.', 'agent-builder' ),
+				),
+				404
+			);
+		}
+
+		$api_key       = (string) ( $p['api_key'] ?? '' );
+		$is_keyless    = in_array( $slug, array( 'ollama', 'agentic' ), true );
+		if ( ! $is_keyless && ! empty( $p['requires_key'] ) && empty( $api_key ) ) {
+			return new \WP_REST_Response(
+				array(
+					'ok'      => false,
+					'message' => __( 'No API key configured for this provider.', 'agent-builder' ),
+				),
+				200
+			);
+		}
+
+		$model = (string) ( $p['default_model'] ?? '' );
+		if ( $slug === get_option( 'agentic_llm_provider', '' ) ) {
+			$site_model = (string) get_option( 'agentic_model', '' );
+			if ( '' !== $site_model ) {
+				$model = $site_model;
+			}
+		}
+
+		if ( $is_keyless ) {
+			$url = 'ollama' === $slug
+				? rtrim( get_option( 'agentic_ollama_url', 'http://localhost:11434' ), '/' ) . '/api/tags'
+				: Service_Registry::url( 'agentic-chat', '/health' );
+			$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+		} else {
+			$llm      = new LLM_Client();
+			$endpoint = Provider_Registry::resolve_endpoint( (string) ( $p['endpoint'] ?? '' ), $model, $api_key );
+			$response = wp_remote_post(
+				$endpoint,
+				array(
+					'timeout' => 15,
+					'headers' => $llm->get_headers_for_provider( $slug, $api_key ),
+					'body'    => wp_json_encode(
+						$llm->format_request_for_provider(
+							$slug,
+							array(
+								array(
+									'role'    => 'user',
+									'content' => 'Hello, please respond with OK.',
+								),
+							),
+							$model
+						)
+					),
+				)
+			);
+		}
+
+		if ( is_wp_error( $response ) ) {
+			return new \WP_REST_Response(
+				array(
+					'ok'      => false,
+					'message' => $response->get_error_message(),
+				),
+				200
+			);
+		}
+
+		$status = wp_remote_retrieve_response_code( $response );
+		if ( $status >= 200 && $status < 300 ) {
+			return new \WP_REST_Response(
+				array(
+					'ok'      => true,
+					'message' => __( 'Connected successfully.', 'agent-builder' ),
+				),
+				200
+			);
+		}
+
+		$body      = json_decode( wp_remote_retrieve_body( $response ), true );
+		$error_msg = $body['error']['message'] ?? $body['error'] ?? sprintf(
+			/* translators: %d: HTTP status code. */
+			__( 'Connection failed (HTTP %d).', 'agent-builder' ),
+			$status
+		);
+		if ( is_array( $error_msg ) ) {
+			$error_msg = wp_json_encode( $error_msg );
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'ok'      => false,
+				'message' => (string) $error_msg,
+			),
+			200
+		);
 	}
 
 	/**

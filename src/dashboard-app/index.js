@@ -319,6 +319,42 @@ function ActivityCard( { data, activity, dnd } ) {
 
 function ProvidersCard( { data, dnd } ) {
 	const rows = data.providers || [];
+	const [ tests, setTests ] = useState( {} );
+
+	const testProvider = ( slug ) => {
+		setTests( ( prev ) => ( {
+			...prev,
+			[ slug ]: { testing: true, ok: null, message: '' },
+		} ) );
+		apiFetch( {
+			path: 'agentic/v1/admin-page',
+			method: 'POST',
+			data: { action_name: 'test_provider', slug },
+		} )
+			.then( ( res ) =>
+				setTests( ( prev ) => ( {
+					...prev,
+					[ slug ]: {
+						testing: false,
+						ok: !! res.ok,
+						message: res.message || '',
+					},
+				} ) )
+			)
+			.catch( ( err ) =>
+				setTests( ( prev ) => ( {
+					...prev,
+					[ slug ]: {
+						testing: false,
+						ok: false,
+						message:
+							err.message ||
+							__( 'Test failed.', 'agent-builder' ),
+					},
+				} ) )
+			);
+	};
+
 	return (
 		<Card
 			cardId="providers"
@@ -342,42 +378,72 @@ function ProvidersCard( { data, dnd } ) {
 				</p>
 			) : (
 				<div className="agentic-provider-list">
-					{ rows.map( ( p ) => (
-						<div
-							key={ p.slug }
-							className={
-								'agentic-provider-row' +
-								( p.is_default
-									? ' agentic-provider-active'
-									: '' )
-							}
-						>
-							<span className="agentic-provider-dot">●</span>
-							<div className="agentic-provider-meta">
-								<div className="agentic-provider-line">
-									<span className="agentic-provider-k">
-										{ __( 'Provider', 'agent-builder' ) }
-									</span>
-									<span className="agentic-provider-name">
-										{ p.name }
-									</span>
+					{ rows.map( ( p ) => {
+						const t = tests[ p.slug ];
+						return (
+							<div
+								key={ p.slug }
+								className={
+									'agentic-provider-row' +
+									( p.is_default
+										? ' agentic-provider-active'
+										: '' )
+								}
+							>
+								<span className="agentic-provider-dot">●</span>
+								<div className="agentic-provider-meta">
+									<div className="agentic-provider-line">
+										<span className="agentic-provider-k">
+											{ __(
+												'Provider',
+												'agent-builder'
+											) }
+										</span>
+										<span className="agentic-provider-name">
+											{ p.name }
+										</span>
+									</div>
+									<div className="agentic-provider-line">
+										<span className="agentic-provider-k">
+											{ __( 'Model', 'agent-builder' ) }
+										</span>
+										<span className="agentic-provider-model">
+											{ p.model || '—' }
+										</span>
+									</div>
+									{ t && null !== t.ok && (
+										<div className="agentic-provider-line">
+											<span
+												className={
+													t.ok
+														? 'agentic-status-active'
+														: 'agentic-status-error'
+												}
+											>
+												{ t.ok ? '✓' : '✗' }{ ' ' }
+												{ t.message }
+											</span>
+										</div>
+									) }
 								</div>
-								<div className="agentic-provider-line">
-									<span className="agentic-provider-k">
-										{ __( 'Model', 'agent-builder' ) }
+								{ p.is_default && (
+									<span className="agentic-provider-badge">
+										{ __( 'Default', 'agent-builder' ) }
 									</span>
-									<span className="agentic-provider-model">
-										{ p.model || '—' }
-									</span>
-								</div>
+								) }
+								<button
+									type="button"
+									className="button button-small"
+									disabled={ !! t?.testing }
+									onClick={ () => testProvider( p.slug ) }
+								>
+									{ t?.testing
+										? __( 'Testing…', 'agent-builder' )
+										: __( 'Test', 'agent-builder' ) }
+								</button>
 							</div>
-							{ p.is_default && (
-								<span className="agentic-provider-badge">
-									{ __( 'Default', 'agent-builder' ) }
-								</span>
-							) }
-						</div>
-					) ) }
+						);
+					} ) }
 				</div>
 			) }
 		</Card>
