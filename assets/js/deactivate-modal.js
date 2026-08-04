@@ -78,7 +78,7 @@
 			/* Step 2 — Pro feedback (hidden in free build) */
 			( agenticDeactivate.canSendFeedback ?
 			'<div class="adm-step adm-hidden" id="adm-step-2">' +
-				'<p class="adm-lead">Help us improve — why are you deactivating?</p>' +
+				'<p class="adm-lead">Help us improve — why are you deactivating? <em>(Optional)</em></p>' +
 				'<div class="adm-reasons">' +
 					REASONS.map( function ( r ) {
 						return '<label class="adm-reason">' +
@@ -91,7 +91,7 @@
 					'<textarea id="adm-reason-detail" class="adm-detail" rows="3" ' +
 						'placeholder="Tell us more (optional)…" maxlength="500"></textarea>' +
 				'</div>' +
-				'<p class="adm-privacy-note">Your feedback is sent to agentic-plugin.com and used only to improve the plugin.</p>' +
+				'<p class="adm-privacy-note">This is voluntary and opt-in — nothing is sent unless you click &ldquo;Submit &amp; deactivate.&rdquo; Doing so sends your selected reason and any notes above to agentic-plugin.com, used only to improve the plugin.</p>' +
 				'<div class="adm-actions">' +
 					'<button class="button adm-skip-btn">Skip &amp; deactivate</button>' +
 					'<button class="button button-primary adm-submit-btn">Submit &amp; deactivate</button>' +

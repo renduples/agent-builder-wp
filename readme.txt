@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.47
+Stable tag: 3.3.48
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -287,7 +287,18 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
+= Deactivation feedback (optional) =
+* **Endpoint:** `https://agentic-plugin.com/wp-json/agentic-license/v1/cancellation-feedback`
+* **When used:** Only if you've connected to the free Agentic AI provider (Quick Start sign-up) and, when deactivating the plugin, pick a reason and click "Submit & deactivate" in the deactivation dialog's optional feedback step. Explicit opt-in — clicking "Skip & deactivate" instead sends nothing.
+* **Data sent:** Your selected deactivation reason, any notes you type (up to 500 characters), your Agentic API/license key, site URL, and plugin version.
+* **How to disable:** Never connect to the Agentic AI provider, or always click "Skip & deactivate" instead of "Submit & deactivate."
+* **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
+* **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
+
 == Changelog ==
+
+= 3.3.48 - 2026-08-04 =
+* Clarified the deactivation dialog's optional feedback step: it now states up front that answering is voluntary/opt-in and that nothing is sent unless you click "Submit & deactivate" (vs. "Skip & deactivate," which sends nothing). Also documented the feedback endpoint in External Services, which previously listed every other agentic-plugin.com endpoint except this one.
 
 = 3.3.47 - 2026-08-03 =
 * Fix: On the Plugins page, choosing "Delete all plugin data" and clicking Continue in the deactivation dialog appeared to hang — the follow-up "Are you sure?" confirmation was actually opening, but rendered underneath the still-visible deactivation dialog (z-index 100002 vs. 160000) instead of on top of it, so its buttons were unreachable. Raised the shared confirm-dialog overlay's z-index above the deactivation dialog's so it always stacks on top.
