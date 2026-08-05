@@ -1686,7 +1686,7 @@ class Admin_Pages_REST {
 		$is_pro  = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
 		$pricing = class_exists( Distribution::class )
 			? Distribution::PRICING_URL
-			: 'https://agentic-plugin.com/licensing-and-pricing/';
+			: 'https://agentic-plugin.com/pricing/';
 		return array(
 			'page'        => 'upgrade-pro',
 			'title'       => $is_pro ? __( 'Pro', 'agent-builder' ) : __( 'Upgrade to Pro', 'agent-builder' ),

@@ -835,12 +835,12 @@ function InterfaceCard( { data, mutate, dnd } ) {
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							{ __( 'Browse marketplace →', 'agent-builder' ) }
+							{ __( 'Browse →', 'agent-builder' ) }
 						</a>
 					</div>
 					<span className="agentic-mode-hint agentic-text-muted">
 						{ __(
-							'Discover and install community agents from the Agent Builder marketplace.',
+							'Discover and install agents created by the WordPress community.',
 							'agent-builder'
 						) }
 					</span>

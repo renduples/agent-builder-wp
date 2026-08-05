@@ -102,8 +102,7 @@ function AdminPageFooter( { footer } ) {
 	const supportUrl = f.support_url || 'https://agentic-plugin.com/support/';
 	// Default off-site pricing — never a missing admin.php?page=agentic-upgrade-pro.
 	const promoUrl =
-		f.promo_url ||
-		'https://agentic-plugin.com/licensing-and-pricing/';
+		f.promo_url || 'https://agentic-plugin.com/pricing/';
 	const promoLabel =
 		f.promo_label || __( 'Upgrade to Pro', 'agent-builder' );
 	const promoExternal =

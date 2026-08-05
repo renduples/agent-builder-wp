@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.51
+Stable tag: 3.3.52
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.52 - 2026-08-05 =
+* Change: Dashboard Interface Settings — reworded the Community Agents blurb to "Discover and install agents created by the WordPress community." and shortened its button from "Browse marketplace →" to "Browse →".
+* Fix: Every "Upgrade to Pro" link (admin footer, in-admin upgrade page, tools upgrade prompt) pointed at the old `/licensing-and-pricing/` URL. Updated the shared `Distribution::PRICING_URL` source and its few defensive duplicate fallbacks to `https://agentic-plugin.com/pricing/`.
 
 = 3.3.51 - 2026-08-04 =
 * Change: The Dashboard's Approvals & Backups card now shows Completed Approvals alongside Pending Approvals, and moved the two backup counters (Files Backed Up, DB Tables Backed Up) to their own row below — a 2x2 grid instead of one cramped row of three. Completed Approvals counts only approvals a human actually approved or rejected, not the general tool-execution ledger.

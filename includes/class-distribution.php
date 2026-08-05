@@ -65,7 +65,7 @@ final class Distribution {
 	 * Public pricing / licensing page (off-site). Used for free → Pro promo when
 	 * the in-plugin Upgrade screen is not available (WPorg free, or stripped build).
 	 */
-	public const PRICING_URL = 'https://agentic-plugin.com/licensing-and-pricing/';
+	public const PRICING_URL = 'https://agentic-plugin.com/pricing/';
 
 	/**
 	 * Community agents marketplace (browse only on free / WPorg — no remote install).

@@ -1139,7 +1139,7 @@ class Site_Local_Tools {
 			'agents'      => $agents,
 			'upgrade_url' => class_exists( Distribution::class )
 				? Distribution::free_pro_promo_url()
-				: 'https://agentic-plugin.com/licensing-and-pricing/',
+				: 'https://agentic-plugin.com/pricing/',
 			'docs_url'    => 'https://agentic-plugin.com/agent-tools/',
 		);
 	}
