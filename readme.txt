@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.52
+Stable tag: 3.3.53
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.53 - 2026-08-05 =
+* Add: The Dashboard page never had the standard plugin footer (Support Center, Documentation, Upgrade to Pro, Terms/Privacy/GDPR links) that every other admin page already has — it was built as a separate, self-contained React app and was simply never wired up to it. Added it, including a dashboard-specific summary blurb.
 
 = 3.3.52 - 2026-08-05 =
 * Change: Dashboard Interface Settings — reworded the Community Agents blurb to "Discover and install agents created by the WordPress community." and shortened its button from "Browse marketplace →" to "Browse →".

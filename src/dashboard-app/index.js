@@ -14,6 +14,93 @@ function formatInt( n ) {
 	return Number( n || 0 ).toLocaleString();
 }
 
+function AdminPageFooter( { footer } ) {
+	const f = footer || {};
+	const docUrl = f.doc_url || 'https://agentic-plugin.com/the-dashboard/';
+	const supportUrl = f.support_url || 'https://agentic-plugin.com/support/';
+	const promoUrl = f.promo_url || 'https://agentic-plugin.com/pricing/';
+	const promoLabel = f.promo_label || __( 'Upgrade to Pro', 'agent-builder' );
+	const promoExternal =
+		typeof f.promo_external === 'boolean'
+			? f.promo_external
+			: /^https?:\/\//i.test( promoUrl );
+	const policy =
+		f.policy ||
+		__(
+			'The dashboard summarizes agents, approvals, activity, and providers at a glance.',
+			'agent-builder'
+		);
+
+	return (
+		<div className="agentic-page-footer agentic-page-footer--react">
+			<span className="agentic-page-footer-left">
+				{ policy && (
+					<span className="agentic-page-footer-policy">
+						{ policy }{ ' ' }
+					</span>
+				) }
+				{ __( 'Need help?', 'agent-builder' ) }{ ' ' }
+				<a
+					href={ supportUrl }
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'Visit our Support Center', 'agent-builder' ) }
+				</a>
+				{ ' | ' }
+				<a href={ docUrl } target="_blank" rel="noopener noreferrer">
+					{ __( 'Documentation', 'agent-builder' ) }
+				</a>
+				{ ' | ' }
+				<a
+					href={ promoUrl }
+					target={ promoExternal || f.is_pro ? '_blank' : undefined }
+					rel={
+						promoExternal || f.is_pro
+							? 'noopener noreferrer'
+							: undefined
+					}
+				>
+					{ promoLabel }
+				</a>
+			</span>
+			<span className="agentic-page-footer-right">
+				<a
+					href={
+						f.terms_url ||
+						'https://agentic-plugin.com/terms-of-service/'
+					}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'Terms of Service', 'agent-builder' ) }
+				</a>
+				{ ' | ' }
+				<a
+					href={
+						f.privacy_url ||
+						'https://agentic-plugin.com/privacy-policy/'
+					}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'Privacy Policy', 'agent-builder' ) }
+				</a>
+				{ ' | ' }
+				<a
+					href={
+						f.gdpr_url || 'https://agentic-plugin.com/gdpr-policy/'
+					}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'GDPR Policy', 'agent-builder' ) }
+				</a>
+			</span>
+		</div>
+	);
+}
+
 function Card( {
 	title,
 	headerLink,
@@ -1248,6 +1335,8 @@ function DashboardApp() {
 			<div className="agentic-dashboard-grid">
 				{ visibleLayout.map( ( id ) => renderCard( id ) ) }
 			</div>
+
+			<AdminPageFooter footer={ data.footer } />
 		</div>
 	);
 }

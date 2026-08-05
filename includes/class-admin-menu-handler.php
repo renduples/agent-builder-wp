@@ -920,7 +920,9 @@ class Admin_Menu_Handler {
 
 		// Short policy blurb — contextual by page/tab.
 		$policy = __( 'Settings control how assistants behave on this site. Changes are stored locally and take effect for new conversations.', 'agent-builder' );
-		if ( 'agentic-tools' === $page ) {
+		if ( 'agent-builder' === $page ) {
+			$policy = __( 'The dashboard summarizes agents, approvals, activity, and providers at a glance. Open any card\'s own page for full control.', 'agent-builder' );
+		} elseif ( 'agentic-tools' === $page ) {
 			$policy = __( 'Assistants only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings.', 'agent-builder' );
 		} elseif ( str_starts_with( $page, 'agentic-train' ) ) {
 			$policy = __( 'Knowledge stays on your site for the free wiki; hosted vector features follow your license and provider terms.', 'agent-builder' );

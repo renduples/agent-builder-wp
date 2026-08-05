@@ -354,6 +354,9 @@ class Dashboard_REST {
 				'onboarding'              => $steps,
 				'layout'                  => self::get_layout_for_user(),
 				'layout_default'          => self::default_layout(),
+				'footer'                  => class_exists( Admin_Menu_Handler::class )
+					? ( new Admin_Menu_Handler() )->get_admin_footer_data( 'agent-builder' )
+					: array(),
 				'warnings'                => $warnings,
 			),
 			200
