@@ -224,6 +224,14 @@ function SafetyCard( { data, dnd } ) {
 						{ formatInt( pending ) }
 					</a>
 				</StatusTile>
+				<StatusTile label={ __( 'Completed Approvals', 'agent-builder' ) }>
+					<a href={ data.urls?.approvals }>
+						<span className="agentic-status-active">●</span>{ ' ' }
+						{ formatInt( safety.completed_approvals ) }
+					</a>
+				</StatusTile>
+			</div>
+			<div className="agentic-status-grid agentic-mt-8">
 				<StatusTile label={ __( 'Files Backed Up', 'agent-builder' ) }>
 					<a href={ data.urls?.backups }>
 						<span className="agentic-status-active">●</span>{ ' ' }

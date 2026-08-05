@@ -229,11 +229,11 @@ class Dashboard_REST {
 
 		// Safety net — pending approvals and the automatic file/DB backups
 		// created before an assistant modifies something (Tool_Helpers).
-		$pending_approvals = class_exists( Approval_Queue::class )
-			? ( new Approval_Queue() )->get_pending_count()
-			: 0;
-		$file_backups      = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_backups() ) : 0;
-		$table_backups     = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_table_backups() ) : 0;
+		$approval_queue      = class_exists( Approval_Queue::class ) ? new Approval_Queue() : null;
+		$pending_approvals   = $approval_queue ? $approval_queue->get_pending_count() : 0;
+		$completed_approvals = $approval_queue ? $approval_queue->get_completed_count() : 0;
+		$file_backups        = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_backups() ) : 0;
+		$table_backups       = class_exists( Tool_Helpers::class ) ? count( Tool_Helpers::get_table_backups() ) : 0;
 
 		// Quick actions.
 		$catalog = Admin_Menu_Handler::quick_actions_catalog();
@@ -342,9 +342,10 @@ class Dashboard_REST {
 					'cost'    => round( (float) ( $stats['total_cost'] ?? 0 ), 4 ),
 				),
 				'safety'                  => array(
-					'pending_approvals' => (int) $pending_approvals,
-					'file_backups'      => $file_backups,
-					'table_backups'     => $table_backups,
+					'pending_approvals'   => (int) $pending_approvals,
+					'completed_approvals' => (int) $completed_approvals,
+					'file_backups'        => $file_backups,
+					'table_backups'       => $table_backups,
 				),
 				'agents'                  => $agent_counts,
 				'providers'               => $providers,

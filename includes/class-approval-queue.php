@@ -80,6 +80,29 @@ class Approval_Queue {
 	}
 
 	/**
+	 * Get count of approvals a human has actually acted on (approved or
+	 * rejected, including ones later marked executed).
+	 *
+	 * Deliberately keyed on `approved_by IS NOT NULL` rather than a status
+	 * list: this table also holds the general non-readonly tool-execution
+	 * ledger (see log_executed()), whose rows land at status = 'executed'
+	 * too but were never approval-gated at all (approved_by stays NULL).
+	 * Counting those here would make this number mostly ledger noise
+	 * instead of a meaningful pairing with get_pending_count(). Expired
+	 * items are excluded for the same reason — nobody reviewed them.
+	 *
+	 * @return int
+	 */
+	public function get_completed_count(): int {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table query.
+		return (int) $wpdb->get_var(
+			"SELECT COUNT(*) FROM {$wpdb->prefix}agentic_approval_queue WHERE approved_by IS NOT NULL"
+		);
+	}
+
+	/**
 	 * Get all pending approvals
 	 *
 	 * @return array

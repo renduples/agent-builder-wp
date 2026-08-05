@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.50
+Stable tag: 3.3.51
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.51 - 2026-08-04 =
+* Change: The Dashboard's Approvals & Backups card now shows Completed Approvals alongside Pending Approvals, and moved the two backup counters (Files Backed Up, DB Tables Backed Up) to their own row below — a 2x2 grid instead of one cramped row of three. Completed Approvals counts only approvals a human actually approved or rejected, not the general tool-execution ledger.
 
 = 3.3.50 - 2026-08-04 =
 * Add: Each provider in the Dashboard's Connected Providers card now has a "Test" button that checks connectivity on demand — a real lightweight request to that provider's API, using its own already-stored key and model (not the site's active-default model, which could differ for a non-default provider). Shows a checkmark and short status message, or the provider's own error message, inline.
