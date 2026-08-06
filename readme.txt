@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.53
+Stable tag: 3.3.55
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,12 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.55 - 2026-08-05 =
+* Fix: Even after excluding always-on concepts from the knowledge index (3.3.54), agents still sometimes tried calling read_okf_concept for content already fully present in the prompt — the tool's own description ("use this instead of guessing") nudges the model to use it for any knowledge-shaped question regardless of what's already in context, and with the id no longer listed anywhere it would just guess (and fail) using the concept's title. Added an explicit "already fully loaded, do not call these tools" instruction directly in the always-on block.
+
+= 3.3.54 - 2026-08-05 =
+* Fix: Agents redundantly called read_okf_concept for facts already fully injected via "Always include in prompts," because the same concept also appeared as a title-only entry in the knowledge index, which explicitly instructs "never answer from a title alone." Always-on concepts are now excluded from that index. Also fixed the underlying cause of a related gap: an agent-scoped concept marked "Always include in prompts" was silently never injected at all (only site-wide always-on concepts worked) because the prompt builder never passed the agent's own slug through to the always-on lookup — it now does, so per-agent always-on concepts are injected too, and their titles are correctly excluded from the index on that agent's own prompts.
 
 = 3.3.53 - 2026-08-05 =
 * Add: The Dashboard page never had the standard plugin footer (Support Center, Documentation, Upgrade to Pro, Terms/Privacy/GDPR links) that every other admin page already has — it was built as a separate, self-contained React app and was simply never wired up to it. Added it, including a dashboard-specific summary blurb.

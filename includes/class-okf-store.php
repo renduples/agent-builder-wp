@@ -501,7 +501,7 @@ class Okf_Store {
 		}
 
 		$block = "\n\n[SITE KNOWLEDGE — always on]\n"
-			. __( 'Standing site knowledge from the Knowledge Wiki. Prefer this over guessing about the business.', 'agent-builder' )
+			. __( 'Standing site knowledge from the Knowledge Wiki. Prefer this over guessing about the business. This content is already fully loaded — do not call read_okf_concept, list_okf_concepts, or search_okf for anything covered below; that would be redundant.', 'agent-builder' )
 			. "\n\n"
 			. implode( "\n\n", $chunks )
 			. "\n";
@@ -583,8 +583,20 @@ class Okf_Store {
 
 		$lines = array();
 		foreach ( $scopes as $scope ) {
-			// Never inject demo/example concepts into agent prompts.
-			$concepts = self::list_concepts( $scope, false );
+			// Never inject demo/example concepts into agent prompts. Always-on
+			// concepts are skipped here too — always_on_prompt_block() already
+			// injects their full body (with the same site+agent scope
+			// resolution as this method), so listing them again as a
+			// title-only stub would contradict that block and needlessly
+			// prompt a read_okf_concept call for content the model already has.
+			$concepts = array_values(
+				array_filter(
+					self::list_concepts( $scope, false ),
+					static function ( array $c ): bool {
+						return empty( $c['always_on'] );
+					}
+				)
+			);
 			if ( empty( $concepts ) ) {
 				continue;
 			}
