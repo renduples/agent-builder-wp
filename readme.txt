@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.55
+Stable tag: 3.3.56
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.56 - 2026-08-06 =
+* Fix: When a tool call failed and got retried internally, agents sometimes surfaced troubleshooting commentary about it (e.g. "If the issue persists, try a different tool.") in their actual reply to the user. Root cause: the retry-guidance sent back to the model was tagged role:'user' — indistinguishable from something the human actually said — so the model would occasionally respond to it directly as part of its answer. Retry-guidance messages are now explicitly framed as internal system notices with an instruction not to mention them to the user.
 
 = 3.3.55 - 2026-08-05 =
 * Fix: Even after excluding always-on concepts from the knowledge index (3.3.54), agents still sometimes tried calling read_okf_concept for content already fully present in the prompt — the tool's own description ("use this instead of guessing") nudges the model to use it for any knowledge-shaped question regardless of what's already in context, and with the id no longer listed anywhere it would just guess (and fail) using the concept's title. Added an explicit "already fully loaded, do not call these tools" instruction directly in the always-on block.

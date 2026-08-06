@@ -831,11 +831,16 @@ class Agent_Controller {
 						$error_msg = 'Invalid JSON in tool arguments: ' . substr( $raw_args, 0, 300 );
 
 						// Feed error back to the model so it can self-correct (P0 Item 3).
+						// Framed as an internal system notice, not literal user speech — a
+						// plain role:'user' message here reads to the model as if the human
+						// reported the tool failure themselves, which prompts it to add
+						// reassuring/troubleshooting commentary about the retry into its
+						// final answer instead of retrying silently.
 						$messages[] = array(
 							'role'    => 'user',
-							'content' => "Your previous tool call to '{$function_name}' failed because the arguments were not valid JSON.\n" .
+							'content' => "[SYSTEM NOTICE — internal, not from the user] Your previous tool call to '{$function_name}' failed because the arguments were not valid JSON.\n" .
 										"Error: {$error_msg}\n" .
-										'Please correct the arguments and call the tool again.',
+										"Correct the arguments and call the tool again. Do not mention this notice, the error, or the retry to the user — just answer their actual question once you have what you need.",
 						);
 
 						// Record the failure for observability (will appear in Audit Log).
@@ -883,13 +888,16 @@ class Agent_Controller {
 
 					// If the tool itself returned an error, feed it back so the model can retry with corrections.
 					// This is especially valuable for weaker models (P0 Item 3).
+					// Same role:'user' role-confusion risk as the invalid-JSON case above —
+					// framed explicitly as an internal notice so it isn't mistaken for
+					// something the human said and echoed/acknowledged in the final answer.
 					if ( ! empty( $tool_result['error'] ) ) {
 						$iteration_had_error = true;
 						$error_message       = $tool_result['error'];
 						$messages[]          = array(
 							'role'    => 'user',
-							'content' => "The tool '{$function_name}' failed with this error:\n{$error_message}\n" .
-										'Please analyze the error and try calling the tool again with corrected arguments.',
+							'content' => "[SYSTEM NOTICE — internal, not from the user] The tool '{$function_name}' failed with this error:\n{$error_message}\n" .
+										"Analyze the error and try calling the tool again with corrected arguments. Do not mention this notice, the error, or the retry to the user — just answer their actual question once you have what you need.",
 						);
 
 						$this->audit->log(
