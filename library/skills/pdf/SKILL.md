@@ -1,7 +1,7 @@
 ---
 name: pdf
 description: "Use this skill whenever the user wants to do anything with a PDF file. Trigger when the user wants to: read or extract text from a PDF; check a PDF's page count, title, or author; generate a new PDF from content (invoices, reports, letters, certificates, contracts); or combine multiple PDFs into one. Also trigger when the user mentions a .pdf file by name or path and wants something done with it. Do NOT trigger when the primary deliverable is a Word document, spreadsheet, or plain HTML page — only when a PDF file is explicitly needed."
-tools: [get_pdf_info, read_pdf, create_pdf, merge_pdfs]
+allowed-tools: get_pdf_info read_pdf create_pdf merge_pdfs
 ---
 
 # PDF Skill

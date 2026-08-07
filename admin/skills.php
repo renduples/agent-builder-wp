@@ -94,6 +94,44 @@ if ( isset( $_GET['skill_action'], $_GET['skill_id'], $_GET['_wpnonce'] )
 	);
 }
 
+// ── Reset a customized core skill back to its shipped version ─────────
+if ( isset( $_GET['skill_action'], $_GET['skill_id'], $_GET['_wpnonce'] )
+	&& 'reset' === $_GET['skill_action']
+	&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'agentic_skill_reset_' . absint( $_GET['skill_id'] ) )
+) {
+	$agentic_sk_reset_id = absint( $_GET['skill_id'] );
+	$agentic_sk_reset    = Skills_Registry::get( $agentic_sk_reset_id );
+
+	if ( $agentic_sk_reset && 'core' === ( $agentic_sk_reset['source'] ?? '' ) ) {
+		$agentic_sk_bundled = Skills_Registry::get_bundled_content( $agentic_sk_reset['source_id'] ?? '' );
+		if ( null !== $agentic_sk_bundled ) {
+			$agentic_sk_identity = Skills_Registry::parse_front_matter_identity( $agentic_sk_bundled );
+			Skills_Registry::update(
+				$agentic_sk_reset_id,
+				array(
+					'description' => $agentic_sk_identity['description'],
+					'content'     => $agentic_sk_bundled,
+					'source_hash' => hash( 'sha256', $agentic_sk_bundled ),
+				)
+			);
+			$agentic_sk_message = __( 'Skill reset to the shipped version.', 'agent-builder' );
+
+			\Agentic\Security_Log::log_system(
+				'settings_changed',
+				'skills',
+				array(
+					'action'   => 'reset_to_shipped',
+					'skill_id' => $agentic_sk_reset_id,
+				)
+			);
+		} else {
+			$agentic_sk_error = __( 'Could not find the shipped SKILL.md file to reset from.', 'agent-builder' );
+		}
+	}
+	$agentic_sk_view    = 'list';
+	$agentic_sk_edit_id = 0;
+}
+
 // ── Import (Agentic AI or ClawHub) ──────────────────────────
 if ( isset( $_POST['agentic_hub_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['agentic_hub_nonce'] ) ), 'agentic_hub_import' ) ) {
 	$agentic_hub_json = sanitize_text_field( wp_unslash( $_POST['agentic_hub_data'] ?? '' ) );
@@ -132,6 +170,14 @@ if ( isset( $_POST['agentic_hub_nonce'] ) && wp_verify_nonce( sanitize_text_fiel
 $agentic_sk_all  = Skills_Registry::get_all();
 $agentic_sk_edit = ( 'edit' === $agentic_sk_view && $agentic_sk_edit_id > 0 ) ? Skills_Registry::get( $agentic_sk_edit_id ) : null;
 
+// New-skill template gallery: 'new' with no template chosen yet shows the
+// gallery instead of the form. Choosing one (or "Start from scratch")
+// re-requests with &template=KEY, which falls through to the normal form.
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only selector, no state change.
+$agentic_sk_template_key = isset( $_GET['template'] ) ? sanitize_key( $_GET['template'] ) : '';
+$agentic_sk_templates    = Skills_Registry::get_templates();
+$agentic_sk_show_gallery = ( 'new' === $agentic_sk_view && '' === $agentic_sk_template_key && ! isset( $_POST['agentic_skill_nonce'] ) );
+
 // Active agents for the dropdown.
 $agentic_sk_registry  = \Agentic_Agent_Registry::get_instance();
 $agentic_sk_agents    = $agentic_sk_registry->get_active_agents();
@@ -147,17 +193,72 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 <div class="notice notice-error"><p><?php echo esc_html( $agentic_sk_error ); ?></p></div>
 <?php endif; ?>
 
-<?php if ( 'edit' === $agentic_sk_view || 'new' === $agentic_sk_view ) : ?>
+<?php if ( $agentic_sk_show_gallery ) : ?>
+
+	<div class="agentic-max-900">
+		<h2 class="agentic-h2-flex">
+			<?php esc_html_e( 'Create Skill', 'agent-builder' ); ?>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills' ) ); ?>" class="button agentic-ml-auto">&larr; <?php esc_html_e( 'Back to Skills', 'agent-builder' ); ?></a>
+		</h2>
+		<p><?php esc_html_e( 'Start from a template close to what you need, or from a blank skill.', 'agent-builder' ); ?></p>
+
+		<div class="agentic-skills-template-grid">
+			<?php foreach ( $agentic_sk_templates as $agentic_sk_tpl_key => $agentic_sk_tpl ) : ?>
+				<a class="agentic-skill-card-js agentic-skill-template-card" href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills&skill_view=new&template=' . $agentic_sk_tpl_key ) ); ?>">
+					<span class="agentic-badge-indigo-sm"><?php echo esc_html( $agentic_sk_tpl['category'] ); ?></span>
+					<strong class="agentic-skill-card-title"><?php echo esc_html( $agentic_sk_tpl['label'] ); ?></strong>
+					<p class="agentic-skill-card-desc"><?php echo esc_html( $agentic_sk_tpl['description'] ); ?></p>
+				</a>
+			<?php endforeach; ?>
+		</div>
+
+		<h3 class="agentic-th-mt-32"><?php esc_html_e( 'Or import an existing SKILL.md', 'agent-builder' ); ?></h3>
+		<p class="agentic-mb-12-text-dim"><?php esc_html_e( 'Any spec-compliant skill file — from ClawHub, Android Skills, Claude Skills, or elsewhere — can be dropped in directly.', 'agent-builder' ); ?></p>
+		<?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only redirect flag, no state change. ?>
+		<?php if ( isset( $_GET['import_error'] ) ) : ?>
+			<div class="notice notice-error agentic-notice-mt-0"><p><?php esc_html_e( 'Could not import that file — make sure it is a valid SKILL.md (YAML frontmatter followed by Markdown).', 'agent-builder' ); ?></p></div>
+		<?php endif; ?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data" class="agentic-flex-gap-8-mb-20">
+			<?php wp_nonce_field( 'agentic_import_skill', 'agentic_skill_import_nonce' ); ?>
+			<input type="hidden" name="action" value="agentic_import_skill" />
+			<input type="file" name="agentic_skill_file" accept=".md,text/markdown,text/plain" required />
+			<button type="submit" class="button"><?php esc_html_e( 'Import File', 'agent-builder' ); ?></button>
+		</form>
+	</div>
+
+<?php elseif ( 'edit' === $agentic_sk_view || 'new' === $agentic_sk_view ) : ?>
 
 	<?php
+	$agentic_sk_from_template = ( 'new' === $agentic_sk_view && ! $agentic_sk_edit && '' !== $agentic_sk_template_key && isset( $agentic_sk_templates[ $agentic_sk_template_key ] ) )
+		? $agentic_sk_templates[ $agentic_sk_template_key ]
+		: null;
+
 	$agentic_sk_name    = $agentic_sk_edit['name'] ?? '';
 	$agentic_sk_desc    = $agentic_sk_edit['description'] ?? '';
-	$agentic_sk_content = $agentic_sk_edit['content'] ?? '';
+	$agentic_sk_content = $agentic_sk_edit['content'] ?? ( $agentic_sk_from_template['content'] ?? '' );
 	$agentic_sk_agent   = $agentic_sk_edit['agent_slug'] ?? '';
 	$agentic_sk_author  = $agentic_sk_edit['author'] ?? '';
 	$agentic_sk_version = $agentic_sk_edit['version'] ?? '1.0.0';
 	$agentic_sk_enabled = $agentic_sk_edit ? ( '1' === ( $agentic_sk_edit['enabled'] ?? '0' ) ) : true;
 	$agentic_sk_source  = $agentic_sk_edit['source'] ?? 'local';
+
+	// Spec + tool-existence check against the content's own front matter,
+	// not the DB columns — this is what actually ships in the SKILL.md body.
+	$agentic_sk_identity        = Skills_Registry::parse_front_matter_identity( $agentic_sk_content );
+	$agentic_sk_spec_errors     = Skills_Registry::validate_spec_fields( $agentic_sk_identity['name'], $agentic_sk_identity['description'] );
+	$agentic_sk_declared_tools  = Skills_Registry::parse_front_matter_tools( $agentic_sk_content );
+	$agentic_sk_known_tools     = array_keys( \Agentic\Tools_Registry::get_all() );
+	$agentic_sk_unknown_tools   = array_values( array_diff( $agentic_sk_declared_tools, $agentic_sk_known_tools ) );
+	$agentic_sk_is_customized   = $agentic_sk_edit ? Skills_Registry::is_customized( $agentic_sk_edit ) : false;
+
+	// Preview: exactly the line this skill contributes to the [SKILLS] prompt
+	// index (progressive-disclosure "metadata" tier — always injected), plus
+	// a body-size check against the spec's ~500-line / ~5000-token guidance.
+	$agentic_sk_preview_name  = '' !== $agentic_sk_identity['name'] ? $agentic_sk_identity['name'] : ( '' !== $agentic_sk_name ? $agentic_sk_name : '(unnamed)' );
+	$agentic_sk_preview_desc  = '' !== $agentic_sk_identity['description'] ? $agentic_sk_identity['description'] : $agentic_sk_desc;
+	$agentic_sk_preview_line  = sprintf( '- %s — %s [slug: %s]', $agentic_sk_preview_name, '' !== $agentic_sk_preview_desc ? $agentic_sk_preview_desc : __( 'No description', 'agent-builder' ), $agentic_sk_edit['slug'] ?? sanitize_title( $agentic_sk_preview_name ) );
+	$agentic_sk_body_lines    = substr_count( $agentic_sk_content, "\n" ) + 1;
+	$agentic_sk_body_est_tok  = (int) ceil( strlen( $agentic_sk_content ) / 4 );
 	?>
 
 	<div class="agentic-max-800">
@@ -165,6 +266,42 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 			<?php echo $agentic_sk_edit_id ? esc_html__( 'Edit Skill', 'agent-builder' ) : esc_html__( 'Create Skill', 'agent-builder' ); ?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills' ) ); ?>" class="button agentic-ml-auto">&larr; <?php esc_html_e( 'Back to Skills', 'agent-builder' ); ?></a>
 		</h2>
+
+		<?php if ( 'core' === $agentic_sk_source ) : ?>
+			<div class="notice notice-info agentic-notice-mt-0">
+				<p>
+					<?php if ( $agentic_sk_is_customized ) : ?>
+						<strong><?php esc_html_e( 'This bundled skill has local edits.', 'agent-builder' ); ?></strong>
+						<?php esc_html_e( 'Plugin updates will not overwrite your changes.', 'agent-builder' ); ?>
+						<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=agentic-skills&skill_action=reset&skill_id=' . $agentic_sk_edit_id ), 'agentic_skill_reset_' . $agentic_sk_edit_id ) ); ?>" data-agentic-confirm="<?php echo esc_attr( __( 'Discard your edits and restore the shipped version of this skill?', 'agent-builder' ) ); ?>" data-agentic-confirm-danger data-agentic-confirm-ok="<?php echo esc_attr( __( 'Reset', 'agent-builder' ) ); ?>"><?php esc_html_e( 'Reset to shipped version', 'agent-builder' ); ?></a>
+					<?php else : ?>
+						<?php esc_html_e( 'This is a bundled skill. Editing it will fork a local copy — your changes will be preserved across plugin updates.', 'agent-builder' ); ?>
+					<?php endif; ?>
+				</p>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $agentic_sk_spec_errors ) || ! empty( $agentic_sk_unknown_tools ) ) : ?>
+			<div class="notice notice-warning agentic-notice-mt-0">
+				<p><strong><?php esc_html_e( 'Spec check — not blocking, but fixing these keeps the skill portable to other agent tools:', 'agent-builder' ); ?></strong></p>
+				<ul class="agentic-list-disc-pl20">
+					<?php foreach ( $agentic_sk_spec_errors as $agentic_sk_spec_err ) : ?>
+						<li><?php echo esc_html( $agentic_sk_spec_err ); ?></li>
+					<?php endforeach; ?>
+					<?php if ( ! empty( $agentic_sk_unknown_tools ) ) : ?>
+						<li>
+							<?php
+							printf(
+								/* translators: %s: comma-separated tool names */
+								esc_html__( 'allowed-tools references unknown tool(s): %s', 'agent-builder' ),
+								esc_html( implode( ', ', $agentic_sk_unknown_tools ) )
+							);
+							?>
+						</li>
+					<?php endif; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $agentic_sk_edit_id ) ); ?>">
 			<?php wp_nonce_field( 'agentic_skill_save', 'agentic_skill_nonce' ); ?>
@@ -230,6 +367,30 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 					</td>
 				</tr>
 			</table>
+
+			<details class="agentic-skill-preview">
+				<summary><?php esc_html_e( 'Preview what this skill sends to the assistant', 'agent-builder' ); ?></summary>
+				<div class="agentic-mb-12-text-dim">
+					<p>
+						<?php esc_html_e( 'Always in context (progressive-disclosure "metadata" tier — every enabled skill\'s index line):', 'agent-builder' ); ?>
+					</p>
+					<code class="agentic-code-block-sm"><?php echo esc_html( $agentic_sk_preview_line ); ?></code>
+					<p class="agentic-mt-12">
+						<?php esc_html_e( 'Loaded only when the assistant calls load_skill for this skill (the full body below):', 'agent-builder' ); ?>
+						<?php
+						printf(
+							/* translators: 1: line count, 2: estimated token count */
+							esc_html__( '%1$d lines, ~%2$d tokens.', 'agent-builder' ),
+							(int) $agentic_sk_body_lines,
+							(int) $agentic_sk_body_est_tok
+						);
+						?>
+						<?php if ( $agentic_sk_body_lines > 500 ) : ?>
+							<strong class="agentic-text-warning"><?php esc_html_e( 'Over the spec\'s ~500-line guidance — consider moving reference material out.', 'agent-builder' ); ?></strong>
+						<?php endif; ?>
+					</p>
+				</div>
+			</details>
 
 			<?php if ( 'clawhub' === $agentic_sk_source ) : ?>
 				<p class="agentic-text-dim-xs">
@@ -583,6 +744,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						</td>
 						<td>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $agentic_sk_item['id'] ) ); ?>" class="button button-small"><?php esc_html_e( 'Edit', 'agent-builder' ); ?></a>
+							<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=agentic_export_skill&skill_id=' . $agentic_sk_item['id'] ), 'agentic_export_skill' ) ); ?>" class="button button-small"><?php esc_html_e( 'Export', 'agent-builder' ); ?></a>
 							<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=agentic-skills&skill_action=delete&skill_id=' . $agentic_sk_item['id'] ), 'agentic_skill_delete_' . $agentic_sk_item['id'] ) ); ?>" class="button button-small agentic-link-danger" data-agentic-confirm="<?php echo esc_attr( __( 'Delete this skill?', 'agent-builder' ) ); ?>" data-agentic-confirm-danger data-agentic-confirm-ok="<?php echo esc_attr( __( 'Delete', 'agent-builder' ) ); ?>"><?php esc_html_e( 'Delete', 'agent-builder' ); ?></a>
 						</td>
 					</tr>

@@ -126,6 +126,49 @@ final class Skills_Registry {
 	}
 
 	/**
+	 * Compact skills index for progressive disclosure, mirroring
+	 * Okf_Store::prompt_index_block(). Only name + description (the
+	 * agentskills.io spec's "metadata" tier, ~100 tokens each) are injected
+	 * into every prompt; the full SKILL.md body is loaded on demand via the
+	 * load_skill tool once the agent recognises a matching task, so an
+	 * agent with many enabled skills does not carry all of their bodies in
+	 * context on every turn.
+	 *
+	 * @param string $agent_slug Agent identifier.
+	 * @param int    $max_chars  Hard cap on the returned block's length.
+	 * @return string
+	 */
+	public static function prompt_index_block( string $agent_slug, int $max_chars = 3000 ): string {
+		$skills = self::get_for_agent( $agent_slug );
+		if ( empty( $skills ) ) {
+			return '';
+		}
+
+		$lines = array();
+		foreach ( $skills as $skill ) {
+			$desc    = (string) ( $skill['description'] ?? '' );
+			$lines[] = sprintf(
+				'- %s — %s [slug: %s]',
+				(string) ( $skill['name'] ?? $skill['slug'] ),
+				'' !== $desc ? $desc : __( 'No description', 'agent-builder' ),
+				(string) ( $skill['slug'] ?? '' )
+			);
+		}
+
+		$block = "\n\n[SKILLS]\n"
+			. __( 'The entries below are titles only. When a request matches one, call load_skill with its [slug] to load the full instructions before acting — do not guess at a workflow from the description alone. Skip skills that clearly do not apply.', 'agent-builder' )
+			. "\n"
+			. implode( "\n", $lines )
+			. "\n";
+
+		if ( strlen( $block ) > $max_chars ) {
+			$block = substr( $block, 0, $max_chars - 20 ) . "\n…\n";
+		}
+
+		return $block;
+	}
+
+	/**
 	 * Count skills grouped by source.
 	 *
 	 * @return array<string, int>
@@ -173,11 +216,12 @@ final class Skills_Registry {
 				'source_id'   => sanitize_text_field( $data['source_id'] ?? '' ),
 				'version'     => sanitize_text_field( $data['version'] ?? '1.0.0' ),
 				'author'      => sanitize_text_field( $data['author'] ?? '' ),
+				'source_hash' => sanitize_text_field( $data['source_hash'] ?? '' ),
 				'enabled'     => ! empty( $data['enabled'] ) ? 1 : 0,
 				'created_at'  => $now,
 				'updated_at'  => $now,
 			),
-			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
 		);
 
 		if ( false === $result ) {
@@ -209,6 +253,7 @@ final class Skills_Registry {
 			'agent_slug'  => '%s',
 			'version'     => '%s',
 			'author'      => '%s',
+			'source_hash' => '%s',
 			'enabled'     => '%d',
 		);
 
@@ -263,13 +308,18 @@ final class Skills_Registry {
 	/**
 	 * Seed bundled core skills from library/skills/{slug}/SKILL.md files.
 	 *
-	 * Only inserts skills that do not already exist (checked by slug).
-	 * Existing skills — including those imported from ClawHub — are left
-	 * untouched so user edits are preserved.
+	 * New skills are inserted. Existing core-sourced skills are refreshed
+	 * from disk only when their DB content still matches the hash recorded
+	 * at the last seed/refresh — i.e. the user never edited them — so a
+	 * plugin update can deliver bundled-skill improvements without silently
+	 * overwriting a customization. Rows from before source_hash existed have
+	 * no baseline to compare against, so their current content is adopted as
+	 * the baseline on first sight rather than guessed at. User-created and
+	 * ClawHub-imported skills (source !== 'core') are never touched here.
 	 *
-	 * @return int Number of newly seeded skills.
+	 * @return array{seeded: int, refreshed: int}
 	 */
-	public static function seed_core_skills(): int {
+	public static function seed_core_skills(): array {
 		$core_dir = defined( 'AGENT_BUILDER_DIR' ) ? AGENT_BUILDER_DIR . 'library/skills/' : '';
 
 		$dirs = array();
@@ -282,24 +332,25 @@ final class Skills_Registry {
 		$dirs = array_unique( array_filter( $dirs, 'is_dir' ) );
 
 		if ( empty( $dirs ) ) {
-			return 0;
+			return array(
+				'seeded'   => 0,
+				'refreshed' => 0,
+			);
 		}
 
-		$seeded = 0;
+		$seeded    = 0;
+		$refreshed = 0;
 
 		foreach ( $dirs as $skills_dir ) {
 			$skill_files = glob( rtrim( $skills_dir, '/' ) . '/*/SKILL.md' );
 			foreach ( ( $skill_files ? $skill_files : array() ) as $skill_file ) {
 				$slug = basename( dirname( $skill_file ) );
 
-				if ( self::get_by_slug( $slug ) ) {
-					continue;
-				}
-
 				$raw = file_get_contents( $skill_file );
 				if ( false === $raw || '' === $raw ) {
 					continue;
 				}
+				$hash = hash( 'sha256', $raw );
 
 				$name        = ucwords( str_replace( '-', ' ', $slug ) );
 				$description = '';
@@ -313,33 +364,97 @@ final class Skills_Registry {
 					}
 				}
 
-				self::create(
-					array(
-						'name'        => $name,
-						'description' => $description,
-						'content'     => $raw,
-						'agent_slug'  => '',
-						'source'      => 'core',
-						'source_id'   => $slug,
-						'version'     => '1.0.0',
-						'author'      => 'Agentic',
-						'enabled'     => true,
-					)
-				);
+				$existing = self::get_by_slug( $slug );
 
-				++$seeded;
+				if ( ! $existing ) {
+					self::create(
+						array(
+							'name'        => $name,
+							'description' => $description,
+							'content'     => $raw,
+							'agent_slug'  => '',
+							'source'      => 'core',
+							'source_id'   => $slug,
+							'version'     => '1.0.0',
+							'author'      => 'Agentic',
+							'source_hash' => $hash,
+							'enabled'     => true,
+						)
+					);
+					++$seeded;
+					continue;
+				}
+
+				// Only core-sourced rows are eligible for auto-refresh — a user
+				// skill or ClawHub import that happens to reuse a slug is untouched.
+				if ( 'core' !== ( $existing['source'] ?? '' ) ) {
+					continue;
+				}
+
+				$stored_hash = (string) ( $existing['source_hash'] ?? '' );
+
+				// No baseline recorded yet (row predates source_hash tracking).
+				// Adopt its current content as the baseline instead of guessing
+				// whether it was user-edited; the next real bundled-file change
+				// will then be detected correctly.
+				if ( '' === $stored_hash ) {
+					self::update(
+						(int) $existing['id'],
+						array( 'source_hash' => hash( 'sha256', (string) ( $existing['content'] ?? '' ) ) )
+					);
+					continue;
+				}
+
+				$is_customized = hash( 'sha256', (string) ( $existing['content'] ?? '' ) ) !== $stored_hash;
+				$has_update    = $hash !== $stored_hash;
+
+				if ( ! $is_customized && $has_update ) {
+					self::update(
+						(int) $existing['id'],
+						array(
+							'description' => $description,
+							'content'     => $raw,
+							'source_hash' => $hash,
+						)
+					);
+					++$refreshed;
+				}
 			}
 		}
 
-		return $seeded;
+		return array(
+			'seeded'    => $seeded,
+			'refreshed' => $refreshed,
+		);
 	}
 
 	/**
-	 * Extract the `tools:` list from SKILL.md YAML front matter.
+	 * Whether a core-sourced skill has local edits (its content no longer
+	 * matches the hash recorded when it was last seeded/refreshed from the
+	 * bundled file). Used by the admin UI to offer "Reset to shipped version".
 	 *
-	 * Parses inline YAML arrays in the form `tools: [foo, bar]` or block
-	 * sequences `tools:\n  - foo\n  - bar`. Returns an empty array when no
-	 * `tools:` key is present — absence is not an error.
+	 * @param array<string, mixed> $skill Skill row from get_all()/get().
+	 * @return bool
+	 */
+	public static function is_customized( array $skill ): bool {
+		if ( 'core' !== ( $skill['source'] ?? '' ) ) {
+			return false;
+		}
+		$stored_hash = (string) ( $skill['source_hash'] ?? '' );
+		if ( '' === $stored_hash ) {
+			return false;
+		}
+		return hash( 'sha256', (string) ( $skill['content'] ?? '' ) ) !== $stored_hash;
+	}
+
+	/**
+	 * Extract the tool list from SKILL.md YAML front matter.
+	 *
+	 * Prefers the agentskills.io spec's `allowed-tools: foo bar baz`
+	 * (space-separated string). Falls back to this plugin's pre-spec
+	 * `tools: [foo, bar]` inline array or `tools:\n  - foo\n  - bar` block
+	 * sequence for skills authored before the spec existed. Returns an
+	 * empty array when neither key is present — absence is not an error.
 	 *
 	 * @param string $content Raw SKILL.md content.
 	 * @return string[] Tool name list, or empty array.
@@ -350,13 +465,19 @@ final class Skills_Registry {
 		}
 		$front_matter = $m[1];
 
-		// Inline array: tools: [foo, bar, baz].
+		// Spec field: allowed-tools: foo bar baz (space-separated string).
+		if ( preg_match( '/^allowed-tools:\s*["\']?(.+?)["\']?\s*$/m', $front_matter, $spec ) ) {
+			$names = preg_split( '/\s+/', trim( $spec[1] ) );
+			return array_values( array_filter( (array) $names ) );
+		}
+
+		// Legacy inline array: tools: [foo, bar, baz].
 		if ( preg_match( '/^tools:\s*\[([^\]]*)\]/m', $front_matter, $inline ) ) {
 			$names = array_map( 'trim', explode( ',', $inline[1] ) );
 			return array_values( array_filter( $names ) );
 		}
 
-		// Block sequence:
+		// Legacy block sequence:
 		// tools:
 		// - foo
 		// - bar.
@@ -366,6 +487,102 @@ final class Skills_Registry {
 		}
 
 		return array();
+	}
+
+	/**
+	 * Extract the optional spec fields (license, compatibility, metadata)
+	 * from SKILL.md YAML front matter. `name` and `description` are handled
+	 * separately by seed_core_skills() and the admin form since they map to
+	 * dedicated DB columns.
+	 *
+	 * @param string $content Raw SKILL.md content.
+	 * @return array{license: string, compatibility: string, metadata: array<string, string>}
+	 */
+	public static function parse_front_matter_meta( string $content ): array {
+		$result = array(
+			'license'       => '',
+			'compatibility' => '',
+			'metadata'      => array(),
+		);
+
+		if ( ! preg_match( '/^---\s*\n(.*?)\n---\s*\n/s', $content, $m ) ) {
+			return $result;
+		}
+		$front_matter = $m[1];
+
+		foreach ( array( 'license', 'compatibility' ) as $key ) {
+			if ( preg_match( '/^' . $key . ':\s*["\']?(.*?)["\']?\s*$/m', $front_matter, $km ) ) {
+				$result[ $key ] = trim( $km[1] );
+			}
+		}
+
+		// metadata:
+		//   author: example-org
+		//   version: "1.0"
+		if ( preg_match( '/^metadata:\s*\n((?:[ \t]+\S.*\n?)+)/m', $front_matter, $meta_block ) ) {
+			if ( preg_match_all( '/^[ \t]+([a-zA-Z0-9_-]+):\s*["\']?(.*?)["\']?\s*$/m', $meta_block[1], $pairs, PREG_SET_ORDER ) ) {
+				foreach ( $pairs as $p ) {
+					$result['metadata'][ $p[1] ] = trim( $p[2] );
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Extract just `name` and `description` from SKILL.md front matter, for
+	 * callers (like the admin editor) that want to validate/preview the
+	 * content's own identity fields rather than the DB row's columns.
+	 *
+	 * @param string $content Raw SKILL.md content.
+	 * @return array{name: string, description: string}
+	 */
+	public static function parse_front_matter_identity( string $content ): array {
+		$result = array(
+			'name'        => '',
+			'description' => '',
+		);
+		if ( ! preg_match( '/^---\s*\n(.*?)\n---\s*\n/s', $content, $m ) ) {
+			return $result;
+		}
+		if ( preg_match( '/^name:\s*(.+)$/m', $m[1], $nm ) ) {
+			$result['name'] = trim( $nm[1], " \t\"'" );
+		}
+		if ( preg_match( '/^description:\s*["\']?(.*?)["\']?\s*$/m', $m[1], $dm ) ) {
+			$result['description'] = trim( $dm[1], " \t\"'" );
+		}
+		return $result;
+	}
+
+	/**
+	 * Validate a skill's `name` and `description` against the agentskills.io
+	 * spec's constraints. Skills that fail this are still usable — the spec
+	 * fields are for cross-tool interop, not a hard runtime gate — but the
+	 * admin UI surfaces violations so authored skills stay portable.
+	 *
+	 * @param string $name        Candidate name/slug identifier.
+	 * @param string $description Candidate trigger description.
+	 * @return string[] Human-readable violation messages, empty if valid.
+	 */
+	public static function validate_spec_fields( string $name, string $description ): array {
+		$errors = array();
+
+		if ( '' === $name ) {
+			$errors[] = __( 'Name is required.', 'agent-builder' );
+		} elseif ( strlen( $name ) > 64 ) {
+			$errors[] = __( 'Name must be 64 characters or fewer.', 'agent-builder' );
+		} elseif ( ! preg_match( '/^[a-z0-9]+(-[a-z0-9]+)*$/', $name ) ) {
+			$errors[] = __( 'Name may only contain lowercase letters, numbers, and single hyphens (no leading/trailing/double hyphens).', 'agent-builder' );
+		}
+
+		if ( '' === $description ) {
+			$errors[] = __( 'Description is required — it is what the agent matches against to decide when to use this skill.', 'agent-builder' );
+		} elseif ( strlen( $description ) > 1024 ) {
+			$errors[] = __( 'Description must be 1024 characters or fewer.', 'agent-builder' );
+		}
+
+		return $errors;
 	}
 
 	/**
@@ -451,6 +668,92 @@ final class Skills_Registry {
 				'author'      => $hub_data['author'] ?? '',
 				'enabled'     => true,
 			)
+		);
+	}
+
+	/**
+	 * Read a core skill's current bundled SKILL.md straight from disk,
+	 * searching the same directories seed_core_skills() does (so Pro-added
+	 * directories via the agentic_skill_dirs filter are honoured too). Used
+	 * by the admin UI's "Reset to shipped version" action — the DB row may
+	 * have been customized, but the file on disk is always the true shipped
+	 * baseline.
+	 *
+	 * @param string $source_id Skill slug as shipped (matches the row's source_id).
+	 * @return string|null Raw SKILL.md content, or null if not found.
+	 */
+	public static function get_bundled_content( string $source_id ): ?string {
+		$source_id = sanitize_file_name( $source_id );
+		if ( '' === $source_id ) {
+			return null;
+		}
+
+		$dirs = array();
+		if ( defined( 'AGENT_BUILDER_DIR' ) && is_dir( AGENT_BUILDER_DIR . 'library/skills/' ) ) {
+			$dirs[] = AGENT_BUILDER_DIR . 'library/skills/';
+		}
+		$dirs = apply_filters( 'agentic_skill_dirs', $dirs );
+
+		foreach ( (array) $dirs as $skills_dir ) {
+			if ( ! is_dir( (string) $skills_dir ) ) {
+				continue;
+			}
+			$file = rtrim( (string) $skills_dir, '/' ) . '/' . $source_id . '/SKILL.md';
+			if ( is_file( $file ) ) {
+				$raw = file_get_contents( $file );
+				return false !== $raw ? $raw : null;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Starter templates for the "Create Skill" gallery. Each gives a
+	 * ready-to-edit SKILL.md skeleton following the same structure
+	 * skill-creator teaches: frontmatter, Available Tools table, Workflows,
+	 * Quality Rules.
+	 *
+	 * @return array<string, array{label: string, category: string, description: string, content: string}>
+	 */
+	public static function get_templates(): array {
+		$blank = "---\nname: my-skill\ndescription: \"Use this skill when... Trigger on phrases like '...'. Do NOT trigger when...\"\n---\n\n# My Skill\n\n## Workflow\n1. \n2. \n\n## Quality Rules\n- \n";
+
+		$with_tools = static function ( string $name, string $title, string $trigger_hint ): string {
+			return "---\nname: {$name}\ndescription: \"Use this skill when {$trigger_hint}. Trigger on phrases like '...'. Do NOT trigger when...\"\nallowed-tools: \n---\n\n# {$title}\n\n## Available Tools\n\n| Tool | When to use |\n|---|---|\n| `tool_name` | ... |\n\n## Workflow\n1. \n2. \n\n## Quality Rules\n- \n";
+		};
+
+		return array(
+			'blank'          => array(
+				'label'       => __( 'Blank skill', 'agent-builder' ),
+				'category'    => __( 'General', 'agent-builder' ),
+				'description' => __( 'Start from an empty SKILL.md skeleton.', 'agent-builder' ),
+				'content'     => $blank,
+			),
+			'wp-content'     => array(
+				'label'       => __( 'WordPress content workflow', 'agent-builder' ),
+				'category'    => __( 'WordPress', 'agent-builder' ),
+				'description' => __( 'For a skill that creates, edits, or reviews posts and pages.', 'agent-builder' ),
+				'content'     => $with_tools( 'my-content-skill', 'My Content Skill', 'the user wants to [create/edit/review] WordPress content' ),
+			),
+			'woocommerce'    => array(
+				'label'       => __( 'WooCommerce workflow', 'agent-builder' ),
+				'category'    => __( 'WooCommerce', 'agent-builder' ),
+				'description' => __( 'For a skill touching products, orders, or store data.', 'agent-builder' ),
+				'content'     => $with_tools( 'my-woocommerce-skill', 'My WooCommerce Skill', 'the user wants to work with WooCommerce products/orders' ),
+			),
+			'dev-tool'       => array(
+				'label'       => __( 'Developer / technical workflow', 'agent-builder' ),
+				'category'    => __( 'Developer', 'agent-builder' ),
+				'description' => __( 'For a skill wrapping technical or maintenance tools.', 'agent-builder' ),
+				'content'     => $with_tools( 'my-dev-skill', 'My Developer Skill', 'the user has a [specific technical] request' ),
+			),
+			'communication'  => array(
+				'label'       => __( 'Communication / support workflow', 'agent-builder' ),
+				'category'    => __( 'Communication', 'agent-builder' ),
+				'description' => __( 'For a skill handling messaging, notifications, or support handoffs.', 'agent-builder' ),
+				'content'     => $with_tools( 'my-comms-skill', 'My Communication Skill', 'the user wants to [notify/message/escalate]' ),
+			),
 		);
 	}
 }

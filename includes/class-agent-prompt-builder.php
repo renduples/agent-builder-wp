@@ -55,6 +55,7 @@ class Agent_Prompt_Builder {
 		$output = $agent->get_system_prompt()
 			. self::knowledge_block( $slug )
 			. self::okf_index_block( $slug )
+			. self::skills_index_block( $slug )
 			. self::site_context_block()
 			. self::global_instructions_block( $slug )
 			. self::addressing_block( $is_autonomous )
@@ -138,6 +139,30 @@ class Agent_Prompt_Builder {
 			return '';
 		}
 		return Okf_Store::prompt_index_block( $agent_slug );
+	}
+
+	/**
+	 * Compact skills index for progressive disclosure. Full skill bodies are
+	 * loaded via the load_skill tool so an agent with many enabled skills
+	 * does not carry all of their instructions in context on every turn.
+	 *
+	 * @param string $agent_slug Agent identifier.
+	 * @return string
+	 */
+	public static function skills_index_block( string $agent_slug ): string {
+		if ( ! class_exists( __NAMESPACE__ . '\\Skills_Registry' ) ) {
+			return '';
+		}
+		/**
+		 * Filter whether the skills index is injected into the system prompt.
+		 *
+		 * @param bool   $enabled    Default true.
+		 * @param string $agent_slug Agent slug.
+		 */
+		if ( ! apply_filters( 'agentic_skills_prompt_index', true, $agent_slug ) ) {
+			return '';
+		}
+		return Skills_Registry::prompt_index_block( $agent_slug );
 	}
 
 	/**

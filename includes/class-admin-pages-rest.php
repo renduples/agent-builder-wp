@@ -34,6 +34,8 @@ class Admin_Pages_REST {
 		// native file download via GET navigation — no fetch/blob dance,
 		// no REST nonce-header requirement.
 		add_action( 'admin_post_agentic_export_logs', array( __CLASS__, 'export_logs' ) );
+		add_action( 'admin_post_agentic_export_skill', array( __CLASS__, 'export_skill' ) );
+		add_action( 'admin_post_agentic_import_skill', array( __CLASS__, 'import_skill' ) );
 	}
 
 	/**
@@ -1438,6 +1440,125 @@ class Admin_Pages_REST {
 			);
 		}
 
+		exit;
+	}
+
+	/**
+	 * Download one skill as a spec-shaped, portable SKILL.md file.
+	 *
+	 * A skill's DB `content` column already *is* a valid SKILL.md body, so
+	 * this is a direct stream — no packaging needed for a resource-less
+	 * skill. (Skills with scripts/references/assets aren't supported by the
+	 * DB-backed path at all yet — see class-skills-registry.php's file/DB
+	 * split.)
+	 */
+	public static function export_skill(): void {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'agentic_export_skill' ) ) {
+			wp_die( esc_html__( 'Security check failed. Please reload the Skills page and try exporting again.', 'agent-builder' ), 403 );
+		}
+		if ( ! current_user_can( 'agentic_manage_tools' ) ) {
+			wp_die( esc_html__( 'You do not have permission to export skills.', 'agent-builder' ), 403 );
+		}
+
+		$id    = isset( $_GET['skill_id'] ) ? absint( $_GET['skill_id'] ) : 0;
+		$skill = $id > 0 && class_exists( Skills_Registry::class ) ? Skills_Registry::get( $id ) : null;
+
+		if ( ! $skill ) {
+			wp_die( esc_html__( 'Skill not found.', 'agent-builder' ), 404 );
+		}
+
+		$slug     = (string) ( $skill['slug'] ?? 'skill' );
+		$filename = sanitize_file_name( $slug ) . '.SKILL.md';
+
+		nocache_headers();
+		header( 'Content-Type: text/markdown; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=' . $filename );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Raw file download body, not HTML.
+		echo (string) ( $skill['content'] ?? '' );
+
+		exit;
+	}
+
+	/**
+	 * Import a SKILL.md file uploaded from the "Create Skill" gallery.
+	 *
+	 * Accepts any file matching the agentskills.io shape (YAML frontmatter +
+	 * Markdown body) — from ClawHub, Android Skills, Claude Skills, or any
+	 * other spec-compliant source. This is the file-upload counterpart to
+	 * Skills_Registry::import_from_hub(), which imports by API payload.
+	 */
+	public static function import_skill(): void {
+		if ( ! isset( $_POST['agentic_skill_import_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['agentic_skill_import_nonce'] ) ), 'agentic_import_skill' ) ) {
+			wp_die( esc_html__( 'Security check failed. Please reload the Skills page and try importing again.', 'agent-builder' ), 403 );
+		}
+		if ( ! current_user_can( 'agentic_manage_tools' ) ) {
+			wp_die( esc_html__( 'You do not have permission to import skills.', 'agent-builder' ), 403 );
+		}
+
+		$redirect_base = admin_url( 'admin.php?page=agentic-skills' );
+
+		if ( empty( $_FILES['agentic_skill_file']['tmp_name'] ) || UPLOAD_ERR_OK !== ( $_FILES['agentic_skill_file']['error'] ?? UPLOAD_ERR_NO_FILE ) ) {
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'skill_view'   => 'new',
+						'import_error' => 1,
+					),
+					$redirect_base
+				)
+			);
+			exit;
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_get_contents -- Reading a just-uploaded tmp file, not a remote/user-controlled path.
+		$raw = file_get_contents( sanitize_text_field( wp_unslash( $_FILES['agentic_skill_file']['tmp_name'] ) ), false, null, 0, 200000 );
+
+		if ( false === $raw || '' === trim( (string) $raw ) || ! class_exists( Skills_Registry::class ) ) {
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'skill_view'   => 'new',
+						'import_error' => 1,
+					),
+					$redirect_base
+				)
+			);
+			exit;
+		}
+
+		$identity = Skills_Registry::parse_front_matter_identity( $raw );
+		$name     = '' !== $identity['name'] ? $identity['name'] : preg_replace( '/\.(SKILL)?\.?md$/i', '', sanitize_file_name( $_FILES['agentic_skill_file']['name'] ?? 'imported-skill' ) );
+
+		$new_id = Skills_Registry::create(
+			array(
+				'name'        => $name,
+				'description' => $identity['description'],
+				'content'     => $raw,
+				'agent_slug'  => '',
+				'source'      => 'local',
+				'version'     => '1.0.0',
+				'enabled'     => true,
+			)
+		);
+
+		if ( ! $new_id ) {
+			wp_safe_redirect( add_query_arg( array( 'skill_view' => 'new' ), $redirect_base ) . '#import-error' );
+			exit;
+		}
+
+		if ( class_exists( Security_Log::class ) ) {
+			Security_Log::log_system( 'settings_changed', 'skills', array( 'action' => 'imported_file', 'skill_id' => $new_id ) );
+		}
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'skill_view' => 'edit',
+					'skill_id'   => $new_id,
+				),
+				$redirect_base
+			)
+		);
 		exit;
 	}
 

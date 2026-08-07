@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.56
+Stable tag: 3.3.57
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,13 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.57 - 2026-08-07 =
+* Add: Skills now follow the agentskills.io open standard (the same SKILL.md format Anthropic and Google both use) — `allowed-tools` frontmatter, `license`/`compatibility`/`metadata` fields, and spec validation, alongside the plugin's original `tools:` syntax for backward compatibility.
+* Add: Skills are now actually loaded by agents. Every enabled skill's name and description are injected into the system prompt; the full instructions load on demand via a new `load_skill` tool when a task matches — full bodies are no longer sent on every turn.
+* Add: Bundled skills now refresh automatically on plugin updates if you never edited them; if you did, your changes are preserved and the Skills editor offers "Reset to shipped version".
+* Add: A template gallery when creating a new skill, inline spec/tool validation, a preview of exactly what gets sent to the assistant, and file import/export for portability with other agentskills.io-compliant tools.
+* Add: New bundled skills — WooCommerce catalog management, WooCommerce order management, WordPress content authoring, and Gutenberg block content.
 
 = 3.3.56 - 2026-08-06 =
 * Fix: When a tool call failed and got retried internally, agents sometimes surfaced troubleshooting commentary about it (e.g. "If the issue persists, try a different tool.") in their actual reply to the user. Root cause: the retry-guidance sent back to the model was tagged role:'user' — indistinguishable from something the human actually said — so the model would occasionally respond to it directly as part of its answer. Retry-guidance messages are now explicitly framed as internal system notices with an instruction not to mention them to the user.

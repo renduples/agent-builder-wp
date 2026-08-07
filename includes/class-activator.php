@@ -960,6 +960,7 @@ final class Activator {
             source_id varchar(255) NOT NULL DEFAULT '',
             version varchar(32) NOT NULL DEFAULT '1.0.0',
             author varchar(255) NOT NULL DEFAULT '',
+            source_hash varchar(64) NOT NULL DEFAULT '',
             enabled tinyint(1) NOT NULL DEFAULT 1,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -1102,6 +1103,7 @@ final class Activator {
 			'2.10.3' => array( self::class, 'migrate_schema_2_10_3' ),
 			'2.10.4' => array( self::class, 'migrate_schema_2_10_4' ),
 			'2.12.1' => array( self::class, 'migrate_schema_2_12_1' ),
+			'2.13.0' => array( self::class, 'migrate_schema_2_13_0' ),
 			// Add new version => method pairs here when schema changes are needed.
 			// Future changes must go through this system (no more ad-hoc ALTERs in bootstrap/tests).
 		);
@@ -1256,6 +1258,27 @@ final class Activator {
 		}
 
 		return $ok;
+	}
+
+	/**
+	 * Migration to 2.13.0 — add source_hash to agentic_skills.
+	 *
+	 * Tracks the hash of a core-sourced skill's content at the time it was
+	 * last seeded/refreshed from its bundled library/skills/ file, so a
+	 * plugin update can tell whether the user customized it (leave alone)
+	 * or never touched it (safe to refresh) — see Skills_Registry::
+	 * seed_core_skills() and is_customized().
+	 *
+	 * @return bool
+	 */
+	private static function migrate_schema_2_13_0(): bool {
+		global $wpdb;
+
+		return self::add_column_if_missing(
+			$wpdb->prefix . 'agentic_skills',
+			'source_hash',
+			"varchar(64) NOT NULL DEFAULT ''"
+		);
 	}
 
 	/**
@@ -1586,14 +1609,22 @@ final class Activator {
 	public static function seed_skills( string $schema_version ): void {
 		global $wpdb;
 
+		// Gated on both the DB schema version and the plugin version: bundled
+		// SKILL.md content can change in a content-only release with no
+		// schema bump, and seed_core_skills() needs to run then too so
+		// unedited core skills pick up the improved wording.
 		$seeded_version = get_option( 'agentic_skills_seeded_version', '' );
-		if ( $seeded_version === $schema_version ) {
+		$seeded_plugin  = get_option( 'agentic_skills_seeded_plugin_version', '' );
+		$plugin_version = defined( 'AGENT_BUILDER_VERSION' ) ? AGENT_BUILDER_VERSION : '';
+
+		if ( $seeded_version === $schema_version && $seeded_plugin === $plugin_version ) {
 			self::record(
 				'seed_skills',
 				'skipped',
 				array(
 					'reason'         => 'already_seeded',
 					'schema_version' => $schema_version,
+					'plugin_version' => $plugin_version,
 				)
 			);
 			return;
@@ -1608,16 +1639,19 @@ final class Activator {
 
 		include_once AGENT_BUILDER_DIR . 'includes/class-skills-registry.php';
 
-		$seeded = Skills_Registry::seed_core_skills();
+		$result = Skills_Registry::seed_core_skills();
 
 		update_option( 'agentic_skills_seeded_version', $schema_version );
+		update_option( 'agentic_skills_seeded_plugin_version', $plugin_version );
 
 		self::record(
 			'seed_skills',
 			'ok',
 			array(
-				'seeded'         => $seeded,
+				'seeded'         => $result['seeded'],
+				'refreshed'      => $result['refreshed'],
 				'schema_version' => $schema_version,
+				'plugin_version' => $plugin_version,
 			)
 		);
 	}
