@@ -631,10 +631,18 @@ final class Skills_Registry {
 			$hub_data['description'] = $hub_data['summary'];
 		}
 
-		// Check if already imported.
+		$source = sanitize_key( $hub_data['source'] ?? 'clawhub' );
+		if ( ! in_array( $source, array( 'agentic', 'clawhub', 'wordpress', 'anthropic' ), true ) ) {
+			$source = 'clawhub';
+		}
+
+		// Check if already imported from this exact source. Matching on
+		// source_id alone (regardless of source) would let two different
+		// registries' skills that happen to share a slug — e.g. "pdf" exists
+		// in both Anthropic's and ClawHub's catalogs — clobber each other.
 		if ( $source_id ) {
 			foreach ( self::get_all() as $existing ) {
-				if ( in_array( $existing['source'], array( 'clawhub', 'agentic' ), true ) && $source_id === $existing['source_id'] ) {
+				if ( $source === $existing['source'] && $source_id === $existing['source_id'] ) {
 					// Update existing import.
 					self::update(
 						(int) $existing['id'],
@@ -649,11 +657,6 @@ final class Skills_Registry {
 					return (int) $existing['id'];
 				}
 			}
-		}
-
-		$source = sanitize_key( $hub_data['source'] ?? 'clawhub' );
-		if ( ! in_array( $source, array( 'agentic', 'clawhub' ), true ) ) {
-			$source = 'clawhub';
 		}
 
 		return self::create(

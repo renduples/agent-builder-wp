@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.58
+Stable tag: 3.3.59
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -295,7 +295,35 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
+= WordPress.org Agent Skills (optional) =
+* **Endpoint:** `https://api.github.com/repos/WordPress/agent-skills/` and `https://raw.githubusercontent.com/WordPress/agent-skills/`
+* **When used:** Only when you open Agent Builder → Skills → Browse Community Skills. Your browser lists and fetches skills directly from WordPress.org's official GitHub repository.
+* **Data sent:** No site data — these are unauthenticated, read-only requests to a public repository.
+* **How to disable:** Don't open the Browse Community Skills screen.
+* **Terms of Service:** [https://docs.github.com/site-policy/github-terms/github-terms-of-service](https://docs.github.com/site-policy/github-terms/github-terms-of-service)
+* **Privacy Policy:** [https://docs.github.com/site-policy/privacy-policies/github-privacy-statement](https://docs.github.com/site-policy/privacy-policies/github-privacy-statement)
+
+= Anthropic Agent Skills (optional, Advanced mode) =
+* **Endpoint:** `https://api.github.com/repos/anthropics/skills/` and `https://raw.githubusercontent.com/anthropics/skills/`
+* **When used:** Only in Advanced mode, when you switch the Browse Community Skills screen to the Anthropic source. Your browser lists and fetches skills directly from Anthropic's official GitHub repository.
+* **Data sent:** No site data — these are unauthenticated, read-only requests to a public repository.
+* **How to disable:** Stay on the WordPress.org source, or don't switch to Advanced mode.
+* **Terms of Service:** [https://docs.github.com/site-policy/github-terms/github-terms-of-service](https://docs.github.com/site-policy/github-terms/github-terms-of-service)
+* **Privacy Policy:** [https://docs.github.com/site-policy/privacy-policies/github-privacy-statement](https://docs.github.com/site-policy/privacy-policies/github-privacy-statement)
+
+= ClawHub (optional, Advanced mode) =
+* **Endpoint:** `https://wry-manatee-359.convex.site/api/v1/` and `https://raw.githubusercontent.com/openclaw/skills/`
+* **When used:** Only in Advanced mode, when you switch the Browse Community Skills screen to the OpenClaw/ClawHub source and search. ClawHub is a community-run, open-publish skill registry — content is not reviewed by Agent Builder or WordPress.org before you see it.
+* **Data sent:** Your search query. No other site data.
+* **How to disable:** Stay on the WordPress.org source, or don't switch to Advanced mode.
+* **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
+
 == Changelog ==
+
+= 3.3.59 - 2026-08-08 =
+* Add: Browse Community Skills now supports three sources — WordPress.org's official agent-skills repository (Basic mode default, no switcher needed), plus Anthropic's official skills repository and OpenClaw/ClawHub in Advanced mode, with a tab switcher between them. WordPress and Anthropic skills are listed directly from their GitHub repositories (no search required, small curated catalogs); ClawHub keeps its existing search flow.
+* Fix: The import payload was passed through `sanitize_text_field()` as a whole JSON blob before decoding, which strips anything resembling an HTML tag — corrupting imported skill content that contains "<...>" sequences (routine in WordPress/PHP/block-markup examples). Individual fields are still sanitized on their own terms after decoding; the blob itself no longer is.
+* Fix: Re-importing a community skill could match and silently overwrite a same-slug skill from a *different* source (e.g. two registries both publishing a "pdf" skill). Dedup now requires matching both source and slug.
 
 = 3.3.58 - 2026-08-08 =
 * Change: Skills now always appears in the admin menu, matching Tools, instead of being hidden entirely in Basic mode. The Basic/Advanced split now happens on the page itself — Source/Version columns, the Export action, Author/Version fields, the spec-validation notice, the prompt preview, and file import are Advanced-only; the rest (including assigning a skill to a specific assistant) is available in both.

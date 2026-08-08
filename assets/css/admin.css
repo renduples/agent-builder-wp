@@ -3541,6 +3541,8 @@ button.agentic-card-header-link:focus {
 .agentic-badge-agentic    { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 3px; font-size: 12px; }
 .agentic-badge-clhub      { background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 3px; font-size: 12px; }
 .agentic-badge-local      { background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 3px; font-size: 12px; }
+.agentic-badge-wordpress  { background: #dbeafe; color: #0a4b78; padding: 2px 8px; border-radius: 3px; font-size: 12px; }
+.agentic-badge-anthropic  { background: #fdf2e9; color: #9a4a1f; padding: 2px 8px; border-radius: 3px; font-size: 12px; }
 .agentic-col-60           { width: 60px; }
 .agentic-col-80           { width: 80px; }
 .agentic-col-140          { width: 140px; }
@@ -3571,6 +3573,12 @@ button.agentic-card-header-link:focus {
 .agentic-skill-preview summary { cursor: pointer; font-weight: 600; }
 .agentic-code-block-sm       { display: block; white-space: pre-wrap; word-break: break-word; font-size: 12px; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; padding: 8px 10px; margin-top: 6px; }
 .agentic-text-warning        { color: #b32d2e; }
+
+/* Skill hub source switcher (Advanced mode only) */
+.agentic-hub-source-switcher { display: flex; gap: 4px; margin: 12px 0 16px; border-bottom: 1px solid #ddd; }
+.agentic-hub-source-tab      { background: none; border: none; border-bottom: 2px solid transparent; padding: 8px 12px; font-size: 13px; cursor: pointer; color: #50575e; }
+.agentic-hub-source-tab:hover { color: #2271b1; }
+.agentic-hub-source-tab.is-active { color: #2271b1; border-bottom-color: #2271b1; font-weight: 600; }
 
 /* Channel tab buttons, misc fixes */
 .agentic-channel-tabs .button { display: inline-flex; align-items: center; gap: 6px; }

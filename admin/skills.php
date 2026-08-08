@@ -132,9 +132,15 @@ if ( isset( $_GET['skill_action'], $_GET['skill_id'], $_GET['_wpnonce'] )
 	$agentic_sk_edit_id = 0;
 }
 
-// ── Import (Agentic AI or ClawHub) ──────────────────────────
+// ── Import (Agentic AI, ClawHub, or a browsable GitHub source) ─────────
 if ( isset( $_POST['agentic_hub_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['agentic_hub_nonce'] ) ), 'agentic_hub_import' ) ) {
-	$agentic_hub_json = sanitize_text_field( wp_unslash( $_POST['agentic_hub_data'] ?? '' ) );
+	// Note: NOT sanitize_text_field() — it strips anything that looks like an
+	// HTML tag, which corrupts real skill content (WordPress/PHP/block-markup
+	// examples routinely contain "<...>") once it's embedded in this JSON
+	// blob. json_decode() below fails safely on malformed input either way,
+	// and every individual field is sanitized on its own terms downstream in
+	// Skills_Registry::import_from_hub()/create().
+	$agentic_hub_json = wp_unslash( $_POST['agentic_hub_data'] ?? '' );
 	$agentic_hub_data = json_decode( $agentic_hub_json, true );
 
 	// Normalise field names (ClawHub uses displayName/summary).
@@ -142,9 +148,11 @@ if ( isset( $_POST['agentic_hub_nonce'] ) && wp_verify_nonce( sanitize_text_fiel
 		$agentic_hub_data['name'] = $agentic_hub_data['displayName'];
 	}
 
-	// Determine source — skills from Agentic AI use 'agentic'.
+	// Determine source. 'wordpress' and 'anthropic' are browsed straight from
+	// their official GitHub repos; 'agentic' is the curated Recommended list;
+	// anything else falls back to 'clawhub'.
 	$agentic_import_source = sanitize_key( $agentic_hub_data['source'] ?? 'clawhub' );
-	if ( ! in_array( $agentic_import_source, array( 'agentic', 'clawhub' ), true ) ) {
+	if ( ! in_array( $agentic_import_source, array( 'agentic', 'clawhub', 'wordpress', 'anthropic' ), true ) ) {
 		$agentic_import_source = 'clawhub';
 	}
 	$agentic_hub_data['source'] = $agentic_import_source;
@@ -422,20 +430,58 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 
 <?php elseif ( 'hub' === $agentic_sk_view ) : ?>
 
+	<?php
+	// WordPress and Anthropic are browsed directly from their official GitHub
+	// repos (small, human-reviewed catalogs — no search API needed, just list
+	// everything). ClawHub is a large open-publish registry, kept behind its
+	// existing search-box flow. Basic mode only ever sees WordPress.org.
+	$agentic_sk_hub_sources = array(
+		'wordpress' => array(
+			'label'  => __( 'WordPress.org', 'agent-builder' ),
+			'type'   => 'github',
+			'owner'  => 'WordPress',
+			'repo'   => 'agent-skills',
+			'branch' => 'trunk',
+		),
+	);
+	if ( $agentic_sk_is_advanced ) {
+		$agentic_sk_hub_sources['anthropic'] = array(
+			'label'  => __( 'Anthropic', 'agent-builder' ),
+			'type'   => 'github',
+			'owner'  => 'anthropics',
+			'repo'   => 'skills',
+			'branch' => 'main',
+		);
+		$agentic_sk_hub_sources['clawhub'] = array(
+			'label' => __( 'OpenClaw / ClawHub', 'agent-builder' ),
+			'type'  => 'clawhub',
+		);
+	}
+	?>
+
 	<div class="agentic-max-800">
 		<h2 class="agentic-h2-flex">
-			<?php esc_html_e( 'Import from ClawHub', 'agent-builder' ); ?>
+			<?php esc_html_e( 'Browse Community Skills', 'agent-builder' ); ?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills' ) ); ?>" class="button agentic-ml-auto">&larr; <?php esc_html_e( 'Back to Skills', 'agent-builder' ); ?></a>
 		</h2>
-		<p><?php esc_html_e( 'Search the ClawHub skill registry for community-contributed skills.', 'agent-builder' ); ?></p>
 
-		<div class="agentic-flex-gap-8-mb-20">
+		<?php if ( $agentic_sk_is_advanced ) : ?>
+		<div id="agentic-hub-source-switcher" class="agentic-hub-source-switcher" role="tablist" aria-label="<?php esc_attr_e( 'Skill source', 'agent-builder' ); ?>">
+			<?php foreach ( $agentic_sk_hub_sources as $agentic_sk_src_key => $agentic_sk_src_cfg ) : ?>
+				<button type="button" class="agentic-hub-source-tab<?php echo 'wordpress' === $agentic_sk_src_key ? ' is-active' : ''; ?>" data-source="<?php echo esc_attr( $agentic_sk_src_key ); ?>" role="tab"><?php echo esc_html( $agentic_sk_src_cfg['label'] ); ?></button>
+			<?php endforeach; ?>
+		</div>
+		<?php else : ?>
+		<p class="agentic-mb-12-text-dim"><?php esc_html_e( 'Browsing skills from the official WordPress.org repository.', 'agent-builder' ); ?></p>
+		<?php endif; ?>
+
+		<div id="agentic-hub-search-wrap" class="agentic-flex-gap-8-mb-20" hidden>
 			<input type="text" id="agentic-hub-search" class="regular-text agentic-flex-1" placeholder="<?php esc_attr_e( 'Search skills...', 'agent-builder' ); ?>" />
 			<button type="button" id="agentic-hub-search-btn" class="button button-primary"><?php esc_html_e( 'Search', 'agent-builder' ); ?></button>
 		</div>
 
 		<div id="agentic-hub-results" class="agentic-hub-results">
-			<p class="agentic-text-dim"><?php esc_html_e( 'Enter a search term above to find skills on ClawHub.', 'agent-builder' ); ?></p>
+			<p class="agentic-text-dim"><?php esc_html_e( 'Loading...', 'agent-builder' ); ?></p>
 		</div>
 
 		<!-- Hidden import form -->
@@ -448,15 +494,118 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 	<script>
 	(function() {
 		'use strict';
-		var searchInput = document.getElementById('agentic-hub-search');
-		var searchBtn   = document.getElementById('agentic-hub-search-btn');
-		var resultsDiv  = document.getElementById('agentic-hub-results');
-		var importForm      = document.getElementById('agentic-hub-import-form');
-		var importDataField = document.getElementById('agentic-hub-data');
 
-		var CLAWHUB_API = 'https://wry-manatee-359.convex.site/api/v1';
+		var SOURCES = <?php echo wp_json_encode( array_map( static fn( $s ) => array_intersect_key( $s, array_flip( array( 'label', 'type', 'owner', 'repo', 'branch' ) ) ), $agentic_sk_hub_sources ) ); ?>;
 
-		function doSearch() {
+		var switcherEl      = document.getElementById('agentic-hub-source-switcher');
+		var searchWrap       = document.getElementById('agentic-hub-search-wrap');
+		var searchInput      = document.getElementById('agentic-hub-search');
+		var searchBtn        = document.getElementById('agentic-hub-search-btn');
+		var resultsDiv       = document.getElementById('agentic-hub-results');
+		var importForm       = document.getElementById('agentic-hub-import-form');
+		var importDataField  = document.getElementById('agentic-hub-data');
+		var CLAWHUB_API      = 'https://wry-manatee-359.convex.site/api/v1';
+		var cache            = {};
+
+		function escHtml(str) {
+			var div = document.createElement('div');
+			div.textContent = str;
+			return div.innerHTML;
+		}
+
+		function escAttr(str) {
+			return String(str).replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		}
+
+		// Minimal client-side reader for the two YAML frontmatter fields we
+		// need, mirroring Skills_Registry::parse_front_matter_identity().
+		function parseFrontMatter(raw) {
+			var out = { name: '', description: '' };
+			var m = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+			if (!m) return out;
+			var nm = m[1].match(/^name:\s*(.+)$/m);
+			if (nm) out.name = nm[1].trim().replace(/^["']|["']$/g, '');
+			var dm = m[1].match(/^description:\s*["']?(.*?)["']?\s*$/m);
+			if (dm) out.description = dm[1].trim();
+			return out;
+		}
+
+		function renderResults(items, emptyMessage) {
+			if (!items.length) {
+				resultsDiv.innerHTML = '<p class="agentic-text-dim">' + escHtml(emptyMessage) + '</p>';
+				return;
+			}
+			var html = '<table class="widefat striped"><thead><tr>' +
+				'<th><?php echo esc_js( __( 'Name', 'agent-builder' ) ); ?></th>' +
+				'<th><?php echo esc_js( __( 'Description', 'agent-builder' ) ); ?></th>' +
+				'<th class="agentic-col-min-90"><?php echo esc_js( __( 'Action', 'agent-builder' ) ); ?></th>' +
+				'</tr></thead><tbody>';
+			items.forEach(function(item) {
+				html += '<tr>';
+				html += '<td><strong>' + escHtml(item.name) + '</strong><br><code class="agentic-code-xs">' + escHtml(item.slug || '') + '</code></td>';
+				html += '<td>' + escHtml(item.description || '') + '</td>';
+				html += '<td><button type="button" class="button agentic-hub-import-btn" data-skill=\'' + escAttr(JSON.stringify(item)) + '\'><?php echo esc_js( __( 'Import', 'agent-builder' ) ); ?></button></td>';
+				html += '</tr>';
+			});
+			html += '</tbody></table>';
+			resultsDiv.innerHTML = html;
+			wireImportButtons();
+		}
+
+		function wireImportButtons() {
+			resultsDiv.querySelectorAll('.agentic-hub-import-btn').forEach(function(btn) {
+				btn.addEventListener('click', async function() {
+					if (!await agenticUI.confirm('<?php echo esc_js( __( 'Import this skill?', 'agent-builder' ) ); ?>', { confirmText: '<?php echo esc_js( __( 'Import', 'agent-builder' ) ); ?>' })) return;
+					var thisBtn = this;
+					var skillData = JSON.parse(thisBtn.dataset.skill);
+					thisBtn.disabled = true;
+					thisBtn.textContent = '<?php echo esc_js( __( 'Importing...', 'agent-builder' ) ); ?>';
+
+					if ('clawhub' === skillData.source) {
+						finishClawhubImport(skillData);
+					} else {
+						submitImport(skillData);
+					}
+				});
+			});
+		}
+
+		function submitImport(skillData) {
+			importDataField.value = JSON.stringify(skillData);
+			importForm.submit();
+		}
+
+		// ClawHub search results only carry summary metadata — fetch full
+		// detail + the actual SKILL.md body (from the openclaw/skills GitHub
+		// repo ClawHub indexes) only once the user commits to importing.
+		function finishClawhubImport(skillData) {
+			var slug = skillData.slug;
+			fetch(CLAWHUB_API + '/skills/' + encodeURIComponent(slug))
+			.then(function(r) { return r.ok ? r.json() : null; })
+			.then(function(detail) {
+				if (detail && detail.skill) {
+					skillData.description = detail.skill.summary || skillData.description;
+					if (detail.latestVersion) {
+						skillData.version = detail.latestVersion.version || skillData.version;
+					}
+					if (detail.owner) {
+						skillData.author = detail.owner.displayName || detail.owner.handle || '';
+					}
+				}
+				var ownerHandle = (detail && detail.owner) ? (detail.owner.handle || '') : '';
+				var canonicalSlug = (detail && detail.skill) ? (detail.skill.slug || slug) : slug;
+				if (ownerHandle) {
+					return fetch('https://raw.githubusercontent.com/openclaw/skills/main/skills/' + encodeURIComponent(ownerHandle) + '/' + encodeURIComponent(canonicalSlug) + '/SKILL.md')
+					.then(function(r) { return r.ok ? r.text() : ''; })
+					.then(function(md) { skillData.content = md || ''; })
+					.catch(function() {});
+				}
+			})
+			.then(function() { submitImport(skillData); })
+			.catch(function() { submitImport(skillData); }); // Import with search data only.
+		}
+
+		function doClawhubSearch() {
 			var query = searchInput.value.trim();
 			if (!query) return;
 
@@ -474,82 +623,16 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 			.then(function(data) {
 				searchBtn.disabled = false;
 				var skills = data.results || data.items || [];
-
-				if (!skills.length) {
-					resultsDiv.innerHTML = '<p class="agentic-text-dim"><?php echo esc_js( __( 'No skills found. Try a different search term.', 'agent-builder' ) ); ?></p>';
-					return;
-				}
-
-				var html = '<table class="widefat striped"><thead><tr>' +
-					'<th><?php echo esc_js( __( 'Name', 'agent-builder' ) ); ?></th>' +
-					'<th><?php echo esc_js( __( 'Description', 'agent-builder' ) ); ?></th>' +
-					'<th class="agentic-col-80"><?php echo esc_js( __( 'Version', 'agent-builder' ) ); ?></th>' +
-					'<th class="agentic-col-min-90"><?php echo esc_js( __( 'Action', 'agent-builder' ) ); ?></th>' +
-					'</tr></thead><tbody>';
-
-				skills.forEach(function(skill) {
-					// Map ClawHub fields to our import format.
-					var importData = {
+				var items = skills.map(function(skill) {
+					return {
 						name: skill.displayName || skill.slug || 'Untitled',
 						description: skill.summary || '',
-						id: skill.slug || '',
-						version: skill.version || '1.0.0',
 						slug: skill.slug || '',
+						version: skill.version || '1.0.0',
+						source: 'clawhub',
 					};
-					html += '<tr>';
-					html += '<td><strong>' + escHtml(importData.name) + '</strong><br><code class="agentic-code-xs">' + escHtml(skill.slug || '') + '</code></td>';
-					html += '<td>' + escHtml(importData.description) + '</td>';
-					html += '<td><code class="agentic-code-sm">' + escHtml(importData.version) + '</code></td>';
-					html += '<td><button type="button" class="button agentic-hub-import-btn" data-slug="' + escAttr(skill.slug || '') + '" data-skill=\'' + escAttr(JSON.stringify(importData)) + '\'><?php echo esc_js( __( 'Import', 'agent-builder' ) ); ?></button></td>';
-					html += '</tr>';
 				});
-
-				html += '</tbody></table>';
-				resultsDiv.innerHTML = html;
-
-				resultsDiv.querySelectorAll('.agentic-hub-import-btn').forEach(function(btn) {
-					btn.addEventListener('click', async function() {
-						if (!await agenticUI.confirm('<?php echo esc_js( __( 'Import this skill?', 'agent-builder' ) ); ?>', { confirmText: '<?php echo esc_js( __( 'Import', 'agent-builder' ) ); ?>' })) return;
-						var btn = this;
-						var skillData = JSON.parse(btn.dataset.skill);
-						var slug = btn.dataset.slug;
-						btn.disabled = true;
-						btn.textContent = '<?php echo esc_js( __( 'Importing...', 'agent-builder' ) ); ?>';
-
-						// Fetch skill detail + SKILL.md content from GitHub.
-						fetch(CLAWHUB_API + '/skills/' + encodeURIComponent(slug))
-						.then(function(r) { return r.ok ? r.json() : null; })
-						.then(function(detail) {
-							if (detail && detail.skill) {
-								skillData.description = detail.skill.summary || skillData.description;
-								if (detail.latestVersion) {
-									skillData.version = detail.latestVersion.version || skillData.version;
-								}
-								if (detail.owner) {
-									skillData.author = detail.owner.displayName || detail.owner.handle || '';
-								}
-							}
-							// Fetch SKILL.md from GitHub repo using owner handle and canonical slug.
-							var ownerHandle = (detail && detail.owner) ? (detail.owner.handle || '') : '';
-							var canonicalSlug = (detail && detail.skill) ? (detail.skill.slug || slug) : slug;
-							if (ownerHandle) {
-								return fetch('https://raw.githubusercontent.com/openclaw/skills/main/skills/' + encodeURIComponent(ownerHandle) + '/' + encodeURIComponent(canonicalSlug) + '/SKILL.md')
-								.then(function(r) { return r.ok ? r.text() : ''; })
-								.then(function(md) { skillData.content = md || ''; })
-								.catch(function() {});
-							}
-						})
-						.then(function() {
-							importDataField.value = JSON.stringify(skillData);
-							importForm.submit();
-						})
-						.catch(function() {
-							// Import with search data only.
-							importDataField.value = JSON.stringify(skillData);
-							importForm.submit();
-						});
-					});
-				});
+				renderResults(items, '<?php echo esc_js( __( 'No skills found. Try a different search term.', 'agent-builder' ) ); ?>');
 			})
 			.catch(function(err) {
 				searchBtn.disabled = false;
@@ -557,20 +640,86 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 			});
 		}
 
-		function escHtml(str) {
-			var div = document.createElement('div');
-			div.textContent = str;
-			return div.innerHTML;
+		function loadGithubSource(key, src) {
+			if (cache[key]) {
+				renderResults(cache[key], '<?php echo esc_js( __( 'No skills found in this repository.', 'agent-builder' ) ); ?>');
+				return;
+			}
+			resultsDiv.innerHTML = '<p class="agentic-text-dim"><?php echo esc_js( __( 'Loading...', 'agent-builder' ) ); ?></p>';
+
+			fetch('https://api.github.com/repos/' + src.owner + '/' + src.repo + '/git/trees/' + src.branch + '?recursive=1', {
+				headers: { 'Accept': 'application/vnd.github+json' },
+			})
+			.then(function(r) {
+				if (!r.ok) throw new Error('HTTP ' + r.status);
+				return r.json();
+			})
+			.then(function(data) {
+				var slugs = (data.tree || [])
+					.map(function(e) { return e.path || ''; })
+					.filter(function(p) { return /^skills\/[^\/]+\/SKILL\.md$/.test(p); })
+					.map(function(p) { return p.split('/')[1]; });
+
+				return Promise.all(slugs.map(function(slug) {
+					var rawUrl = 'https://raw.githubusercontent.com/' + src.owner + '/' + src.repo + '/' + src.branch + '/skills/' + slug + '/SKILL.md';
+					return fetch(rawUrl)
+						.then(function(r) { return r.ok ? r.text() : ''; })
+						.then(function(raw) {
+							if (!raw) return null;
+							var fm = parseFrontMatter(raw);
+							return {
+								slug: slug,
+								name: fm.name || slug,
+								description: fm.description || '',
+								content: raw,
+								version: '1.0.0',
+								author: src.label,
+								source: key,
+							};
+						});
+				}));
+			})
+			.then(function(items) {
+				items = items.filter(Boolean);
+				items.sort(function(a, b) { return a.name.localeCompare(b.name); });
+				cache[key] = items;
+				renderResults(items, '<?php echo esc_js( __( 'No skills found in this repository.', 'agent-builder' ) ); ?>');
+			})
+			.catch(function(err) {
+				resultsDiv.innerHTML = '<div class="notice notice-error"><p>' +
+					'<?php echo esc_js( __( 'Failed to load skills from', 'agent-builder' ) ); ?> ' + escHtml(src.label) + '. (' + escHtml(err.message || '') + ')</p></div>';
+			});
 		}
 
-		function escAttr(str) {
-			return str.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		function switchSource(key) {
+			var src = SOURCES[key];
+			if (!src) return;
+			if (switcherEl) {
+				switcherEl.querySelectorAll('[data-source]').forEach(function(b) {
+					b.classList.toggle('is-active', b.dataset.source === key);
+				});
+			}
+			if ('github' === src.type) {
+				searchWrap.hidden = true;
+				loadGithubSource(key, src);
+			} else {
+				searchWrap.hidden = false;
+				resultsDiv.innerHTML = '<p class="agentic-text-dim"><?php echo esc_js( __( 'Enter a search term above to find skills on ClawHub.', 'agent-builder' ) ); ?></p>';
+			}
 		}
 
-		searchBtn.addEventListener('click', doSearch);
+		if (switcherEl) {
+			switcherEl.querySelectorAll('[data-source]').forEach(function(btn) {
+				btn.addEventListener('click', function() { switchSource(this.dataset.source); });
+			});
+		}
+
+		searchBtn.addEventListener('click', doClawhubSearch);
 		searchInput.addEventListener('keydown', function(e) {
-			if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
+			if (e.key === 'Enter') { e.preventDefault(); doClawhubSearch(); }
 		});
+
+		switchSource('wordpress');
 	})();
 	</script>
 
@@ -749,11 +898,17 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						<td>
 							<?php
 							$agentic_sk_src = $agentic_sk_item['source'] ?? 'local';
-							if ( 'agentic' === $agentic_sk_src ) :
+							if ( 'core' === $agentic_sk_src ) :
 								?>
+								<span class="agentic-badge-local"><?php esc_html_e( 'Core', 'agent-builder' ); ?></span>
+							<?php elseif ( 'agentic' === $agentic_sk_src ) : ?>
 								<span class="agentic-badge-agentic">Agentic</span>
 							<?php elseif ( 'clawhub' === $agentic_sk_src ) : ?>
 								<span class="agentic-badge-clhub">ClawHub</span>
+							<?php elseif ( 'wordpress' === $agentic_sk_src ) : ?>
+								<span class="agentic-badge-wordpress">WordPress.org</span>
+							<?php elseif ( 'anthropic' === $agentic_sk_src ) : ?>
+								<span class="agentic-badge-anthropic">Anthropic</span>
 							<?php else : ?>
 								<span class="agentic-badge-local"><?php esc_html_e( 'Local', 'agent-builder' ); ?></span>
 							<?php endif; ?>
