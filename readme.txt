@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.59
+Stable tag: 3.3.60
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.60 - 2026-08-08 =
+* Fix: On Browse Community Skills, the search box (only meant for the ClawHub source) stayed visible on the WordPress.org and Anthropic sources instead of hiding, because a shared CSS utility class's `display: flex` was overriding the native `hidden` attribute/property. Toggled via inline style instead.
+* Fix: Skill descriptions written in YAML's block-scalar form (`description: |` / `|-` / `>`, common for longer descriptions — Anthropic's own claude-api skill uses it) were parsed as literally just the block indicator instead of the actual text, both in the browser-side skill browser and the PHP-side parser. Both now read block-scalar and single-line descriptions correctly.
 
 = 3.3.59 - 2026-08-08 =
 * Add: Browse Community Skills now supports three sources — WordPress.org's official agent-skills repository (Basic mode default, no switcher needed), plus Anthropic's official skills repository and OpenClaw/ClawHub in Advanced mode, with a tab switcher between them. WordPress and Anthropic skills are listed directly from their GitHub repositories (no search required, small curated catalogs); ClawHub keeps its existing search flow.

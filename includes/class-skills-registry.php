@@ -359,9 +359,7 @@ final class Skills_Registry {
 					if ( preg_match( '/^name:\s*(.+)$/m', $m[1], $nm ) ) {
 						$name = trim( $nm[1], " \t\"'" );
 					}
-					if ( preg_match( '/^description:\s*["\']?(.*?)["\']?\s*$/m', $m[1], $dm ) ) {
-						$description = trim( $dm[1], " \t\"'" );
-					}
+					$description = self::extract_description( $m[1] );
 				}
 
 				$existing = self::get_by_slug( $slug );
@@ -549,10 +547,32 @@ final class Skills_Registry {
 		if ( preg_match( '/^name:\s*(.+)$/m', $m[1], $nm ) ) {
 			$result['name'] = trim( $nm[1], " \t\"'" );
 		}
-		if ( preg_match( '/^description:\s*["\']?(.*?)["\']?\s*$/m', $m[1], $dm ) ) {
-			$result['description'] = trim( $dm[1], " \t\"'" );
-		}
+		$result['description'] = self::extract_description( $m[1] );
 		return $result;
+	}
+
+	/**
+	 * Extract a `description:` value from YAML front matter, accepting both
+	 * a plain single-line value and YAML's block scalar form
+	 * (`description: |`, `|-`, `>`, `>-` followed by indented lines) —
+	 * third-party skills use both; e.g. Anthropic's own claude-api skill is
+	 * block-scalar.
+	 *
+	 * @param string $front_matter Front matter text (without the --- fences).
+	 * @return string
+	 */
+	private static function extract_description( string $front_matter ): string {
+		if ( preg_match( '/^description:\s*[|>][-+]?[ \t]*\n((?:[ \t]+.*\n?)+)/m', $front_matter, $block ) ) {
+			$lines = array_filter(
+				array_map( 'trim', explode( "\n", $block[1] ) ),
+				static fn( string $l ): bool => '' !== $l
+			);
+			return implode( ' ', $lines );
+		}
+		if ( preg_match( '/^description:\s*["\']?(.*?)["\']?\s*$/m', $front_matter, $dm ) ) {
+			return trim( $dm[1], " \t\"'" );
+		}
+		return '';
 	}
 
 	/**

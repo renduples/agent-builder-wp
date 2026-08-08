@@ -475,7 +475,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 		<p class="agentic-mb-12-text-dim"><?php esc_html_e( 'Browsing skills from the official WordPress.org repository.', 'agent-builder' ); ?></p>
 		<?php endif; ?>
 
-		<div id="agentic-hub-search-wrap" class="agentic-flex-gap-8-mb-20" hidden>
+		<div id="agentic-hub-search-wrap" class="agentic-flex-gap-8-mb-20" style="display:none" hidden>
 			<input type="text" id="agentic-hub-search" class="regular-text agentic-flex-1" placeholder="<?php esc_attr_e( 'Search skills...', 'agent-builder' ); ?>" />
 			<button type="button" id="agentic-hub-search-btn" class="button button-primary"><?php esc_html_e( 'Search', 'agent-builder' ); ?></button>
 		</div>
@@ -519,14 +519,28 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 
 		// Minimal client-side reader for the two YAML frontmatter fields we
 		// need, mirroring Skills_Registry::parse_front_matter_identity().
+		// Handles both a plain single-line description and YAML's block
+		// scalar form ("description: |" / "description: |-" / "description: >"
+		// followed by indented lines) — real skills in the wild use both;
+		// Anthropic's own claude-api skill is block-scalar.
 		function parseFrontMatter(raw) {
 			var out = { name: '', description: '' };
 			var m = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
 			if (!m) return out;
-			var nm = m[1].match(/^name:\s*(.+)$/m);
+			var fm = m[1];
+			var nm = fm.match(/^name:\s*(.+)$/m);
 			if (nm) out.name = nm[1].trim().replace(/^["']|["']$/g, '');
-			var dm = m[1].match(/^description:\s*["']?(.*?)["']?\s*$/m);
-			if (dm) out.description = dm[1].trim();
+
+			var block = fm.match(/^description:\s*[|>][-+]?[ \t]*\n((?:[ \t]+.*\n?)+)/m);
+			if (block) {
+				out.description = block[1].split('\n')
+					.filter(function (l) { return l.trim() !== ''; })
+					.map(function (l) { return l.trim(); })
+					.join(' ');
+			} else {
+				var dm = fm.match(/^description:\s*["']?(.*?)["']?\s*$/m);
+				if (dm) out.description = dm[1].trim();
+			}
 			return out;
 		}
 
@@ -700,10 +714,16 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 				});
 			}
 			if ('github' === src.type) {
+				// .hidden alone isn't enough here — agentic-flex-gap-8-mb-20
+				// sets display:flex in an author stylesheet, which beats the
+				// browser's default [hidden]{display:none} UA rule regardless
+				// of the hidden attribute/property. Toggle display directly.
 				searchWrap.hidden = true;
+				searchWrap.style.display = 'none';
 				loadGithubSource(key, src);
 			} else {
 				searchWrap.hidden = false;
+				searchWrap.style.display = '';
 				resultsDiv.innerHTML = '<p class="agentic-text-dim"><?php echo esc_js( __( 'Enter a search term above to find skills on ClawHub.', 'agent-builder' ) ); ?></p>';
 			}
 		}
