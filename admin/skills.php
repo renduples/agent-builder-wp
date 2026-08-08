@@ -178,6 +178,13 @@ $agentic_sk_template_key = isset( $_GET['template'] ) ? sanitize_key( $_GET['tem
 $agentic_sk_templates    = Skills_Registry::get_templates();
 $agentic_sk_show_gallery = ( 'new' === $agentic_sk_view && '' === $agentic_sk_template_key && ! isset( $_POST['agentic_skill_nonce'] ) );
 
+// Basic/Advanced split happens on this page rather than by hiding the menu
+// item (same principle as Settings' advanced-only tab cluster) — Skills is
+// always reachable, but technical details (source/version columns, file
+// import/export, spec validation, the prompt preview) only show in
+// Advanced mode.
+$agentic_sk_is_advanced = \Agentic\Admin_Menu_Handler::is_advanced_mode( 'skills' );
+
 // Active agents for the dropdown.
 $agentic_sk_registry  = \Agentic_Agent_Registry::get_instance();
 $agentic_sk_agents    = $agentic_sk_registry->get_active_agents();
@@ -212,6 +219,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 			<?php endforeach; ?>
 		</div>
 
+		<?php if ( $agentic_sk_is_advanced ) : ?>
 		<h3 class="agentic-th-mt-32"><?php esc_html_e( 'Or import an existing SKILL.md', 'agent-builder' ); ?></h3>
 		<p class="agentic-mb-12-text-dim"><?php esc_html_e( 'Any spec-compliant skill file — from ClawHub, Android Skills, Claude Skills, or elsewhere — can be dropped in directly.', 'agent-builder' ); ?></p>
 		<?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only redirect flag, no state change. ?>
@@ -224,6 +232,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 			<input type="file" name="agentic_skill_file" accept=".md,text/markdown,text/plain" required />
 			<button type="submit" class="button"><?php esc_html_e( 'Import File', 'agent-builder' ); ?></button>
 		</form>
+		<?php endif; ?>
 	</div>
 
 <?php elseif ( 'edit' === $agentic_sk_view || 'new' === $agentic_sk_view ) : ?>
@@ -281,7 +290,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 			</div>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $agentic_sk_spec_errors ) || ! empty( $agentic_sk_unknown_tools ) ) : ?>
+		<?php if ( $agentic_sk_is_advanced && ( ! empty( $agentic_sk_spec_errors ) || ! empty( $agentic_sk_unknown_tools ) ) ) : ?>
 			<div class="notice notice-warning agentic-notice-mt-0">
 				<p><strong><?php esc_html_e( 'Spec check — not blocking, but fixing these keeps the skill portable to other agent tools:', 'agent-builder' ); ?></strong></p>
 				<ul class="agentic-list-disc-pl20">
@@ -345,6 +354,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						<p class="description"><?php esc_html_e( 'Leave as "All Assistants" to make this skill available globally, or assign it to a specific assistant.', 'agent-builder' ); ?></p>
 					</td>
 				</tr>
+				<?php if ( $agentic_sk_is_advanced ) : ?>
 				<tr>
 					<th scope="row"><label for="agentic_sk_author"><?php esc_html_e( 'Author', 'agent-builder' ); ?> <small>(<?php esc_html_e( 'optional', 'agent-builder' ); ?>)</small></label></th>
 					<td>
@@ -357,6 +367,10 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						<input type="text" id="agentic_sk_version" name="agentic_sk_version" value="<?php echo esc_attr( $agentic_sk_version ); ?>" class="small-text" />
 					</td>
 				</tr>
+				<?php else : ?>
+				<input type="hidden" name="agentic_sk_author" value="<?php echo esc_attr( $agentic_sk_author ); ?>" />
+				<input type="hidden" name="agentic_sk_version" value="<?php echo esc_attr( $agentic_sk_version ); ?>" />
+				<?php endif; ?>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Enable', 'agent-builder' ); ?></th>
 					<td>
@@ -368,6 +382,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 				</tr>
 			</table>
 
+			<?php if ( $agentic_sk_is_advanced ) : ?>
 			<details class="agentic-skill-preview">
 				<summary><?php esc_html_e( 'Preview what this skill sends to the assistant', 'agent-builder' ); ?></summary>
 				<div class="agentic-mb-12-text-dim">
@@ -391,6 +406,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 					</p>
 				</div>
 			</details>
+			<?php endif; ?>
 
 			<?php if ( 'clawhub' === $agentic_sk_source ) : ?>
 				<p class="agentic-text-dim-xs">
@@ -695,8 +711,10 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						<th class="agentic-col-200"><?php esc_html_e( 'Name', 'agent-builder' ); ?></th>
 						<th><?php esc_html_e( 'Description', 'agent-builder' ); ?></th>
 						<th class="agentic-col-140"><?php esc_html_e( 'Assistant', 'agent-builder' ); ?></th>
+						<?php if ( $agentic_sk_is_advanced ) : ?>
 						<th class="agentic-col-80"><?php esc_html_e( 'Source', 'agent-builder' ); ?></th>
 						<th class="agentic-col-80"><?php esc_html_e( 'Version', 'agent-builder' ); ?></th>
+						<?php endif; ?>
 						<th class="agentic-col-140"><?php esc_html_e( 'Actions', 'agent-builder' ); ?></th>
 					</tr>
 				</thead>
@@ -727,6 +745,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 							}
 							?>
 						</td>
+						<?php if ( $agentic_sk_is_advanced ) : ?>
 						<td>
 							<?php
 							$agentic_sk_src = $agentic_sk_item['source'] ?? 'local';
@@ -742,9 +761,12 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						<td>
 							<code class="agentic-code-sm"><?php echo esc_html( $agentic_sk_item['version'] ?? '1.0.0' ); ?></code>
 						</td>
+						<?php endif; ?>
 						<td>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $agentic_sk_item['id'] ) ); ?>" class="button button-small"><?php esc_html_e( 'Edit', 'agent-builder' ); ?></a>
+							<?php if ( $agentic_sk_is_advanced ) : ?>
 							<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=agentic_export_skill&skill_id=' . $agentic_sk_item['id'] ), 'agentic_export_skill' ) ); ?>" class="button button-small"><?php esc_html_e( 'Export', 'agent-builder' ); ?></a>
+							<?php endif; ?>
 							<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=agentic-skills&skill_action=delete&skill_id=' . $agentic_sk_item['id'] ), 'agentic_skill_delete_' . $agentic_sk_item['id'] ) ); ?>" class="button button-small agentic-link-danger" data-agentic-confirm="<?php echo esc_attr( __( 'Delete this skill?', 'agent-builder' ) ); ?>" data-agentic-confirm-danger data-agentic-confirm-ok="<?php echo esc_attr( __( 'Delete', 'agent-builder' ) ); ?>"><?php esc_html_e( 'Delete', 'agent-builder' ); ?></a>
 						</td>
 					</tr>

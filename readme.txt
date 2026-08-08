@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.57
+Stable tag: 3.3.58
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -296,6 +296,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 == Changelog ==
+
+= 3.3.58 - 2026-08-08 =
+* Change: Skills now always appears in the admin menu, matching Tools, instead of being hidden entirely in Basic mode. The Basic/Advanced split now happens on the page itself — Source/Version columns, the Export action, Author/Version fields, the spec-validation notice, the prompt preview, and file import are Advanced-only; the rest (including assigning a skill to a specific assistant) is available in both.
 
 = 3.3.57 - 2026-08-07 =
 * Add: Skills now follow the agentskills.io open standard (the same SKILL.md format Anthropic and Google both use) — `allowed-tools` frontmatter, `license`/`compatibility`/`metadata` fields, and spec validation, alongside the plugin's original `tools:` syntax for backward compatibility.

@@ -179,10 +179,11 @@ class Admin_Menu_Handler {
 			fn() => $this->render_page( 'tools' )
 		);
 
-		// Skills — an advanced concept; hidden from nav in Basic mode but still
-		// reachable at admin.php?page=agentic-skills.
+		// Skills — always shown in the menu, same as Tools. The Basic/Advanced
+		// split happens on the page itself (admin/skills.php), not by hiding
+		// the menu entry.
 		add_submenu_page(
-			$agentic_advanced_parent,
+			'agent-builder',
 			__( 'Agent Builder — Skills', 'agent-builder' ),
 			__( 'Skills', 'agent-builder' ),
 			'agentic_manage_tools',
