@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.61
+Stable tag: 3.3.62
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -318,10 +318,13 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **How to disable:** Stay on the WordPress.org source, or don't switch to Advanced mode.
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
+== Changelog ==
+
+= 3.3.62 - 2026-08-10 =
+* Fix: Clicking "Save changes" on any Settings tab that used the shared save button directly (Interface, Security, Memory, Agents, Instructions) threw a "Converting circular structure to JSON" error and silently failed to save — the button's `onClick` passed the raw click event through as the save handler's data argument, which then got spread into the save payload instead of the actual form state. The shared save button no longer forwards its click event.
+
 = 3.3.61 - 2026-08-10 =
 * Fix: The Skills list page you actually land on from the nav menu renders through a separate React view, not the classic PHP page — so the Basic/Advanced split from 3.3.58 (Source/Version columns, Export action) never applied there; Source was never shown at all and Version was always shown regardless of mode. Both are now correctly Advanced-only there too, matching the classic edit/hub pages.
-
-== Changelog ==
 
 = 3.3.60 - 2026-08-08 =
 * Fix: On Browse Community Skills, the search box (only meant for the ClawHub source) stayed visible on the WordPress.org and Anthropic sources instead of hiding, because a shared CSS utility class's `display: flex` was overriding the native `hidden` attribute/property. Toggled via inline style instead.

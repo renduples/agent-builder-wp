@@ -85,7 +85,7 @@ export function SaveBar( { onSave, saving, label } ) {
 			<FlexItem>
 				<Button
 					variant="primary"
-					onClick={ onSave }
+					onClick={ () => onSave() }
 					isBusy={ saving }
 					disabled={ saving }
 				>
