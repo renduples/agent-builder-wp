@@ -811,11 +811,24 @@ class Admin_Pages_REST {
 	 * @return array<string,mixed>
 	 */
 	private static function skills_payload(): array {
+		$is_advanced = class_exists( Admin_Menu_Handler::class )
+			? Admin_Menu_Handler::is_advanced_mode( 'skills' )
+			: ( 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) );
+
+		$source_labels = array(
+			'core'      => __( 'Core', 'agent-builder' ),
+			'agentic'   => __( 'Agentic', 'agent-builder' ),
+			'clawhub'   => __( 'ClawHub', 'agent-builder' ),
+			'wordpress' => __( 'WordPress.org', 'agent-builder' ),
+			'anthropic' => __( 'Anthropic', 'agent-builder' ),
+		);
+
 		$skills = class_exists( Skills_Registry::class ) ? Skills_Registry::get_all() : array();
 		$rows   = array();
 		foreach ( $skills as $skill ) {
 			$id     = (int) ( $skill['id'] ?? 0 );
-			$rows[] = array(
+			$source = (string) ( $skill['source'] ?? 'local' );
+			$row    = array(
 				'id'        => (string) $id,
 				'title'     => (string) ( $skill['name'] ?? '' ),
 				'subtitle'  => (string) ( $skill['description'] ?? '' ),
@@ -825,6 +838,14 @@ class Admin_Pages_REST {
 				'edit_url'  => admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $id ),
 				'delete_id' => $id,
 			);
+			// Source/version detail and export are Advanced-only, matching the
+			// classic Skills admin page's Basic/Advanced split.
+			if ( $is_advanced ) {
+				$row['source']       = $source;
+				$row['source_label'] = $source_labels[ $source ] ?? __( 'Local', 'agent-builder' );
+				$row['export_url']   = wp_nonce_url( admin_url( 'admin-post.php?action=agentic_export_skill&skill_id=' . $id ), 'agentic_export_skill' );
+			}
+			$rows[] = $row;
 		}
 
 		return array(
@@ -832,6 +853,7 @@ class Admin_Pages_REST {
 			'title'       => __( 'Skills', 'agent-builder' ),
 			'description' => __( 'Instructions that teach agents when and how to use tools.', 'agent-builder' ),
 			'rows'        => $rows,
+			'is_advanced' => $is_advanced,
 			'actions'     => array(
 				array(
 					'label'   => __( 'Create Skill', 'agent-builder' ),

@@ -1140,6 +1140,7 @@ function ToolsView( { data, reload, patchData } ) {
 function SkillsView( { data, reload } ) {
 	const [ q, setQ ] = useState( '' );
 	const [ err, setErr ] = useState( '' );
+	const isAdvanced = !! data.is_advanced;
 	const rows = useMemo( () => {
 		const all = data.rows || [];
 		const n = q.trim().toLowerCase();
@@ -1212,7 +1213,14 @@ function SkillsView( { data, reload } ) {
 						<tr>
 							<th>{ __( 'Skill', 'agent-builder' ) }</th>
 							<th>{ __( 'Agent', 'agent-builder' ) }</th>
-							<th>{ __( 'Version', 'agent-builder' ) }</th>
+							{ isAdvanced && (
+								<>
+									<th>{ __( 'Source', 'agent-builder' ) }</th>
+									<th>
+										{ __( 'Version', 'agent-builder' ) }
+									</th>
+								</>
+							) }
 							<th>{ __( 'Actions', 'agent-builder' ) }</th>
 						</tr>
 					</thead>
@@ -1230,11 +1238,40 @@ function SkillsView( { data, reload } ) {
 								<td>
 									<code>{ r.agent || '—' }</code>
 								</td>
-								<td>{ r.version || '—' }</td>
+								{ isAdvanced && (
+									<>
+										<td>
+											<span
+												className={
+													'agentic-react-badge agentic-react-badge--' +
+													( r.source || 'local' )
+												}
+											>
+												{ r.source_label ||
+													__(
+														'Local',
+														'agent-builder'
+													) }
+											</span>
+										</td>
+										<td>{ r.version || '—' }</td>
+									</>
+								) }
 								<td>
 									<a href={ r.edit_url }>
 										{ __( 'Edit', 'agent-builder' ) }
 									</a>
+									{ isAdvanced && r.export_url && (
+										<>
+											{ ' · ' }
+											<a href={ r.export_url }>
+												{ __(
+													'Export',
+													'agent-builder'
+												) }
+											</a>
+										</>
+									) }
 									{ ' · ' }
 									<button
 										type="button"

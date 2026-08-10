@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.60
+Stable tag: 3.3.61
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -317,6 +317,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Data sent:** Your search query. No other site data.
 * **How to disable:** Stay on the WordPress.org source, or don't switch to Advanced mode.
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
+
+= 3.3.61 - 2026-08-10 =
+* Fix: The Skills list page you actually land on from the nav menu renders through a separate React view, not the classic PHP page — so the Basic/Advanced split from 3.3.58 (Source/Version columns, Export action) never applied there; Source was never shown at all and Version was always shown regardless of mode. Both are now correctly Advanced-only there too, matching the classic edit/hub pages.
 
 == Changelog ==
 

@@ -145,6 +145,27 @@
 	color: #fff;
 }
 
+/* Skill source badges (Advanced mode, Skills list) — must come after the
+   base .agentic-react-badge rule so these backgrounds actually win. */
+.agentic-react-badge--core,
+.agentic-react-badge--local,
+.agentic-react-badge--wordpress {
+	background: #dbeafe;
+	color: #1e40af;
+}
+.agentic-react-badge--agentic {
+	background: #d1fae5;
+	color: #065f46;
+}
+.agentic-react-badge--clawhub {
+	background: #e0e7ff;
+	color: #3730a3;
+}
+.agentic-react-badge--anthropic {
+	background: #fdf2e9;
+	color: #9a4a1f;
+}
+
 .agentic-react-muted {
 	color: #646970;
 	font-size: 12px;
