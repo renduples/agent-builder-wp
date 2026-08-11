@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.63
+Stable tag: 3.3.64
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.64 - 2026-08-10 =
+* Change: "Publish" and "Activity" are now always shown in the Agent Builder admin menu, matching Tools/Skills/Approvals — previously they were hidden from the menu (though still reachable by direct URL) whenever the site-wide default was Basic. Basic/Advanced now only ever affects a page's own content, never whether it appears in navigation.
 
 = 3.3.63 - 2026-08-10 =
 * Change: The Basic/Advanced switch on Tools, Skills, Approvals, and Activity now lives in the same top-right spot on every one of those screens (previously it sat inline in body copy, and Skills had no switch at all).

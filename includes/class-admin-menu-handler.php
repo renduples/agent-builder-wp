@@ -68,11 +68,6 @@ class Admin_Menu_Handler {
 			return;
 		}
 
-		// Slug used as the parent for "Advanced" surfaces. In Basic mode these
-		// pages are registered hidden (parent '') so deep links keep working
-		// while the navigation stays uncluttered for non-technical users.
-		$agentic_advanced_parent = $this->advanced_parent_slug();
-
 		add_submenu_page(
 			'agent-builder',
 			__( 'Agent Builder — Dashboard', 'agent-builder' ),
@@ -109,11 +104,12 @@ class Admin_Menu_Handler {
 			fn() => $this->render_page( 'agents' )
 		);
 
-		// Publish — developer-facing deployment surfaces (scheduled tasks, event
-		// listeners, Gutenberg blocks, CLI, shortcodes, etc.); hidden from nav in
-		// Basic mode but still reachable at admin.php?page=agentic-deployment.
+		// Publish — deployment surfaces (scheduled tasks, event listeners,
+		// Gutenberg blocks, CLI, shortcodes, etc.). Always shown in the menu,
+		// same as Tools/Skills/Approvals/Activity — Basic/Advanced only ever
+		// affects a page's own content, never whether it's in the nav.
 		add_submenu_page(
-			$agentic_advanced_parent,
+			'agent-builder',
 			__( 'Agent Builder — Publish', 'agent-builder' ),
 			__( 'Publish', 'agent-builder' ),
 			'agentic_manage_agents',
@@ -212,11 +208,10 @@ class Admin_Menu_Handler {
 
 		// Usage / Costs page is registered by Agent Builder Pro.
 
-		// Activity — hidden from nav in Basic mode (reachable via the Dashboard's
-		// "View all activity" link and directly at admin.php?page=agentic-audit-log)
-		// so Basic nav doesn't need a dedicated top-level slot for it.
+		// Activity — always shown in the menu; the friendly/technical split
+		// happens on the page itself via its own Basic/Advanced switch.
 		add_submenu_page(
-			$agentic_advanced_parent,
+			'agent-builder',
 			__( 'Agent Builder — Activity', 'agent-builder' ),
 			__( 'Activity', 'agent-builder' ),
 			'agentic_view_audit_log',
@@ -320,19 +315,6 @@ class Admin_Menu_Handler {
 	 */
 	public static function reset_screen_modes(): void {
 		delete_user_meta( get_current_user_id(), self::SCREEN_MODE_META );
-	}
-
-	/**
-	 * Parent slug to register an advanced page under.
-	 *
-	 * Returns the real parent in Advanced mode so the page appears in the
-	 * navigation; returns '' in Basic mode so the page is still registered
-	 * (and therefore directly accessible by URL) but hidden from the menu.
-	 *
-	 * @return string
-	 */
-	private function advanced_parent_slug(): string {
-		return self::is_advanced_mode() ? 'agent-builder' : '';
 	}
 
 	/**
