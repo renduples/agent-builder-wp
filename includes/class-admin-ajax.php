@@ -308,90 +308,25 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Permission denied.', 'agent-builder' ) );
 		}
 
-		$id         = sanitize_text_field( wp_unslash( $_POST['trigger_id'] ?? '' ) );
-		$agent_slug = sanitize_text_field( wp_unslash( $_POST['agent_slug'] ?? '' ) );
-		$hook       = sanitize_text_field( wp_unslash( $_POST['hook'] ?? '' ) );
-		$name       = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
-		$prompt     = sanitize_textarea_field( wp_unslash( $_POST['prompt'] ?? '' ) );
-		$priority   = absint( $_POST['priority'] ?? 10 );
+		$result = Agent_Lifecycle::save_user_trigger(
+			array(
+				'id'         => wp_unslash( $_POST['trigger_id'] ?? '' ),
+				'agent_slug' => wp_unslash( $_POST['agent_slug'] ?? '' ),
+				'hook'       => wp_unslash( $_POST['hook'] ?? '' ),
+				'name'       => wp_unslash( $_POST['name'] ?? '' ),
+				'prompt'     => wp_unslash( $_POST['prompt'] ?? '' ),
+				'priority'   => $_POST['priority'] ?? 10,
+			)
+		);
 
-		if ( empty( $agent_slug ) || empty( $hook ) ) {
-			wp_send_json_error( __( 'Agent and hook are required.', 'agent-builder' ) );
-		}
-
-		if ( empty( $name ) ) {
-			$name = ucfirst( str_replace( array( '_', '-' ), ' ', $hook ) ) . ' → ' . $agent_slug;
-		}
-
-		$triggers = get_option( 'agentic_user_event_triggers', array() );
-		if ( ! is_array( $triggers ) ) {
-			$triggers = array();
-		}
-
-		if ( ! empty( $id ) ) {
-			// Update existing trigger.
-			foreach ( $triggers as &$t ) {
-				if ( $t['id'] === $id ) {
-					$t['agent_slug'] = $agent_slug;
-					$t['hook']       = $hook;
-					$t['name']       = $name;
-					$t['prompt']     = $prompt;
-					$t['priority']   = $priority;
-					break;
-				}
-			}
-			unset( $t );
-		} else {
-			// New trigger.
-			$id         = 'ut_' . uniqid();
-			$triggers[] = array(
-				'id'         => $id,
-				'agent_slug' => $agent_slug,
-				'hook'       => $hook,
-				'name'       => $name,
-				'prompt'     => $prompt,
-				'priority'   => $priority,
-				'created_at' => gmdate( 'Y-m-d H:i:s' ),
-			);
-		}
-
-		update_option( 'agentic_user_event_triggers', $triggers, false );
-
-		// Dual-write to Deployments table.
-		if ( class_exists( '\Agentic\Deployments' ) ) {
-			// Find existing row by trigger_id stored in config.
-			$et_existing_id = 0;
-			foreach ( Deployments::all( Deployments::TYPE_EVENT_LISTENER, $agent_slug ) as $et_row ) {
-				if ( ( $et_row['config']['trigger_id'] ?? '' ) === $id ) {
-					$et_existing_id = $et_row['id'];
-					break;
-				}
-			}
-
-			$et_save = array(
-				'type'       => Deployments::TYPE_EVENT_LISTENER,
-				'agent_slug' => $agent_slug,
-				'label'      => $name,
-				'enabled'    => 1,
-				'source'     => Deployments::SOURCE_ADMIN,
-				'config'     => array(
-					'hook'       => $hook,
-					'prompt'     => $prompt,
-					'priority'   => $priority,
-					'source'     => 'user',
-					'trigger_id' => $id,
-				),
-			);
-			if ( $et_existing_id ) {
-				$et_save['id'] = $et_existing_id;
-			}
-			Deployments::save( $et_save );
+		if ( empty( $result['ok'] ) ) {
+			wp_send_json_error( $result['error'] ?? __( 'Could not save the event trigger.', 'agent-builder' ) );
 		}
 
 		wp_send_json_success(
 			array(
-				'id'   => $id,
-				'name' => $name,
+				'id'   => $result['id'],
+				'name' => $result['name'],
 			)
 		);
 	}
@@ -408,30 +343,11 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Permission denied.', 'agent-builder' ) );
 		}
 
-		$id = sanitize_text_field( wp_unslash( $_POST['trigger_id'] ?? '' ) );
-		if ( empty( $id ) ) {
-			wp_send_json_error( __( 'Missing trigger ID.', 'agent-builder' ) );
-		}
+		$id     = sanitize_text_field( wp_unslash( $_POST['trigger_id'] ?? '' ) );
+		$result = Agent_Lifecycle::delete_user_trigger( $id );
 
-		$triggers = get_option( 'agentic_user_event_triggers', array() );
-		if ( ! is_array( $triggers ) ) {
-			$triggers = array();
-		}
-
-		$triggers = array_values(
-			array_filter( $triggers, fn( $t ) => $t['id'] !== $id )
-		);
-
-		update_option( 'agentic_user_event_triggers', $triggers, false );
-
-		// Also delete from Deployments table (match by trigger_id in config).
-		if ( class_exists( '\Agentic\Deployments' ) ) {
-			foreach ( Deployments::all( Deployments::TYPE_EVENT_LISTENER ) as $et_del_row ) {
-				if ( ( $et_del_row['config']['trigger_id'] ?? '' ) === $id ) {
-					Deployments::delete( $et_del_row['id'] );
-					break;
-				}
-			}
+		if ( empty( $result['ok'] ) ) {
+			wp_send_json_error( $result['error'] ?? __( 'Could not delete the event trigger.', 'agent-builder' ) );
 		}
 
 		wp_send_json_success();
@@ -449,121 +365,25 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Permission denied.', 'agent-builder' ) );
 		}
 
-		$id          = sanitize_key( wp_unslash( $_POST['task_id'] ?? '' ) );
-		$agent_slug  = sanitize_key( wp_unslash( $_POST['agent_slug'] ?? '' ) );
-		$name        = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
-		$prompt      = sanitize_textarea_field( wp_unslash( $_POST['prompt'] ?? '' ) );
-		$description = sanitize_text_field( wp_unslash( $_POST['description'] ?? '' ) );
-		$schedule    = sanitize_key( wp_unslash( $_POST['schedule'] ?? 'daily' ) );
+		$result = Agent_Lifecycle::save_user_scheduled_task(
+			array(
+				'id'          => wp_unslash( $_POST['task_id'] ?? '' ),
+				'agent_slug'  => wp_unslash( $_POST['agent_slug'] ?? '' ),
+				'name'        => wp_unslash( $_POST['name'] ?? '' ),
+				'prompt'      => wp_unslash( $_POST['prompt'] ?? '' ),
+				'description' => wp_unslash( $_POST['description'] ?? '' ),
+				'schedule'    => wp_unslash( $_POST['schedule'] ?? 'daily' ),
+			)
+		);
 
-		if ( empty( $agent_slug ) ) {
-			wp_send_json_error( __( 'Agent is required.', 'agent-builder' ) );
-		}
-
-		if ( '' === trim( $prompt ) ) {
-			wp_send_json_error( __( 'Prompt is required.', 'agent-builder' ) );
-		}
-
-		$registry = \Agentic_Agent_Registry::get_instance();
-		$agent    = $registry->get_agent_instance( $agent_slug );
-		if ( ! $agent ) {
-			wp_send_json_error( __( 'Agent not found or not active.', 'agent-builder' ) );
-		}
-
-		if ( ! in_array( $schedule, Agent_Lifecycle::ALLOWED_USER_SCHEDULES, true ) ) {
-			$schedule = 'daily';
-		}
-
-		if ( empty( $name ) ) {
-			$name = sprintf(
-				/* translators: 1: schedule label, 2: agent name */
-				__( '%1$s — %2$s', 'agent-builder' ),
-				ucfirst( $schedule ),
-				$agent->get_name()
-			);
-		}
-
-		$tasks = Agent_Lifecycle::get_user_scheduled_tasks();
-		$found = false;
-
-		if ( ! empty( $id ) ) {
-			foreach ( $tasks as &$row ) {
-				if ( ( $row['id'] ?? '' ) === $id ) {
-					// Reschedule if agent or recurrence changed.
-					$old_hook = Agent_Lifecycle::user_task_cron_hook( (string) ( $row['agent_slug'] ?? '' ), $id );
-					wp_clear_scheduled_hook( $old_hook );
-
-					$row['agent_slug']  = $agent_slug;
-					$row['name']        = $name;
-					$row['prompt']      = $prompt;
-					$row['description'] = $description;
-					$row['schedule']    = $schedule;
-					$found              = true;
-					break;
-				}
-			}
-			unset( $row );
-		}
-
-		if ( ! $found ) {
-			$id      = 'us_' . uniqid();
-			$tasks[] = array(
-				'id'          => $id,
-				'agent_slug'  => $agent_slug,
-				'name'        => $name,
-				'prompt'      => $prompt,
-				'description' => $description,
-				'schedule'    => $schedule,
-				'created_at'  => gmdate( 'Y-m-d H:i:s' ),
-			);
-		}
-
-		update_option( Agent_Lifecycle::USER_SCHEDULED_TASKS_OPTION, array_values( $tasks ), false );
-
-		// Register WP-Cron event immediately.
-		$hook = Agent_Lifecycle::user_task_cron_hook( $agent_slug, $id );
-		wp_clear_scheduled_hook( $hook );
-		$next_ts = time();
-		wp_schedule_event( $next_ts, $schedule, $hook );
-
-		// Dual-write Deployments row.
-		if ( class_exists( Deployments::class ) ) {
-			$existing_id = 0;
-			foreach ( Deployments::all( Deployments::TYPE_SCHEDULED_TASK, $agent_slug ) as $st_row ) {
-				if ( ( $st_row['config']['task_id'] ?? '' ) === $id ) {
-					$existing_id = (int) $st_row['id'];
-					break;
-				}
-			}
-
-			$st_save = array(
-				'type'       => Deployments::TYPE_SCHEDULED_TASK,
-				'agent_slug' => $agent_slug,
-				'label'      => $name,
-				'enabled'    => 1,
-				'source'     => Deployments::SOURCE_ADMIN,
-				'config'     => array(
-					'task_id'     => $id,
-					'schedule'    => $schedule,
-					'mode'        => 'autonomous',
-					'description' => $description,
-					'prompt'      => $prompt,
-					'source'      => 'user',
-					'next_run'    => gmdate( 'Y-m-d H:i:s', $next_ts ),
-					'last_run'    => null,
-					'last_status' => null,
-				),
-			);
-			if ( $existing_id ) {
-				$st_save['id'] = $existing_id;
-			}
-			Deployments::save( $st_save );
+		if ( empty( $result['ok'] ) ) {
+			wp_send_json_error( $result['error'] ?? __( 'Could not save the scheduled task.', 'agent-builder' ) );
 		}
 
 		wp_send_json_success(
 			array(
-				'id'   => $id,
-				'name' => $name,
+				'id'   => $result['id'],
+				'name' => $result['name'],
 			)
 		);
 	}
@@ -580,41 +400,11 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Permission denied.', 'agent-builder' ) );
 		}
 
-		$id = sanitize_key( wp_unslash( $_POST['task_id'] ?? '' ) );
-		if ( empty( $id ) ) {
-			wp_send_json_error( __( 'Missing task ID.', 'agent-builder' ) );
-		}
+		$id     = sanitize_key( wp_unslash( $_POST['task_id'] ?? '' ) );
+		$result = Agent_Lifecycle::delete_user_scheduled_task( $id );
 
-		$tasks      = Agent_Lifecycle::get_user_scheduled_tasks();
-		$agent_slug = '';
-		foreach ( $tasks as $row ) {
-			if ( ( $row['id'] ?? '' ) === $id ) {
-				$agent_slug = (string) ( $row['agent_slug'] ?? '' );
-				break;
-			}
-		}
-
-		$tasks = array_values(
-			array_filter(
-				$tasks,
-				static function ( $t ) use ( $id ) {
-					return ( $t['id'] ?? '' ) !== $id;
-				}
-			)
-		);
-		update_option( Agent_Lifecycle::USER_SCHEDULED_TASKS_OPTION, $tasks, false );
-
-		if ( $agent_slug ) {
-			wp_clear_scheduled_hook( Agent_Lifecycle::user_task_cron_hook( $agent_slug, $id ) );
-		}
-
-		if ( class_exists( Deployments::class ) ) {
-			foreach ( Deployments::all( Deployments::TYPE_SCHEDULED_TASK ) as $st_row ) {
-				if ( ( $st_row['config']['task_id'] ?? '' ) === $id ) {
-					Deployments::delete( (int) $st_row['id'] );
-					break;
-				}
-			}
+		if ( empty( $result['ok'] ) ) {
+			wp_send_json_error( $result['error'] ?? __( 'Could not delete the scheduled task.', 'agent-builder' ) );
 		}
 
 		wp_send_json_success();

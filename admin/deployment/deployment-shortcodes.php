@@ -42,31 +42,6 @@ function agentic_sc_form_data( array $row ): array {
 	);
 }
 
-/**
- * Build the [agentic_chat] shortcode string from a Deployments row.
- *
- * @param array $row Deployment row.
- * @return string
- */
-function agentic_sc_build_string( array $row ): string {
-	$cfg   = $row['config'] ?? array();
-	$style = $cfg['style'] ?? 'inline';
-	$parts = array( 'agent="' . esc_attr( $row['agent_slug'] ) . '"' );
-	if ( 'inline' !== $style ) {
-		$parts[] = 'style="' . esc_attr( $style ) . '"';
-	}
-	if ( ! empty( $cfg['height'] ) && '500px' !== $cfg['height'] ) {
-		$parts[] = 'height="' . esc_attr( $cfg['height'] ) . '"';
-	}
-	if ( ! empty( $cfg['placeholder'] ) ) {
-		$parts[] = 'placeholder="' . esc_attr( $cfg['placeholder'] ) . '"';
-	}
-	if ( isset( $cfg['show_header'] ) && ! $cfg['show_header'] ) {
-		$parts[] = 'show_header="false"';
-	}
-	return '[agentic_chat ' . implode( ' ', $parts ) . ']';
-}
-
 // ── Actions ───────────────────────────────────────────────────────────────────
 
 if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'agentic_manage_shortcodes' ) ) {
@@ -139,7 +114,7 @@ if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_uns
 				)
 			);
 			$agentic_created_row = Deployments::get( $agentic_new_id );
-			$agentic_sc_string   = $agentic_created_row ? agentic_sc_build_string( $agentic_created_row ) : '';
+			$agentic_sc_string   = $agentic_created_row ? Deployments::build_shortcode_string( $agentic_created_row ) : '';
 			$agentic_notice      = sprintf(
 				/* translators: %s: shortcode string */
 				__( 'Shortcode created. Copy and paste it into any page, post, or widget: %s', 'agent-builder' ),
@@ -258,7 +233,7 @@ $agentic_source_labels = array(
 	<tbody>
 		<?php
 		foreach ( $agentic_deployments as $agentic_dep ) :
-			$agentic_sc_string    = agentic_sc_build_string( $agentic_dep );
+			$agentic_sc_string    = Deployments::build_shortcode_string( $agentic_dep );
 			$agentic_cfg          = $agentic_dep['config'];
 			$agentic_style_str    = $agentic_cfg['style'] ?? 'inline';
 			$agentic_style_labels = array(

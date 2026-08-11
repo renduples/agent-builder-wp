@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.66
+Stable tag: 3.3.67
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,11 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.67 - 2026-08-11 =
+* Add: Publish now has a Basic/Advanced switch like Tools/Skills/Approvals/Activity. Basic mode embeds a chat with a new bundled agent, Agent Orchestrator, that has real tools to do everything the 8 technical Publish tabs do — shortcodes, scheduled tasks, event listeners, admin-bar launchers, editor sidebar, frontend modal, Gutenberg blocks, and CLI settings — conversationally, without needing the tabs at all. Existing sites get Agent Orchestrator activated automatically after updating.
+* Fix: A tool result whose top-level `shortcode` key held a structured object (rather than the plain shortcode string the chat widget's generic "paste this shortcode" formatting expects) rendered as the literal text "[object Object]" instead of the actual shortcode.
+* Fix: `Deployments::save()` rebuilt every column from only the fields passed to it, so any partial update (e.g. changing just a label) silently blanked columns that weren't included — most seriously the `type` column, and it also reset `created_at` to the current time on every edit. Partial updates now merge onto the existing row first, so omitted fields are preserved. This affected both the new Agent Orchestrator tools and the classic Deployment tabs' own Edit forms, which have the same partial-update pattern.
 
 = 3.3.66 - 2026-08-11 =
 * Change: Removed the redundant "Community Agents" button next to "Upload Agent" at the top of the Agents page — the same link is still available in the filter row below (All | Active | Inactive | Community Agents).

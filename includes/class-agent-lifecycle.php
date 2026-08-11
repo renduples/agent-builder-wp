@@ -31,6 +31,11 @@ class Agent_Lifecycle {
 	const USER_SCHEDULED_TASKS_OPTION = 'agentic_user_scheduled_tasks';
 
 	/**
+	 * Option key for admin-created event triggers (Deployment → Event Listeners).
+	 */
+	const USER_EVENT_TRIGGERS_OPTION = 'agentic_user_event_triggers';
+
+	/**
 	 * Allowed WP-Cron recurrence keys for user-defined scheduled tasks.
 	 *
 	 * @var array<int, string>
@@ -181,6 +186,201 @@ class Agent_Lifecycle {
 	}
 
 	/**
+	 * Create or update a user-defined scheduled task — the single place this
+	 * happens, shared by the classic Deployment → Scheduled Tasks AJAX
+	 * handler (Admin_Ajax::save_user_scheduled_task()) and the
+	 * manage_scheduled_task tool, so both write through the exact same
+	 * option + cron + Deployments dual-write.
+	 *
+	 * @param array $args {
+	 *     @type string $id          Existing task id to update, or '' for a new task.
+	 *     @type string $agent_slug  Required. Agent to run the task.
+	 *     @type string $name        Optional, defaults to "{schedule} — {agent name}".
+	 *     @type string $prompt      Required.
+	 *     @type string $description Optional.
+	 *     @type string $schedule    One of ALLOWED_USER_SCHEDULES, defaults to 'daily'.
+	 * }
+	 * @return array{ok:bool,id?:string,name?:string,error?:string}
+	 */
+	public static function save_user_scheduled_task( array $args ): array {
+		$id          = sanitize_key( (string) ( $args['id'] ?? '' ) );
+		$agent_slug  = sanitize_key( (string) ( $args['agent_slug'] ?? '' ) );
+		$name        = sanitize_text_field( (string) ( $args['name'] ?? '' ) );
+		$prompt      = sanitize_textarea_field( (string) ( $args['prompt'] ?? '' ) );
+		$description = sanitize_text_field( (string) ( $args['description'] ?? '' ) );
+		$schedule    = sanitize_key( (string) ( $args['schedule'] ?? 'daily' ) );
+
+		if ( empty( $agent_slug ) ) {
+			return array(
+				'ok'    => false,
+				'error' => __( 'Agent is required.', 'agent-builder' ),
+			);
+		}
+
+		if ( '' === trim( $prompt ) ) {
+			return array(
+				'ok'    => false,
+				'error' => __( 'Prompt is required.', 'agent-builder' ),
+			);
+		}
+
+		$registry = \Agentic_Agent_Registry::get_instance();
+		$agent    = $registry->get_agent_instance( $agent_slug );
+		if ( ! $agent ) {
+			return array(
+				'ok'    => false,
+				'error' => __( 'Agent not found or not active.', 'agent-builder' ),
+			);
+		}
+
+		if ( ! in_array( $schedule, self::ALLOWED_USER_SCHEDULES, true ) ) {
+			$schedule = 'daily';
+		}
+
+		if ( empty( $name ) ) {
+			$name = sprintf(
+				/* translators: 1: schedule label, 2: agent name */
+				__( '%1$s — %2$s', 'agent-builder' ),
+				ucfirst( $schedule ),
+				$agent->get_name()
+			);
+		}
+
+		$tasks = self::get_user_scheduled_tasks();
+		$found = false;
+
+		if ( ! empty( $id ) ) {
+			foreach ( $tasks as &$row ) {
+				if ( ( $row['id'] ?? '' ) === $id ) {
+					$old_hook = self::user_task_cron_hook( (string) ( $row['agent_slug'] ?? '' ), $id );
+					wp_clear_scheduled_hook( $old_hook );
+
+					$row['agent_slug']  = $agent_slug;
+					$row['name']        = $name;
+					$row['prompt']      = $prompt;
+					$row['description'] = $description;
+					$row['schedule']    = $schedule;
+					$found              = true;
+					break;
+				}
+			}
+			unset( $row );
+		}
+
+		if ( ! $found ) {
+			$id      = $id ? $id : ( 'us_' . uniqid() );
+			$tasks[] = array(
+				'id'          => $id,
+				'agent_slug'  => $agent_slug,
+				'name'        => $name,
+				'prompt'      => $prompt,
+				'description' => $description,
+				'schedule'    => $schedule,
+				'created_at'  => gmdate( 'Y-m-d H:i:s' ),
+			);
+		}
+
+		update_option( self::USER_SCHEDULED_TASKS_OPTION, array_values( $tasks ), false );
+
+		// Register WP-Cron event immediately.
+		$hook = self::user_task_cron_hook( $agent_slug, $id );
+		wp_clear_scheduled_hook( $hook );
+		$next_ts = time();
+		wp_schedule_event( $next_ts, $schedule, $hook );
+
+		// Dual-write Deployments row.
+		if ( class_exists( Deployments::class ) ) {
+			$existing_id = 0;
+			foreach ( Deployments::all( Deployments::TYPE_SCHEDULED_TASK, $agent_slug ) as $st_row ) {
+				if ( ( $st_row['config']['task_id'] ?? '' ) === $id ) {
+					$existing_id = (int) $st_row['id'];
+					break;
+				}
+			}
+
+			$st_save = array(
+				'type'       => Deployments::TYPE_SCHEDULED_TASK,
+				'agent_slug' => $agent_slug,
+				'label'      => $name,
+				'enabled'    => 1,
+				'source'     => Deployments::SOURCE_ADMIN,
+				'config'     => array(
+					'task_id'     => $id,
+					'schedule'    => $schedule,
+					'mode'        => 'autonomous',
+					'description' => $description,
+					'prompt'      => $prompt,
+					'source'      => 'user',
+					'next_run'    => gmdate( 'Y-m-d H:i:s', $next_ts ),
+					'last_run'    => null,
+					'last_status' => null,
+				),
+			);
+			if ( $existing_id ) {
+				$st_save['id'] = $existing_id;
+			}
+			Deployments::save( $st_save );
+		}
+
+		return array(
+			'ok'   => true,
+			'id'   => $id,
+			'name' => $name,
+		);
+	}
+
+	/**
+	 * Delete a user-defined scheduled task by id — shared by the classic AJAX
+	 * handler and the manage_scheduled_task tool.
+	 *
+	 * @param string $id Task id.
+	 * @return array{ok:bool,error?:string}
+	 */
+	public static function delete_user_scheduled_task( string $id ): array {
+		$id = sanitize_key( $id );
+		if ( empty( $id ) ) {
+			return array(
+				'ok'    => false,
+				'error' => __( 'Missing task ID.', 'agent-builder' ),
+			);
+		}
+
+		$tasks      = self::get_user_scheduled_tasks();
+		$agent_slug = '';
+		foreach ( $tasks as $row ) {
+			if ( ( $row['id'] ?? '' ) === $id ) {
+				$agent_slug = (string) ( $row['agent_slug'] ?? '' );
+				break;
+			}
+		}
+
+		$tasks = array_values(
+			array_filter(
+				$tasks,
+				static function ( $t ) use ( $id ) {
+					return ( $t['id'] ?? '' ) !== $id;
+				}
+			)
+		);
+		update_option( self::USER_SCHEDULED_TASKS_OPTION, $tasks, false );
+
+		if ( $agent_slug ) {
+			wp_clear_scheduled_hook( self::user_task_cron_hook( $agent_slug, $id ) );
+		}
+
+		if ( class_exists( Deployments::class ) ) {
+			foreach ( Deployments::all( Deployments::TYPE_SCHEDULED_TASK ) as $st_row ) {
+				if ( ( $st_row['config']['task_id'] ?? '' ) === $id ) {
+					Deployments::delete( (int) $st_row['id'] );
+					break;
+				}
+			}
+		}
+
+		return array( 'ok' => true );
+	}
+
+	/**
 	 * Execute a scheduled task with outcome logging and optional LLM routing.
 	 *
 	 * If the task defines a 'prompt' field and the LLM is configured, the task
@@ -317,10 +517,7 @@ class Agent_Lifecycle {
 		}
 
 		// Bind user-defined triggers created via the Deployment → Event Listeners form.
-		$user_triggers = get_option( 'agentic_user_event_triggers', array() );
-		if ( ! is_array( $user_triggers ) ) {
-			$user_triggers = array();
-		}
+		$user_triggers = self::get_user_event_triggers();
 
 		foreach ( $user_triggers as $trigger ) {
 			$agent = $registry->get_agent_instance( $trigger['agent_slug'] ?? '' );
@@ -346,6 +543,151 @@ class Agent_Lifecycle {
 				1
 			);
 		}
+	}
+
+	/**
+	 * Read all admin-created event triggers.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function get_user_event_triggers(): array {
+		$triggers = get_option( self::USER_EVENT_TRIGGERS_OPTION, array() );
+		return is_array( $triggers ) ? $triggers : array();
+	}
+
+	/**
+	 * Create or update a user-defined event trigger — shared by the classic
+	 * Deployment → Event Listeners AJAX handler (Admin_Ajax::save_user_trigger())
+	 * and the manage_event_listener tool, so both write through the exact
+	 * same option + Deployments dual-write.
+	 *
+	 * @param array $args {
+	 *     @type string $id         Existing trigger id to update, or '' for a new trigger.
+	 *     @type string $agent_slug Required. Agent to run when the hook fires.
+	 *     @type string $hook       Required. WordPress action hook name.
+	 *     @type string $name       Optional, defaults to "{hook} → {agent slug}".
+	 *     @type string $prompt     Instructions for the agent when the hook fires.
+	 *     @type int    $priority   add_action() priority, defaults to 10.
+	 * }
+	 * @return array{ok:bool,id?:string,name?:string,error?:string}
+	 */
+	public static function save_user_trigger( array $args ): array {
+		$id         = sanitize_text_field( (string) ( $args['id'] ?? '' ) );
+		$agent_slug = sanitize_text_field( (string) ( $args['agent_slug'] ?? '' ) );
+		$hook       = sanitize_text_field( (string) ( $args['hook'] ?? '' ) );
+		$name       = sanitize_text_field( (string) ( $args['name'] ?? '' ) );
+		$prompt     = sanitize_textarea_field( (string) ( $args['prompt'] ?? '' ) );
+		$priority   = absint( $args['priority'] ?? 10 );
+
+		if ( empty( $agent_slug ) || empty( $hook ) ) {
+			return array(
+				'ok'    => false,
+				'error' => __( 'Agent and hook are required.', 'agent-builder' ),
+			);
+		}
+
+		if ( empty( $name ) ) {
+			$name = ucfirst( str_replace( array( '_', '-' ), ' ', $hook ) ) . ' → ' . $agent_slug;
+		}
+
+		$triggers = self::get_user_event_triggers();
+
+		if ( ! empty( $id ) ) {
+			foreach ( $triggers as &$t ) {
+				if ( $t['id'] === $id ) {
+					$t['agent_slug'] = $agent_slug;
+					$t['hook']       = $hook;
+					$t['name']       = $name;
+					$t['prompt']     = $prompt;
+					$t['priority']   = $priority;
+					break;
+				}
+			}
+			unset( $t );
+		} else {
+			$id         = 'ut_' . uniqid();
+			$triggers[] = array(
+				'id'         => $id,
+				'agent_slug' => $agent_slug,
+				'hook'       => $hook,
+				'name'       => $name,
+				'prompt'     => $prompt,
+				'priority'   => $priority,
+				'created_at' => gmdate( 'Y-m-d H:i:s' ),
+			);
+		}
+
+		update_option( self::USER_EVENT_TRIGGERS_OPTION, $triggers, false );
+
+		// Dual-write to Deployments table.
+		if ( class_exists( Deployments::class ) ) {
+			$existing_id = 0;
+			foreach ( Deployments::all( Deployments::TYPE_EVENT_LISTENER, $agent_slug ) as $row ) {
+				if ( ( $row['config']['trigger_id'] ?? '' ) === $id ) {
+					$existing_id = (int) $row['id'];
+					break;
+				}
+			}
+
+			$save = array(
+				'type'       => Deployments::TYPE_EVENT_LISTENER,
+				'agent_slug' => $agent_slug,
+				'label'      => $name,
+				'enabled'    => 1,
+				'source'     => Deployments::SOURCE_ADMIN,
+				'config'     => array(
+					'hook'       => $hook,
+					'prompt'     => $prompt,
+					'priority'   => $priority,
+					'source'     => 'user',
+					'trigger_id' => $id,
+				),
+			);
+			if ( $existing_id ) {
+				$save['id'] = $existing_id;
+			}
+			Deployments::save( $save );
+		}
+
+		return array(
+			'ok'   => true,
+			'id'   => $id,
+			'name' => $name,
+		);
+	}
+
+	/**
+	 * Delete a user-defined event trigger by id — shared by the classic AJAX
+	 * handler and the manage_event_listener tool.
+	 *
+	 * @param string $id Trigger id.
+	 * @return array{ok:bool,error?:string}
+	 */
+	public static function delete_user_trigger( string $id ): array {
+		$id = sanitize_text_field( $id );
+		if ( empty( $id ) ) {
+			return array(
+				'ok'    => false,
+				'error' => __( 'Missing trigger ID.', 'agent-builder' ),
+			);
+		}
+
+		$triggers = self::get_user_event_triggers();
+		$triggers = array_values(
+			array_filter( $triggers, fn( $t ) => $t['id'] !== $id )
+		);
+		update_option( self::USER_EVENT_TRIGGERS_OPTION, $triggers, false );
+
+		if ( class_exists( Deployments::class ) ) {
+			foreach ( Deployments::all( Deployments::TYPE_EVENT_LISTENER ) as $row ) {
+				if ( ( $row['config']['trigger_id'] ?? '' ) === $id ) {
+					Deployments::delete( (int) $row['id'] );
+					break;
+				}
+			}
+		}
+
+		return array( 'ok' => true );
 	}
 
 	/**

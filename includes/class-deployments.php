@@ -166,10 +166,22 @@ class Deployments {
 		$id = isset( $data['id'] ) ? (int) $data['id'] : 0;
 		unset( $data['id'] );
 
-		$row    = self::prepare_row( $data );
 		$is_new = $id < 1;
 
-		if ( $id > 0 ) {
+		if ( ! $is_new ) {
+			// Callers commonly pass a partial field set (e.g. just label/config)
+			// intending a partial update. Merge onto the existing row first so
+			// prepare_row() doesn't reconstruct — and blank out — omitted
+			// columns like type or created_at.
+			$existing = self::get( $id );
+			if ( $existing ) {
+				$data = array_merge( $existing, $data );
+			}
+		}
+
+		$row = self::prepare_row( $data );
+
+		if ( ! $is_new ) {
 			$row['updated_at'] = current_time( 'mysql' );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->update( self::table(), $row, array( 'id' => $id ) );
@@ -351,5 +363,33 @@ class Deployments {
 		$type_label  = ucwords( str_replace( '_', ' ', $type ) );
 		$agent_label = ucwords( str_replace( '-', ' ', $agent_slug ) );
 		return '' !== $agent_slug ? "{$agent_label} ({$type_label})" : $type_label;
+	}
+
+	/**
+	 * Build the `[agentic_chat ...]` shortcode string for a TYPE_SHORTCODE
+	 * deployment row — shared by the classic Deployment → Shortcodes tab
+	 * and the manage_agent_shortcode tool, so both hand back the exact same
+	 * embed code for the same row.
+	 *
+	 * @param array $row Deployment row (as returned by get()/all()).
+	 * @return string
+	 */
+	public static function build_shortcode_string( array $row ): string {
+		$cfg   = $row['config'] ?? array();
+		$style = $cfg['style'] ?? 'inline';
+		$parts = array( 'agent="' . esc_attr( $row['agent_slug'] ) . '"' );
+		if ( 'inline' !== $style ) {
+			$parts[] = 'style="' . esc_attr( $style ) . '"';
+		}
+		if ( ! empty( $cfg['height'] ) && '500px' !== $cfg['height'] ) {
+			$parts[] = 'height="' . esc_attr( $cfg['height'] ) . '"';
+		}
+		if ( ! empty( $cfg['placeholder'] ) ) {
+			$parts[] = 'placeholder="' . esc_attr( $cfg['placeholder'] ) . '"';
+		}
+		if ( isset( $cfg['show_header'] ) && ! $cfg['show_header'] ) {
+			$parts[] = 'show_header="false"';
+		}
+		return '[agentic_chat ' . implode( ' ', $parts ) . ']';
 	}
 }

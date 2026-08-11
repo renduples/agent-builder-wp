@@ -5,7 +5,7 @@
  * Plugin Name:       Agent Builder
  * Plugin URI:        https://agentic-plugin.com
  * Description:       Orchestrate role-based AI agents and teams with simple job descriptions.
- * Version:           3.3.66
+ * Version:           3.3.67
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Agent Builder Team
@@ -57,7 +57,7 @@ spl_autoload_register(
 
 // Plugin constants.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-define( 'AGENT_BUILDER_VERSION', '3.3.66' );
+define( 'AGENT_BUILDER_VERSION', '3.3.67' );
 define( 'AGENT_BUILDER_FILE', __FILE__ );
 define( 'AGENT_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGENT_BUILDER_URL', plugin_dir_url( __FILE__ ) );
@@ -65,7 +65,7 @@ define( 'AGENT_BUILDER_BASENAME', plugin_basename( __FILE__ ) );
 define( 'AGENTIC_AGENTS_DIR', WP_CONTENT_DIR . '/agentic-agents' );
 define( 'AGENTIC_KNOWLEDGE_DIR', WP_CONTENT_DIR . '/agentic-knowledge' );
 define( 'AGENTIC_BACKUPS_DIR', WP_CONTENT_DIR . '/agentic-backups' );
-define( 'AGENT_BUILDER_DB_VERSION', '2.13.0' );
+define( 'AGENT_BUILDER_DB_VERSION', '2.13.1' );
 // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 
 // AGENTIC_PRO is true when an add-on is installed and active (detected via its early constant AGENT_BUILDER_PRO_FILE).
