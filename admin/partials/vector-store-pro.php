@@ -49,7 +49,7 @@ if ( ! in_array( $agentic_td_tab, array( 'scan', 'upload', 'sources' ), true ) )
 	<!-- ═══════════════════════════════════════════════════════════════════ -->
 	<div class="agentic-td-panel">
 		<h3><?php esc_html_e( 'Scan Your Website Content', 'agent-builder' ); ?></h3>
-		<p class="description"><?php esc_html_e( 'Select which content to train your assistants on. Published pages and posts will be sent to the Vector Store for embedding.', 'agent-builder' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Select which content to train your agents on. Published pages and posts will be sent to the Vector Store for embedding.', 'agent-builder' ); ?></p>
 
 		<div class="agentic-td-scan-options">
 			<div class="agentic-td-scan-type">
@@ -136,7 +136,7 @@ if ( ! in_array( $agentic_td_tab, array( 'scan', 'upload', 'sources' ), true ) )
 	<!-- ═══════════════════════════════════════════════════════════════════ -->
 	<div class="agentic-td-panel">
 		<h3><?php esc_html_e( 'Upload Documents', 'agent-builder' ); ?></h3>
-		<p class="description"><?php esc_html_e( 'Upload PDF or text files to train your assistants. Files are chunked, embedded, and stored in your private Vector Store.', 'agent-builder' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Upload PDF or text files to train your agents. Files are chunked, embedded, and stored in your private Vector Store.', 'agent-builder' ); ?></p>
 
 		<div class="agentic-td-upload-zone" id="agentic-upload-zone">
 			<div class="agentic-td-upload-icon">

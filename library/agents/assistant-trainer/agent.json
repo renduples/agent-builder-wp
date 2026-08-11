@@ -2,7 +2,7 @@
     "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
     "slug": "assistant-trainer",
     "name": "Assistant Trainer",
-    "description": "Meta-agent that trains new AI assistants from natural language descriptions.",
+    "description": "Meta-agent that trains new AI agents from natural language descriptions.",
     "category": "developer",
     "icon": "🏗️",
     "version": "1.1.0",

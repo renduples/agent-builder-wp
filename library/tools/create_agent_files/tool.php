@@ -45,7 +45,7 @@ class Create_Agent_Files extends Tool_Base {
 	 * @return string
 	 */
 	private function default_welcome_message( string $name, string $desc ): string {
-		$name = '' !== trim( $name ) ? trim( $name ) : 'your assistant';
+		$name = '' !== trim( $name ) ? trim( $name ) : 'your agent';
 		$desc = trim( rtrim( trim( $desc ), '.' ) );
 		if ( '' !== $desc ) {
 			return sprintf( "Hi! I'm %s — %s.\n\nTell me what you need and I'll help you get it done.", $name, lcfirst( $desc ) );

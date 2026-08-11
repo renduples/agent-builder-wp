@@ -31,7 +31,7 @@ if ( ! in_array( $agentic_active_tab, array( 'admin-bar', 'cli', 'admin-ui', 'ev
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'Agent Deployment', 'agent-builder' ); ?></h1>
-	<p><?php esc_html_e( 'Manage how assistants are invoked: embed them on your site with shortcodes, schedule recurring tasks, or react to WordPress events.', 'agent-builder' ); ?></p>
+	<p><?php esc_html_e( 'Manage how agents are invoked: embed them on your site with shortcodes, schedule recurring tasks, or react to WordPress events.', 'agent-builder' ); ?></p>
 
 	<?php
 	// Labels A–Z for nav order.

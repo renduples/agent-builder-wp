@@ -83,7 +83,7 @@ function SettingsPageFooter( { tab } ) {
 	const policy =
 		f.policy ||
 		__(
-			'Settings control how assistants behave on this site. Changes are stored locally and take effect for new conversations.',
+			'Settings control how agents behave on this site. Changes are stored locally and take effect for new conversations.',
 			'agent-builder'
 		);
 
@@ -287,7 +287,7 @@ function InterfaceTab( { data, setData, onSave, saving, error, saved, clearSaved
 					borderTop: '1px solid #dcdcde',
 				} }
 			/>
-			<Section title={ __( 'How assistants address people', 'agent-builder' ) }>
+			<Section title={ __( 'How agents address people', 'agent-builder' ) }>
 				<p className="agentic-react-muted" style={ { marginTop: 0 } }>
 					{ __(
 						'Site knowledge and standing guidance are under',
@@ -402,7 +402,7 @@ function InterfaceTab( { data, setData, onSave, saving, error, saved, clearSaved
 											} }
 										>
 											{ __(
-												'AI Assistant',
+												'AI Agent',
 												'agent-builder'
 											) }
 										</span>
@@ -669,7 +669,7 @@ function ProvidersTab( { data } ) {
 			</div>
 			<p className="agentic-react-muted" style={ { marginTop: 12 } }>
 				{ __(
-					'API keys: use Edit on a provider. Setting a default updates the global provider and model used by assistants.',
+					'API keys: use Edit on a provider. Setting a default updates the global provider and model used by agents.',
 					'agent-builder'
 				) }
 			</p>
@@ -1508,7 +1508,7 @@ function AgentsTab( { data, setData, onSave, saving, error, saved, clearSaved } 
 			<Section title={ __( 'Active agent overrides', 'agent-builder' ) }>
 				<p className="agentic-react-muted" style={ { marginTop: 0 } }>
 					{ __(
-						'Each row starts on the site default provider and model (Providers tab). Change only the assistants that need a different setup.',
+						'Each row starts on the site default provider and model (Providers tab). Change only the agents that need a different setup.',
 						'agent-builder'
 					) }
 				</p>
@@ -1522,7 +1522,7 @@ function AgentsTab( { data, setData, onSave, saving, error, saved, clearSaved } 
 							<thead>
 								<tr>
 									<th>
-										{ __( 'Assistant', 'agent-builder' ) }
+										{ __( 'Agent', 'agent-builder' ) }
 									</th>
 									<th>
 										{ __( 'Provider', 'agent-builder' ) }
@@ -1735,16 +1735,16 @@ function InstructionsTab( { data, setData, onSave, saving, error, saved, clearSa
 			/>
 			<p className="agentic-react-lead">
 				{ __(
-					'Customise greetings and personality notes per assistant.',
+					'Customise greetings and personality notes per agent.',
 					'agent-builder'
 				) }
 			</p>
 			{ ! agents.length ? (
-				<p>{ __( 'No assistants installed.', 'agent-builder' ) }</p>
+				<p>{ __( 'No agents installed.', 'agent-builder' ) }</p>
 			) : (
 				<>
 					<SelectControl
-						label={ __( 'Select assistant', 'agent-builder' ) }
+						label={ __( 'Select agent', 'agent-builder' ) }
 						value={ current?.slug || '' }
 						options={ agents.map( ( a ) => ( {
 							label: a.name,

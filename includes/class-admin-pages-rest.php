@@ -719,9 +719,9 @@ class Admin_Pages_REST {
 			'title'            => __( 'Tools', 'agent-builder' ),
 			'panel_title'      => $is_advanced
 				? $panel_title
-				: __( 'What may assistants do?', 'agent-builder' ),
+				: __( 'What may agents do?', 'agent-builder' ),
 			'description'      => $is_advanced
-				? __( 'Enable or disable tools assistants can use. Group by category using the tabs.', 'agent-builder' )
+				? __( 'Enable or disable tools agents can use. Group by category using the tabs.', 'agent-builder' )
 				: __( 'Pick a simple safety profile. We turn tools on or off to match — no need to manage hundreds of tools one by one.', 'agent-builder' ),
 			'rows'             => $rows,
 			'tabs'             => $tabs,
@@ -738,7 +738,7 @@ class Admin_Pages_REST {
 				: 'none',
 			'docs_url'         => 'https://agentic-plugin.com/agent-tools/',
 			'footer_policy'    => __(
-				'Assistants only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings. Provider processing of chat content is covered by our Privacy Policy.',
+				'Agents only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings. Provider processing of chat content is covered by our Privacy Policy.',
 				'agent-builder'
 			),
 		);
@@ -754,7 +754,7 @@ class Admin_Pages_REST {
 			'browse' => array(
 				'label'    => __( 'Browse & answer', 'agent-builder' ),
 				'summary'  => __( 'Safest — read-only help', 'agent-builder' ),
-				'detail'   => __( 'Assistants can look things up and answer questions. They cannot change posts, settings, or your site.', 'agent-builder' ),
+				'detail'   => __( 'Agents can look things up and answer questions. They cannot change posts, settings, or your site.', 'agent-builder' ),
 				'max_risk' => 'low',
 				'icon'     => '👀',
 			),
@@ -920,7 +920,7 @@ class Admin_Pages_REST {
 			'tab'              => $tab,
 			'title'            => __( 'Approvals', 'agent-builder' ),
 			'panel_title'      => __( 'Things waiting for your OK', 'agent-builder' ),
-			'description'      => __( 'When an assistant wants to change something important, it waits here until you approve or reject it.', 'agent-builder' ),
+			'description'      => __( 'When an agent wants to change something important, it waits here until you approve or reject it.', 'agent-builder' ),
 			'pending_count'    => count( $rows ),
 			'rows'             => $rows,
 			'groups'           => self::group_pending_for_bulk( $rows ),
@@ -943,7 +943,7 @@ class Admin_Pages_REST {
 			'comfort_profiles' => self::approval_comfort_profiles(),
 			'docs_url'         => 'https://agentic-plugin.com/approval-queue/',
 			'footer_policy'    => __(
-				'Approvals keep high-risk assistant actions under human control. Email alerts use your admin address and never include passwords. See Privacy Policy for how providers process chat.',
+				'Approvals keep high-risk agent actions under human control. Email alerts use your admin address and never include passwords. See Privacy Policy for how providers process chat.',
 				'agent-builder'
 			),
 		);
@@ -984,8 +984,8 @@ class Admin_Pages_REST {
 				'icon'      => '⚡',
 				'label'     => __( 'Trust more (higher risk)', 'agent-builder' ),
 				'summary'   => __( 'Faster — use with care', 'agent-builder' ),
-				'detail'    => __( 'Assistants work with less interruption (autonomous mode). You can still review history. Extreme tools stay blocked.', 'agent-builder' ),
-				'risk_note' => __( 'I understand assistants may change content without waiting in this queue, and I accept that increased risk.', 'agent-builder' ),
+				'detail'    => __( 'Agents work with less interruption (autonomous mode). You can still review history. Extreme tools stay blocked.', 'agent-builder' ),
+				'risk_note' => __( 'I understand agents may change content without waiting in this queue, and I accept that increased risk.', 'agent-builder' ),
 				'auto_max'  => 'medium',
 				'mode'      => 'autonomous',
 				'needs_ack' => true,
@@ -1494,12 +1494,12 @@ class Admin_Pages_REST {
 			'panel_title'    => match ( $tab ) {
 				'conversations' => __( 'Recent conversations', 'agent-builder' ),
 				'security'      => __( 'Security events', 'agent-builder' ),
-				default         => __( 'What your assistants have been doing', 'agent-builder' ),
+				default         => __( 'What your agents have been doing', 'agent-builder' ),
 			},
 			'description'    => match ( $tab ) {
-				'conversations' => __( 'Chats between people and assistants on this site.', 'agent-builder' ),
+				'conversations' => __( 'Chats between people and agents on this site.', 'agent-builder' ),
 				'security'      => __( 'Security-related events. Most sites stay quiet here.', 'agent-builder' ),
-				default         => __( 'A simple timeline of assistant work — tools used, approvals, and important system events. No technical jargon required.', 'agent-builder' ),
+				default         => __( 'A simple timeline of agent work — tools used, approvals, and important system events. No technical jargon required.', 'agent-builder' ),
 			},
 			'rows'           => $rows,
 			'stats'          => $stats,
@@ -1558,7 +1558,7 @@ class Admin_Pages_REST {
 			),
 			'docs_url'       => 'https://agentic-plugin.com/audit-log/',
 			'footer_policy'  => __(
-				'Activity helps you understand what assistants did on your site. Logs are stored locally and purged according to your retention settings. Chat content lives under Conversations.',
+				'Activity helps you understand what agents did on your site. Logs are stored locally and purged according to your retention settings. Chat content lives under Conversations.',
 				'agent-builder'
 			),
 			'tabs'           => array(
@@ -1904,7 +1904,7 @@ class Admin_Pages_REST {
 			'action_rejected'            => __( 'You rejected an action', 'agent-builder' ),
 			'approval_prefs_saved'       => __( 'Approval preferences saved', 'agent-builder' ),
 			'ui_mode_changed'            => __( 'Interface mode changed', 'agent-builder' ),
-			'default_agent_mode_changed' => __( 'Default assistant mode changed', 'agent-builder' ),
+			'default_agent_mode_changed' => __( 'Default agent mode changed', 'agent-builder' ),
 			'deployment_created'         => __( 'Deployment created', 'agent-builder' ),
 			'deployment_updated'         => __( 'Deployment updated', 'agent-builder' ),
 			'deployment_enabled'         => __( 'Deployment enabled', 'agent-builder' ),
@@ -1913,9 +1913,9 @@ class Admin_Pages_REST {
 			'settings_changed'           => __( 'Settings changed', 'agent-builder' ),
 			'endpoint_url_changed'       => __( 'Changed a service endpoint URL', 'agent-builder' ),
 			'knowledge_added'            => __( 'Added knowledge', 'agent-builder' ),
-			'agent_activated'            => __( 'Assistant activated', 'agent-builder' ),
-			'agent_deactivated'          => __( 'Assistant deactivated', 'agent-builder' ),
-			'agent_installed'            => __( 'Assistant created', 'agent-builder' ),
+			'agent_activated'            => __( 'Agent activated', 'agent-builder' ),
+			'agent_deactivated'          => __( 'Agent deactivated', 'agent-builder' ),
+			'agent_installed'            => __( 'Agent created', 'agent-builder' ),
 		);
 		if ( isset( $map[ $action ] ) ) {
 			return $map[ $action ];
@@ -1997,7 +1997,7 @@ class Admin_Pages_REST {
 		return array(
 			'page'        => 'deployment',
 			'title'       => __( 'Publish', 'agent-builder' ),
-			'description' => __( 'Deploy assistants to shortcodes, blocks, and channels.', 'agent-builder' ),
+			'description' => __( 'Deploy agents to shortcodes, blocks, and channels.', 'agent-builder' ),
 			'links'       => array(
 				array(
 					'label' => __( 'Shortcodes', 'agent-builder' ),
@@ -2007,12 +2007,12 @@ class Admin_Pages_REST {
 				array(
 					'label' => __( 'Open Agent Chat', 'agent-builder' ),
 					'url'   => admin_url( 'admin.php?page=agentic-chat' ),
-					'hint'  => __( 'Test assistants in wp-admin', 'agent-builder' ),
+					'hint'  => __( 'Test agents in wp-admin', 'agent-builder' ),
 				),
 				array(
 					'label' => __( 'Train an Agent', 'agent-builder' ),
 					'url'   => admin_url( 'admin.php?page=agentic-agent-wizard' ),
-					'hint'  => __( 'Wizard to create a new assistant', 'agent-builder' ),
+					'hint'  => __( 'Wizard to create a new agent', 'agent-builder' ),
 				),
 			),
 			'legacy_note' => __( 'Full deployment editor (shortcode builder, CLI, modals) remains available when you open a deployment action from here.', 'agent-builder' ),

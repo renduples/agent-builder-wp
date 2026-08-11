@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.64
+Stable tag: 3.3.65
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -19,7 +19,7 @@ Orchestrate role-based AI agents and teams with simple job descriptions.
 
 The free plugin ships **8 role-based agents** ready to activate:
 
-* **Assistant Trainer** — trains new AI assistants from plain job descriptions
+* **Assistant Trainer** — trains new AI agents from plain job descriptions
 * **Content Writer** — creates, edits, and publishes posts and pages
 * **Editorial Director** — plans content work and coordinates specialist agents
 * **SEO Optimizer** — audits on-page SEO and proposes concrete improvements
@@ -38,7 +38,7 @@ Additional community agents are listed on the product site (install separately i
 * **Tools hub** — categories, risk filters, Basic ability profiles
 * **Settings** (React): Interface · Agents · Providers · Users · Security (Advanced: APIs / Endpoints)
 * Shortcodes, Gutenberg blocks, WordPress Abilities API support (WP 6.9+)
-* **Knowledge** hub — free local OKF wiki, per-assistant Instructions, optional Memory
+* **Knowledge** hub — free local OKF wiki, per-agent Instructions, optional Memory
 * Hosted Vector Store / RAG is available with the separate **Agent Builder Pro** plugin when you need it
 
 Documentation: [agentic-plugin.com/documentation](https://agentic-plugin.com/documentation/)
@@ -66,7 +66,7 @@ Download the plugin ZIP (from WordPress.org or your distribution package), then 
 2. Open **Agent Builder → Quick Start** (or Settings → Providers) and connect an LLM provider — bring your own API key, use a local Ollama endpoint, or choose Agentic AI if you prefer that service.
 3. Open **Agent Builder → Chat** and select an agent.
 
-Also useful: **Settings** (Interface, Providers, Users, Security), **Knowledge**, and **Agents** (activate or deactivate assistants).
+Also useful: **Settings** (Interface, Providers, Users, Security), **Knowledge**, and **Agents** (activate or deactivate agents).
 
 = Updating =
 
@@ -160,7 +160,7 @@ Use the WordPress.org support forum for this plugin, or the contact options on [
 
 1. Dashboard — overview, connected providers, and quick actions
 2. Chat — talk to any agent with tools and conversation history
-3. Agents — activate and manage the eight bundled assistants
+3. Agents — activate and manage the eight bundled agents
 4. Settings — Interface, Agents, Providers, Users, and Security (React)
 5. Providers — connect OpenAI, Anthropic, xAI, Kimi, Ollama, and more
 6. Tools — categories, risk levels, and ability profiles
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.65 - 2026-08-11 =
+* Change: Standardized on "agent" instead of "assistant" throughout the UI — admin pages, the chat widget, onboarding, tooltips, email notifications, and generated content all now consistently say "agent". Bundled agents that are actually named "Assistant" (WordPress Assistant, Assistant Trainer, User Assistant) keep their real names; only generic wording changed.
 
 = 3.3.64 - 2026-08-10 =
 * Change: "Publish" and "Activity" are now always shown in the Agent Builder admin menu, matching Tools/Skills/Approvals — previously they were hidden from the menu (though still reachable by direct URL) whenever the site-wide default was Basic. Basic/Advanced now only ever affects a page's own content, never whether it appears in navigation.

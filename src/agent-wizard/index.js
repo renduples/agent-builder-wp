@@ -334,7 +334,7 @@ function App() {
 							isDismissible={ false }
 						>
 							{ training.running
-								? format( __( 'Training your assistant on your knowledge… %s', 'agent-builder' ), `${ training.done }/${ training.total }` )
+								? format( __( 'Training your agent on your knowledge… %s', 'agent-builder' ), `${ training.done }/${ training.total }` )
 								: format( __( 'Knowledge training finished — %s sources trained.', 'agent-builder' ), `${ training.ok }/${ training.total }` ) }
 						</Notice>
 					) }
@@ -660,12 +660,12 @@ function App() {
 					<Fragment>
 						{ ! RAG.hasLicense ? (
 							<Notice status="info" isDismissible={ false }>
-								{ __( 'Knowledge (RAG) uses the Agentic AI service. Connect your license to train assistants on your content — you can also add knowledge later from the Knowledge page.', 'agent-builder' ) }
+								{ __( 'Knowledge (RAG) uses the Agentic AI service. Connect your license to train agents on your content — you can also add knowledge later from the Knowledge page.', 'agent-builder' ) }
 							</Notice>
 						) : (
 							<Fragment>
 								<p className="agentic-wizard-hint">
-									{ __( 'Optionally give your assistants knowledge to draw on. Selected pages, posts and files are embedded into your shared Vector Store after the agent is created — training runs in the background.', 'agent-builder' ) }
+									{ __( 'Optionally give your agents knowledge to draw on. Selected pages, posts and files are embedded into your shared Vector Store after the agent is created — training runs in the background.', 'agent-builder' ) }
 								</p>
 								<p className="agentic-wizard-sublabel">{ __( 'Upload files (PDF or text)', 'agent-builder' ) }</p>
 								<input

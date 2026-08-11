@@ -146,24 +146,24 @@ Add / Edit Trigger Form
 ===================================================================== -->
 <div id="agentic-trigger-form-wrap" class="agentic-trigger-form">
 	<h2 class="agentic-section-h2b"><?php esc_html_e( 'Add New Trigger', 'agent-builder' ); ?></h2>
-	<p class="description"><?php esc_html_e( 'When the chosen WordPress event fires, the selected assistant will be invoked asynchronously with the prompt you provide plus the event context.', 'agent-builder' ); ?></p>
+	<p class="description"><?php esc_html_e( 'When the chosen WordPress event fires, the selected agent will be invoked asynchronously with the prompt you provide plus the event context.', 'agent-builder' ); ?></p>
 
 	<input type="hidden" id="agentic-trigger-editing-id" value="">
 
 	<table class="form-table agentic-table-mt-0">
 		<tr>
 			<th scope="row" class="agentic-trigger-form-th">
-				<label for="agentic-trigger-agent"><?php esc_html_e( 'Assistant', 'agent-builder' ); ?></label>
+				<label for="agentic-trigger-agent"><?php esc_html_e( 'Agent', 'agent-builder' ); ?></label>
 			</th>
 			<td class="agentic-trigger-form-td">
 				<select id="agentic-trigger-agent" class="agentic-select-260">
-					<option value=""><?php esc_html_e( '— choose an assistant —', 'agent-builder' ); ?></option>
+					<option value=""><?php esc_html_e( '— choose an agent —', 'agent-builder' ); ?></option>
 					<?php foreach ( $agentic_agent_options as $agentic_slug => $agentic_label ) : ?>
 					<option value="<?php echo esc_attr( $agentic_slug ); ?>"><?php echo esc_html( $agentic_label ); ?></option>
 					<?php endforeach; ?>
 				</select>
 				<?php if ( empty( $agentic_agent_options ) ) : ?>
-					<p class="description agentic-text-danger"><?php esc_html_e( 'No assistants installed. Install an assistant first.', 'agent-builder' ); ?></p>
+					<p class="description agentic-text-danger"><?php esc_html_e( 'No agents installed. Install an agent first.', 'agent-builder' ); ?></p>
 				<?php endif; ?>
 			</td>
 		</tr>
@@ -196,7 +196,7 @@ Add / Edit Trigger Form
 				<label for="agentic-trigger-prompt"><?php esc_html_e( 'Prompt', 'agent-builder' ); ?></label>
 			</th>
 			<td class="agentic-trigger-form-td">
-				<textarea id="agentic-trigger-prompt" rows="3" class="agentic-textarea-full" placeholder="<?php esc_attr_e( 'Describe what the assistant should do when this event fires. Event context is appended automatically.', 'agent-builder' ); ?>"></textarea>
+				<textarea id="agentic-trigger-prompt" rows="3" class="agentic-textarea-full" placeholder="<?php esc_attr_e( 'Describe what the agent should do when this event fires. Event context is appended automatically.', 'agent-builder' ); ?>"></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -230,13 +230,13 @@ Add / Edit Trigger Form
 	===================================================================== -->
 <?php if ( empty( $agentic_all_events ) ) : ?>
 <div class="notice notice-info inline">
-	<p><?php esc_html_e( 'No event listeners active. Add a trigger above or activate assistants that define built-in listeners.', 'agent-builder' ); ?></p>
+	<p><?php esc_html_e( 'No event listeners active. Add a trigger above or activate agents that define built-in listeners.', 'agent-builder' ); ?></p>
 </div>
 <?php else : ?>
 <table class="widefat striped">
 	<thead>
 		<tr>
-			<th><?php esc_html_e( 'Assistant', 'agent-builder' ); ?></th>
+			<th><?php esc_html_e( 'Agent', 'agent-builder' ); ?></th>
 			<th><?php esc_html_e( 'Trigger / Label', 'agent-builder' ); ?></th>
 			<th><?php esc_html_e( 'WordPress Hook', 'agent-builder' ); ?></th>
 			<th class="agentic-col-60"><?php esc_html_e( 'Priority', 'agent-builder' ); ?></th>
@@ -292,7 +292,7 @@ Add / Edit Trigger Form
 
 <div class="agentic-info-note">
 	<strong><?php esc_html_e( 'How it works:', 'agent-builder' ); ?></strong>
-	<?php esc_html_e( 'When a WordPress event fires, the matched assistant is queued as an async AI task — it never blocks the current page load. WordPress hook arguments are serialised into the prompt as context.', 'agent-builder' ); ?>
+	<?php esc_html_e( 'When a WordPress event fires, the matched agent is queued as an async AI task — it never blocks the current page load. WordPress hook arguments are serialised into the prompt as context.', 'agent-builder' ); ?>
 </div>
 
 <!-- =====================================================================
@@ -334,7 +334,7 @@ Add / Edit Trigger Form
 		const hook    = getHook();
 		const agent   = $('#agentic-trigger-agent').val();
 
-		if ( ! agent ) { $status.css('color','#d63638').text(<?php echo wp_json_encode( __( 'Please choose an assistant.', 'agent-builder' ) ); ?>); return; }
+		if ( ! agent ) { $status.css('color','#d63638').text(<?php echo wp_json_encode( __( 'Please choose an agent.', 'agent-builder' ) ); ?>); return; }
 		if ( ! hook )  { $status.css('color','#d63638').text(<?php echo wp_json_encode( __( 'Please choose or enter a hook name.', 'agent-builder' ) ); ?>); return; }
 
 		$btn.prop('disabled', true).text(<?php echo wp_json_encode( __( 'Saving…', 'agent-builder' ) ); ?>);

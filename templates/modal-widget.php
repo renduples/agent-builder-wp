@@ -94,7 +94,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- Agent picker for modal -->
 <div id="agentic-modal-picker" class="agentic-modal-picker agentic-modal-<?php echo esc_attr( $position ); ?>" style="display:none;">
 	<div class="agentic-modal-picker-header">
-		<strong><?php esc_html_e( 'Choose an assistant', 'agent-builder' ); ?></strong>
+		<strong><?php esc_html_e( 'Choose an agent', 'agent-builder' ); ?></strong>
 		<button type="button" class="agentic-modal-picker-close">&times;</button>
 	</div>
 	<?php foreach ( $agents as $agentic_slug => $agentic_agent ) : ?>

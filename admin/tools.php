@@ -370,7 +370,7 @@ data-ability="<?php echo esc_attr( $agentic_ab_orig ); ?>"
 
 	<?php if ( empty( $agentic_all_tools ) ) : ?>
 		<div class="notice notice-info">
-			<p><?php esc_html_e( 'No tools found. Activate assistants to see their available tools.', 'agent-builder' ); ?></p>
+			<p><?php esc_html_e( 'No tools found. Activate agents to see their available tools.', 'agent-builder' ); ?></p>
 		</div>
 	<?php else : ?>
 		<div class="agentic-table-scroll">
@@ -497,10 +497,10 @@ data-ability="<?php echo esc_attr( $agentic_ab_orig ); ?>"
 
 	<div class="agentic-callout-warning-mt20">
 		<h3><?php esc_html_e( 'Tool Permission System', 'agent-builder' ); ?></h3>
-		<p class="agentic-mb-8"><?php esc_html_e( 'Use the toggle switches above to control which tools assistants can access. When a tool is disabled:', 'agent-builder' ); ?></p>
+		<p class="agentic-mb-8"><?php esc_html_e( 'Use the toggle switches above to control which tools agents can access. When a tool is disabled:', 'agent-builder' ); ?></p>
 		<ul class="agentic-mb-10 agentic-list-disc">
-			<li><?php esc_html_e( 'The tool is hidden from the AI model — assistants will not know it exists and cannot request it.', 'agent-builder' ); ?></li>
-			<li><?php esc_html_e( 'Even if an assistant attempts to call a disabled tool directly, execution is blocked and an error is returned.', 'agent-builder' ); ?></li>
+			<li><?php esc_html_e( 'The tool is hidden from the AI model — agents will not know it exists and cannot request it.', 'agent-builder' ); ?></li>
+			<li><?php esc_html_e( 'Even if an agent attempts to call a disabled tool directly, execution is blocked and an error is returned.', 'agent-builder' ); ?></li>
 			<li><?php esc_html_e( 'Disabled tool calls are logged in the Audit Log for security visibility.', 'agent-builder' ); ?></li>
 			<li><?php esc_html_e( 'Changes take effect immediately — no restart or reload required.', 'agent-builder' ); ?></li>
 		</ul>
@@ -513,9 +513,9 @@ data-ability="<?php echo esc_attr( $agentic_ab_orig ); ?>"
 	<div class="agentic-embed-note">
 		<h3><?php esc_html_e( 'About Tools', 'agent-builder' ); ?></h3>
 		<ul>
-			<li><?php esc_html_e( 'Core tools are available to all assistants and provide file operations, WordPress data access, and schedule management.', 'agent-builder' ); ?></li>
-			<li><?php esc_html_e( 'Assistant tools are defined by individual assistants for their specific functionality (e.g., security scans, content analysis).', 'agent-builder' ); ?></li>
-			<li><?php esc_html_e( 'When chatting with an assistant, the LLM decides which tools to call based on the conversation context.', 'agent-builder' ); ?></li>
+			<li><?php esc_html_e( 'Core tools are available to all agents and provide file operations, WordPress data access, and schedule management.', 'agent-builder' ); ?></li>
+			<li><?php esc_html_e( 'Agent tools are defined by individual agents for their specific functionality (e.g., security scans, content analysis).', 'agent-builder' ); ?></li>
+			<li><?php esc_html_e( 'When chatting with an agent, the LLM decides which tools to call based on the conversation context.', 'agent-builder' ); ?></li>
 			<li><?php esc_html_e( 'All tool executions are logged in the Audit Log for transparency and debugging.', 'agent-builder' ); ?></li>
 			<?php if ( $agentic_abilities_api ) : ?>
 				<li><?php esc_html_e( 'On WordPress 6.9+, every enabled tool is also published as a WordPress ability (shown as agent-builder/… under each tool name) — discoverable by core AI, MCP clients, and the Command Palette. Disable a tool to unpublish its ability. Abilities from other plugins appear under the "Inbound Abilities" category.', 'agent-builder' ); ?></li>

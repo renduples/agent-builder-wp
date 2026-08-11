@@ -241,24 +241,24 @@ $agentic_ajax_url    = admin_url( 'admin-ajax.php' );
 	===================================================================== -->
 <div id="agentic-sched-form-wrap" class="agentic-trigger-form">
 	<h2 class="agentic-section-h2b"><?php esc_html_e( 'Add Scheduled Task', 'agent-builder' ); ?></h2>
-	<p class="description"><?php esc_html_e( 'Run any active assistant on a WP-Cron schedule with an AI prompt. Built-in tasks from assistants also appear in the table below.', 'agent-builder' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Run any active agent on a WP-Cron schedule with an AI prompt. Built-in tasks from agents also appear in the table below.', 'agent-builder' ); ?></p>
 
 	<input type="hidden" id="agentic-sched-editing-id" value="">
 
 	<table class="form-table agentic-table-mt-0">
 		<tr>
 			<th scope="row" class="agentic-trigger-form-th">
-				<label for="agentic-sched-agent"><?php esc_html_e( 'Assistant', 'agent-builder' ); ?></label>
+				<label for="agentic-sched-agent"><?php esc_html_e( 'Agent', 'agent-builder' ); ?></label>
 			</th>
 			<td class="agentic-trigger-form-td">
 				<select id="agentic-sched-agent" class="agentic-select-260">
-					<option value=""><?php esc_html_e( '— choose an assistant —', 'agent-builder' ); ?></option>
+					<option value=""><?php esc_html_e( '— choose an agent —', 'agent-builder' ); ?></option>
 					<?php foreach ( $agentic_agent_options as $agentic_slug => $agentic_label ) : ?>
 					<option value="<?php echo esc_attr( $agentic_slug ); ?>"><?php echo esc_html( $agentic_label ); ?></option>
 					<?php endforeach; ?>
 				</select>
 				<?php if ( empty( $agentic_agent_options ) ) : ?>
-					<p class="description agentic-text-danger"><?php esc_html_e( 'No assistants active. Activate an assistant first.', 'agent-builder' ); ?></p>
+					<p class="description agentic-text-danger"><?php esc_html_e( 'No agents active. Activate an agent first.', 'agent-builder' ); ?></p>
 				<?php endif; ?>
 			</td>
 		</tr>
@@ -279,7 +279,7 @@ $agentic_ajax_url    = admin_url( 'admin-ajax.php' );
 				<label for="agentic-sched-prompt"><?php esc_html_e( 'Prompt', 'agent-builder' ); ?></label>
 			</th>
 			<td class="agentic-trigger-form-td">
-				<textarea id="agentic-sched-prompt" rows="3" class="agentic-textarea-full" placeholder="<?php esc_attr_e( 'Describe what the assistant should do on each run…', 'agent-builder' ); ?>"></textarea>
+				<textarea id="agentic-sched-prompt" rows="3" class="agentic-textarea-full" placeholder="<?php esc_attr_e( 'Describe what the agent should do on each run…', 'agent-builder' ); ?>"></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -314,7 +314,7 @@ $agentic_ajax_url    = admin_url( 'admin-ajax.php' );
 	===================================================================== -->
 <?php if ( empty( $agentic_all_tasks ) ) : ?>
 	<div class="notice notice-info inline">
-		<p><?php esc_html_e( 'No scheduled tasks yet. Add one above, or activate assistants that define built-in scheduled tasks (for example Site Auditor or AI Radar).', 'agent-builder' ); ?></p>
+		<p><?php esc_html_e( 'No scheduled tasks yet. Add one above, or activate agents that define built-in scheduled tasks (for example Site Auditor or AI Radar).', 'agent-builder' ); ?></p>
 	</div>
 <?php else : ?>
 	<table class="widefat striped">
@@ -461,7 +461,7 @@ $agentic_ajax_url    = admin_url( 'admin-ajax.php' );
 			<li><?php esc_html_e( 'Tasks use WordPress cron (WP-Cron), which runs when someone visits your site.', 'agent-builder' ); ?></li>
 			<li><?php esc_html_e( 'For reliable scheduling on low-traffic sites, set up a real cron job to hit wp-cron.php.', 'agent-builder' ); ?></li>
 			<li><?php esc_html_e( 'Custom tasks you add here are scheduled immediately and run through the LLM with full tool access.', 'agent-builder' ); ?></li>
-			<li><?php esc_html_e( 'Built-in tasks ship with some assistants; use Schedule to put them on the cron queue, or Unschedule to pause them without deleting the definition.', 'agent-builder' ); ?></li>
+			<li><?php esc_html_e( 'Built-in tasks ship with some agents; use Schedule to put them on the cron queue, or Unschedule to pause them without deleting the definition.', 'agent-builder' ); ?></li>
 			<li><?php esc_html_e( 'Every execution is logged in the Audit Log with timing, mode, and outcome details.', 'agent-builder' ); ?></li>
 		</ul>
 	</div>
@@ -494,7 +494,7 @@ $agentic_ajax_url    = admin_url( 'admin-ajax.php' );
 		const prompt  = $('#agentic-sched-prompt').val().trim();
 
 		if ( ! agent ) {
-			$status.css('color','#d63638').text(<?php echo wp_json_encode( __( 'Please choose an assistant.', 'agent-builder' ) ); ?>);
+			$status.css('color','#d63638').text(<?php echo wp_json_encode( __( 'Please choose an agent.', 'agent-builder' ) ); ?>);
 			return;
 		}
 		if ( ! prompt ) {

@@ -334,21 +334,21 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 					<th scope="row"><label for="agentic_sk_description"><?php esc_html_e( 'Description', 'agent-builder' ); ?></label></th>
 					<td>
 						<input type="text" id="agentic_sk_description" name="agentic_sk_description" value="<?php echo esc_attr( $agentic_sk_desc ); ?>" class="large-text" />
-						<p class="description"><?php esc_html_e( 'Brief summary of what this skill teaches the assistant to do.', 'agent-builder' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Brief summary of what this skill teaches the agent to do.', 'agent-builder' ); ?></p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="agentic_sk_content"><?php esc_html_e( 'SKILL.md Content', 'agent-builder' ); ?></label></th>
 					<td>
 						<textarea id="agentic_sk_content" name="agentic_sk_content" rows="16" class="large-text code agentic-textarea-mono"><?php echo esc_textarea( $agentic_sk_content ); ?></textarea>
-						<p class="description"><?php esc_html_e( 'Markdown instructions that get injected into the assistant\'s system prompt. Teaches the assistant when and how to use specific tools.', 'agent-builder' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Markdown instructions that get injected into the agent\'s system prompt. Teaches the agent when and how to use specific tools.', 'agent-builder' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="agentic_sk_agent"><?php esc_html_e( 'Assign to Assistant', 'agent-builder' ); ?></label></th>
+					<th scope="row"><label for="agentic_sk_agent"><?php esc_html_e( 'Assign to Agent', 'agent-builder' ); ?></label></th>
 					<td>
 						<select id="agentic_sk_agent" name="agentic_sk_agent">
-							<option value=""><?php esc_html_e( 'All Assistants', 'agent-builder' ); ?></option>
+							<option value=""><?php esc_html_e( 'All Agents', 'agent-builder' ); ?></option>
 							<?php foreach ( $agentic_sk_agents as $agentic_sk_slug ) : ?>
 								<?php
 								$agentic_sk_inst  = $agentic_sk_instances[ $agentic_sk_slug ] ?? null;
@@ -359,7 +359,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<p class="description"><?php esc_html_e( 'Leave as "All Assistants" to make this skill available globally, or assign it to a specific assistant.', 'agent-builder' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Leave as "All Agents" to make this skill available globally, or assign it to a specific agent.', 'agent-builder' ); ?></p>
 					</td>
 				</tr>
 				<?php if ( $agentic_sk_is_advanced ) : ?>
@@ -384,7 +384,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 					<td>
 						<label>
 							<input type="checkbox" name="agentic_sk_enabled" value="1" <?php checked( $agentic_sk_enabled ); ?> />
-							<?php esc_html_e( 'Active — inject this skill into assistant system prompts', 'agent-builder' ); ?>
+							<?php esc_html_e( 'Active — inject this skill into agent system prompts', 'agent-builder' ); ?>
 						</label>
 					</td>
 				</tr>
@@ -392,14 +392,14 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 
 			<?php if ( $agentic_sk_is_advanced ) : ?>
 			<details class="agentic-skill-preview">
-				<summary><?php esc_html_e( 'Preview what this skill sends to the assistant', 'agent-builder' ); ?></summary>
+				<summary><?php esc_html_e( 'Preview what this skill sends to the agent', 'agent-builder' ); ?></summary>
 				<div class="agentic-mb-12-text-dim">
 					<p>
 						<?php esc_html_e( 'Always in context (progressive-disclosure "metadata" tier — every enabled skill\'s index line):', 'agent-builder' ); ?>
 					</p>
 					<code class="agentic-code-block-sm"><?php echo esc_html( $agentic_sk_preview_line ); ?></code>
 					<p class="agentic-mt-12">
-						<?php esc_html_e( 'Loaded only when the assistant calls load_skill for this skill (the full body below):', 'agent-builder' ); ?>
+						<?php esc_html_e( 'Loaded only when the agent calls load_skill for this skill (the full body below):', 'agent-builder' ); ?>
 						<?php
 						printf(
 							/* translators: 1: line count, 2: estimated token count */
@@ -751,7 +751,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills&skill_view=new' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Create Skill', 'agent-builder' ); ?></a>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-skills&skill_view=hub' ) ); ?>" class="button"><?php esc_html_e( 'Browse Community', 'agent-builder' ); ?></a>
 		</h2>
-		<p><?php esc_html_e( 'Skills contain SKILL.md instructions that teach assistants when and how to use specific tools. They are injected into the system prompt at runtime.', 'agent-builder' ); ?></p>
+		<p><?php esc_html_e( 'Skills contain SKILL.md instructions that teach agents when and how to use specific tools. They are injected into the system prompt at runtime.', 'agent-builder' ); ?></p>
 
 		<!-- Recommended Skills from agentic-plugin.com -->
 		<div id="agentic-recommended-skills" class="agentic-recommended-grid">
@@ -879,7 +879,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						<th class="agentic-col-60"><?php esc_html_e( 'Status', 'agent-builder' ); ?></th>
 						<th class="agentic-col-200"><?php esc_html_e( 'Name', 'agent-builder' ); ?></th>
 						<th><?php esc_html_e( 'Description', 'agent-builder' ); ?></th>
-						<th class="agentic-col-140"><?php esc_html_e( 'Assistant', 'agent-builder' ); ?></th>
+						<th class="agentic-col-140"><?php esc_html_e( 'Agent', 'agent-builder' ); ?></th>
 						<?php if ( $agentic_sk_is_advanced ) : ?>
 						<th class="agentic-col-80"><?php esc_html_e( 'Source', 'agent-builder' ); ?></th>
 						<th class="agentic-col-80"><?php esc_html_e( 'Version', 'agent-builder' ); ?></th>
@@ -953,10 +953,10 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 		<div class="agentic-about-skills-box">
 			<h3 class="agentic-about-skills-h3"><?php esc_html_e( 'About Skills', 'agent-builder' ); ?></h3>
 			<ul class="agentic-list-disc-pl20">
-				<li><?php esc_html_e( 'Skills contain SKILL.md instructions — markdown that gets injected into the assistant\'s system prompt.', 'agent-builder' ); ?></li>
-				<li><?php esc_html_e( 'They teach assistants when and how to use channel-specific tools (e.g., "when a user asks to speak to a human, use the Slack handoff tool").', 'agent-builder' ); ?></li>
-				<li><?php esc_html_e( 'Skills never contain API keys or direct HTTP calls — they operate above channels in the stack: assistant → skill → channel → tool.', 'agent-builder' ); ?></li>
-				<li><?php esc_html_e( 'Assign a skill to a specific assistant, or leave it as "All" to make it available globally.', 'agent-builder' ); ?></li>
+				<li><?php esc_html_e( 'Skills contain SKILL.md instructions — markdown that gets injected into the agent\'s system prompt.', 'agent-builder' ); ?></li>
+				<li><?php esc_html_e( 'They teach agents when and how to use channel-specific tools (e.g., "when a user asks to speak to a human, use the Slack handoff tool").', 'agent-builder' ); ?></li>
+				<li><?php esc_html_e( 'Skills never contain API keys or direct HTTP calls — they operate above channels in the stack: agent → skill → channel → tool.', 'agent-builder' ); ?></li>
+				<li><?php esc_html_e( 'Assign a skill to a specific agent, or leave it as "All" to make it available globally.', 'agent-builder' ); ?></li>
 				<li><?php esc_html_e( 'Import curated skills from the Recommended section, browse community skills, or create your own.', 'agent-builder' ); ?></li>
 			</ul>
 		</div>

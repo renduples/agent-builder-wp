@@ -35,7 +35,7 @@ function agentic_chat_i18n(): array {
 		'showDiff'            => __( '\u25b6 Show Diff', 'agent-builder' ),
 		'hideDiff'            => __( '\u25bc Hide Diff', 'agent-builder' ),
 		'proposalDefault'     => __( 'Agent wants to make a change.', 'agent-builder' ),
-		'approvalDefault'     => __( 'An assistant wants to perform a high-risk action.', 'agent-builder' ),
+		'approvalDefault'     => __( 'An agent wants to perform a high-risk action.', 'agent-builder' ),
 		'ttsOff'              => __( 'Read aloud: off \u2014 click to enable', 'agent-builder' ),
 		'ttsOn'               => __( 'Read aloud: on \u2014 click to disable', 'agent-builder' ),
 		'voiceHttpsRequired'  => __( 'Voice input requires Chrome, Edge, or Safari with HTTPS', 'agent-builder' ),

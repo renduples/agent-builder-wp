@@ -68,7 +68,7 @@ $agentic_ui_whitelabel = get_option( 'agentic_chat_whitelabel', '0' );
 				<input type="checkbox" name="agentic_chat_vision" value="1" <?php checked( $agentic_ui_vision, '1' ); ?> />
 				Enable image uploads (paperclip button)
 			</label>
-			<p class="description">Allow users to attach images for the assistant to analyze.</p>
+			<p class="description">Allow users to attach images for the agent to analyze.</p>
 		</td>
 	</tr>
 	<?php if ( \Agentic\License_Client::get_instance()->is_pro() ) : ?>

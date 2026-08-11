@@ -51,7 +51,7 @@ $agentic_f_placeholder = $agentic_form_data['placeholder'] ?? '';
 					</option>
 				<?php endforeach; ?>
 			</select>
-			<p class="description"><?php esc_html_e( 'The assistant visitors will chat with.', 'agent-builder' ); ?></p>
+			<p class="description"><?php esc_html_e( 'The agent visitors will chat with.', 'agent-builder' ); ?></p>
 		</td>
 	</tr>
 	<tr>
@@ -81,7 +81,7 @@ $agentic_f_placeholder = $agentic_form_data['placeholder'] ?? '';
 		<td>
 			<label>
 				<input type="checkbox" id="agentic_sc_show_header" name="agentic_sc_show_header" value="1" <?php checked( $agentic_f_show_header ); ?>>
-				<?php esc_html_e( 'Show assistant name and icon header', 'agent-builder' ); ?>
+				<?php esc_html_e( 'Show agent name and icon header', 'agent-builder' ); ?>
 			</label>
 			<p class="description"><?php esc_html_e( 'Display the agent name and avatar above the chat area.', 'agent-builder' ); ?></p>
 		</td>

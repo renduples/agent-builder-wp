@@ -432,7 +432,7 @@ class Chat_Security {
 			self::log_rate_limited( $user_id );
 			return array(
 				'pass'   => false,
-				'reason' => 'Our AI assistant is currently at capacity. Please try again later or log in for priority access.',
+				'reason' => 'Our AI agent is currently at capacity. Please try again later or log in for priority access.',
 				'code'   => 'daily_limit_global',
 			);
 		}

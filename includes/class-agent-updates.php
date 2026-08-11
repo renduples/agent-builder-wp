@@ -232,7 +232,7 @@ class Agent_Updates {
 		// Builder Pro feature. The free plugin never downloads and installs
 		// executable agent code (WordPress.org Guideline 8).
 		if ( ! class_exists( '\Agentic\License_Client' ) || ! \Agentic\License_Client::get_instance()->is_pro() ) {
-			return new \WP_Error( 'pro_required', __( 'Updating installed assistant packages requires Agent Builder Pro.', 'agent-builder' ) );
+			return new \WP_Error( 'pro_required', __( 'Updating installed agent packages requires Agent Builder Pro.', 'agent-builder' ) );
 		}
 
 		// SSRF guard — only allow downloads from our host.
@@ -637,9 +637,9 @@ class Agent_Updates {
 			return new \WP_Error( 'forbidden', __( 'Insufficient permissions.', 'agent-builder' ) );
 		}
 
-		// Installing purchased assistants is an Agent Builder Pro feature.
+		// Installing purchased agents is an Agent Builder Pro feature.
 		if ( ! class_exists( '\Agentic\License_Client' ) || ! \Agentic\License_Client::get_instance()->is_pro() ) {
-			return new \WP_Error( 'pro_required', __( 'Installing purchased assistants requires Agent Builder Pro.', 'agent-builder' ) );
+			return new \WP_Error( 'pro_required', __( 'Installing purchased agents requires Agent Builder Pro.', 'agent-builder' ) );
 		}
 
 		// SSRF guard — only our host may serve manifests.

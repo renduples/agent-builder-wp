@@ -88,12 +88,12 @@ class Gutenberg_Blocks {
 					'title'           => $agent->get_name(),
 					'description'     => sprintf(
 						/* translators: %s: agent name */
-						__( 'Embed the %s AI assistant as an interactive chat.', 'agent-builder' ),
+						__( 'Embed the %s AI agent as an interactive chat.', 'agent-builder' ),
 						$agent->get_name()
 					),
 					'category'        => 'agentic-ai',
 					'icon'            => 'format-chat',
-					'keywords'        => array( 'chat', 'ai', 'gpt', 'bot', 'assistant', strtolower( $agent->get_name() ) ),
+					'keywords'        => array( 'chat', 'ai', 'gpt', 'bot', 'agent', 'assistant', strtolower( $agent->get_name() ) ),
 					'supports'        => array(
 						'html'     => false,
 						'align'    => array( 'wide', 'full' ),
@@ -242,7 +242,7 @@ class Gutenberg_Blocks {
 				'icon'        => $agent->get_icon(),
 				'description' => sprintf(
 					/* translators: %s: agent name */
-					__( 'Embed the %s AI assistant as an interactive chat.', 'agent-builder' ),
+					__( 'Embed the %s AI agent as an interactive chat.', 'agent-builder' ),
 					$agent->get_name()
 				),
 			);

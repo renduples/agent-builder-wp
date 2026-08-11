@@ -902,26 +902,26 @@ class Admin_Menu_Handler {
 		}
 
 		// Short policy blurb — contextual by page/tab.
-		$policy = __( 'Settings control how assistants behave on this site. Changes are stored locally and take effect for new conversations.', 'agent-builder' );
+		$policy = __( 'Settings control how agents behave on this site. Changes are stored locally and take effect for new conversations.', 'agent-builder' );
 		if ( 'agent-builder' === $page ) {
 			$policy = __( 'The dashboard summarizes agents, approvals, activity, and providers at a glance. Open any card\'s own page for full control.', 'agent-builder' );
 		} elseif ( 'agentic-tools' === $page ) {
-			$policy = __( 'Assistants only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings.', 'agent-builder' );
+			$policy = __( 'Agents only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings.', 'agent-builder' );
 		} elseif ( str_starts_with( $page, 'agentic-train' ) ) {
 			$policy = __( 'Knowledge stays on your site for the free wiki; hosted vector features follow your license and provider terms.', 'agent-builder' );
 			if ( 'instructions' === $tab ) {
-				$policy = __( 'Per-assistant instructions shape tone and greetings. Site-wide knowledge belongs in the Knowledge Wiki.', 'agent-builder' );
+				$policy = __( 'Per-agent instructions shape tone and greetings. Site-wide knowledge belongs in the Knowledge Wiki.', 'agent-builder' );
 			} elseif ( 'memory' === $tab ) {
-				$policy = __( 'Local memory is optional and site-owned. Turn it off if you prefer assistants not to retain short notes across chats.', 'agent-builder' );
+				$policy = __( 'Local memory is optional and site-owned. Turn it off if you prefer agents not to retain short notes across chats.', 'agent-builder' );
 			}
 		} elseif ( 'agentic-approvals' === $page ) {
 			$policy = __( 'Approvals keep high-risk tool calls under human control before they change your site.', 'agent-builder' );
 		} elseif ( 'agentic-audit-log' === $page || 'agentic-logs' === $page ) {
-			$policy = __( 'Activity helps you understand what assistants did. Logs are local; retention follows your Security settings.', 'agent-builder' );
+			$policy = __( 'Activity helps you understand what agents did. Logs are local; retention follows your Security settings.', 'agent-builder' );
 		} elseif ( 'agentic-settings' === $page ) {
 			$policy = match ( $tab ) {
-				'interface' => __( 'Interface settings change how chat looks and how assistants address people. Theme applies to admin and frontend chat.', 'agent-builder' ),
-				'agents'    => __( 'Agent chat features apply site-wide. Per-assistant provider/model overrides only when needed. Emergency stop deactivates all agents.', 'agent-builder' ),
+				'interface' => __( 'Interface settings change how chat looks and how agents address people. Theme applies to admin and frontend chat.', 'agent-builder' ),
+				'agents'    => __( 'Agent chat features apply site-wide. Per-agent provider/model overrides only when needed. Emergency stop deactivates all agents.', 'agent-builder' ),
 				'providers' => __( 'API keys stay on your site. Only connected providers can be set as the site default.', 'agent-builder' ),
 				'users'     => __( 'Role privileges control who can administer the plugin and chat with agents. Administrators always retain full access.', 'agent-builder' ),
 				'security'  => __( 'Security settings include consent, retention, scanning, and request rate limits. Review Approvals for high-risk actions.', 'agent-builder' ),

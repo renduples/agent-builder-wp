@@ -361,7 +361,7 @@ $agentic_source_labels = array(
 </h2>
 
 	<?php if ( empty( $agentic_all_agents ) ) : ?>
-<div class="notice notice-warning"><p><?php esc_html_e( 'No active assistants.', 'agent-builder' ); ?></p></div>
+<div class="notice notice-warning"><p><?php esc_html_e( 'No active agents.', 'agent-builder' ); ?></p></div>
 	<?php else : ?>
 <form method="post">
 		<?php wp_nonce_field( 'agentic_manage_shortcodes' ); ?>
@@ -379,7 +379,7 @@ $agentic_source_labels = array(
 
 	<?php if ( empty( $agentic_all_agents ) ) : ?>
 <div class="notice notice-warning">
-	<p><?php esc_html_e( 'No active assistants. Activate at least one assistant before creating a shortcode deployment.', 'agent-builder' ); ?></p>
+	<p><?php esc_html_e( 'No active agents. Activate at least one agent before creating a shortcode deployment.', 'agent-builder' ); ?></p>
 </div>
 	<?php else : ?>
 <form method="post">
@@ -404,7 +404,7 @@ $agentic_source_labels = array(
 <div class="agentic-embed-note">
 	<h3><?php esc_html_e( 'How Shortcodes Work', 'agent-builder' ); ?></h3>
 	<ul>
-		<li><?php esc_html_e( 'Paste the shortcode into any page, post, or text widget to embed an assistant chat interface.', 'agent-builder' ); ?></li>
+		<li><?php esc_html_e( 'Paste the shortcode into any page, post, or text widget to embed an agent chat interface.', 'agent-builder' ); ?></li>
 		<li>
 			<?php esc_html_e( 'Two shortcodes are available:', 'agent-builder' ); ?>
 			<ul class="agentic-list-circle">
@@ -413,7 +413,7 @@ $agentic_source_labels = array(
 			</ul>
 		</li>
 		<li><?php esc_html_e( 'Shortcodes placed directly in theme or plugin files are auto-detected on first page load and shown here with source "Auto-detected" or "Hardcoded".', 'agent-builder' ); ?></li>
-		<li><?php esc_html_e( 'All assistant interactions via shortcodes are logged in the Audit Log.', 'agent-builder' ); ?></li>
+		<li><?php esc_html_e( 'All agent interactions via shortcodes are logged in the Audit Log.', 'agent-builder' ); ?></li>
 	</ul>
 </div>
 

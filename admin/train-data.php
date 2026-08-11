@@ -39,9 +39,9 @@ $agentic_td_tabs = array(
 // One-line "why does this exist" tooltip per tab — these four are the ones
 // new users most often confuse with each other.
 $agentic_td_tab_titles = array(
-	'wiki'         => __( 'Facts, policies, and FAQs every assistant can look up — the site\'s shared source of truth.', 'agent-builder' ),
-	'instructions' => __( 'How one specific assistant talks: its tone, greeting, and persona. Not shared facts — that\'s the Wiki.', 'agent-builder' ),
-	'memory'       => __( 'Short notes an assistant keeps between chats, e.g. things a user told it. Optional and site-owned.', 'agent-builder' ),
+	'wiki'         => __( 'Facts, policies, and FAQs every agent can look up — the site\'s shared source of truth.', 'agent-builder' ),
+	'instructions' => __( 'How one specific agent talks: its tone, greeting, and persona. Not shared facts — that\'s the Wiki.', 'agent-builder' ),
+	'memory'       => __( 'Short notes an agent keeps between chats, e.g. things a user told it. Optional and site-owned.', 'agent-builder' ),
 	'vector'       => __( 'Hosted semantic search over large documents (PDFs, long pages) for faster, more precise recall.', 'agent-builder' ),
 );
 
@@ -283,7 +283,7 @@ if ( class_exists( '\Agentic_Agent_Registry' ) ) {
 						<label class="agentic-kn-example-label">
 							<input type="checkbox" id="agentic-okf-always-on" value="1" />
 							<strong><?php esc_html_e( 'Always include in prompts', 'agent-builder' ); ?></strong>
-							<?php esc_html_e( '— inject this concept into every assistant’s system prompt (best for site overview, tone, standing policies). Keep short.', 'agent-builder' ); ?>
+							<?php esc_html_e( '— inject this concept into every agent’s system prompt (best for site overview, tone, standing policies). Keep short.', 'agent-builder' ); ?>
 						</label>
 					</div>
 					<div class="agentic-kn-field agentic-kn-field-full">
@@ -315,7 +315,7 @@ if ( class_exists( '\Agentic_Agent_Registry' ) ) {
 				<div class="agentic-kn-empty-card">
 					<span class="dashicons dashicons-book-alt"></span>
 					<h2><?php esc_html_e( 'Your knowledge wiki', 'agent-builder' ); ?></h2>
-					<p><?php esc_html_e( 'Add facts, policies, and FAQs your assistants can use.', 'agent-builder' ); ?></p>
+					<p><?php esc_html_e( 'Add facts, policies, and FAQs your agents can use.', 'agent-builder' ); ?></p>
 					<button type="button" class="button button-primary" id="agentic-okf-new-2"><?php esc_html_e( 'Add knowledge', 'agent-builder' ); ?></button>
 				</div>
 			</section>
@@ -339,7 +339,7 @@ if ( class_exists( '\Agentic_Agent_Registry' ) ) {
 				<div class="agentic-kn-pro-card">
 					<p class="agentic-kn-eyebrow agentic-kn-eyebrow-pro"><?php esc_html_e( 'Agent Builder Pro', 'agent-builder' ); ?></p>
 					<h2><?php esc_html_e( 'Vector Store &amp; RAG', 'agent-builder' ); ?></h2>
-					<p><?php esc_html_e( 'Train assistants on large document sets and whole-site content with hosted embeddings. Semantic search retrieves the right passages at chat time — ideal for PDFs, long manuals, and fuzzy customer questions.', 'agent-builder' ); ?></p>
+					<p><?php esc_html_e( 'Train agents on large document sets and whole-site content with hosted embeddings. Semantic search retrieves the right passages at chat time — ideal for PDFs, long manuals, and fuzzy customer questions.', 'agent-builder' ); ?></p>
 					<ul class="agentic-kn-pro-list">
 						<li><?php esc_html_e( 'Scan posts & pages into a private vector namespace', 'agent-builder' ); ?></li>
 						<li><?php esc_html_e( 'Upload PDF / TXT / MD with automatic chunking', 'agent-builder' ); ?></li>

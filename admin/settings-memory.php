@@ -188,7 +188,7 @@ $agentic_ttl_days    = (int) get_option( 'agentic_memory_ttl_days', 0 );
 <?php if ( empty( $agentic_rows ) ) : ?>
 	<div class="agentic-memory-empty">
 		<p class="agentic-text-sm agentic-mt-0"><?php esc_html_e( 'No memory entries found.', 'agent-builder' ); ?></p>
-		<p class="agentic-mt-8"><?php esc_html_e( 'Agent memories will appear here as your assistants accumulate context across conversations.', 'agent-builder' ); ?></p>
+		<p class="agentic-mt-8"><?php esc_html_e( 'Agent memories will appear here as your agents accumulate context across conversations.', 'agent-builder' ); ?></p>
 	</div>
 <?php else : ?>
 	<table class="widefat striped agentic-table-1200">

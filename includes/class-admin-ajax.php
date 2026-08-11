@@ -457,7 +457,7 @@ class Admin_Ajax {
 		$schedule    = sanitize_key( wp_unslash( $_POST['schedule'] ?? 'daily' ) );
 
 		if ( empty( $agent_slug ) ) {
-			wp_send_json_error( __( 'Assistant is required.', 'agent-builder' ) );
+			wp_send_json_error( __( 'Agent is required.', 'agent-builder' ) );
 		}
 
 		if ( '' === trim( $prompt ) ) {
@@ -467,7 +467,7 @@ class Admin_Ajax {
 		$registry = \Agentic_Agent_Registry::get_instance();
 		$agent    = $registry->get_agent_instance( $agent_slug );
 		if ( ! $agent ) {
-			wp_send_json_error( __( 'Assistant not found or not active.', 'agent-builder' ) );
+			wp_send_json_error( __( 'Agent not found or not active.', 'agent-builder' ) );
 		}
 
 		if ( ! in_array( $schedule, Agent_Lifecycle::ALLOWED_USER_SCHEDULES, true ) ) {
@@ -1469,12 +1469,12 @@ class Admin_Ajax {
 		$task_id  = sanitize_text_field( wp_unslash( $_POST['task'] ?? '' ) );
 
 		if ( empty( $agent_id ) || empty( $task_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Missing assistant or task parameter.', 'agent-builder' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Missing agent or task parameter.', 'agent-builder' ) ) );
 		}
 
 		$resolved = Agent_Lifecycle::resolve_task( $agent_id, $task_id );
 		if ( ! $resolved ) {
-			wp_send_json_error( array( 'message' => __( 'Task not found on this assistant.', 'agent-builder' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Task not found on this agent.', 'agent-builder' ) ) );
 		}
 
 		$instance = $resolved['agent'];

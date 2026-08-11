@@ -345,7 +345,7 @@ class Admin_Surfaces {
 			return '';
 		}
 		$label = isset( $args['label'] ) ? (string) $args['label'] : __( 'Ask AI', 'agent-builder' );
-		$title = isset( $args['title'] ) ? (string) $args['title'] : __( 'Open the AI assistant. Data is sent only when you press Send.', 'agent-builder' );
+		$title = isset( $args['title'] ) ? (string) $args['title'] : __( 'Open the AI agent. Data is sent only when you press Send.', 'agent-builder' );
 
 		// Compact sparkle mark (SVG) — scales cleanly; no emoji font fallback issues.
 		$icon = '<span class="agentic-context-launcher__icon" aria-hidden="true">'
@@ -404,7 +404,7 @@ class Admin_Surfaces {
 						'slug'   => $slug,
 						'prompt' => $prompt,
 						'label'  => __( 'Ask AI about plugins', 'agent-builder' ),
-						'title'  => __( 'Review installed plugins with the AI assistant. Data is sent only when you press Send.', 'agent-builder' ),
+						'title'  => __( 'Review installed plugins with the AI agent. Data is sent only when you press Send.', 'agent-builder' ),
 					)
 				);
 				if ( '' !== $link ) {
@@ -422,7 +422,7 @@ class Admin_Surfaces {
 					'slug'   => 'plugin-assistant',
 					'prompt' => __( 'I want to build a custom plugin. Help me scaffold it: ask me what it should do, then generate the plugin structure and code for me to review.', 'agent-builder' ),
 					'label'  => __( 'Create a plugin with AI', 'agent-builder' ),
-					'title'  => __( 'Scaffold a custom plugin with the AI assistant. Data is sent only when you press Send.', 'agent-builder' ),
+					'title'  => __( 'Scaffold a custom plugin with the AI agent. Data is sent only when you press Send.', 'agent-builder' ),
 				)
 			);
 			if ( '' !== $create ) {
@@ -471,12 +471,12 @@ class Admin_Surfaces {
 				'slug'   => $slug,
 				'prompt' => $prompt,
 				'label'  => __( 'Generate alt text with AI', 'agent-builder' ),
-				'title'  => __( 'Draft alt text with the AI assistant. Data is sent only when you press Send.', 'agent-builder' ),
+				'title'  => __( 'Draft alt text with the AI agent. Data is sent only when you press Send.', 'agent-builder' ),
 			)
 		);
 		if ( '' !== $link ) {
 			$fields['agentic_alt_ai'] = array(
-				'label' => __( 'AI assistant', 'agent-builder' ),
+				'label' => __( 'AI agent', 'agent-builder' ),
 				'input' => 'html',
 				'html'  => $link,
 			);

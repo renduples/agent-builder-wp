@@ -209,7 +209,7 @@ unset( $agentic_all_post_types['attachment'] );
 
 	<h2><?php esc_html_e( 'Sidebar Agent', 'agent-builder' ); ?></h2>
 	<p>
-		<?php esc_html_e( 'Add an AI assistant panel inside the block editor. When enabled, a sidebar panel appears while your team edits posts or pages — with full awareness of the current draft (title, content, post type, and status).', 'agent-builder' ); ?>
+		<?php esc_html_e( 'Add an AI agent panel inside the block editor. When enabled, a sidebar panel appears while your team edits posts or pages — with full awareness of the current draft (title, content, post type, and status).', 'agent-builder' ); ?>
 	</p>
 
 	<form method="post" action="">
@@ -223,13 +223,13 @@ unset( $agentic_all_post_types['attachment'] );
 					<label>
 						<input type="checkbox" name="agentic_sidebar_enabled" value="1"
 							<?php checked( '1', $agentic_sidebar_settings['enabled'] ); ?>>
-						<?php esc_html_e( 'Show an AI assistant panel in the Gutenberg block editor', 'agent-builder' ); ?>
+						<?php esc_html_e( 'Show an AI agent panel in the Gutenberg block editor', 'agent-builder' ); ?>
 					</label>
 				</td>
 			</tr>
 
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Assistants', 'agent-builder' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Agents', 'agent-builder' ); ?></th>
 				<td>
 					<?php if ( empty( $agentic_all_agents ) ) : ?>
 						<p class="description agentic-status-error">
@@ -317,10 +317,10 @@ unset( $agentic_all_post_types['attachment'] );
 					<label>
 						<input type="checkbox" name="agentic_sidebar_inject_context" value="1"
 							<?php checked( '1', $agentic_sidebar_settings['inject_context'] ); ?>>
-						<?php esc_html_e( 'Automatically share the current draft title and content with the assistant on the first message', 'agent-builder' ); ?>
+						<?php esc_html_e( 'Automatically share the current draft title and content with the agent on the first message', 'agent-builder' ); ?>
 					</label>
 					<p class="description">
-						<?php esc_html_e( 'The assistant will be aware of what you are writing. Content is sent only when you open the chat — nothing is shared automatically.', 'agent-builder' ); ?>
+						<?php esc_html_e( 'The agent will be aware of what you are writing. Content is sent only when you open the chat — nothing is shared automatically.', 'agent-builder' ); ?>
 					</p>
 				</td>
 			</tr>

@@ -476,7 +476,7 @@ wp_enqueue_style( 'agentic-setup', AGENT_BUILDER_URL . 'assets/css/setup.css', a
 			<div class="setup-card-inner" id="phase-account">
 				<div class="account-question">
 					<h2><?php esc_html_e( 'Do you already have an account with an AI Provider?', 'agent-builder' ); ?></h2>
-					<p><?php esc_html_e( 'At least one AI Provider is needed in order for your AI Assistants to respond to requests.', 'agent-builder' ); ?></p>
+					<p><?php esc_html_e( 'At least one AI Provider is needed in order for your AI Agents to respond to requests.', 'agent-builder' ); ?></p>
 					<p><strong><?php esc_html_e( 'Popular AI Providers:', 'agent-builder' ); ?></strong></p>
 					<ul class="provider-list">
 						<?php foreach ( $agentic_providers as $agentic_p_slug => $agentic_p ) : ?>
@@ -843,7 +843,7 @@ wp_enqueue_style( 'agentic-setup', AGENT_BUILDER_URL . 'assets/css/setup.css', a
 				<!-- Agent Mode -->
 				<div class="wizard-pref-section">
 					<h3><?php esc_html_e( 'Choose an agent mode', 'agent-builder' ); ?></h3>
-					<p class="wizard-pref-hint"><?php esc_html_e( 'Controls how much authority your AI assistants have. You can change this any time in Settings.', 'agent-builder' ); ?></p>
+					<p class="wizard-pref-hint"><?php esc_html_e( 'Controls how much authority your AI agents have. You can change this any time in Settings.', 'agent-builder' ); ?></p>
 					<div class="wizard-mode-grid">
 						<label class="wizard-mode-card" data-mode="supervised">
 							<input type="radio" name="wizard_mode" value="supervised" checked>
@@ -868,7 +868,7 @@ wp_enqueue_style( 'agentic-setup', AGENT_BUILDER_URL . 'assets/css/setup.css', a
 								<span class="wizard-mode-icon">💬</span>
 								<strong><?php esc_html_e( 'Chat only', 'agent-builder' ); ?></strong>
 							</div>
-							<p><?php esc_html_e( 'Assistants can answer questions and give advice, but cannot read data from or make any changes to your site.', 'agent-builder' ); ?></p>
+							<p><?php esc_html_e( 'Agents can answer questions and give advice, but cannot read data from or make any changes to your site.', 'agent-builder' ); ?></p>
 						</label>
 					</div>
 				</div>

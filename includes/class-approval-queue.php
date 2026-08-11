@@ -231,14 +231,14 @@ class Approval_Queue {
 
 		$subject = sprintf(
 			/* translators: %s: site name */
-			__( '[%s] Assistant action waiting for your approval', 'agent-builder' ),
+			__( '[%s] Agent action waiting for your approval', 'agent-builder' ),
 			wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES )
 		);
 
-		$body  = '<p style="margin:0 0 12px;">' . esc_html__( 'An AI assistant wants to make a change that needs your OK before it runs.', 'agent-builder' ) . '</p>';
+		$body  = '<p style="margin:0 0 12px;">' . esc_html__( 'An AI agent wants to make a change that needs your OK before it runs.', 'agent-builder' ) . '</p>';
 		$body .= '<ul style="margin:0 0 16px;padding-left:18px;">';
 		$body .= '<li><strong>' . esc_html__( 'Action', 'agent-builder' ) . ':</strong> ' . esc_html( $label ) . '</li>';
-		$body .= '<li><strong>' . esc_html__( 'Assistant', 'agent-builder' ) . ':</strong> ' . esc_html( $agent ) . '</li>';
+		$body .= '<li><strong>' . esc_html__( 'Agent', 'agent-builder' ) . ':</strong> ' . esc_html( $agent ) . '</li>';
 		$body .= '<li><strong>' . esc_html__( 'Risk', 'agent-builder' ) . ':</strong> ' . esc_html( $risk_level ) . '</li>';
 		if ( $reasoning ) {
 			$body .= '<li><strong>' . esc_html__( 'Why', 'agent-builder' ) . ':</strong> ' . esc_html( wp_strip_all_tags( $reasoning ) ) . '</li>';

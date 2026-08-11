@@ -458,7 +458,7 @@ class Shortcodes {
 
 		return sprintf(
 			'<div class="agentic-login-prompt"><p>%s</p><a href="%s" class="button">%s</a></div>',
-			esc_html__( 'Please log in to chat with our AI assistant.', 'agent-builder' ),
+			esc_html__( 'Please log in to chat with our AI agent.', 'agent-builder' ),
 			esc_url( $login_url ),
 			esc_html__( 'Log In', 'agent-builder' )
 		);

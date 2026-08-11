@@ -127,13 +127,13 @@ class Generate_Agent extends Tool_Base {
 			$tool_list  = "\n\nYou have these tools available — use them, do not guess:\n" . implode( "\n", $tool_lines );
 		}
 
-		$system_prompt_text = "You are the {$name} assistant for WordPress.\n\n" .
+		$system_prompt_text = "You are the {$name} agent for WordPress.\n\n" .
 			"Your expertise: {$system_prompt_focus}\n\n" .
 			"RULES:\n" .
 			"1. Always call tools to gather data before answering — never guess or fabricate information.\n" .
 			"2. Be concise: lead with findings, not explanations of what you will do.\n" .
 			"3. When a task requires multiple tools, call them in sequence within a single turn.\n" .
-			"4. Only operate within your domain. For unrelated requests, tell the user which assistant can help.\n" .
+			"4. Only operate within your domain. For unrelated requests, tell the user which agent can help.\n" .
 			'5. Follow WordPress coding standards and best practices in all suggestions.' .
 			$tool_list;
 

@@ -412,7 +412,7 @@
 
         const desc = el('div', {
             className: 'agentic-overlay-proposal-desc',
-            textContent: proposal.description || 'An assistant wants to perform a high-risk action.'
+            textContent: proposal.description || 'An agent wants to perform a high-risk action.'
         });
         card.appendChild(desc);
 
@@ -661,9 +661,9 @@
             var btnsWrap = el('div', { className: 'agentic-overlay-quick-actions' });
             var actions = [
                 { label: 'Agent Builder', slug: 'wordpress-assistant' },
-                { label: 'Content Assistant', slug: 'content-writer' },
-                { label: 'Plugin Assistant', slug: 'plugin-assistant' },
-                { label: 'Theme Assistant', slug: 'theme-assistant' }
+                { label: 'Content Agent', slug: 'content-writer' },
+                { label: 'Plugin Agent', slug: 'plugin-assistant' },
+                { label: 'Theme Agent', slug: 'theme-assistant' }
             ];
             actions.forEach(function (action) {
                 var btn = el('button', { className: 'agentic-overlay-quick-btn', textContent: action.label });

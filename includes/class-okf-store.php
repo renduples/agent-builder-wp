@@ -544,7 +544,7 @@ class Okf_Store {
 					array(
 						'type'        => 'Policy',
 						'title'       => __( 'Site overview', 'agent-builder' ),
-						'description' => __( 'Standing guidance for every assistant. Always included in prompts.', 'agent-builder' ),
+						'description' => __( 'Standing guidance for every agent. Always included in prompts.', 'agent-builder' ),
 						'tags'        => array( 'site', 'overview', 'always-on' ),
 						'status'      => 'stable',
 						'always_on'   => true,

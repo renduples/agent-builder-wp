@@ -62,11 +62,11 @@ class Agents_Available extends \Agentic\Tool_Base {
 			'properties' => array(
 				'search'   => array(
 					'type'        => 'string',
-					'description' => 'Search term to filter assistants by name or description.',
+					'description' => 'Search term to filter agents by name or description.',
 				),
 				'category' => array(
 					'type'        => 'string',
-					'description' => 'Filter assistants by category.',
+					'description' => 'Filter agents by category.',
 				),
 			),
 			'required'   => array(),
@@ -117,7 +117,7 @@ class Agents_Available extends \Agentic\Tool_Base {
 			return array(
 				'agents' => array(),
 				'total'  => 0,
-				'note'   => 'No assistants found matching your criteria.',
+				'note'   => 'No agents found matching your criteria.',
 			);
 		}
 

@@ -20,13 +20,13 @@ import { AdminPage, Panel, InfoTip } from '../shared/components';
 const RISK_EXPLANATIONS = {
 	none: __( 'Safe to run automatically — read-only, no approval needed.', 'agent-builder' ),
 	low: __( 'Runs automatically by default; may read data that includes personal information.', 'agent-builder' ),
-	medium: __( 'Changes something — assistants pause for your in-chat confirmation first.', 'agent-builder' ),
+	medium: __( 'Changes something — agents pause for your in-chat confirmation first.', 'agent-builder' ),
 	high: __( 'A significant or bulk change — waits in the Approvals queue for you to allow it.', 'agent-builder' ),
-	extreme: __( 'Too risky to allow at all — hidden from assistants entirely, cannot be enabled.', 'agent-builder' ),
+	extreme: __( 'Too risky to allow at all — hidden from agents entirely, cannot be enabled.', 'agent-builder' ),
 };
 
 const APPROVAL_ACTION_HINT = __(
-	'An assistant tried to run this specific action and paused here first. Nothing happens until you decide — approve to let it run once, or reject to cancel it.',
+	'An agent tried to run this specific action and paused here first. Nothing happens until you decide — approve to let it run once, or reject to cancel it.',
 	'agent-builder'
 );
 
@@ -119,7 +119,7 @@ function AdminPageFooter( { footer } ) {
 	const policy =
 		f.policy ||
 		__(
-			'Assistants only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings.',
+			'Agents only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings.',
 			'agent-builder'
 		);
 
@@ -709,7 +709,7 @@ function ToolsBasicProfiles( { data, reload } ) {
 			</p>
 			<p className="agentic-react-muted">
 				{ __(
-					'These profiles control which tools every assistant may use. Approvals still apply for riskier actions.',
+					'These profiles control which tools every agent may use. Approvals still apply for riskier actions.',
 					'agent-builder'
 				) }{ ' ' }
 				{ __(
@@ -1476,7 +1476,7 @@ function ApprovalsView( { data, reload } ) {
 								key: 'done',
 								label: success
 									? __(
-											'Done — assistant task finished',
+											'Done — agent task finished',
 											'agent-builder'
 									  )
 									: __(
@@ -1749,7 +1749,7 @@ function ApprovalsView( { data, reload } ) {
 				<h3>{ __( 'Preferences', 'agent-builder' ) }</h3>
 				<p className="agentic-react-muted">
 					{ __(
-						'Choose how closely you want to watch assistants, and whether we should email you when something is waiting.',
+						'Choose how closely you want to watch agents, and whether we should email you when something is waiting.',
 						'agent-builder'
 					) }
 				</p>
@@ -1809,7 +1809,7 @@ function ApprovalsView( { data, reload } ) {
 						/>
 						<span>
 							{ __(
-								'I understand assistants may change my site with less waiting, and I accept that increased risk.',
+								'I understand agents may change my site with less waiting, and I accept that increased risk.',
 								'agent-builder'
 							) }
 						</span>
@@ -1891,13 +1891,13 @@ function ApprovalsView( { data, reload } ) {
 					</p>
 					<p className="agentic-react-muted">
 						{ __(
-							'Approvals pause any action an assistant rates as risky until you say yes — nothing waiting here means nothing is on hold right now.',
+							'Approvals pause any action an agent rates as risky until you say yes — nothing waiting here means nothing is on hold right now.',
 							'agent-builder'
 						) }
 					</p>
 					<p className="agentic-react-muted">
 						{ __(
-							'When an assistant needs permission for a bigger change, it will show up here',
+							'When an agent needs permission for a bigger change, it will show up here',
 							'agent-builder'
 						) }
 						{ emailNotify
@@ -1934,7 +1934,7 @@ function ApprovalsView( { data, reload } ) {
 												),
 												group.agent_id ||
 													__(
-														'Assistant',
+														'Agent',
 														'agent-builder'
 													),
 												items.length,
@@ -2069,7 +2069,7 @@ function ApprovalsView( { data, reload } ) {
 
 			<p className="agentic-react-muted" style={ { marginTop: 16 } }>
 				{ __(
-					'Assistants back up files and database tables automatically before changing them.',
+					'Agents back up files and database tables automatically before changing them.',
 					'agent-builder'
 				) }{ ' ' }
 				<a href={ data.tabs?.find( ( t ) => t.id === 'backups' )?.url }>
@@ -2270,7 +2270,7 @@ function LogsView( { data, reload } ) {
 									'agent-builder'
 							  )
 							: __(
-									'When assistants chat or use tools, their activity will show up here.',
+									'When agents chat or use tools, their activity will show up here.',
 									'agent-builder'
 							  ) }
 					</p>

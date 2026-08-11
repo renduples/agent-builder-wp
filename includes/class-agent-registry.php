@@ -514,7 +514,7 @@ class Agentic_Agent_Registry {
 			);
 			return new WP_Error(
 				'license_required',
-				__( 'This assistant requires a premium license. Upgrade at agentic-plugin.com to activate it.', 'agent-builder' )
+				__( 'This agent requires a premium license. Upgrade at agentic-plugin.com to activate it.', 'agent-builder' )
 			);
 		}
 

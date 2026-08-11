@@ -119,13 +119,13 @@ $agentic_agent_mode = get_option( 'agentic_agent_mode', 'supervised' );
 		?>
 
 		<p class="description agentic-mt-16">
-			<?php esc_html_e( 'Review and approve actions requested by AI assistants before they are executed.', 'agent-builder' ); ?>
+			<?php esc_html_e( 'Review and approve actions requested by AI agents before they are executed.', 'agent-builder' ); ?>
 			<?php if ( 'supervised' === $agentic_agent_mode ) : ?>
 				<strong><?php esc_html_e( 'Mode:', 'agent-builder' ); ?></strong> <?php esc_html_e( 'Supervised — high-risk actions require approval.', 'agent-builder' ); ?>
 			<?php elseif ( 'autonomous' === $agentic_agent_mode ) : ?>
 				<strong><?php esc_html_e( 'Mode:', 'agent-builder' ); ?></strong> <?php esc_html_e( 'Autonomous — all actions execute automatically.', 'agent-builder' ); ?>
 			<?php else : ?>
-				<strong><?php esc_html_e( 'Mode:', 'agent-builder' ); ?></strong> <?php esc_html_e( 'Disabled — assistants cannot make file changes.', 'agent-builder' ); ?>
+				<strong><?php esc_html_e( 'Mode:', 'agent-builder' ); ?></strong> <?php esc_html_e( 'Disabled — agents cannot make file changes.', 'agent-builder' ); ?>
 			<?php endif; ?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-settings' ) ); ?>"><?php esc_html_e( 'Change mode', 'agent-builder' ); ?></a>
 		</p>
@@ -247,7 +247,7 @@ $agentic_agent_mode = get_option( 'agentic_agent_mode', 'supervised' );
 		?>
 
 		<p class="description agentic-mt-16">
-			<?php esc_html_e( 'Automatic backups created before AI assistants modify files or database tables. Restore with one click.', 'agent-builder' ); ?>
+			<?php esc_html_e( 'Automatic backups created before AI agents modify files or database tables. Restore with one click.', 'agent-builder' ); ?>
 			<a href="https://agentic-plugin.com/backups/" target="_blank" rel="noopener noreferrer" class="agentic-ml-6"><?php esc_html_e( 'Learn more', 'agent-builder' ); ?> &rarr;</a>
 		</p>
 
@@ -255,7 +255,7 @@ $agentic_agent_mode = get_option( 'agentic_agent_mode', 'supervised' );
 			<div class="agentic-card agentic-approval-empty-card">
 				<span class="dashicons dashicons-backup agentic-di-xxl agentic-di-grey agentic-di-mb10"></span>
 				<h2 class="agentic-approval-h2"><?php esc_html_e( 'No backups yet', 'agent-builder' ); ?></h2>
-				<p class="agentic-text-dim"><?php esc_html_e( 'When assistants modify files or database tables, backups are created automatically and will appear here.', 'agent-builder' ); ?></p>
+				<p class="agentic-text-dim"><?php esc_html_e( 'When agents modify files or database tables, backups are created automatically and will appear here.', 'agent-builder' ); ?></p>
 			</div>
 		<?php else : ?>
 

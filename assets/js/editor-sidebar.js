@@ -477,7 +477,7 @@
 					if ( data && data.configured === false ) {
 						setProviderError( {
 							provider: data.provider || 'unknown',
-							message:  'No API key is configured for the "' + ( data.provider || 'selected' ) + '" provider. The AI assistant won\'t work until a key is added.',
+							message:  'No API key is configured for the "' + ( data.provider || 'selected' ) + '" provider. The AI agent won\'t work until a key is added.',
 						} );
 					}
 				} )
@@ -706,7 +706,7 @@
 		var emptyLabel = agentCfg.emptyLabel || (
 			config.injectContext
 				? 'Ask me anything about this ' + ( postType || 'post' ) + '.\n\nor\n\nSimply highlight any text and click on a Quick-Action.'
-				: 'Start a conversation with ' + ( activeAgentName || 'your AI assistant' ) + '.'
+				: 'Start a conversation with ' + ( activeAgentName || 'your AI agent' ) + '.'
 		);
 
 		return el(

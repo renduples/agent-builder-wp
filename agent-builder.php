@@ -5,7 +5,7 @@
  * Plugin Name:       Agent Builder
  * Plugin URI:        https://agentic-plugin.com
  * Description:       Orchestrate role-based AI agents and teams with simple job descriptions.
- * Version:           3.3.64
+ * Version:           3.3.65
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Agent Builder Team
@@ -57,7 +57,7 @@ spl_autoload_register(
 
 // Plugin constants.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-define( 'AGENT_BUILDER_VERSION', '3.3.64' );
+define( 'AGENT_BUILDER_VERSION', '3.3.65' );
 define( 'AGENT_BUILDER_FILE', __FILE__ );
 define( 'AGENT_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGENT_BUILDER_URL', plugin_dir_url( __FILE__ ) );
@@ -436,7 +436,7 @@ final class Plugin {
 				'title' => '<span class="ab-icon dashicons dashicons-format-chat" style="font-size: 18px; line-height: 1.3;"></span>' . __( 'AI Agents', 'agent-builder' ),
 				'href'  => '#',
 				'meta'  => array(
-					'title' => __( 'Chat with an AI Assistant', 'agent-builder' ),
+					'title' => __( 'Chat with an AI Agent', 'agent-builder' ),
 				),
 			)
 		);

@@ -20,7 +20,7 @@ $agentic_frontend_address = (string) get_option( 'agentic_frontend_address', '' 
 $agentic_wiki_url         = admin_url( 'admin.php?page=agentic-train-data&tab=wiki' );
 ?>
 
-<p class="agentic-settings-lead"><?php esc_html_e( 'How assistants address people. Site facts and standing guidance belong in Knowledge Wiki.', 'agent-builder' ); ?></p>
+<p class="agentic-settings-lead"><?php esc_html_e( 'How agents address people. Site facts and standing guidance belong in Knowledge Wiki.', 'agent-builder' ); ?></p>
 <h3 class="agentic-settings-section-title"><?php esc_html_e( 'Personalization', 'agent-builder' ); ?></h3>
 
 <table class="form-table" role="presentation">
@@ -50,7 +50,7 @@ $agentic_wiki_url         = admin_url( 'admin.php?page=agentic-train-data&tab=wi
 				printf(
 					wp_kses(
 						/* translators: %s: Knowledge admin URL */
-						__( 'Standing facts, tone, and “always keep in mind” guidance are managed under <a href="%s"><strong>Knowledge</strong></a>. Mark a concept <strong>Always include in prompts</strong> so every assistant receives it automatically (for example Site overview).', 'agent-builder' ),
+						__( 'Standing facts, tone, and “always keep in mind” guidance are managed under <a href="%s"><strong>Knowledge</strong></a>. Mark a concept <strong>Always include in prompts</strong> so every agent receives it automatically (for example Site overview).', 'agent-builder' ),
 						array(
 							'a'      => array( 'href' => array() ),
 							'strong' => array(),

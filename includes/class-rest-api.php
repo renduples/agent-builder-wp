@@ -1084,7 +1084,7 @@ class REST_API {
 				/* translators: 1: action name, 2: agent name */
 				__( 'Approved “%1$s” for %2$s.', 'agent-builder' ),
 				$action_label,
-				$agent_label ? $agent_label : __( 'assistant', 'agent-builder' )
+				$agent_label ? $agent_label : __( 'agent', 'agent-builder' )
 			);
 
 		return $this->api_success(

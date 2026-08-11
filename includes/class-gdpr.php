@@ -69,7 +69,7 @@ class GDPR {
 		}
 
 		$content = '<h2>' . __( 'AI Chat & Agent Data', 'agent-builder' ) . '</h2>'
-			. '<p>' . __( 'This site uses the Agent Builder plugin to provide AI-powered chat assistants. When you interact with the chat interface, the following data is collected and processed:', 'agent-builder' ) . '</p>'
+			. '<p>' . __( 'This site uses the Agent Builder plugin to provide AI-powered chat agents. When you interact with the chat interface, the following data is collected and processed:', 'agent-builder' ) . '</p>'
 			. '<ul>'
 			. '<li>' . __( '<strong>Chat messages</strong> — Your messages and AI responses are stored in our database for conversation history and audit purposes. Messages are automatically deleted after the configured retention period (default: 30 days).', 'agent-builder' ) . '</li>'
 			. '<li>' . __( '<strong>User identity</strong> — If you are logged in, your WordPress user ID is associated with your chat sessions. Anonymous visitors are identified by session ID only.', 'agent-builder' ) . '</li>'
@@ -84,7 +84,7 @@ class GDPR {
 			. '<p>' . __( 'The plugin sets two cookies on the frontend:', 'agent-builder' ) . '</p>'
 			. '<ul>'
 			. '<li>' . __( '<strong>agentic_consent_given</strong> — Records that you accepted the chat privacy notice (1 year).', 'agent-builder' ) . '</li>'
-			. '<li>' . __( '<strong>agentic_last_agent</strong> — Remembers your last-used AI assistant for convenience (1 year).', 'agent-builder' ) . '</li>'
+			. '<li>' . __( '<strong>agentic_last_agent</strong> — Remembers your last-used AI agent for convenience (1 year).', 'agent-builder' ) . '</li>'
 			. '</ul>'
 			. '<h2>' . __( 'Data Retention & Deletion', 'agent-builder' ) . '</h2>'
 			. '<p>' . __( 'Chat history and audit logs are automatically deleted after 30 days (configurable by the site administrator). You can request export or deletion of your personal data through the WordPress privacy tools (Settings → Privacy).', 'agent-builder' ) . '</p>';

@@ -772,7 +772,7 @@ class Audit_Dimension extends \Agentic\Tool_Base {
 			$checks[] = $this->check( 'ai_crawlers', 'AI crawler access', 'fail', 'Blanket Disallow detected in robots.txt — ALL bots including AI crawlers are blocked.', 10, 0 );
 		} elseif ( in_array( 'GPTBot', $bots_blocked, true ) || in_array( 'ClaudeBot', $bots_blocked, true ) ) {
 			$list     = implode( ', ', $bots_blocked );
-			$checks[] = $this->check( 'ai_crawlers', 'AI crawler access', 'fail', "Major AI crawlers blocked: {$list}. These AI assistants cannot see or cite your site.", 9, 0 );
+			$checks[] = $this->check( 'ai_crawlers', 'AI crawler access', 'fail', "Major AI crawlers blocked: {$list}. These AI agents cannot see or cite your site.", 9, 0 );
 		} elseif ( empty( $bots_blocked ) ) {
 			$checks[] = $this->check( 'ai_crawlers', 'AI crawler access', 'pass', 'All AI crawlers appear to have access.', 0, 4 );
 			$score   += 4;
@@ -822,7 +822,7 @@ class Audit_Dimension extends \Agentic\Tool_Base {
 			$checks[] = $this->check( 'llms_txt', 'llms.txt', 'pass', 'llms.txt present — you\'re ahead of the curve on this emerging standard.', 0, 1 );
 			$score   += 1;
 		} else {
-			$checks[] = $this->check( 'llms_txt', 'llms.txt', 'warn', 'No llms.txt file. This emerging standard helps AI assistants understand your site content. Low effort to add.', 2, 0 );
+			$checks[] = $this->check( 'llms_txt', 'llms.txt', 'warn', 'No llms.txt file. This emerging standard helps AI agents understand your site content. Low effort to add.', 2, 0 );
 		}
 
 		return array(

@@ -241,7 +241,7 @@ $agentic_ajax_url         = admin_url( 'admin-ajax.php' );
 	<table class="widefat striped agentic-table-780">
 		<thead>
 			<tr>
-				<th><?php esc_html_e( 'Assistant', 'agent-builder' ); ?></th>
+				<th><?php esc_html_e( 'Agent', 'agent-builder' ); ?></th>
 				<th class="agentic-col-180 agentic-td-center">
 					<?php esc_html_e( 'CLI invocation', 'agent-builder' ); ?>
 					<br><small class="agentic-small-muted"><?php esc_html_e( 'wp agent prompt/run-task — Pro', 'agent-builder' ); ?></small>

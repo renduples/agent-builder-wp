@@ -45,7 +45,7 @@ if ( ! $agentic_agent_obj ) {
 	wp_die(
 		sprintf(
 			/* translators: %s: agent ID */
-			esc_html__( 'Assistant "%s" not found or not active.', 'agent-builder' ),
+			esc_html__( 'Agent "%s" not found or not active.', 'agent-builder' ),
 			esc_html( $agentic_run_agent_id )
 		)
 	);

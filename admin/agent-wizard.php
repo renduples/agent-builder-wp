@@ -51,7 +51,7 @@ if ( file_exists( $agentic_aw_asset_file ) ) {
 <div class="wrap agentic-agent-wizard-wrap">
 	<h1><?php esc_html_e( 'Train an Agent', 'agent-builder' ); ?></h1>
 	<p class="agentic-wizard-intro">
-		<?php esc_html_e( 'Create a new AI assistant in a few quick steps. You can refine everything later from the Agents and Settings pages.', 'agent-builder' ); ?>
+		<?php esc_html_e( 'Create a new AI agent in a few quick steps. You can refine everything later from the Agents and Settings pages.', 'agent-builder' ); ?>
 	</p>
 
 	<div id="agentic-agent-wizard-root">

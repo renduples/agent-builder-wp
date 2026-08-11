@@ -89,7 +89,7 @@
 			description: agent.description,
 			category: 'agentic-ai',
 			icon: chatIcon,
-			keywords: [ 'chat', 'ai', 'gpt', 'bot', 'assistant', agent.name.toLowerCase() ],
+			keywords: [ 'chat', 'ai', 'gpt', 'bot', 'agent', 'assistant', agent.name.toLowerCase() ],
 			supports: {
 				html: false,
 				align: [ 'wide', 'full' ],

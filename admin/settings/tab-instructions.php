@@ -25,16 +25,16 @@ if ( ! $agentic_pa_selected && ! empty( $agentic_all_agents ) ) {
 	$agentic_pa_selected = array_key_first( $agentic_all_agents );
 }
 ?>
-<p class="agentic-settings-lead"><?php esc_html_e( 'Customise how each assistant greets visitors and add context that shapes its personality. Instructions are appended to the assistant’s system prompt — they do not replace it.', 'agent-builder' ); ?></p>
+<p class="agentic-settings-lead"><?php esc_html_e( 'Customise how each agent greets visitors and add context that shapes its personality. Instructions are appended to the agent’s system prompt — they do not replace it.', 'agent-builder' ); ?></p>
 
 <?php if ( empty( $agentic_all_agents ) ) : ?>
-<p><em>No assistants are currently installed.</em></p>
+<p><em>No agents are currently installed.</em></p>
 <?php else : ?>
 
 <table class="form-table agentic-table-mt-0">
 	<tr>
 		<th scope="row" class="agentic-th-180">
-			<label for="agentic-persona-agent-select">Select Assistant</label>
+			<label for="agentic-persona-agent-select">Select Agent</label>
 		</th>
 		<td>
 			<select id="agentic-persona-agent-select" class="agentic-select-min-280">
@@ -88,7 +88,7 @@ document.getElementById('agentic-persona-agent-select').addEventListener('change
 					class="large-text"
 					placeholder="<?php echo esc_attr( $agentic_pa_default ); ?>"
 				><?php echo esc_textarea( $agentic_pa_welcome ); ?></textarea>
-				<p class="description">This is the opening message currently shown when a chat starts. Edit it to customise. Clear the field and save to restore the assistant&rsquo;s built-in default.</p>
+				<p class="description">This is the opening message currently shown when a chat starts. Edit it to customise. Clear the field and save to restore the agent&rsquo;s built-in default.</p>
 			</td>
 		</tr>
 		<tr>
@@ -104,7 +104,7 @@ document.getElementById('agentic-persona-agent-select').addEventListener('change
 					<option value="technical" <?php selected( $agentic_pa_style, 'technical' ); ?>>Technical</option>
 					<option value="friendly" <?php selected( $agentic_pa_style, 'friendly' ); ?>>Friendly</option>
 				</select>
-				<p class="description">Controls the assistant&rsquo;s tone and verbosity. This is appended to the system prompt automatically.</p>
+				<p class="description">Controls the agent&rsquo;s tone and verbosity. This is appended to the system prompt automatically.</p>
 			</td>
 		</tr>
 		<tr>
@@ -144,9 +144,9 @@ document.getElementById('agentic-persona-agent-select').addEventListener('change
 					id="agentic_persona_notes_<?php echo esc_attr( $agentic_pa_selected ); ?>"
 					rows="5"
 					class="large-text"
-					placeholder="<?php echo esc_attr( "e.g. This assistant is deployed on a WooCommerce store selling handmade jewellery in Cape Town, South Africa. Always maintain a warm, personal tone and mention the handcrafted origin when relevant. The store owner's name is Sarah \u2014 use her name occasionally to add a personal touch. When visitors ask about shipping, remind them that all orders are packed by hand and may take 3\u20135 business days." ); ?>"
+					placeholder="<?php echo esc_attr( "e.g. This agent is deployed on a WooCommerce store selling handmade jewellery in Cape Town, South Africa. Always maintain a warm, personal tone and mention the handcrafted origin when relevant. The store owner's name is Sarah \u2014 use her name occasionally to add a personal touch. When visitors ask about shipping, remind them that all orders are packed by hand and may take 3\u20135 business days." ); ?>"
 				><?php echo esc_textarea( $agentic_pa_notes ); ?></textarea>
-				<p class="description">Additional context appended to this assistant&rsquo;s system prompt on every conversation. Use it to share business context, tone of voice, or specific instructions &mdash; without overwriting the core system prompt.</p>
+				<p class="description">Additional context appended to this agent&rsquo;s system prompt on every conversation. Use it to share business context, tone of voice, or specific instructions &mdash; without overwriting the core system prompt.</p>
 			</td>
 		</tr>
 		<tr>
@@ -168,7 +168,7 @@ document.getElementById('agentic-persona-agent-select').addEventListener('change
 					class="large-text code"
 					placeholder="<?php echo esc_attr( "e.g. Our business hours are Mon-Fri 9am-5pm SAST. Returns accepted within 30 days with proof of purchase.\n\nProduct categories: Rings, Necklaces, Bracelets, Earrings, Custom Orders.\n\nFAQ:\nQ: Do you ship internationally?\nA: Yes, we ship to 40+ countries via DHL Express (5-7 business days)." ); ?>"
 				><?php echo esc_textarea( $agentic_pa_knowledge ); ?></textarea>
-				<p class="description">Quick reference for this assistant (FAQs, policies, product facts). For a structured, multi-concept wiki, use <a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-train-data&tab=wiki' ) ); ?>"><strong>Knowledge → Knowledge Wiki (OKF)</strong></a>. Hosted Vector Store / RAG is available in Agent Builder Pro.</p>
+				<p class="description">Quick reference for this agent (FAQs, policies, product facts). For a structured, multi-concept wiki, use <a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-train-data&tab=wiki' ) ); ?>"><strong>Knowledge → Knowledge Wiki (OKF)</strong></a>. Hosted Vector Store / RAG is available in Agent Builder Pro.</p>
 			</td>
 		</tr>
 	</table>

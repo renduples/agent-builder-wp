@@ -177,7 +177,7 @@ class Generate_Agent_Documentation extends Tool_Base {
 
 			foreach ( array_slice( $prompts, 0, 3 ) as $prompt ) {
 				$clean = preg_replace( '/^[^\w]+/', '', $prompt );
-				$md   .= "**User:** {$clean}\n\n**{$name}:** _(The assistant will use its tools to handle this request)_\n\n";
+				$md   .= "**User:** {$clean}\n\n**{$name}:** _(The agent will use its tools to handle this request)_\n\n";
 			}
 		}
 
