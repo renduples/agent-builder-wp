@@ -95,7 +95,7 @@ class Admin_Pages_REST {
 		$action = sanitize_key( (string) $request->get_param( 'action_name' ) );
 
 		$tools_actions  = array( 'toggle_tool', 'apply_tools_profile', 'delete_skill' );
-		$agents_actions = array( 'save_approval_prefs', 'approval_decide' );
+		$agents_actions = array( 'save_approval_prefs', 'approval_decide', 'approval_decide_bulk' );
 
 		if ( 'tools' === $page || 'skills' === $page || in_array( $action, $tools_actions, true ) ) {
 			return current_user_can( 'agentic_manage_tools' );
@@ -261,6 +261,10 @@ class Admin_Pages_REST {
 
 		if ( 'approval_decide' === $action ) {
 			return self::approval_decide( $request );
+		}
+
+		if ( 'approval_decide_bulk' === $action ) {
+			return self::approval_decide_bulk( $request );
 		}
 
 		if ( 'delete_skill' === $action ) {
@@ -919,6 +923,7 @@ class Admin_Pages_REST {
 			'description'      => __( 'When an assistant wants to change something important, it waits here until you approve or reject it.', 'agent-builder' ),
 			'pending_count'    => count( $rows ),
 			'rows'             => $rows,
+			'groups'           => self::group_pending_for_bulk( $rows ),
 			'tabs'             => array(
 				array(
 					'id'    => 'approvals',
@@ -941,7 +946,6 @@ class Admin_Pages_REST {
 				'Approvals keep high-risk assistant actions under human control. Email alerts use your admin address and never include passwords. See Privacy Policy for how providers process chat.',
 				'agent-builder'
 			),
-			'classic_url'      => admin_url( 'admin.php?page=agentic-approvals&tab=approvals&classic=1' ),
 		);
 	}
 
@@ -1146,6 +1150,199 @@ class Admin_Pages_REST {
 			),
 			200
 		);
+	}
+
+	/**
+	 * Approve or reject several queue items in one call — the React
+	 * Approvals page's "Approve all" / "Reject all" group actions.
+	 *
+	 * Rejecting has no ordering requirement, so items run in the order
+	 * given and every item is attempted regardless of earlier failures.
+	 * Approving stops at the first failure instead: a later item in the
+	 * same batch (e.g. a step that edits files a scaffold step just
+	 * created) may depend on an earlier one having actually run, and nothing
+	 * in Approval_Queue enforces that server-side — see
+	 * order_ids_for_bulk_decide() below, which is the only thing standing
+	 * between "approve all" and running steps out of order.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	private static function approval_decide_bulk( \WP_REST_Request $request ) {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'agentic_manage_agents' ) ) {
+			return new \WP_Error( 'forbidden', __( 'Permission denied.', 'agent-builder' ), array( 'status' => 403 ) );
+		}
+
+		$ids = array_map( 'absint', (array) $request->get_param( 'ids' ) );
+		$ids = array_values( array_unique( array_filter( $ids ) ) );
+		$decide = sanitize_key( (string) $request->get_param( 'decide' ) );
+
+		if ( empty( $ids ) || ! in_array( $decide, array( 'approve', 'reject' ), true ) ) {
+			return new \WP_Error( 'invalid', __( 'Invalid approval request.', 'agent-builder' ), array( 'status' => 400 ) );
+		}
+
+		// Re-derive a safe order server-side rather than trusting whatever
+		// order the client sent — cheap, and the one thing that actually
+		// prevents "approve all" from running a dependent step first.
+		$ids = self::order_ids_for_bulk_decide( $ids );
+
+		$results       = array();
+		$succeeded     = 0;
+		$failed        = 0;
+		$stopped_early = false;
+
+		foreach ( $ids as $id ) {
+			$rest_req = new \WP_REST_Request( 'POST', '/agentic/v1/approvals/' . $id );
+			$rest_req->set_param( 'id', $id );
+			$rest_req->set_param( 'action', $decide );
+			$response = rest_do_request( $rest_req );
+			$is_error = $response->is_error();
+			$body     = $response->get_data();
+			$core     = is_array( $body ) ? $body : array();
+			if ( isset( $core['data'] ) && is_array( $core['data'] ) ) {
+				$core = $core['data'];
+			}
+
+			$results[] = array(
+				'id'      => $id,
+				'ok'      => ! $is_error,
+				'message' => (string) ( $core['message'] ?? ( $is_error ? $response->as_error()->get_error_message() : '' ) ),
+			);
+
+			if ( $is_error ) {
+				++$failed;
+				if ( 'approve' === $decide ) {
+					// Stop the chain — don't approve a step that likely
+					// depends on the one that just failed.
+					$stopped_early = true;
+					break;
+				}
+			} else {
+				++$succeeded;
+			}
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'ok'            => 0 === $failed,
+				'decide'        => $decide,
+				'results'       => $results,
+				'succeeded'     => $succeeded,
+				'failed'        => $failed,
+				'stopped_early' => $stopped_early,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Order a set of pending-approval ids the same way the classic batch
+	 * queue did: group members that look like scaffolding (creating the
+	 * files/plugin a later step will edit) go first, then ascending id.
+	 * Ids no longer pending are appended at the tail so approval_decide_bulk
+	 * still surfaces an "already processed" style error for them instead of
+	 * silently dropping them.
+	 *
+	 * @param array<int> $ids Requested ids.
+	 * @return array<int>
+	 */
+	private static function order_ids_for_bulk_decide( array $ids ): array {
+		$wanted = array_flip( $ids );
+		$queue  = new Approval_Queue();
+		$rows   = $queue->get_pending();
+
+		$scaffold_actions = array( 'create_plugin_scaffold', 'create_agent_files' );
+		$matched          = array();
+		foreach ( $rows as $row ) {
+			if ( isset( $wanted[ (int) ( $row['id'] ?? 0 ) ] ) ) {
+				$matched[] = $row;
+			}
+		}
+
+		usort(
+			$matched,
+			function ( $a, $b ) use ( $scaffold_actions ) {
+				$a_action   = (string) ( $a['tool_name'] ?? $a['action'] ?? '' );
+				$b_action   = (string) ( $b['tool_name'] ?? $b['action'] ?? '' );
+				$a_scaffold = in_array( $a_action, $scaffold_actions, true ) ? 0 : 1;
+				$b_scaffold = in_array( $b_action, $scaffold_actions, true ) ? 0 : 1;
+				if ( $a_scaffold !== $b_scaffold ) {
+					return $a_scaffold - $b_scaffold;
+				}
+				return (int) $a['id'] - (int) $b['id'];
+			}
+		);
+
+		$ordered = array_map( fn( $row ) => (int) $row['id'], $matched );
+		$missing = array_values( array_diff( $ids, $ordered ) );
+
+		return array_merge( $ordered, $missing );
+	}
+
+	/**
+	 * Group approvals_payload() rows by requesting agent + a 120s time
+	 * window, same rule the classic batch queue used, so items from one
+	 * agent "burst" (e.g. a scaffold step plus the edits that follow it) are
+	 * offered together for "Approve all" / "Reject all" instead of one
+	 * unrelated pending item from a different request being bundled in.
+	 *
+	 * @param array<int, array<string, mixed>> $rows Rows as built by approvals_payload().
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function group_pending_for_bulk( array $rows ): array {
+		$scaffold_actions = array( 'create_plugin_scaffold', 'create_agent_files' );
+		$groups           = array();
+
+		foreach ( $rows as $row ) {
+			$agent = (string) ( $row['subtitle'] ?? '' );
+			$ts    = strtotime( ( (string) ( $row['created_at'] ?? '' ) ) . ' UTC' );
+			$ts    = false !== $ts ? $ts : time();
+			$key   = null;
+
+			foreach ( $groups as $k => $g ) {
+				if ( $g['agent_id'] === $agent && abs( $g['last_ts'] - $ts ) < 120 ) {
+					$key = $k;
+					break;
+				}
+			}
+
+			if ( null === $key ) {
+				$key            = count( $groups );
+				$groups[ $key ] = array(
+					'agent_id' => $agent,
+					'first_ts' => $ts,
+					'last_ts'  => $ts,
+					'items'    => array(),
+				);
+			}
+
+			$groups[ $key ]['items'][] = $row;
+			$groups[ $key ]['last_ts'] = $ts;
+		}
+
+		$out = array();
+		foreach ( $groups as $g ) {
+			usort(
+				$g['items'],
+				function ( $a, $b ) use ( $scaffold_actions ) {
+					$a_scaffold = in_array( $a['action'], $scaffold_actions, true ) ? 0 : 1;
+					$b_scaffold = in_array( $b['action'], $scaffold_actions, true ) ? 0 : 1;
+					if ( $a_scaffold !== $b_scaffold ) {
+						return $a_scaffold - $b_scaffold;
+					}
+					return (int) $a['id'] - (int) $b['id'];
+				}
+			);
+
+			$out[] = array(
+				'agent_id' => $g['agent_id'],
+				'count'    => count( $g['items'] ),
+				'time_ago' => human_time_diff( $g['first_ts'] ),
+				'ids'      => array_map( fn( $r ) => (string) $r['id'], $g['items'] ),
+			);
+		}
+
+		return $out;
 	}
 
 	/**

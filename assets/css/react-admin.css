@@ -7,6 +7,13 @@
 	max-width: 1100px;
 }
 
+/* Table-heavy pages (Tools, Skills, Approvals, Activity) — use the full
+ * content width like classic WP_List_Table screens, instead of leaving a
+ * wide empty strip on the right at typical admin viewport widths. */
+.agentic-react-admin--wide {
+	max-width: none;
+}
+
 .agentic-react-admin__page-head {
 	display: flex;
 	justify-content: space-between;
@@ -195,7 +202,9 @@
 	color: #2271b1;
 }
 
-/* Per-screen Basic/Advanced toggle (Tools/Approvals/Activity headers) */
+/* Per-screen Basic/Advanced toggle, rendered in AdminPage's top-right
+ * actions slot on Tools/Skills/Approvals/Activity — same spot on every
+ * screen so the control stays familiar as a view setting. */
 .agentic-screen-mode-toggle {
 	display: inline-flex;
 	align-items: center;
@@ -706,7 +715,25 @@
 .agentic-react-approval-list {
 	display: flex;
 	flex-direction: column;
+	gap: 16px;
+}
+.agentic-react-approval-group {
+	display: flex;
+	flex-direction: column;
 	gap: 10px;
+}
+.agentic-react-approval-group__header {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px 16px;
+	padding: 8px 4px;
+}
+.agentic-react-approval-group__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
 }
 .agentic-react-approval-card {
 	display: flex;

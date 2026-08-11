@@ -16,11 +16,19 @@ import {
 } from '@wordpress/components';
 
 /**
- * Page shell with optional title.
+ * Page shell with optional title. Pass `wide` for table-heavy pages (lists,
+ * queues) that should use the full content width like classic WP_List_Table
+ * screens do — leave it off for form/card-heavy pages (Settings, Dashboard)
+ * where the narrower default width reads more comfortably.
  */
-export function AdminPage( { title, description, children, actions } ) {
+export function AdminPage( { title, description, children, actions, wide } ) {
 	return (
-		<div className="agentic-react-admin">
+		<div
+			className={
+				'agentic-react-admin' +
+				( wide ? ' agentic-react-admin--wide' : '' )
+			}
+		>
 			{ ( title || actions ) && (
 				<div className="agentic-react-admin__page-head">
 					<div>

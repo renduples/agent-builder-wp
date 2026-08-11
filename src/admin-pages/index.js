@@ -34,12 +34,19 @@ function bootConfig() {
 	return window.agenticAdminPage || { page: 'tools', tab: '' };
 }
 
+// Screens with a Basic/Advanced content split, and thus a ScreenModeToggle
+// in AdminPage's top-right actions slot. Must match the screens the
+// set_screen_mode REST action recognizes (class-admin-pages-rest.php).
+const SCREENS_WITH_MODE = [ 'tools', 'skills', 'approvals', 'logs' ];
+
 /**
- * Small in-page Basic/Advanced control for one screen. Writes a per-user
- * override for `screen` via the set_screen_mode REST action, independent of
- * every other screen's mode and of the site-wide default (Settings >
- * Interface / the Dashboard toggle) — modelled visually on the Dashboard's
- * own InterfaceCard button pair.
+ * Small Basic/Advanced control for one screen, rendered in the same
+ * top-right spot on every screen in SCREENS_WITH_MODE (AdminPage's actions
+ * slot) so the control stays in a familiar place as users move between
+ * pages. Writes a per-user override for `screen` via the set_screen_mode
+ * REST action, independent of every other screen's mode and of the
+ * site-wide default (Settings > Interface / the Dashboard toggle) —
+ * modelled visually on the Dashboard's own InterfaceCard button pair.
  */
 function ScreenModeToggle( { screen, data, reload } ) {
 	const [ busy, setBusy ] = useState( false );
@@ -706,14 +713,9 @@ function ToolsBasicProfiles( { data, reload } ) {
 					'agent-builder'
 				) }{ ' ' }
 				{ __(
-					'Switch to Advanced for the full tool-by-tool list:',
+					'Switch to Advanced (top right) for the full tool-by-tool list.',
 					'agent-builder'
-				) }{ ' ' }
-				<ScreenModeToggle
-					screen="tools"
-					data={ data }
-					reload={ reload }
-				/>
+				) }
 			</p>
 
 			{ err && (
@@ -952,12 +954,7 @@ function ToolsView( { data, reload, patchData } ) {
 						{ __(
 							'You are in Advanced view (full tool list).',
 							'agent-builder'
-						) }{ ' ' }
-						<ScreenModeToggle
-							screen="tools"
-							data={ data }
-							reload={ reload }
-						/>
+						) }
 					</p>
 					<div className="agentic-react-tools-toolbar">
 						<SearchControl
@@ -1294,6 +1291,18 @@ function SkillsView( { data, reload } ) {
 
 function ApprovalsView( { data, reload } ) {
 	const rows = data.rows || [];
+	// Server-computed agent+time-window groups (see group_pending_for_bulk()
+	// in class-admin-pages-rest.php). Fall back to one group per row for
+	// payloads from before this existed, so nothing breaks on a stale cache.
+	const groups =
+		data.groups && data.groups.length
+			? data.groups
+			: rows.map( ( r ) => ( {
+					agent_id: r.subtitle,
+					count: 1,
+					time_ago: '',
+					ids: [ r.id ],
+			  } ) );
 	const prefs = data.prefs || {};
 	const profiles = data.comfort_profiles || [];
 	const [ busy, setBusy ] = useState( '' );
@@ -1514,6 +1523,102 @@ function ApprovalsView( { data, reload } ) {
 			.finally( () => setBusy( '' ) );
 	};
 
+	// Approve/reject a whole group in one call (server enforces scaffold-
+	// before-dependents ordering — see order_ids_for_bulk_decide()). Mirrors
+	// the classic batch queue's Approve All/Reject All, which this replaces.
+	const bulkDecide = ( group, groupIndex, action ) => {
+		const ids = group.ids || [];
+		if ( ! ids.length ) {
+			return;
+		}
+		const confirmMsg =
+			action === 'approve'
+				? sprintf(
+						/* translators: %d: number of pending actions */
+						__(
+							'Approve all %d actions in this group? They will run in order.',
+							'agent-builder'
+						),
+						ids.length
+				  )
+				: sprintf(
+						/* translators: %d: number of pending actions */
+						__( 'Reject all %d actions in this group?', 'agent-builder' ),
+						ids.length
+				  );
+		if ( ! window.confirm( confirmMsg ) ) {
+			return;
+		}
+		setBusy( `bulk-${ groupIndex }` );
+		setErr( '' );
+		setOk( '' );
+		apiFetch( {
+			path: 'agentic/v1/admin-page',
+			method: 'POST',
+			data: {
+				action_name: 'approval_decide_bulk',
+				ids,
+				decide: action,
+			},
+		} )
+			.then( ( res ) => {
+				let payload = res || {};
+				if ( payload.data && typeof payload.data === 'object' ) {
+					payload = { ...payload, ...payload.data };
+				}
+				const succeeded = payload.succeeded || 0;
+				const failed = payload.failed || 0;
+				const stoppedEarly = !! payload.stopped_early;
+				if ( failed === 0 ) {
+					setOk(
+						action === 'approve'
+							? sprintf(
+									/* translators: %d: number of approved actions */
+									__( 'Approved %d actions.', 'agent-builder' ),
+									succeeded
+							  )
+							: sprintf(
+									/* translators: %d: number of rejected actions */
+									__( 'Rejected %d actions.', 'agent-builder' ),
+									succeeded
+							  )
+					);
+				} else {
+					const failedResult = ( payload.results || [] ).find(
+						( r ) => ! r.ok
+					);
+					setErr(
+						stoppedEarly
+							? sprintf(
+									/* translators: 1: number completed, 2: number requested, 3: failure reason */
+									__(
+										'Stopped after %1$d of %2$d — %3$s',
+										'agent-builder'
+									),
+									succeeded,
+									ids.length,
+									failedResult?.message ||
+										__( 'one action failed.', 'agent-builder' )
+							  )
+							: sprintf(
+									/* translators: 1: number succeeded, 2: number failed */
+									__( '%1$d succeeded, %2$d failed.', 'agent-builder' ),
+									succeeded,
+									failed
+							  )
+					);
+				}
+				reload( { silent: true } );
+			} )
+			.catch( ( e ) =>
+				setErr(
+					e.message ||
+						__( 'Could not process that group.', 'agent-builder' )
+				)
+			)
+			.finally( () => setBusy( '' ) );
+	};
+
 	const savePrefs = ( nextComfort ) => {
 		const c = nextComfort || comfort;
 		const profile = profiles.find( ( p ) => p.id === c );
@@ -1566,12 +1671,7 @@ function ApprovalsView( { data, reload } ) {
 					: __(
 							'Simple view for non-technical admins.',
 							'agent-builder'
-					  ) }{ ' ' }
-				<ScreenModeToggle
-					screen="approvals"
-					data={ data }
-					reload={ reload }
-				/>
+					  ) }
 			</p>
 
 			{ err && (
@@ -1810,69 +1910,160 @@ function ApprovalsView( { data, reload } ) {
 				</div>
 			) : (
 				<div className="agentic-react-approval-list">
-					{ rows.map( ( r ) => (
-						<div
-							key={ r.id }
-							className="agentic-react-approval-card"
-						>
-							<div className="agentic-react-approval-card__main">
-								<strong>{ r.title }</strong>
-								<InfoTip text={ APPROVAL_ACTION_HINT } />
-								<span
-									className={
-										'agentic-react-risk agentic-react-risk--' +
-										( r.risk_level || 'high' )
-									}
-								>
-									{ r.risk_level || 'high' }
-								</span>
-								<InfoTip
-									text={
-										RISK_EXPLANATIONS[
-											r.risk_level || 'high'
-										]
-									}
-								/>
-								<div className="agentic-react-muted">
-									{ r.subtitle
-										? `${ r.subtitle } · `
-										: '' }
-									{ r.created_at }
-								</div>
-								{ r.summary && (
-									<p className="agentic-react-approval-card__summary">
-										{ String( r.summary ).slice( 0, 200 ) }
-										{ String( r.summary ).length > 200
-											? '…'
-											: '' }
-									</p>
+					{ groups.map( ( group, groupIndex ) => {
+						const items = ( group.ids || [] )
+							.map( ( id ) => rows.find( ( r ) => r.id === id ) )
+							.filter( Boolean );
+						if ( ! items.length ) {
+							return null;
+						}
+						const groupBusy = busy === `bulk-${ groupIndex }`;
+						return (
+							<div
+								key={ groupIndex }
+								className="agentic-react-approval-group"
+							>
+								{ items.length > 1 && (
+									<div className="agentic-react-approval-group__header">
+										<span className="agentic-react-muted">
+											{ sprintf(
+												/* translators: 1: agent name, 2: number of actions, 3: relative time */
+												__(
+													'%1$s · %2$d actions · %3$s ago',
+													'agent-builder'
+												),
+												group.agent_id ||
+													__(
+														'Assistant',
+														'agent-builder'
+													),
+												items.length,
+												group.time_ago || ''
+											) }
+										</span>
+										<div className="agentic-react-approval-group__actions">
+											<Button
+												variant="primary"
+												disabled={ !! busy }
+												onClick={ () =>
+													bulkDecide(
+														group,
+														groupIndex,
+														'approve'
+													)
+												}
+											>
+												{ groupBusy
+													? __(
+															'Working…',
+															'agent-builder'
+													  )
+													: __(
+															'Approve all',
+															'agent-builder'
+													  ) }
+											</Button>
+											<Button
+												variant="secondary"
+												isDestructive
+												disabled={ !! busy }
+												onClick={ () =>
+													bulkDecide(
+														group,
+														groupIndex,
+														'reject'
+													)
+												}
+											>
+												{ __(
+													'Reject all',
+													'agent-builder'
+												) }
+											</Button>
+										</div>
+									</div>
 								) }
+								{ items.map( ( r ) => (
+									<div
+										key={ r.id }
+										className="agentic-react-approval-card"
+									>
+										<div className="agentic-react-approval-card__main">
+											<strong>{ r.title }</strong>
+											{ data.is_advanced && r.action && (
+												<code className="agentic-react-activity-item__raw">
+													{ r.action }
+												</code>
+											) }
+											<InfoTip text={ APPROVAL_ACTION_HINT } />
+											<span
+												className={
+													'agentic-react-risk agentic-react-risk--' +
+													( r.risk_level || 'high' )
+												}
+											>
+												{ r.risk_level || 'high' }
+											</span>
+											<InfoTip
+												text={
+													RISK_EXPLANATIONS[
+														r.risk_level || 'high'
+													]
+												}
+											/>
+											<div className="agentic-react-muted">
+												{ r.subtitle
+													? `${ r.subtitle } · `
+													: '' }
+												{ r.created_at }
+											</div>
+											{ r.summary && (
+												<p className="agentic-react-approval-card__summary">
+													{ String( r.summary ).slice(
+														0,
+														200
+													) }
+													{ String( r.summary )
+														.length > 200
+														? '…'
+														: '' }
+												</p>
+											) }
+										</div>
+										<div className="agentic-react-approval-card__actions">
+											<Button
+												variant="primary"
+												disabled={ !! busy }
+												onClick={ () =>
+													decide( r, 'approve' )
+												}
+											>
+												{ busy === `d-${ r.id }`
+													? __(
+															'Working…',
+															'agent-builder'
+													  )
+													: __(
+															'Approve',
+															'agent-builder'
+													  ) }
+											</Button>
+											<Button
+												variant="secondary"
+												isDestructive
+												disabled={ !! busy }
+												onClick={ () =>
+													decide( r, 'reject' )
+												}
+											>
+												{ __( 'Reject', 'agent-builder' ) }
+											</Button>
+										</div>
+									</div>
+								) ) }
 							</div>
-							<div className="agentic-react-approval-card__actions">
-								<Button
-									variant="primary"
-									disabled={ !! busy }
-									onClick={ () =>
-										decide( r, 'approve' )
-									}
-								>
-									{ busy === `d-${ r.id }`
-										? __( 'Working…', 'agent-builder' )
-										: __( 'Approve', 'agent-builder' ) }
-								</Button>
-								<Button
-									variant="secondary"
-									isDestructive
-									disabled={ !! busy }
-									onClick={ () =>
-										decide( r, 'reject' )
-									}
-								>
-									{ __( 'Reject', 'agent-builder' ) }
-								</Button>
-							</div>
-						</div>
-					) ) }
+						);
+					} ) }
 				</div>
 			) }
 
@@ -1884,15 +2075,6 @@ function ApprovalsView( { data, reload } ) {
 				<a href={ data.tabs?.find( ( t ) => t.id === 'backups' )?.url }>
 					{ __( 'View backups and restore', 'agent-builder' ) }
 				</a>
-				{ data.is_advanced && (
-					<>
-						{ ' ' }
-						{ __( '· Need batch approve tools?', 'agent-builder' ) }{ ' ' }
-						<a href={ data.classic_url || data.tabs?.[ 0 ]?.url }>
-							{ __( 'Open classic queue', 'agent-builder' ) }
-						</a>
-					</>
-				) }
 			</p>
 		</>
 	);
@@ -1949,12 +2131,7 @@ function LogsView( { data, reload } ) {
 				{ __(
 					'This is a friendly activity feed. Technical names stay in Advanced detail when useful.',
 					'agent-builder'
-				) }{ ' ' }
-				<ScreenModeToggle
-					screen="logs"
-					data={ data }
-					reload={ reload }
-				/>
+				) }
 			</p>
 
 			{ /* Summary metrics */ }
@@ -2343,12 +2520,25 @@ function AdminPagesApp() {
 	const panelTitle =
 		data.panel_title || data.title || __( 'Tools', 'agent-builder' );
 
+	// Every screen with a Basic/Advanced content split gets the same switch
+	// in the same top-right spot, so the control's location stays familiar
+	// as users move between pages instead of living inline in body copy.
+	const headerActions = SCREENS_WITH_MODE.includes( data.page ) ? (
+		<ScreenModeToggle
+			screen={ data.page }
+			data={ data }
+			reload={ reload }
+		/>
+	) : null;
+
 	// Outer .wrap is provided by PHP so the shared admin footer can attach.
 	return (
 		<div className="agentic-admin">
 			<AdminPage
 				title={ data.title }
 				description={ data.description }
+				actions={ headerActions }
+				wide
 			>
 				<Panel title={ panelTitle }>{ body }</Panel>
 			</AdminPage>

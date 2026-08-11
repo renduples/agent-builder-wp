@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.62
+Stable tag: 3.3.63
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,11 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.63 - 2026-08-10 =
+* Change: The Basic/Advanced switch on Tools, Skills, Approvals, and Activity now lives in the same top-right spot on every one of those screens (previously it sat inline in body copy, and Skills had no switch at all).
+* Fix: On Approvals, Advanced mode's only difference used to be an "Open classic queue" link that pointed nowhere real — the routing for it was never wired up, and the classic batch-approve page it targeted had no working buttons in the first place (removed along with the plugin's own React migration, never reconnected). Replaced with real bulk approve/reject: pending items are grouped by requesting agent and a short time window, with "Approve all"/"Reject all" actions per group. Approving runs the group in dependency-safe order (scaffold/create steps before whatever depends on them) and stops at the first failure; rejecting has no such ordering requirement.
+* Fix: Tools, Skills, Approvals, and Activity — all table/list screens — were capped at the same 1100px content width as form-heavy pages like Settings, leaving a large empty strip on the right at typical admin widths instead of using the full content area the way classic WordPress list tables do.
 
 = 3.3.62 - 2026-08-10 =
 * Fix: Clicking "Save changes" on any Settings tab that used the shared save button directly (Interface, Security, Memory, Agents, Instructions) threw a "Converting circular structure to JSON" error and silently failed to save — the button's `onClick` passed the raw click event through as the save handler's data argument, which then got spread into the save payload instead of the actual form state. The shared save button no longer forwards its click event.

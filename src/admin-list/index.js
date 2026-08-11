@@ -30,6 +30,7 @@ function AdminListApp() {
 			<AdminPage
 				title={ cfg.title || __( 'Items', 'agent-builder' ) }
 				description={ cfg.description || '' }
+				wide
 				actions={
 					cfg.primaryAction ? (
 						<Button variant="primary" href={ cfg.primaryAction.url }>
