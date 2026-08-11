@@ -403,7 +403,6 @@ if ( 'active' === $agentic_filter ) {
 
 <div class="wrap agentic-agents-page">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'Agents', 'agent-builder' ); ?></h1>
-	<a href="<?php echo esc_url( $agentic_marketplace_url ); ?>" class="page-title-action" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Community Agents', 'agent-builder' ); ?></a>
 	<a href="#" class="upload-view-toggle page-title-action" id="agentic-upload-toggle"><?php esc_html_e( 'Upload Agent', 'agent-builder' ); ?></a>
 	<hr class="wp-header-end">
 

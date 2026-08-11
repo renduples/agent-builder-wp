@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.65
+Stable tag: 3.3.66
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.66 - 2026-08-11 =
+* Change: Removed the redundant "Community Agents" button next to "Upload Agent" at the top of the Agents page — the same link is still available in the filter row below (All | Active | Inactive | Community Agents).
 
 = 3.3.65 - 2026-08-11 =
 * Change: Standardized on "agent" instead of "assistant" throughout the UI — admin pages, the chat widget, onboarding, tooltips, email notifications, and generated content all now consistently say "agent". Bundled agents that are actually named "Assistant" (WordPress Assistant, Assistant Trainer, User Assistant) keep their real names; only generic wording changed.
