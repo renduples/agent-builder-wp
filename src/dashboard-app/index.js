@@ -591,18 +591,16 @@ function QuickActionsCard( { data, onSaveQuickActions, mutate, dnd } ) {
 		);
 	}, [ data.quick_actions ] );
 
+	// A user who explicitly enabled an action via "Manage Actions" sees it
+	// regardless of Basic/Advanced mode — that per-user choice is the whole
+	// point of the picker. The "Advanced" note in the picker itself is just
+	// informational context, not a second gate on top of `enabled`.
 	const catalog = data.quick_actions || [];
 	const primary = catalog.filter(
-		( a ) =>
-			a.enabled &&
-			a.group !== 'secondary' &&
-			( ! a.advanced || data.is_advanced )
+		( a ) => a.enabled && a.group !== 'secondary'
 	);
 	const secondary = catalog.filter(
-		( a ) =>
-			a.enabled &&
-			a.group === 'secondary' &&
-			( ! a.advanced || data.is_advanced )
+		( a ) => a.enabled && a.group === 'secondary'
 	);
 
 	const toggle = ( slug, locked ) => {

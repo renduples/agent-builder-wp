@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.67
+Stable tag: 3.3.68
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.68 - 2026-08-12 =
+* Fix: On the Dashboard, a Quick Action explicitly enabled via "Manage Actions" (e.g. Tools, Skills, Approvals, Publish, Settings — all marked "Advanced") saved correctly but silently never appeared as a button unless the Dashboard itself was in Advanced mode, with no indication why. The picker's per-user selection is now authoritative regardless of Basic/Advanced mode — consistent with Basic/Advanced only ever affecting a page's own content, never navigation (see 3.3.64).
 
 = 3.3.67 - 2026-08-11 =
 * Add: Publish now has a Basic/Advanced switch like Tools/Skills/Approvals/Activity. Basic mode embeds a chat with a new bundled agent, Agent Orchestrator, that has real tools to do everything the 8 technical Publish tabs do — shortcodes, scheduled tasks, event listeners, admin-bar launchers, editor sidebar, frontend modal, Gutenberg blocks, and CLI settings — conversationally, without needing the tabs at all. Existing sites get Agent Orchestrator activated automatically after updating.
