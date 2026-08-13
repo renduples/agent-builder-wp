@@ -104,7 +104,8 @@ class Tool_Executor {
 
 		// --- Risk-level gating ---
 		$tool_instance = $this->tool_loader->get( $tool_name );
-		$risk          = Abilities_Manifest::get_effective_risk( $agent_id, $tool_name, $tool_instance );
+		$call_action   = is_string( $arguments['action'] ?? null ) ? $arguments['action'] : '';
+		$risk          = Abilities_Manifest::get_effective_risk( $agent_id, $tool_name, $tool_instance, $call_action );
 		$enforcement   = Risk_Level::enforcement( $risk, $mode );
 
 		if ( 'block' === $enforcement ) {

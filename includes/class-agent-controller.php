@@ -927,12 +927,22 @@ class Agent_Controller {
 					// Stop looping as soon as a tool needs user sign-off: in-chat
 					// confirmation (medium) OR the admin approval queue (high). Both are
 					// successful pauses, NOT errors — relay the tool's own message.
+					//
+					// This must break the tool_calls loop itself, not just note the
+					// pending state and keep going — a model that batches several tool
+					// calls in one turn (e.g. one per deployment channel to answer "where
+					// is everything deployed") would otherwise create a separate proposal
+					// for every one of them, leaving the top-level response text (built
+					// from whichever proposal's message was seen LAST) mismatched against
+					// the "Proposed Change" card actually shown (built from whichever
+					// proposal was seen FIRST, further down in $tool_results).
 					$tool_status = $tool_result['status'] ?? '';
 					if ( 'confirmation_required' === $tool_status || 'queued_for_approval' === $tool_status ) {
 						$has_pending_proposal = true;
 						if ( ! empty( $tool_result['message'] ) ) {
 							$pending_message = (string) $tool_result['message'];
 						}
+						break;
 					}
 				}
 

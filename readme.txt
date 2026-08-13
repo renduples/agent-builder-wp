@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.70
+Stable tag: 3.3.71
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.71 - 2026-08-13 =
+* Fix: Every Agent Orchestrator tool required in-chat confirmation for every call, including pure read/list lookups — asking a simple "where are agents deployed?" fired off 8 separate approval prompts, one per deployment tool, since risk was declared per-tool rather than per-action. Read-only actions (list, get, get_whitelist, get_agent_privileges) across all 8 tools are now correctly risk-free.
+* Fix: When a chat turn produced multiple pending confirmations at once, the response text and the "Proposed Change" card shown to the user described two different, mismatched actions — the tool-call loop wasn't actually stopping at the first one needing sign-off despite intending to, so it kept executing (and proposing) the rest of the batch. It now stops immediately.
 
 = 3.3.70 - 2026-08-13 =
 * Add: Editorial Director can now list which specific posts/pages are thin content (title, word count, URL) instead of only seeing an aggregate count — granted it the existing `list_posts_needing_seo` tool (already used by the SEO Optimizer) rather than building a duplicate. Previously it could tell you "30 thin posts" but had no way to say which ones, forcing it into slow, unreliable guesswork.

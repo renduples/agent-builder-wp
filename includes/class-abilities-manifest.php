@@ -113,20 +113,38 @@ class Abilities_Manifest {
 	 *
 	 * Returns null if the agent has no manifest or the tool isn't declared.
 	 *
-	 * @param string $agent_slug Agent identifier.
-	 * @param string $tool_name  Tool name (slug).
+	 * A tool with multiple actions of meaningfully different risk (e.g. a
+	 * `manage_x` tool whose `list`/`get` action is a pure read but whose
+	 * `create`/`update`/`delete` actions write) can declare a per-action
+	 * `risk_by_action` map alongside its flat `risk`; `$call_action` looks
+	 * that up first and falls back to the flat value for any action not
+	 * listed. This only ever narrows which of the tool's OWN actions the
+	 * flat risk applies to — it cannot introduce a risk below the tool's
+	 * own intrinsic default, since get_effective_risk() still maxes this
+	 * against that floor.
+	 *
+	 * @param string $agent_slug  Agent identifier.
+	 * @param string $tool_name   Tool name (slug).
+	 * @param string $call_action Optional `action` argument of the specific call, for tools with risk_by_action.
 	 * @return string|null Risk level string or null.
 	 */
-	public static function get_declared_risk( string $agent_slug, string $tool_name ): ?string {
+	public static function get_declared_risk( string $agent_slug, string $tool_name, string $call_action = '' ): ?string {
 		$manifest = self::load( $agent_slug );
 		if ( ! $manifest ) {
 			return null;
 		}
 
 		// Check tools (standalone tools).
-		if ( isset( $manifest['abilities'][ $tool_name ]['risk'] ) ) {
-			$risk = $manifest['abilities'][ $tool_name ]['risk'];
-			return Risk_Level::is_valid( $risk ) ? $risk : null;
+		if ( isset( $manifest['abilities'][ $tool_name ] ) ) {
+			$ability = $manifest['abilities'][ $tool_name ];
+			if ( '' !== $call_action && isset( $ability['risk_by_action'][ $call_action ] ) ) {
+				$risk = $ability['risk_by_action'][ $call_action ];
+				return Risk_Level::is_valid( $risk ) ? $risk : null;
+			}
+			if ( isset( $ability['risk'] ) ) {
+				$risk = $ability['risk'];
+				return Risk_Level::is_valid( $risk ) ? $risk : null;
+			}
 		}
 
 		// Check wp_abilities (wp-extended abilities used as tools).
@@ -146,14 +164,18 @@ class Abilities_Manifest {
 	 * Get the effective risk level for a tool call by a specific agent.
 	 *
 	 * Effective risk = max( tool_default_risk, manifest_risk, admin_override ).
-	 * An agent or admin can only escalate risk, never downgrade.
+	 * An agent or admin can only escalate risk, never downgrade — this holds
+	 * per call too: passing $call_action only lets a tool's manifest risk
+	 * apply more narrowly (via risk_by_action, see get_declared_risk()), it
+	 * never lowers the result below the tool's own intrinsic default.
 	 *
-	 * @param string    $agent_slug Agent identifier.
-	 * @param string    $tool_name  Tool name.
-	 * @param Tool_Base $tool       Tool instance (for default risk).
+	 * @param string    $agent_slug  Agent identifier.
+	 * @param string    $tool_name   Tool name.
+	 * @param Tool_Base $tool        Tool instance (for default risk).
+	 * @param string    $call_action Optional `action` argument of the specific call, for tools with risk_by_action.
 	 * @return string Effective risk level.
 	 */
-	public static function get_effective_risk( string $agent_slug, string $tool_name, ?Tool_Base $tool = null ): string {
+	public static function get_effective_risk( string $agent_slug, string $tool_name, ?Tool_Base $tool = null, string $call_action = '' ): string {
 		// 1. Tool default risk — prefer registry, fall back to instance method.
 		$tool_default = Risk_Level::get_tool_default( $tool_name );
 		if ( $tool ) {
@@ -161,7 +183,7 @@ class Abilities_Manifest {
 		}
 
 		// 2. Manifest declaration (can only escalate).
-		$manifest_risk = self::get_declared_risk( $agent_slug, $tool_name );
+		$manifest_risk = self::get_declared_risk( $agent_slug, $tool_name, $call_action );
 		$effective     = $manifest_risk
 			? Risk_Level::max( $tool_default, $manifest_risk )
 			: $tool_default;
