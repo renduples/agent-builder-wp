@@ -14,6 +14,7 @@
     "get_content_stats",
     "get_site_writing_stats",
     "list_posts",
+    "list_posts_needing_seo",
     "search_content",
     "delegate_to_agent",
     "report_issue"

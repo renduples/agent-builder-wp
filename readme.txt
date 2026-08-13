@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.69
+Stable tag: 3.3.70
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.70 - 2026-08-13 =
+* Add: Editorial Director can now list which specific posts/pages are thin content (title, word count, URL) instead of only seeing an aggregate count — granted it the existing `list_posts_needing_seo` tool (already used by the SEO Optimizer) rather than building a duplicate. Previously it could tell you "30 thin posts" but had no way to say which ones, forcing it into slow, unreliable guesswork.
 
 = 3.3.69 - 2026-08-13 =
 * Fix: When a provider (Gemini, Claude, etc.) cut a response short because it hit its output token limit mid-answer — common on tool-heavy multi-step requests — the truncated fragment was silently shown as if it were the complete answer, with no indication anything was cut off. The streaming response parsers for Google and Anthropic never even captured the provider's truncation signal in the first place (only the non-streaming path did); both now do, and a response cut short this way gets a visible note appended rather than being presented as finished.
