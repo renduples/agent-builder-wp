@@ -129,6 +129,18 @@ class Agent_Controller {
 	}
 
 	/**
+	 * Notice appended to a response whose final completion was cut off by the
+	 * provider's token limit (finish_reason 'length'/'max_tokens'), so a
+	 * truncated fragment is never presented to the user as if it were the
+	 * complete answer.
+	 *
+	 * @return string
+	 */
+	private static function truncation_notice(): string {
+		return "\n\n" . __( '⚠️ This response was cut short — the model hit its token limit before finishing. Try asking me to continue, or break the request into smaller steps.', 'agent-builder' );
+	}
+
+	/**
 	 * Get the LLM client instance.
 	 *
 	 * @return LLM_Client
@@ -946,6 +958,9 @@ class Agent_Controller {
 			} else {
 				// No more tool calls, we have our final response.
 				$response = $assistant_message['content'];
+				if ( 'length' === ( $choice['finish_reason'] ?? '' ) ) {
+					$response .= self::truncation_notice();
+				}
 				break;
 			}
 		}
@@ -1224,6 +1239,9 @@ class Agent_Controller {
 				}
 			} else {
 				$response = $assistant_message['content'];
+				if ( 'length' === ( $choice['finish_reason'] ?? '' ) ) {
+					$response .= "\n\n" . __( '[Note: this result was cut short — the model hit its token limit before finishing.]', 'agent-builder' );
+				}
 				break;
 			}
 		}

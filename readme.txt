@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.68
+Stable tag: 3.3.69
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.69 - 2026-08-13 =
+* Fix: When a provider (Gemini, Claude, etc.) cut a response short because it hit its output token limit mid-answer — common on tool-heavy multi-step requests — the truncated fragment was silently shown as if it were the complete answer, with no indication anything was cut off. The streaming response parsers for Google and Anthropic never even captured the provider's truncation signal in the first place (only the non-streaming path did); both now do, and a response cut short this way gets a visible note appended rather than being presented as finished.
 
 = 3.3.68 - 2026-08-12 =
 * Fix: On the Dashboard, a Quick Action explicitly enabled via "Manage Actions" (e.g. Tools, Skills, Approvals, Publish, Settings — all marked "Advanced") saved correctly but silently never appeared as a button unless the Dashboard itself was in Advanced mode, with no indication why. The picker's per-user selection is now authoritative regardless of Basic/Advanced mode — consistent with Basic/Advanced only ever affecting a page's own content, never navigation (see 3.3.64).

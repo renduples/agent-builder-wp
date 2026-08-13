@@ -719,8 +719,13 @@ class LLM_Client {
 			$usage['prompt_tokens'] = $chunk['message']['usage']['input_tokens'] ?? 0;
 		} elseif ( 'message_delta' === $type ) {
 			$usage['completion_tokens'] = $chunk['usage']['output_tokens'] ?? 0;
-			if ( 'tool_use' === ( $chunk['delta']['stop_reason'] ?? '' ) ) {
+			// Mirror normalize_anthropic_response()'s stop_reason mapping so
+			// streamed and non-streamed calls report truncation the same way.
+			$stop_reason = $chunk['delta']['stop_reason'] ?? '';
+			if ( 'tool_use' === $stop_reason ) {
 				$finish_reason = 'tool_calls';
+			} elseif ( 'max_tokens' === $stop_reason ) {
+				$finish_reason = 'length';
 			}
 		}
 	}
@@ -765,6 +770,23 @@ class LLM_Client {
 				$finish_reason = 'tool_calls';
 			}
 		}
+
+		// finishReason only appears on the terminal chunk for a candidate — mirror
+		// normalize_google_response()'s mapping so streamed and non-streamed calls
+		// report truncation (MAX_TOKENS) the same way. Never override an
+		// already-detected 'tool_calls' — Gemini can report STOP on the same
+		// chunk that carries the functionCall, which is a normal turn-end, not
+		// evidence the model finished without needing the tool.
+		$chunk_finish = $chunk['candidates'][0]['finishReason'] ?? '';
+		if ( '' !== $chunk_finish && 'tool_calls' !== $finish_reason ) {
+			$finish_map    = array(
+				'STOP'       => 'stop',
+				'MAX_TOKENS' => 'length',
+				'SAFETY'     => 'content_filter',
+			);
+			$finish_reason = $finish_map[ $chunk_finish ] ?? $finish_reason;
+		}
+
 		if ( isset( $chunk['usageMetadata'] ) ) {
 			$usage['prompt_tokens']     = $chunk['usageMetadata']['promptTokenCount'] ?? 0;
 			$usage['completion_tokens'] = $chunk['usageMetadata']['candidatesTokenCount'] ?? 0;
