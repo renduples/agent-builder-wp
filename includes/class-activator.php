@@ -214,7 +214,7 @@ final class Activator {
 			'agentic_editor_sidebar_settings' => array(
 				'enabled'         => '1',
 				'agent_slug'      => 'content-writer',
-				'agent_slugs'     => array( 'content-writer', 'seo-assistant', 'wordpress-assistant' ),
+				'agent_slugs'     => array( 'content-writer', 'seo-optimizer', 'wordpress-assistant' ),
 				'post_types'      => array( 'post', 'page' ),
 				'inject_context'  => '1',
 				'agent_mode'      => 'autonomous',
@@ -1080,6 +1080,7 @@ final class Activator {
 
 		self::migrate_agent_personas();
 		self::migrate_agent_overrides();
+		self::migrate_editor_sidebar_seo_slug();
 
 		// Schema migrations (proper versioned table changes).
 		self::run_schema_migrations();
@@ -1530,6 +1531,87 @@ final class Activator {
 			array(
 				'agents_migrated' => count( $migrated ),
 				'detail'          => $migrated,
+			)
+		);
+	}
+
+	/**
+	 * Fix a since-day-one typo in the fresh-install default: the SEO agent's
+	 * slug was hardcoded as 'seo-assistant' in set_default_options() instead
+	 * of the real slug 'seo-optimizer'. Any install whose editor-sidebar
+	 * settings still have the never-edited default carries this bad slug in
+	 * TWO places that must both be fixed — it silently never matches a real
+	 * agent, so "SEO Optimizer" always showed as unchecked in the classic
+	 * Editor tab despite being listed as enabled by anything that reads the
+	 * raw data (e.g. tool output):
+	 *
+	 * 1. The `agentic_editor_sidebar_settings` option itself (fresh-install
+	 *    default, or fallback source when no Deployments rows exist yet).
+	 * 2. A `wp_agentic_deployments` row (type admin_ui) with this same slug,
+	 *    which Deployments_Migrator copied verbatim from the option the
+	 *    first time it ran — the *primary* source the classic Editor tab
+	 *    and manage_editor_sidebar_agent tool actually read once rows exist.
+	 *
+	 * @return void
+	 */
+	private static function migrate_editor_sidebar_seo_slug(): void {
+		if ( get_option( 'agentic_editor_sidebar_seo_slug_fixed_v1' ) ) {
+			self::record( 'migrate_editor_sidebar_seo_slug', 'skipped', 'already migrated' );
+			return;
+		}
+
+		$option_changed = false;
+		$settings       = get_option( 'agentic_editor_sidebar_settings', null );
+
+		if ( is_array( $settings ) && ! empty( $settings['agent_slugs'] ) && is_array( $settings['agent_slugs'] ) ) {
+			$fixed = array_values(
+				array_unique(
+					array_map(
+						static fn( $slug ) => 'seo-assistant' === $slug ? 'seo-optimizer' : $slug,
+						$settings['agent_slugs']
+					)
+				)
+			);
+
+			$option_changed = $fixed !== array_values( $settings['agent_slugs'] );
+			if ( $option_changed ) {
+				$settings['agent_slugs'] = $fixed;
+				update_option( 'agentic_editor_sidebar_settings', $settings );
+			}
+		}
+
+		$rows_changed = 0;
+		if ( class_exists( Deployments::class ) ) {
+			global $wpdb;
+			$table = Deployments::table();
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$has_correct = (bool) $wpdb->get_var(
+				$wpdb->prepare( 'SELECT id FROM %i WHERE type = %s AND agent_slug = %s', $table, Deployments::TYPE_ADMIN_UI, 'seo-optimizer' )
+			);
+
+			if ( $has_correct ) {
+				// A correct row already exists — drop the bad one rather than collide.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$rows_changed = (int) $wpdb->delete( $table, array( 'type' => Deployments::TYPE_ADMIN_UI, 'agent_slug' => 'seo-assistant' ) );
+			} else {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$rows_changed = (int) $wpdb->update(
+					$table,
+					array( 'agent_slug' => 'seo-optimizer' ),
+					array( 'type' => Deployments::TYPE_ADMIN_UI, 'agent_slug' => 'seo-assistant' )
+				);
+			}
+		}
+
+		update_option( 'agentic_editor_sidebar_seo_slug_fixed_v1', true );
+
+		self::record(
+			'migrate_editor_sidebar_seo_slug',
+			'ok',
+			array(
+				'option_changed' => $option_changed,
+				'rows_changed'   => $rows_changed,
 			)
 		);
 	}
