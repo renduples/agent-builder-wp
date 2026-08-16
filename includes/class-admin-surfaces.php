@@ -95,8 +95,13 @@ class Admin_Surfaces {
 		}
 
 		if ( in_array( 'media', $screens, true ) ) {
+			// Covers List View — WP_Media_List_Table renders this server-side.
+			add_action( 'restrict_manage_posts', array( $this, 'media_toolbar_launcher' ), 10, 2 );
 			add_filter( 'attachment_fields_to_edit', array( $this, 'attachment_alt_launcher' ), 20, 2 );
 			add_filter( 'media_row_actions', array( $this, 'media_row_action' ), 20, 2 );
+			// Covers Grid View (the default) — rendered client-side by Backbone
+			// (wp.media), so restrict_manage_posts never fires there at all.
+			add_action( 'admin_footer-upload.php', array( $this, 'media_grid_launcher_js' ) );
 		}
 
 		if ( in_array( 'users', $screens, true ) ) {
@@ -438,6 +443,117 @@ class Admin_Surfaces {
 	/*
 		Media Library                                                         */
 	/* --------------------------------------------------------------------- */
+
+	/**
+	 * Add a toolbar-level "Ask AI about media" launcher above the Media
+	 * Library grid/list. Unlike the other four screens, Media's other two
+	 * launchers (attachment_alt_launcher, media_row_action) only ever
+	 * surface once a user has clicked into an individual item or switched
+	 * out of the default Grid View into List View — so without this one,
+	 * nothing is visible at all on the screen most people actually land on.
+	 *
+	 * restrict_manage_posts is shared across every post-type list table
+	 * (Posts, Pages, custom post types), not media-specific, so the
+	 * post_type check is required — without it this would also render on
+	 * every other admin list screen.
+	 *
+	 * @param string $post_type Post type of the current list table.
+	 * @param string $which     Location of the extra table nav ('bar' for media).
+	 * @return void
+	 */
+	public function media_toolbar_launcher( string $post_type, string $which ): void {
+		if ( 'attachment' !== $post_type || 'bar' !== $which ) {
+			return;
+		}
+		$html = $this->media_launcher_html();
+		if ( '' !== $html ) {
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- media_launcher_html() returns escaped HTML.
+		}
+	}
+
+	/**
+	 * Build the wrapped "Ask AI about media" launcher markup (link + dismiss
+	 * button), shared by the List View server-render (media_toolbar_launcher)
+	 * and the Grid View JS injection (media_grid_launcher_js) so both surface
+	 * the exact same control rather than two copies that could drift apart.
+	 *
+	 * @return string Escaped HTML, or '' if the launcher shouldn't show.
+	 */
+	private function media_launcher_html(): string {
+		if ( $this->is_dismissed( 'media' ) ) {
+			return '';
+		}
+		$slug = $this->resolve_agent( 'media-assistant' );
+		if ( '' === $slug ) {
+			return '';
+		}
+
+		$prompt = __( 'Give me an overview of my media library: any images missing alt text, unused files I could clean up, and anything else worth a look.', 'agent-builder' );
+
+		$link = $this->launcher_link(
+			array(
+				'slug'   => $slug,
+				'prompt' => $prompt,
+				'label'  => __( 'Ask AI about media', 'agent-builder' ),
+			)
+		);
+		if ( '' === $link ) {
+			return '';
+		}
+
+		return sprintf(
+			'<span class="agentic-launcher-wrap agentic-launcher-wrap--toolbar">%1$s%2$s</span>',
+			$link, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- launcher_link() returns escaped HTML.
+			$this->dismiss_button( 'media' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- dismiss_button() returns escaped HTML.
+		);
+	}
+
+	/**
+	 * Inject the same launcher into Media Library's Grid View — the default
+	 * view, rendered client-side by Backbone (wp.media) rather than
+	 * WP_Media_List_Table, so no PHP action hook fires inside it.
+	 *
+	 * .media-toolbar-secondary exists in the initial server-rendered HTML as
+	 * an empty shell, but Backbone's own AttachmentsBrowser view populates
+	 * (and in doing so, clears) it asynchronously after this admin_footer
+	 * script has already run — an insert-once-at-parse-time approach loses
+	 * the race and gets wiped. A MutationObserver re-inserts the launcher
+	 * every time the toolbar's contents change instead of relying on timing.
+	 *
+	 * @return void
+	 */
+	public function media_grid_launcher_js(): void {
+		$html = $this->media_launcher_html();
+		if ( '' === $html ) {
+			return;
+		}
+		?>
+		<script>
+		( function () {
+			var launcherHtml = <?php echo wp_json_encode( $html ); ?>;
+
+			function insert() {
+				var toolbar = document.querySelector( '.media-toolbar-secondary' );
+				if ( ! toolbar || toolbar.querySelector( '.agentic-launcher-wrap' ) ) {
+					return;
+				}
+				var wrap = document.createElement( 'div' );
+				wrap.innerHTML = launcherHtml;
+				toolbar.appendChild( wrap.firstElementChild );
+			}
+
+			insert();
+
+			// Observe body, not the toolbar node itself — Backbone may replace
+			// the element outright rather than just clearing its contents, which
+			// would silently detach an observer bound to the original reference.
+			// insert() re-queries the toolbar fresh each time, so this stays
+			// correct regardless of which underlying node currently matches.
+			new MutationObserver( insert ).observe( document.body, { childList: true, subtree: true } );
+		} )();
+		</script>
+		<?php
+	}
 
 	/**
 	 * Add a "Generate alt text" launcher to the attachment edit fields.

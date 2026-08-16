@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.72
+Stable tag: 3.3.73
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.73 - 2026-08-16 =
+* Fix: The "Ask AI" contextual launcher on Media Library was invisible on the screen almost everyone actually sees — the default Grid View. It only ever appeared after clicking into an individual image's details, or after manually switching to List View, unlike the other four screens (Dashboard, Plugins, Users, Comments) where it's visible immediately. Added a toolbar-level launcher matching the other screens, plus a small script for Grid View specifically, since that view is rendered entirely client-side and no server-side hook fires inside it.
 
 = 3.3.72 - 2026-08-13 =
 * Fix: The SEO agent's slug has been hardcoded as "seo-assistant" since the plugin's first release — the real slug is "seo-optimizer" — in the fresh-install default for the Gutenberg editor sidebar feature. This meant SEO Optimizer could never actually be enabled there: it silently never matched a real agent, so the classic Editor tab always showed it unchecked no matter what, while anything reading the raw stored data (e.g. an AI agent asked "what's deployed where") reported it as available under a name that doesn't exist. Existing sites are corrected automatically on update; fresh installs now seed the correct slug.
