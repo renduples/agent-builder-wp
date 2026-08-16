@@ -145,10 +145,15 @@ class Tool_Executor {
 
 		if ( 'queue' === $enforcement ) {
 			$queue    = new Approval_Queue();
-			$approved = $queue->find_approved( $agent_id, $tool_name );
+			$approved = $queue->find_approved( $agent_id, $tool_name, $arguments );
 
 			if ( $approved ) {
 				$queue->mark_executed( (int) $approved['id'] );
+				// Execute the approved params blob, not a later differing call.
+				$stored = json_decode( (string) ( $approved['params'] ?? '' ), true );
+				if ( is_array( $stored ) ) {
+					$arguments = $stored;
+				}
 				$this->audit->log(
 					$agent_id,
 					'tool_approval_consumed',

@@ -105,6 +105,11 @@ class Manage_Event_Listener extends \Agentic\Tool_Base {
 	 * @return array Result data.
 	 */
 	public function execute( array $arguments ): array {
+		$denied = \Agentic\Tool_Helpers::deny_unless_admin_user();
+		if ( null !== $denied ) {
+			return $denied;
+		}
+
 		$action = sanitize_key( (string) ( $arguments['action'] ?? '' ) );
 
 		if ( 'list' === $action ) {

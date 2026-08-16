@@ -3,7 +3,7 @@
  * Tool: edit_image
  *
  * Edit an existing WordPress media library image using the Agentic Image Generation
- * service (Vertex AI Imagen 4 inpainting / maskless edit).
+ * service (Gemini 3.1 Flash Image conversational/semantic edit).
  *
  * @package    Agent_Builder
  * @subpackage Tools
@@ -21,9 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Edit an existing image from the media library using AI (inpainting or maskless edit).
+ * Edit an existing image from the media library using AI (conversational/semantic edit).
  * The edited result is saved as a new media library item.
- * Credit costs: 3 credits (imagen-4-fast), 6 credits (imagen-4, default), 9 credits (imagen-4-ultra).
+ * Credit costs: 5 credits (imagen-4-fast), 10 credits (imagen-4, default), 23 credits (imagen-4-ultra).
  */
 class Edit_Image extends \Agentic\Tool_Base {
 
@@ -42,7 +42,7 @@ class Edit_Image extends \Agentic\Tool_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return 'Edit an existing image from the WordPress media library using AI. Describe what to change — the image is updated and saved as a new media library item. Optionally provide a mask attachment ID (white areas = edit zone) for precise inpainting. Credit costs: 3 (imagen-4-fast), 6 (imagen-4, default), 9 (imagen-4-ultra). Requires Vector Store Pro.';
+		return 'Edit an existing image from the WordPress media library using AI. Describe what to change — the image is updated and saved as a new media library item. Optionally provide a mask attachment ID as a best-effort hint of which region to change; the edit is applied conversationally from the prompt, not pixel-precise inpainting. Credit costs: 5 (imagen-4-fast), 10 (imagen-4, default), 23 (imagen-4-ultra). Requires Vector Store Pro.';
 	}
 
 	/**
@@ -73,11 +73,11 @@ class Edit_Image extends \Agentic\Tool_Base {
 				),
 				'mask_attachment_id' => array(
 					'type'        => 'integer',
-					'description' => 'Optional. Attachment ID of a mask image (PNG). White areas indicate the region to edit; black areas are preserved.',
+					'description' => 'Optional. Attachment ID of a mask image (PNG) used as a best-effort region hint — the edit is applied conversationally from the prompt, not pixel-precise inpainting, so results near the mask boundary may vary.',
 				),
 				'model'              => array(
 					'type'        => 'string',
-					'description' => '"imagen-4-fast" (3 credits), "imagen-4" (6 credits, default), "imagen-4-ultra" (9 credits).',
+					'description' => '"imagen-4-fast" (5 credits), "imagen-4" (10 credits, default), "imagen-4-ultra" (23 credits).',
 					'enum'        => array( 'imagen-4-fast', 'imagen-4', 'imagen-4-ultra' ),
 				),
 				'filename'           => array(

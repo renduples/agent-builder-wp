@@ -106,6 +106,11 @@ class Manage_Cli_Settings extends \Agentic\Tool_Base {
 	 * @return array Result data.
 	 */
 	public function execute( array $arguments ): array {
+		$denied = \Agentic\Tool_Helpers::deny_unless_admin_user();
+		if ( null !== $denied ) {
+			return $denied;
+		}
+
 		$action = sanitize_key( (string) ( $arguments['action'] ?? '' ) );
 
 		if ( in_array( $action, array( 'get_whitelist', 'add_command', 'remove_command' ), true ) ) {

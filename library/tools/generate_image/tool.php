@@ -3,7 +3,7 @@
  * Tool: generate_image
  *
  * Generate images from a text prompt via the Agentic Image Generation service
- * (Vertex AI Imagen 4) and save them to the WordPress media library.
+ * (Gemini 3.1 Flash Image) and save them to the WordPress media library.
  *
  * @package    Agent_Builder
  * @subpackage Tools
@@ -22,8 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Generate one or more images from a text prompt and save them to the media library.
- * Powered by Agentic Image Generation (Vertex AI Imagen 4). Requires Vector Store Pro.
- * Credit costs: imagen-4-fast = 3/image, imagen-4 = 6/image, imagen-4-ultra = 9/image.
+ * Powered by Agentic Image Generation (Gemini 3.1 Flash Image). Requires Vector Store Pro.
+ * Credit costs: imagen-4-fast = 5/image, imagen-4 = 10/image, imagen-4-ultra = 23/image.
  */
 class Generate_Image extends \Agentic\Tool_Base {
 
@@ -42,7 +42,7 @@ class Generate_Image extends \Agentic\Tool_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return 'Generate one or more images from a text prompt and save them to the WordPress media library. Powered by Agentic Image Generation (Vertex AI Imagen 4). Credit costs: 3 credits for imagen-4-fast, 6 for imagen-4 (default), 9 for imagen-4-ultra — per image. Requires an active Vector Store Pro licence.';
+		return 'Generate one or more images from a text prompt and save them to the WordPress media library. Powered by Agentic Image Generation (Gemini 3.1 Flash Image). Credit costs: 5 credits for imagen-4-fast, 10 for imagen-4 (default), 23 for imagen-4-ultra — per image. Requires an active Vector Store Pro licence.';
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Generate_Image extends \Agentic\Tool_Base {
 				),
 				'model'           => array(
 					'type'        => 'string',
-					'description' => '"imagen-4-fast" (3 credits/image), "imagen-4" (6 credits/image, default), "imagen-4-ultra" (9 credits/image, best quality).',
+					'description' => '"imagen-4-fast" (5 credits/image), "imagen-4" (10 credits/image, default), "imagen-4-ultra" (23 credits/image, best quality).',
 					'enum'        => array( 'imagen-4-fast', 'imagen-4', 'imagen-4-ultra' ),
 				),
 				'count'           => array(

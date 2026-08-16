@@ -224,6 +224,13 @@ class LLM_Client {
 			return new \WP_Error( 'not_configured', 'LLM API key not configured.' );
 		}
 
+		// Models that cannot tool-call (tinyllama, runtime-discovered Ollama tags, …):
+		// strip tools before the request so agents still get a text reply (D8).
+		if ( ! empty( $tools ) && ! Model_Capabilities::supports_tools( (string) $this->model, (string) $this->provider ) ) {
+			$tools          = array();
+			$force_tool_use = false;
+		}
+
 		// Get endpoint and headers for the provider.
 		$endpoint = $this->get_endpoint();
 		$headers  = $this->get_headers();
@@ -249,6 +256,10 @@ class LLM_Client {
 			},
 			(array) $tools
 		);
+
+		// Remember whether tools were sent so a provider rejection can retry once
+		// without tools (unknown local models not yet in the capability rules).
+		$sent_tools = ! empty( $clean_tools );
 
 		$body = $this->format_request( $messages, $clean_tools, $force_tool_use );
 
@@ -347,6 +358,20 @@ class LLM_Client {
 				);
 			}
 
+			// Provider rejected tool schemas (common for small Ollama models): retry once without tools.
+			if ( $sent_tools && Model_Capabilities::is_tools_unsupported_error( (string) $error_message ) ) {
+				Model_Capabilities::mark_tools_unsupported( (string) $this->model, (string) $this->provider );
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log(
+					sprintf(
+						'Agentic LLM [%s/%s] does not support tools — retrying without tool schemas.',
+						$this->provider,
+						$this->model
+					)
+				);
+				return $this->chat( $messages, array(), false );
+			}
+
 			// Log the full response and request body for debugging.
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( sprintf( 'Agentic LLM error [%s/%s] HTTP %d: %s', $this->provider, $this->model, $status, $raw_body ) );
@@ -419,6 +444,12 @@ class LLM_Client {
 
 		if ( ! $this->is_configured() ) {
 			return new \WP_Error( 'not_configured', 'LLM API key not configured.' );
+		}
+
+		// Same tool stripping as chat() for models without tool support (D8).
+		if ( ! empty( $tools ) && ! Model_Capabilities::supports_tools( (string) $this->model, (string) $this->provider ) ) {
+			$tools          = array();
+			$force_tool_use = false;
 		}
 
 		$p           = Provider_Registry::get( $this->provider );
@@ -545,6 +576,16 @@ class LLM_Client {
 								if ( ! empty( $chunk['done'] ) ) {
 									$usage['prompt_tokens']     = $chunk['prompt_eval_count'] ?? 0;
 									$usage['completion_tokens'] = $chunk['eval_count'] ?? 0;
+									// Map Ollama done_reason so truncation is visible (parity with
+									// OpenAI/Anthropic/Google stream parsers). Never override tool_calls.
+									if ( 'tool_calls' !== $finish_reason ) {
+										$done_reason = (string) ( $chunk['done_reason'] ?? '' );
+										if ( in_array( $done_reason, array( 'length', 'max_tokens' ), true ) ) {
+											$finish_reason = 'length';
+										} elseif ( '' !== $done_reason && 'stop' !== $finish_reason ) {
+											$finish_reason = ( 'stop' === $done_reason ) ? 'stop' : $finish_reason;
+										}
+									}
 								}
 							} else {
 								$this->parse_openai_stream_chunk( $chunk, $on_token, $acc_text, $tool_calls_raw, $finish_reason, $usage );
@@ -602,6 +643,14 @@ class LLM_Client {
 					if ( ! empty( $chunk['message']['tool_calls'] ) ) {
 						$tool_calls_raw = array_merge( $tool_calls_raw ?: array(), $chunk['message']['tool_calls'] );
 						$finish_reason  = 'tool_calls';
+					}
+					if ( ! empty( $chunk['done'] ) && 'tool_calls' !== $finish_reason ) {
+						$done_reason = (string) ( $chunk['done_reason'] ?? '' );
+						if ( in_array( $done_reason, array( 'length', 'max_tokens' ), true ) ) {
+							$finish_reason = 'length';
+						} elseif ( 'stop' === $done_reason ) {
+							$finish_reason = 'stop';
+						}
 					}
 				} else {
 					$this->parse_openai_stream_chunk( $chunk, $on_token, $acc_text, $tool_calls_raw, $finish_reason, $usage );

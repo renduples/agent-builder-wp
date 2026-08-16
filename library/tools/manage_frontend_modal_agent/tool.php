@@ -99,6 +99,11 @@ class Manage_Frontend_Modal_Agent extends \Agentic\Tool_Base {
 	 * @return array Result data.
 	 */
 	public function execute( array $arguments ): array {
+		$denied = \Agentic\Tool_Helpers::deny_unless_admin_user();
+		if ( null !== $denied ) {
+			return $denied;
+		}
+
 		$action = sanitize_key( (string) ( $arguments['action'] ?? '' ) );
 
 		if ( 'list' === $action ) {
@@ -142,13 +147,31 @@ class Manage_Frontend_Modal_Agent extends \Agentic\Tool_Base {
 			return array( 'ok' => true, 'agent_slug' => $slug, 'enabled' => false );
 		}
 
-		$position = sanitize_key( (string) ( $arguments['position'] ?? 'bottom-right' ) );
+		// Merge onto existing config so omitted fields are not reset to defaults.
+		$existing_cfg = array();
+		if ( $existing_id ) {
+			$existing_row = Deployments::get( $existing_id );
+			if ( is_array( $existing_row ) && is_array( $existing_row['config'] ?? null ) ) {
+				$existing_cfg = $existing_row['config'];
+			}
+		}
+
+		$position = array_key_exists( 'position', $arguments )
+			? sanitize_key( (string) $arguments['position'] )
+			: sanitize_key( (string) ( $existing_cfg['position'] ?? 'bottom-right' ) );
 		if ( ! in_array( $position, array( 'bottom-right', 'bottom-left' ), true ) ) {
 			$position = 'bottom-right';
 		}
-		$pages = sanitize_key( (string) ( $arguments['pages'] ?? 'all' ) );
+		$pages = array_key_exists( 'pages', $arguments )
+			? sanitize_key( (string) $arguments['pages'] )
+			: sanitize_key( (string) ( $existing_cfg['pages'] ?? 'all' ) );
 		if ( ! in_array( $pages, array( 'all', 'front', 'singular', 'homepage' ), true ) ) {
 			$pages = 'all';
+		}
+		if ( array_key_exists( 'require_login', $arguments ) ) {
+			$require_login = ! empty( $arguments['require_login'] ) ? '1' : '0';
+		} else {
+			$require_login = ! empty( $existing_cfg['require_login'] ) ? '1' : '0';
 		}
 
 		$save = array(
@@ -160,7 +183,7 @@ class Manage_Frontend_Modal_Agent extends \Agentic\Tool_Base {
 			'config'     => array(
 				'position'      => $position,
 				'pages'         => $pages,
-				'require_login' => ! empty( $arguments['require_login'] ) ? '1' : '0',
+				'require_login' => $require_login,
 			),
 		);
 		if ( $existing_id ) {
@@ -174,7 +197,7 @@ class Manage_Frontend_Modal_Agent extends \Agentic\Tool_Base {
 			'enabled'       => true,
 			'position'      => $position,
 			'pages'         => $pages,
-			'require_login' => ! empty( $arguments['require_login'] ),
+			'require_login' => '1' === $require_login,
 		);
 	}
 

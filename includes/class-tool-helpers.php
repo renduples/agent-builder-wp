@@ -25,6 +25,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Tool_Helpers {
 
 	/**
+	 * Gate mutating deploy tools for interactive non-admin users.
+	 *
+	 * Returns null when the call may proceed. When a real user is logged in but
+	 * lacks manage_options, returns an error payload. Unauthenticated contexts
+	 * (cron / hooks / CLI) are allowed through — risk gating and agent assignment
+	 * still apply.
+	 *
+	 * @return array{error:string}|null
+	 */
+	public static function deny_unless_admin_user(): ?array {
+		$user_id = get_current_user_id();
+		if ( $user_id > 0 && ! current_user_can( 'manage_options' ) ) {
+			return array(
+				'error' => __( 'Administrator privileges are required for this action.', 'agent-builder' ),
+			);
+		}
+		return null;
+	}
+
+	/**
 	 * Check whether a name matches any sensitive pattern.
 	 *
 	 * Used by tools that read/write options or post meta to block

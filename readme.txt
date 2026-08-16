@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.73
+Stable tag: 3.3.74
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,11 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.74 - 2026-08-15 =
+* Fix: Approval queue matches tool + params (not name alone); deploy manage_* risk floors and admin gate; autonomous tool loop stops on pending approval; Ollama stream truncation note.
+* Fix: Imagegen tool docs for Gemini 3.1 Flash Image pricing/behavior (Imagen 4 retirement).
+* Fix: Frontend modal / admin-bar partial updates no longer clobber config; event listeners validate agent exists.
 
 = 3.3.73 - 2026-08-16 =
 * Fix: The "Ask AI" contextual launcher on Media Library was invisible on the screen almost everyone actually sees — the default Grid View. It only ever appeared after clicking into an individual image's details, or after manually switching to List View, unlike the other four screens (Dashboard, Plugins, Users, Comments) where it's visible immediately. Added a toolbar-level launcher matching the other screens, plus a small script for Grid View specifically, since that view is rendered entirely client-side and no server-side hook fires inside it.

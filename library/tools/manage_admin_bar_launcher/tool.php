@@ -111,6 +111,11 @@ class Manage_Admin_Bar_Launcher extends \Agentic\Tool_Base {
 	 * @return array Result data.
 	 */
 	public function execute( array $arguments ): array {
+		$denied = \Agentic\Tool_Helpers::deny_unless_admin_user();
+		if ( null !== $denied ) {
+			return $denied;
+		}
+
 		$action = sanitize_key( (string) ( $arguments['action'] ?? '' ) );
 		$target = sanitize_key( (string) ( $arguments['target'] ?? '' ) );
 
@@ -165,11 +170,16 @@ class Manage_Admin_Bar_Launcher extends \Agentic\Tool_Base {
 			return array( 'error' => "Agent \"{$slug}\" was not found or is not active." );
 		}
 
-		$position = sanitize_key( (string) ( $args['position'] ?? 'bottom-right' ) );
+		// Preserve position/pages when the caller only flips enabled.
+		$position = array_key_exists( 'position', $args )
+			? sanitize_key( (string) $args['position'] )
+			: sanitize_key( (string) Agent_Settings::get( $slug, 'admin_bar_position', 'bottom-right' ) );
 		if ( ! in_array( $position, array( 'bottom-right', 'bottom-left' ), true ) ) {
 			$position = 'bottom-right';
 		}
-		$pages = sanitize_key( (string) ( $args['pages'] ?? 'all' ) );
+		$pages = array_key_exists( 'pages', $args )
+			? sanitize_key( (string) $args['pages'] )
+			: sanitize_key( (string) Agent_Settings::get( $slug, 'admin_bar_pages', 'all' ) );
 		if ( ! in_array( $pages, array( 'all', 'admin', 'front' ), true ) ) {
 			$pages = 'all';
 		}

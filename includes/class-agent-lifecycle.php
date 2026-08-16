@@ -586,6 +586,15 @@ class Agent_Lifecycle {
 			);
 		}
 
+		$registry = \Agentic_Agent_Registry::get_instance();
+		$agent    = $registry->get_agent_instance( $agent_slug );
+		if ( ! $agent ) {
+			return array(
+				'ok'    => false,
+				'error' => __( 'Agent not found or not active.', 'agent-builder' ),
+			);
+		}
+
 		if ( empty( $name ) ) {
 			$name = ucfirst( str_replace( array( '_', '-' ), ' ', $hook ) ) . ' → ' . $agent_slug;
 		}

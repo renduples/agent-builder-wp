@@ -3,7 +3,8 @@
  * Tool: upscale_image
  *
  * Upscale an existing WordPress media library image using the Agentic Image
- * Generation service (Vertex AI Imagen 4 upscaler).
+ * Generation service (Gemini 3.1 Flash Image — semantic re-render at higher
+ * resolution, not a pixel-preserving upscale).
  *
  * @package    Agent_Builder
  * @subpackage Tools
@@ -22,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Upscale an image from the media library to 2× or 4× its original resolution.
- * The upscaled result is saved as a new media library item. Costs 9 credits.
+ * The upscaled result is saved as a new media library item. Costs 23 credits.
  */
 class Upscale_Image extends \Agentic\Tool_Base {
 
@@ -41,7 +42,7 @@ class Upscale_Image extends \Agentic\Tool_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return 'Upscale an existing media library image to 2× (x2) or 4× (x4) its original resolution using AI. The upscaled result is saved as a new media library item. Costs 9 credits. Requires Vector Store Pro.';
+		return 'Upscale an existing media library image to 2× (x2) or 4× (x4) its original resolution using AI. This is a semantic re-render at higher resolution, not a pixel-preserving upscale, so fine details may shift slightly. The upscaled result is saved as a new media library item. Costs 23 credits. Requires Vector Store Pro.';
 	}
 
 	/**

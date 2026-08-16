@@ -288,6 +288,18 @@ class Risk_Level {
 		'cleanup_post_revisions'               => self::MEDIUM,
 		'cleanup_spam_comments'                => self::MEDIUM,
 		'purge_expired_transients'             => self::MEDIUM,
+
+		// Agent Orchestrator deploy surfaces (3.3.67+). Intrinsic floors so a
+		// tool reassigned outside orchestrator abilities cannot run writes at
+		// risk "none". Read actions still drop via risk_by_action + max().
+		'manage_agent_shortcode'               => self::LOW,
+		'manage_editor_sidebar_agent'          => self::LOW,
+		'manage_frontend_modal_agent'          => self::LOW,
+		'manage_gutenberg_block_agent'         => self::LOW,
+		'manage_admin_bar_launcher'            => self::LOW,
+		'manage_scheduled_task'                => self::MEDIUM,
+		'manage_event_listener'                => self::MEDIUM,
+		'manage_cli_settings'                  => self::HIGH,
 	);
 
 	/**

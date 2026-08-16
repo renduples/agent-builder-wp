@@ -1229,6 +1229,8 @@ class Agent_Controller {
 			}
 
 			if ( ! empty( $assistant_message['tool_calls'] ) ) {
+				$has_pending = false;
+				$pending_msg = '';
 				foreach ( $assistant_message['tool_calls'] as $tool_call ) {
 					$function_name = $tool_call['function']['name'];
 					$arguments     = json_decode( $tool_call['function']['arguments'], true ) ?? array();
@@ -1246,6 +1248,23 @@ class Agent_Controller {
 						'tool'   => $function_name,
 						'result' => $tool_result,
 					);
+
+					// Same as interactive chat: stop at first confirmation/queue so
+					// autonomous turns do not fan out multiple pending approvals.
+					$tool_status = $tool_result['status'] ?? '';
+					if ( 'confirmation_required' === $tool_status || 'queued_for_approval' === $tool_status ) {
+						$has_pending = true;
+						if ( ! empty( $tool_result['message'] ) ) {
+							$pending_msg = (string) $tool_result['message'];
+						}
+						break;
+					}
+				}
+				if ( $has_pending ) {
+					$response = '' !== $pending_msg
+						? $pending_msg
+						: __( 'A tool action is waiting for approval before this task can continue.', 'agent-builder' );
+					break;
 				}
 			} else {
 				$response = $assistant_message['content'];

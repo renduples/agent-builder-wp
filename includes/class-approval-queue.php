@@ -421,29 +421,95 @@ class Approval_Queue {
 	}
 
 	/**
-	 * Find an approved (but not yet executed) entry for a given agent + tool.
+	 * Find an approved (but not yet executed) entry for a given agent + tool + params.
 	 *
-	 * @param string $agent_id Agent identifier.
-	 * @param string $tool_name Tool/action name.
+	 * Matching is params-aware so multi-action tools (e.g. manage_cli_settings with
+	 * different `action`/args) cannot consume an approval granted for a milder call.
+	 *
+	 * @param string     $agent_id   Agent identifier.
+	 * @param string     $tool_name  Tool/action name.
+	 * @param array|null $arguments  Current call arguments. Required for a match;
+	 *                               when null, returns null (never match by name alone).
 	 * @return array|null The queue row, or null if none found.
 	 */
-	public function find_approved( string $agent_id, string $tool_name ): ?array {
+	public function find_approved( string $agent_id, string $tool_name, ?array $arguments = null ): ?array {
+		if ( null === $arguments ) {
+			return null;
+		}
+
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table query.
-		$row = $wpdb->get_row(
+		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->prefix}agentic_approval_queue
 				 WHERE agent_id = %s AND action = %s AND status = 'approved'
 				 AND expires_at > NOW()
-				 ORDER BY approved_at DESC LIMIT 1",
+				 ORDER BY approved_at DESC LIMIT 20",
 				$agent_id,
 				$tool_name
 			),
 			ARRAY_A
 		);
 
-		return is_array( $row ) ? $row : null;
+		if ( empty( $rows ) || ! is_array( $rows ) ) {
+			return null;
+		}
+
+		$want = self::canonicalize_params( $arguments );
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$stored_raw = $row['params'] ?? '';
+			$stored     = is_string( $stored_raw ) ? json_decode( $stored_raw, true ) : null;
+			if ( ! is_array( $stored ) ) {
+				continue;
+			}
+			if ( self::canonicalize_params( $stored ) === $want ) {
+				return $row;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Stable JSON for comparing approval-queue params to a new call.
+	 *
+	 * @param array $params Tool arguments.
+	 * @return string
+	 */
+	public static function canonicalize_params( array $params ): string {
+		return wp_json_encode( self::ksort_recursive( $params ) ) ?: '';
+	}
+
+	/**
+	 * Recursively ksort an array for stable JSON.
+	 *
+	 * @param array $data Input.
+	 * @return array
+	 */
+	private static function ksort_recursive( array $data ): array {
+		foreach ( $data as $key => $value ) {
+			if ( is_array( $value ) ) {
+				// Distinguish list vs map: re-index only pure lists.
+				if ( array_is_list( $value ) ) {
+					$data[ $key ] = array_map(
+						static function ( $item ) {
+							return is_array( $item ) ? self::ksort_recursive( $item ) : $item;
+						},
+						$value
+					);
+				} else {
+					$data[ $key ] = self::ksort_recursive( $value );
+				}
+			}
+		}
+		if ( ! array_is_list( $data ) ) {
+			ksort( $data );
+		}
+		return $data;
 	}
 
 	/**
