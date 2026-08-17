@@ -208,7 +208,11 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 <div class="notice notice-error"><p><?php echo esc_html( $agentic_sk_error ); ?></p></div>
 <?php endif; ?>
 
-<?php if ( $agentic_sk_show_gallery ) : ?>
+<?php if ( ! $agentic_sk_is_advanced ) : ?>
+
+	<?php include AGENT_BUILDER_DIR . 'admin/skills-basic.php'; ?>
+
+<?php elseif ( $agentic_sk_show_gallery ) : ?>
 
 	<div class="agentic-max-900">
 		<h2 class="agentic-h2-flex">

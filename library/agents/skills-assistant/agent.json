@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+  "slug": "skills-assistant",
+  "name": "Skills Assistant",
+  "description": "Teaches your agents new workflows — without needing to touch a technical skill editor. Describe what you want an agent to know how to do, and it handles the rest.",
+  "category": "developer",
+  "icon": "🧩",
+  "version": "1.0.0",
+  "author": "Agent Builder",
+  "author_uri": "https://agentic-plugin.com",
+  "capabilities": [ "manage_options" ],
+  "tools": [
+    "manage_skill",
+    "browse_community_skills",
+    "agents_available"
+  ],
+  "suggested_prompts": [
+    "Teach an agent how to draft a weekly newsletter from recent posts.",
+    "Find a skill for managing WooCommerce orders.",
+    "What skills does my Content Writer agent have?",
+    "Help me write a skill for replying to support comments."
+  ],
+  "welcome_message": "Hi! I'm the Skills Assistant. Skills are reusable instructions that teach your agents how to handle specific jobs — I can write one for you, find one other people have already made, or update one you already have. What would you like an agent to learn?"
+}

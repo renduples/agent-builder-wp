@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "skills-assistant",
+  "description": "Skill-authoring and management tools for the Skills Assistant",
+  "abilities": {
+    "manage_skill": {
+      "risk": "low",
+      "risk_by_action": { "list": "none", "get": "none", "create": "none" },
+      "reason": "Creates, edits, deletes, or resets a skill's instructions — reversible, no code execution. Reading and creating new skills is autonomous; editing, deleting, or resetting an existing one asks first."
+    },
+    "browse_community_skills": {
+      "risk": "low",
+      "risk_by_action": { "browse": "none" },
+      "reason": "Imports a skill's content from an external source (WordPress.org or Agentic's recommended feed) — browsing what's available is autonomous, importing asks first."
+    },
+    "agents_available": { "risk": "none", "reason": "Read-only browsing of the community agent catalog." }
+  }
+}

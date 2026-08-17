@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.74
+Stable tag: 3.3.75
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -319,6 +319,9 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.75 - 2026-08-17 =
+* New: Skills' Basic mode now embeds a chat with a new bundled agent, Skills Assistant, which drafts, edits, and manages skills conversationally — and finds/imports skills other people have already published from WordPress.org's official repository or Agent Builder's curated Recommended feed — without ever showing a raw SKILL.md editor. Backed by two new tools (manage_skill, browse_community_skills) and a new Skill teaching the agent's own workflows. Covers both the classic Skills admin page and the separate React list view reached from the nav sidebar.
 
 = 3.3.74 - 2026-08-15 =
 * Fix: Approval queue matches tool + params (not name alone); deploy manage_* risk floors and admin gate; autonomous tool loop stops on pending approval; Ollama stream truncation note.

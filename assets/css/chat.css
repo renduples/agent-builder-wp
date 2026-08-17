@@ -1581,3 +1581,10 @@
 	50% { opacity: 0; }
 }
 
+/* Skills' Basic-mode React embed sits below an extra page-head (title +
+   description + Basic/Advanced switch) that standalone chat pages don't
+   have, so the 100vh-based height needs a bit more headroom subtracted. */
+.agentic-skills-chat-embed {
+	height: calc(100vh - 260px);
+}
+

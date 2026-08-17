@@ -1026,6 +1026,18 @@ class Admin_Menu_Handler {
 		}
 
 		if ( isset( $react_map[ $file ] ) && React_Admin::enqueue( 'admin-pages' ) ) {
+			// Skills can swap to a chat embed at any time — mode can toggle
+			// client-side without a page reload — so load chat.css unconditionally
+			// here rather than only when the initial request happens to be Basic.
+			if ( 'skills' === $file ) {
+				wp_enqueue_style(
+					'agentic-chat',
+					AGENT_BUILDER_URL . 'assets/css/chat.css',
+					array(),
+					AGENT_BUILDER_VERSION
+				);
+				Chat_Assets::maybe_add_chat_theme_overrides();
+			}
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : $react_map[ $file ]['tab'];
 			// Classic tools.php used ?category= — keep bookmarks working (read-only routing).

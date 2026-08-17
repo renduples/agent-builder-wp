@@ -852,12 +852,31 @@ class Admin_Pages_REST {
 			$rows[] = $row;
 		}
 
+		// In Basic mode the React view swaps to a chat with the bundled Skills
+		// Assistant instead of the table — resolve its display details here so
+		// the client doesn't need a second round-trip just to render a header.
+		$assistant = null;
+		if ( ! $is_advanced ) {
+			$instance  = \Agentic_Agent_Registry::get_instance()->get_agent_instance( 'skills-assistant' );
+			$assistant = $instance
+				? array(
+					'active'            => true,
+					'id'                => $instance->get_id(),
+					'name'              => $instance->get_name(),
+					'icon'              => $instance->get_icon(),
+					'welcome_message'   => $instance->get_welcome_message(),
+					'suggested_prompts' => $instance->get_suggested_prompts(),
+				)
+				: array( 'active' => false );
+		}
+
 		return array(
 			'page'        => 'skills',
 			'title'       => __( 'Skills', 'agent-builder' ),
 			'description' => __( 'Instructions that teach agents when and how to use tools.', 'agent-builder' ),
 			'rows'        => $rows,
 			'is_advanced' => $is_advanced,
+			'assistant'   => $assistant,
 			'actions'     => array(
 				array(
 					'label'   => __( 'Create Skill', 'agent-builder' ),
