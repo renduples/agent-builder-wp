@@ -39,6 +39,13 @@ final class Model_Capabilities {
 	public const API_RESPONSES        = 'responses';
 
 	/**
+	 * WordPress option storing runtime-learned "this model rejected tool
+	 * schemas" facts — for local/unknown models (e.g. Ollama tags) not yet
+	 * covered by a static rule, keyed by "{provider}:{model}".
+	 */
+	private const LEARNED_UNSUPPORTED_OPTION = 'agentic_learned_tools_unsupported';
+
+	/**
 	 * Capability defaults (safe baseline for classic GPT-4o / Claude / Gemini chat).
 	 *
 	 * @return array<string, mixed>
@@ -300,6 +307,88 @@ final class Model_Capabilities {
 	public static function requires_reasoning_effort_none_with_tools( string $model, string $provider = '' ): bool {
 		$caps = self::for_model( $model, $provider );
 		return ! empty( $caps['requires_reasoning_effort_none_with_tools'] );
+	}
+
+	/**
+	 * Whether this model/provider can accept tool/function-call definitions
+	 * at all (e.g. tinyllama and some runtime-discovered Ollama tags cannot).
+	 * Callers use this to strip tools before the request rather than sending
+	 * a shape the model will reject.
+	 *
+	 * @param string $model    Model id.
+	 * @param string $provider Provider slug.
+	 */
+	public static function supports_tools( string $model, string $provider = '' ): bool {
+		if ( isset( self::learned_unsupported()[ self::learned_key( $model, $provider ) ] ) ) {
+			return false;
+		}
+		$caps = self::for_model( $model, $provider );
+		return ! isset( $caps['supports_tools'] ) || ! empty( $caps['supports_tools'] );
+	}
+
+	/**
+	 * Whether a provider's error message indicates it rejected the request
+	 * specifically because of the tool/function schema — the common failure
+	 * mode for small local models (e.g. some Ollama tags) that were never
+	 * built with function-calling support, not a real request/auth/quota
+	 * error. Matched loosely against provider wording since each API phrases
+	 * this differently and none of them return a dedicated error code for it.
+	 *
+	 * @param string $error_message Raw error text from the provider response.
+	 */
+	public static function is_tools_unsupported_error( string $error_message ): bool {
+		if ( '' === $error_message ) {
+			return false;
+		}
+		$needle = strtolower( $error_message );
+		$patterns = array(
+			'does not support tools',
+			'does not support function',
+			'does not support function calling',
+			'tool use is not supported',
+			'tools is not supported',
+			'tools are not supported',
+			'function calling is not supported',
+			'functions are not supported',
+			'model does not support',
+			'no endpoints found that support tool use',
+		);
+		foreach ( $patterns as $pattern ) {
+			if ( str_contains( $needle, $pattern ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Persist that a model/provider combination rejected tool schemas, so
+	 * future requests strip tools up front instead of round-tripping a
+	 * failed request every time.
+	 *
+	 * @param string $model    Model id.
+	 * @param string $provider Provider slug.
+	 */
+	public static function mark_tools_unsupported( string $model, string $provider = '' ): void {
+		$learned                                    = self::learned_unsupported();
+		$learned[ self::learned_key( $model, $provider ) ] = true;
+		update_option( self::LEARNED_UNSUPPORTED_OPTION, $learned, false );
+	}
+
+	/**
+	 * @return array<string, bool>
+	 */
+	private static function learned_unsupported(): array {
+		$learned = get_option( self::LEARNED_UNSUPPORTED_OPTION, array() );
+		return is_array( $learned ) ? $learned : array();
+	}
+
+	/**
+	 * @param string $model    Model id.
+	 * @param string $provider Provider slug.
+	 */
+	private static function learned_key( string $model, string $provider ): string {
+		return $provider . ':' . $model;
 	}
 
 	/**
