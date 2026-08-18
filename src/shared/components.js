@@ -1,6 +1,8 @@
 /**
  * Shared WordPress-components building blocks for Agent Builder admin.
  */
+import { useState } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 import {
 	Card,
@@ -135,6 +137,65 @@ export function Section( { title, children } ) {
 			) }
 			{ children }
 		</div>
+	);
+}
+
+/**
+ * Per-screen Basic/Advanced toggle, writing a personal per-user override for
+ * `screen` via the set_screen_mode admin-page REST action — independent of
+ * every other screen's mode and of the site-wide default (Settings →
+ * Interface / the Dashboard toggle). `screen` just needs to be a stable,
+ * unique key; it doesn't have to correspond to an actual top-level menu page
+ * (e.g. a single settings tab can use its own key like "settings-users").
+ */
+export function ScreenModeToggle( { screen, isAdvanced, onChanged } ) {
+	const [ busy, setBusy ] = useState( false );
+
+	const setMode = ( mode ) => {
+		if ( busy || mode === ( isAdvanced ? 'advanced' : 'basic' ) ) {
+			return;
+		}
+		setBusy( true );
+		apiFetch( {
+			path: 'agentic/v1/admin-page',
+			method: 'POST',
+			data: { action_name: 'set_screen_mode', screen, mode },
+		} )
+			.then( () => onChanged && onChanged() )
+			.finally( () => setBusy( false ) );
+	};
+
+	return (
+		<span className="agentic-screen-mode-toggle">
+			<button
+				type="button"
+				className={
+					'button button-small' +
+					( ! isAdvanced ? ' button-primary' : '' )
+				}
+				disabled={ busy }
+				onClick={ () => setMode( 'basic' ) }
+			>
+				{ __( 'Basic', 'agent-builder' ) }
+			</button>
+			<button
+				type="button"
+				className={
+					'button button-small' +
+					( isAdvanced ? ' button-primary' : '' )
+				}
+				disabled={ busy }
+				onClick={ () => setMode( 'advanced' ) }
+			>
+				{ __( 'Advanced', 'agent-builder' ) }
+			</button>
+			<InfoTip
+				text={ __(
+					'Only changes this screen. Other screens and your site-wide default (Settings → Interface) are unaffected.',
+					'agent-builder'
+				) }
+			/>
+		</span>
 	);
 }
 

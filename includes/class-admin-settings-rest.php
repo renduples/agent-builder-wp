@@ -646,12 +646,38 @@ class Admin_Settings_REST {
 			? Usage_Limits::get_limits()
 			: array();
 
+		// Basic mode swaps the raw role/privilege matrix for a chat with the
+		// bundled User Assistant — same per-tab mode split Skills/Tools/etc.
+		// use, but scoped to just this one Settings tab via its own screen
+		// key ('settings-users'), independent of the whole-page 'settings'
+		// tab-visibility grouping above.
+		$is_advanced = class_exists( Admin_Menu_Handler::class )
+			? Admin_Menu_Handler::is_advanced_mode( 'settings-users' )
+			: ( 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) );
+
+		$assistant = null;
+		if ( ! $is_advanced ) {
+			$instance  = \Agentic_Agent_Registry::get_instance()->get_agent_instance( 'user-assistant' );
+			$assistant = $instance
+				? array(
+					'active'            => true,
+					'id'                => $instance->get_id(),
+					'name'              => $instance->get_name(),
+					'icon'              => $instance->get_icon(),
+					'welcome_message'   => $instance->get_welcome_message(),
+					'suggested_prompts' => $instance->get_suggested_prompts(),
+				)
+				: array( 'active' => false );
+		}
+
 		return array(
 			'allow_anonymous_chat' => (bool) get_option( 'agentic_allow_anonymous_chat', false ),
 			'roles'                => $roles_out,
 			'plugin_privileges'    => $plugin_privs,
 			'agent_privileges'     => $agent_privs,
 			'usage_limits'         => $limits,
+			'is_advanced'          => $is_advanced,
+			'assistant'            => $assistant,
 		);
 	}
 

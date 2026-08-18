@@ -1588,3 +1588,10 @@
 	height: calc(100vh - 260px);
 }
 
+/* Settings > Users' Basic-mode embed sits one level deeper than Skills' —
+   the outer Settings page-head + nav, then this tab's own page-head above
+   the chat — so it needs more headroom subtracted still. */
+.agentic-users-chat-embed {
+	height: calc(100vh - 340px);
+}
+

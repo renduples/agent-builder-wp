@@ -272,7 +272,11 @@ class Admin_Menu_Handler {
 	 *
 	 * @param string $screen Screen key (e.g. 'tools', 'approvals', 'logs',
 	 *                        'dashboard', 'settings'), or '' for the
-	 *                        site-wide default only.
+	 *                        site-wide default only. Doesn't have to be an
+	 *                        actual top-level menu page — a single tab within
+	 *                        a larger screen can use its own key (e.g.
+	 *                        'settings-users' for just the Settings > Users
+	 *                        tab) to get its own independent mode.
 	 * @return bool
 	 */
 	public static function is_advanced_mode( string $screen = '' ): bool {
@@ -1195,6 +1199,18 @@ class Admin_Menu_Handler {
 				array( 'wp-components' ),
 				AGENT_BUILDER_VERSION
 			);
+			// Users' Basic mode embeds a chat with User Assistant. Mode can
+			// toggle client-side without a page reload, and the tab itself
+			// can be switched to without a reload too, so load this
+			// unconditionally rather than only when the initial request
+			// happens to land on the Users tab in Basic mode.
+			wp_enqueue_style(
+				'agentic-chat',
+				AGENT_BUILDER_URL . 'assets/css/chat.css',
+				array(),
+				AGENT_BUILDER_VERSION
+			);
+			Chat_Assets::maybe_add_chat_theme_overrides();
 			// Footer docs per tab for the React settings shell.
 			$footer_by_tab = array();
 			foreach ( array( 'interface', 'agents', 'providers', 'users', 'security', 'license', 'apis', 'endpoints' ) as $slug ) {

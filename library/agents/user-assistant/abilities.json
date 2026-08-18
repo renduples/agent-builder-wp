@@ -30,6 +30,11 @@
       "risk": "high",
       "reason": "Forces a user to reset their password"
     },
+    "manage_user_privileges": {
+      "risk": "high",
+      "risk_by_action": { "get": "none", "set_usage_limit": "low", "set_anonymous_chat": "medium" },
+      "reason": "Reading the current privilege/limit picture is always safe. Granting or revoking a plugin/agent privilege is a meaningful trust decision (high); adjusting a daily usage limit is low-risk throttling; allowing anonymous chat exposes a surface to visitors who aren't logged in (medium)."
+    },
     "list_okf_concepts": {
       "risk": "none"
     },

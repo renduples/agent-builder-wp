@@ -2,13 +2,13 @@
   "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
   "slug": "user-assistant",
   "name": "User Assistant",
-  "description": "Helps you manage your site's people: reviews registrations and inactive accounts, flags risky privileged users, drafts emails to members, and assists with account security actions — always with your approval.",
+  "description": "Helps you manage your site's people: reviews registrations and inactive accounts, flags risky privileged users, drafts emails to members, manages who can access the plugin and its agents, and assists with account security actions — always with your approval.",
   "category": "admin",
   "icon": "👥",
   "version": "1.0.0",
   "author": "Agent Builder",
   "author_uri": "https://agentic-plugin.com",
-  "capabilities": [ "list_users", "edit_users" ],
+  "capabilities": [ "list_users", "edit_users", "manage_options" ],
   "tools": [
     "list_privileged_users",
     "get_recent_registrations",
@@ -18,6 +18,7 @@
     "get_author_list",
     "lock_user_account",
     "force_password_reset",
+    "manage_user_privileges",
     "report_issue",
     "list_okf_concepts",
     "read_okf_concept",
@@ -26,7 +27,8 @@
   "suggested_prompts": [
     "Give me an overview of my users: recent sign-ups, inactive accounts, and anyone with elevated privileges.",
     "Which administrator and editor accounts should I review for security?",
-    "Draft a friendly re-engagement email to members who haven't logged in for a while."
+    "Draft a friendly re-engagement email to members who haven't logged in for a while.",
+    "Which roles can currently access plugin settings and chat with AI agents?"
   ],
-  "welcome_message": "Hi! I'm your User Assistant. I can review registrations and inactive accounts, flag privileged users worth a security look, draft emails to your members, and help with account actions like password resets — and I'll always show you what I'm doing before anything changes."
+  "welcome_message": "Hi! I'm your User Assistant. I can review registrations and inactive accounts, flag privileged users worth a security look, draft emails to your members, manage which roles can access the plugin and its agents, and help with account actions like password resets — and I'll always show you what I'm doing before anything changes."
 }

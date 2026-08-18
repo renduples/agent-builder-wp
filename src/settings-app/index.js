@@ -22,7 +22,9 @@ import {
 	SaveBar,
 	StatusNotice,
 	Section,
+	ScreenModeToggle,
 } from '../shared/components';
+import { ChatEmbed } from '../shared/chat-embed';
 
 const REST = 'agentic/v1/admin-settings';
 
@@ -819,7 +821,17 @@ function SecurityTab( { data, setData, onSave, saving, error, saved, clearSaved 
 	);
 }
 
-function UsersTab( { data, setData, onSave, saving, error, saved, clearSaved } ) {
+function UsersTab( {
+	data,
+	setData,
+	onSave,
+	saving,
+	error,
+	saved,
+	clearSaved,
+	reloadBootstrap,
+} ) {
+	const isAdvanced = !! data.is_advanced;
 	const roles = data.roles || [];
 	const pluginPrivs = data.plugin_privileges || [];
 	const agentPrivs = data.agent_privileges || [];
@@ -909,7 +921,40 @@ function UsersTab( { data, setData, onSave, saving, error, saved, clearSaved } )
 		} );
 	};
 
+	const modeToggle = (
+		<ScreenModeToggle
+			screen="settings-users"
+			isAdvanced={ isAdvanced }
+			onChanged={ reloadBootstrap }
+		/>
+	);
+
+	// Basic mode swaps the raw role/privilege matrix for a chat with the
+	// bundled User Assistant — same full-content-swap pattern Skills/Publish
+	// use, not a partial hide. The chat embed brings its own bordered
+	// container/header, so it renders directly (not wrapped in Panel) to
+	// avoid double-boxing it inside another card.
+	if ( ! isAdvanced ) {
+		return (
+			<AdminPage
+				title={ __( 'Users', 'agent-builder' ) }
+				description={ __(
+					'Control who can administer the plugin and use AI agents.',
+					'agent-builder'
+				) }
+				actions={ modeToggle }
+			>
+				<ChatEmbed
+					assistant={ data.assistant }
+					deploymentContext="settings_users_tab"
+					className="agentic-users-chat-embed"
+				/>
+			</AdminPage>
+		);
+	}
+
 	return (
+		<AdminPage title={ __( 'Users', 'agent-builder' ) } actions={ modeToggle }>
 		<Panel
 			title={ __( 'Users', 'agent-builder' ) }
 			footer={ <SaveBar onSave={ saveUsers } saving={ saving } /> }
@@ -1300,6 +1345,7 @@ function UsersTab( { data, setData, onSave, saving, error, saved, clearSaved } )
 				) }
 			</p>
 		</Panel>
+		</AdminPage>
 	);
 }
 
@@ -2280,6 +2326,16 @@ function SettingsApp() {
 		);
 	}
 
+	// Full bootstrap refetch — used after a per-tab Basic/Advanced mode change
+	// (e.g. Users) so that tab's data.is_advanced/assistant reflect the new
+	// mode immediately, the same refresh onSave already does when the
+	// Interface tab changes site-wide nav.
+	const reloadBootstrap = () =>
+		apiFetch( { path: REST } ).then( ( bootstrap ) => {
+			setBoot( { loading: false, error: '', bootstrap } );
+			setTabData( bootstrap.data || {} );
+		} );
+
 	const common = {
 		data,
 		setData,
@@ -2288,6 +2344,7 @@ function SettingsApp() {
 		error,
 		saved,
 		clearSaved: () => setSaved( false ),
+		reloadBootstrap,
 	};
 
 	const classicTabs = Array.isArray( boot.bootstrap?.classic_tabs )
