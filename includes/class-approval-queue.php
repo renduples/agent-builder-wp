@@ -494,7 +494,7 @@ class Approval_Queue {
 		foreach ( $data as $key => $value ) {
 			if ( is_array( $value ) ) {
 				// Distinguish list vs map: re-index only pure lists.
-				if ( array_is_list( $value ) ) {
+				if ( self::is_list( $value ) ) {
 					$data[ $key ] = array_map(
 						static function ( $item ) {
 							return is_array( $item ) ? self::ksort_recursive( $item ) : $item;
@@ -506,10 +506,27 @@ class Approval_Queue {
 				}
 			}
 		}
-		if ( ! array_is_list( $data ) ) {
+		if ( ! self::is_list( $data ) ) {
 			ksort( $data );
 		}
 		return $data;
+	}
+
+	/**
+	 * Whether an array is a list (sequential integer keys from 0). Same
+	 * check as PHP 8.1's array_is_list(), implemented manually so this
+	 * doesn't depend on WordPress's own polyfill for it (only bundled since
+	 * WP 6.5 — this plugin's declared minimum is 6.4) or assume every site
+	 * actually meets the plugin's declared PHP 8.1 floor at runtime.
+	 *
+	 * @param array $data Input.
+	 * @return bool
+	 */
+	private static function is_list( array $data ): bool {
+		if ( array() === $data ) {
+			return true;
+		}
+		return array_keys( $data ) === range( 0, count( $data ) - 1 );
 	}
 
 	/**

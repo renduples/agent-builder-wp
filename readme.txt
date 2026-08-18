@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, agents, llm
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.76
+Stable tag: 3.3.77
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,17 +15,19 @@ Orchestrate role-based AI agents and teams with simple job descriptions.
 
 **Agent Builder** lets you create and manage role-based AI agents inside WordPress using plain job descriptions. You choose the LLM provider (your own API key, Agentic AI, or a local model such as Ollama). Higher-risk tool actions can require human approval before they run.
 
-= Eight agents included free =
+= Ten agents included free =
 
-The free plugin ships **8 role-based agents** ready to activate:
+The free plugin ships **10 role-based agents** ready to activate:
 
+* **Agent Orchestrator** — deploys other agents as chat widgets, scheduled tasks, or automatic triggers, conversationally
 * **Assistant Trainer** — trains new AI agents from plain job descriptions
 * **Content Writer** — creates, edits, and publishes posts and pages
 * **Editorial Director** — plans content work and coordinates specialist agents
 * **SEO Optimizer** — audits on-page SEO and proposes concrete improvements
 * **Site Health Sentinel** — read-only site health, performance, and security signals
+* **Skills Assistant** — writes and manages the reusable skills that teach other agents new workflows
 * **Support Triage** — triages comments and form submissions, drafts replies
-* **User Assistant** — helps manage registrations, accounts, and member outreach
+* **User Assistant** — helps manage registrations, accounts, member outreach, and role-based access to the plugin and its agents
 * **WordPress Assistant** — guide to WordPress and Agent Builder for new users
 
 Additional community agents are listed on the product site (install separately if you choose).
@@ -113,14 +115,14 @@ Many AI plugins only chat with an external API. Agent Builder also:
 
 - Runs in WordPress admin and front-end surfaces (shortcodes, blocks, optional admin chat)
 - Exposes tools that can read or change WordPress data **when enabled** — publish content, manage media, etc., typically behind Approvals for higher risk
-- Lets you run multiple specialized agents (the eight bundled roles, plus any you train or install yourself)
+- Lets you run multiple specialized agents (the ten bundled roles, plus any you train or install yourself)
 - Keeps an audit trail of conversations and tool use
 
 LLM replies still come from the provider you configure (cloud API or local Ollama). WordPress is the control plane and tool runtime; the model is not “embedded” in core PHP.
 
 = Is Agent Builder free? =
 
-Yes. The free plugin includes the eight bundled agents, tools/skills library, Approvals, Knowledge wiki (OKF), and multi-provider LLM support using **your** keys or a local model.
+Yes. The free plugin includes the ten bundled agents, tools/skills library, Approvals, Knowledge wiki (OKF), and multi-provider LLM support using **your** keys or a local model.
 
 A separate **Agent Builder Pro** plugin is optional for hosted Vector Store / RAG and other Pro-only features. The free plugin remains fully usable without Pro.
 
@@ -160,7 +162,7 @@ Use the WordPress.org support forum for this plugin, or the contact options on [
 
 1. Dashboard — overview, connected providers, and quick actions
 2. Chat — talk to any agent with tools and conversation history
-3. Agents — activate and manage the eight bundled agents
+3. Agents — activate and manage the ten bundled agents
 4. Settings — Interface, Agents, Providers, Users, and Security (React)
 5. Providers — connect OpenAI, Anthropic, xAI, Kimi, Ollama, and more
 6. Tools — categories, risk levels, and ability profiles
@@ -297,11 +299,19 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 
 = WordPress.org Agent Skills (optional) =
 * **Endpoint:** `https://api.github.com/repos/WordPress/agent-skills/` and `https://raw.githubusercontent.com/WordPress/agent-skills/`
-* **When used:** Only when you open Agent Builder → Skills → Browse Community Skills. Your browser lists and fetches skills directly from WordPress.org's official GitHub repository.
+* **When used:** When you open Agent Builder → Skills → Browse Community Skills, your browser lists and fetches skills directly from WordPress.org's official GitHub repository. In Basic mode, asking the bundled Skills Assistant agent to find or import a community skill makes the same requests server-side (from your WordPress site) instead.
 * **Data sent:** No site data — these are unauthenticated, read-only requests to a public repository.
-* **How to disable:** Don't open the Browse Community Skills screen.
+* **How to disable:** Don't open the Browse Community Skills screen, and don't ask Skills Assistant to browse or import skills.
 * **Terms of Service:** [https://docs.github.com/site-policy/github-terms/github-terms-of-service](https://docs.github.com/site-policy/github-terms/github-terms-of-service)
 * **Privacy Policy:** [https://docs.github.com/site-policy/privacy-policies/github-privacy-statement](https://docs.github.com/site-policy/privacy-policies/github-privacy-statement)
+
+= Agentic Recommended Skills (optional) =
+* **Endpoint:** `https://agentic-plugin.com/wp-json/agentic/v1/skills`
+* **When used:** When you open Agent Builder → Skills → Browse Community Skills and view the curated "Recommended" feed (your browser), or when you ask the bundled Skills Assistant agent to find or import a recommended skill (server-side, from your WordPress site).
+* **Data sent:** No site data for browsing. Importing a skill sends the skill's slug; a successful import also fires a best-effort, non-blocking import-count notification with the same slug.
+* **How to disable:** Don't use the Recommended source in Browse Community Skills, and don't ask Skills Assistant to browse or import skills.
+* **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
+* **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
 = Anthropic Agent Skills (optional, Advanced mode) =
 * **Endpoint:** `https://api.github.com/repos/anthropics/skills/` and `https://raw.githubusercontent.com/anthropics/skills/`
@@ -319,6 +329,10 @@ This plugin can connect to third-party LLM and optional Agentic product APIs. **
 * **Terms of Service:** [https://docs.openclaw.ai/](https://docs.openclaw.ai/)
 
 == Changelog ==
+
+= 3.3.77 - 2026-08-18 =
+* Fix: `array_is_list()` (PHP 8.1+ native, but only polyfilled by WordPress core since 6.5) replaced with a manual, version-independent list check in the approval-queue's parameter canonicalizer — found via a WP.org Plugin Check scan; the plugin's declared minimum WordPress version (6.4) predates the polyfill.
+* Docs: readme.txt corrected to reflect the plugin's actual 10 bundled agents (Agent Orchestrator and Skills Assistant were missing from the count/list in four places), and the External Services section now discloses Agentic's Recommended Skills feed and the new server-side (not just browser) fetch path Skills Assistant's tools use.
 
 = 3.3.76 - 2026-08-18 =
 * New: User Assistant now knows about and can manage plugin/agent role privileges, per-role daily usage limits, and anonymous frontend chat — the same settings the classic Settings > Users tab manages — via a new manage_user_privileges tool and skill. Settings > Users also gets a Basic/Advanced split like Skills/Tools/Approvals/Activity: Basic mode embeds a chat with User Assistant instead of the raw role/privilege matrix.
