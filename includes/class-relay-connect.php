@@ -147,6 +147,7 @@ class Agentic_Relay_Connect {
 			return new \WP_REST_Response( null, 200 );
 		}
 
+		$slug   = sanitize_key( (string) $request->get_param( 'slug' ) );
 		$body   = $request->get_json_params();
 		$body   = is_array( $body ) ? $body : array();
 		$method = $body['method'] ?? '';
@@ -161,7 +162,7 @@ class Agentic_Relay_Connect {
 							'protocolVersion' => '2024-11-05',
 							'capabilities'    => array( 'tools' => new \stdClass() ),
 							'serverInfo'      => array(
-								'name'    => 'Agent Builder MCP',
+								'name'    => 'Agent Builder MCP — ' . $slug,
 								'version' => defined( 'AGENT_BUILDER_VERSION' ) ? AGENT_BUILDER_VERSION : '1.0.0',
 							),
 						)
@@ -174,13 +175,13 @@ class Agentic_Relay_Connect {
 
 			case 'tools/list':
 				return new \WP_REST_Response(
-					self::mcp_result( $id, array( 'tools' => self::get_mcp_tools() ) ),
+					self::mcp_result( $id, array( 'tools' => self::get_mcp_tools( $slug ) ) ),
 					200
 				);
 
 			case 'tools/call':
 				return new \WP_REST_Response(
-					self::handle_tool_call( $id, $body['params'] ?? array() ),
+					self::handle_tool_call( $id, $body['params'] ?? array(), $slug ),
 					200
 				);
 
@@ -193,28 +194,38 @@ class Agentic_Relay_Connect {
 	}
 
 	/**
-	 * Build the MCP tools list.
+	 * Build the MCP tools list for one agent's endpoint.
 	 *
 	 * Prefers WordPress core's native Abilities API (6.9+). On older sites
 	 * where that doesn't exist yet, falls back to Agent Builder's own tool
 	 * registry directly — same tools, same MCP transport, no dependency on
 	 * a WordPress version this plugin's own "Requires at least: 6.4" predates.
 	 *
+	 * Every tool is also scoped to what $slug's own abilities.json actually
+	 * declares — the route is per-agent (/{slug}/mcp), so an agent's MCP
+	 * endpoint should only ever expose what that agent itself is allowed to
+	 * touch, the same fail-closed rule chat already enforces.
+	 *
+	 * @param string $slug Agent slug from the route.
 	 * @return array<int,array<string,mixed>>
 	 */
-	private static function get_mcp_tools(): array {
-		if ( WP_Optional_API::has( 'wp_get_abilities' ) ) {
-			return self::get_mcp_tools_from_abilities();
+	private static function get_mcp_tools( string $slug ): array {
+		if ( ! self::agent_mcp_ready( $slug ) ) {
+			return array();
 		}
-		return self::get_mcp_tools_from_registry();
+		if ( WP_Optional_API::has( 'wp_get_abilities' ) ) {
+			return self::get_mcp_tools_from_abilities( $slug );
+		}
+		return self::get_mcp_tools_from_registry( $slug );
 	}
 
 	/**
 	 * Build the MCP tools list from registered WordPress abilities (6.9+).
 	 *
+	 * @param string $slug Agent slug, already verified active with a valid manifest.
 	 * @return array<int,array<string,mixed>>
 	 */
-	private static function get_mcp_tools_from_abilities(): array {
+	private static function get_mcp_tools_from_abilities( string $slug ): array {
 		$tools = array();
 		foreach ( WP_Optional_API::get_abilities() as $ability ) {
 			$name = $ability->get_name();
@@ -231,6 +242,14 @@ class Agentic_Relay_Connect {
 			// alone; this plugin has no risk model for those.
 			$own_tool_name = self::own_ability_to_tool_name( $name );
 			if ( null !== $own_tool_name && ! self::is_tool_mcp_safe( $own_tool_name ) ) {
+				continue;
+			}
+
+			// Scope to this agent's own declared tools — own abilities are
+			// matched by tool name, third-party abilities by their raw name
+			// (Abilities_Manifest::is_declared() checks wp_abilities entries
+			// by exact ability name).
+			if ( ! self::agent_is_declared( $slug, $own_tool_name ?? $name ) ) {
 				continue;
 			}
 
@@ -264,13 +283,17 @@ class Agentic_Relay_Connect {
 	 * read from yet. Same enabled/safety posture Abilities_Bridge applies
 	 * when it registers these same tools as native abilities on newer sites.
 	 *
+	 * @param string $slug Agent slug, already verified active with a valid manifest.
 	 * @return array<int,array<string,mixed>>
 	 */
-	private static function get_mcp_tools_from_registry(): array {
+	private static function get_mcp_tools_from_registry( string $slug ): array {
 		$tools = array();
 		foreach ( Tool_Loader::get_instance()->get_all_definitions() as $definition ) {
 			$name = $definition['function']['name'] ?? '';
 			if ( '' === $name || ! Tools_Registry::is_enabled( $name ) || ! self::is_tool_mcp_safe( $name ) ) {
+				continue;
+			}
+			if ( ! self::agent_is_declared( $slug, $name ) ) {
 				continue;
 			}
 
@@ -291,6 +314,54 @@ class Agentic_Relay_Connect {
 		}
 
 		return $tools;
+	}
+
+	/**
+	 * Whether $slug is a real, active agent with a manifest that passes
+	 * integrity verification — the same fail-closed gate
+	 * Agent_Controller::get_tools_for_agent() applies for chat, applied
+	 * here so an agent's MCP endpoint can't expose more than chat would.
+	 * An unknown/inactive agent, or one with a tampered abilities.json,
+	 * gets zero tools rather than an error — the endpoint still responds,
+	 * it just has nothing to offer.
+	 *
+	 * @param string $slug Agent slug from the route.
+	 * @return bool
+	 */
+	private static function agent_mcp_ready( string $slug ): bool {
+		if ( '' === $slug || ! class_exists( '\\Agentic_Agent_Registry' ) ) {
+			return false;
+		}
+		if ( ! \Agentic_Agent_Registry::get_instance()->get_agent_instance( $slug ) ) {
+			return false;
+		}
+		if ( ! class_exists( '\\Agentic\\Abilities_Manifest' ) ) {
+			return false;
+		}
+		if ( ! \Agentic\Abilities_Manifest::load( $slug ) ) {
+			return false;
+		}
+		if ( ! \Agentic\Abilities_Manifest::verify_integrity( $slug ) ) {
+			\Agentic\Security_Log::log_system(
+				'integrity_failure',
+				$slug,
+				array( 'reason' => 'Manifest signature mismatch — MCP tools blocked for this agent.' )
+			);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Whether $slug's own abilities.json declares $tool_name.
+	 *
+	 * @param string $slug      Agent slug.
+	 * @param string $tool_name Tool (or third-party ability) name.
+	 * @return bool
+	 */
+	private static function agent_is_declared( string $slug, string $tool_name ): bool {
+		return class_exists( '\\Agentic\\Abilities_Manifest' )
+			&& \Agentic\Abilities_Manifest::is_declared( $slug, $tool_name );
 	}
 
 	/**
@@ -375,11 +446,14 @@ class Agentic_Relay_Connect {
 	 * handle_tool_call_via_registry() for the equivalent permission check
 	 * on that path.
 	 *
-	 * @param mixed $id     JSON-RPC request id.
-	 * @param array $params JSON-RPC params (name + arguments).
+	 * @param mixed  $id     JSON-RPC request id.
+	 * @param array  $params JSON-RPC params (name + arguments).
+	 * @param string $slug   Agent slug from the route — the call is only
+	 *                       honored if that agent's own manifest declares
+	 *                       the requested tool.
 	 * @return array JSON-RPC response payload.
 	 */
-	private static function handle_tool_call( mixed $id, array $params ): array {
+	private static function handle_tool_call( mixed $id, array $params, string $slug ): array {
 		$mcp_name  = $params['name'] ?? '';
 		$arguments = $params['arguments'] ?? array();
 
@@ -387,10 +461,14 @@ class Agentic_Relay_Connect {
 			return self::mcp_error( $id, -32602, 'Missing tool name.' );
 		}
 
-		if ( WP_Optional_API::has( 'wp_get_ability' ) ) {
-			return self::handle_tool_call_via_ability( $id, $mcp_name, $arguments );
+		if ( ! self::agent_mcp_ready( $slug ) ) {
+			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
 		}
-		return self::handle_tool_call_via_registry( $id, $mcp_name, $arguments );
+
+		if ( WP_Optional_API::has( 'wp_get_ability' ) ) {
+			return self::handle_tool_call_via_ability( $id, $mcp_name, $arguments, $slug );
+		}
+		return self::handle_tool_call_via_registry( $id, $mcp_name, $arguments, $slug );
 	}
 
 	/**
@@ -399,9 +477,10 @@ class Agentic_Relay_Connect {
 	 * @param mixed  $id        JSON-RPC request id.
 	 * @param string $mcp_name  MCP tool name.
 	 * @param array  $arguments Tool arguments.
+	 * @param string $slug      Agent slug from the route, already verified ready.
 	 * @return array JSON-RPC response payload.
 	 */
-	private static function handle_tool_call_via_ability( mixed $id, string $mcp_name, array $arguments ): array {
+	private static function handle_tool_call_via_ability( mixed $id, string $mcp_name, array $arguments, string $slug ): array {
 		// Convert MCP name → ability name and look up.
 		$ability = WP_Optional_API::get_ability( self::mcp_name_to_ability( $mcp_name ) );
 		if ( ! $ability ) {
@@ -417,6 +496,11 @@ class Agentic_Relay_Connect {
 		// tools/list must not be callable directly by name either.
 		$own_tool_name = self::own_ability_to_tool_name( $ability->get_name() );
 		if ( null !== $own_tool_name && ! self::is_tool_mcp_safe( $own_tool_name ) ) {
+			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
+		}
+
+		// Same per-agent scoping as the listing.
+		if ( ! self::agent_is_declared( $slug, $own_tool_name ?? $ability->get_name() ) ) {
 			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
 		}
 
@@ -460,12 +544,17 @@ class Agentic_Relay_Connect {
 	 * @param mixed  $id        JSON-RPC request id.
 	 * @param string $mcp_name  MCP tool name (the raw tool name in this path).
 	 * @param array  $arguments Tool arguments.
+	 * @param string $slug      Agent slug from the route, already verified ready.
 	 * @return array JSON-RPC response payload.
 	 */
-	private static function handle_tool_call_via_registry( mixed $id, string $mcp_name, array $arguments ): array {
+	private static function handle_tool_call_via_registry( mixed $id, string $mcp_name, array $arguments, string $slug ): array {
 		$tool_name = $mcp_name;
 
 		if ( ! Tools_Registry::is_enabled( $tool_name ) || ! self::is_tool_mcp_safe( $tool_name ) ) {
+			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
+		}
+
+		if ( ! self::agent_is_declared( $slug, $tool_name ) ) {
 			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
 		}
 
