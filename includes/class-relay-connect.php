@@ -16,6 +16,9 @@
 defined( 'ABSPATH' ) || exit;
 
 use Agentic\WP_Optional_API;
+use Agentic\Tool_Loader;
+use Agentic\Tools_Registry;
+use Agentic\Risk_Level;
 
 /**
  * Connects this site to the Agentic MCP relay (mcp.agentic-plugin.com).
@@ -190,21 +193,44 @@ class Agentic_Relay_Connect {
 	}
 
 	/**
-	 * Build the MCP tools list from registered WordPress abilities.
+	 * Build the MCP tools list.
+	 *
+	 * Prefers WordPress core's native Abilities API (6.9+). On older sites
+	 * where that doesn't exist yet, falls back to Agent Builder's own tool
+	 * registry directly — same tools, same MCP transport, no dependency on
+	 * a WordPress version this plugin's own "Requires at least: 6.4" predates.
 	 *
 	 * @return array<int,array<string,mixed>>
 	 */
 	private static function get_mcp_tools(): array {
-		if ( ! WP_Optional_API::has( 'wp_get_abilities' ) ) {
-			return array();
+		if ( WP_Optional_API::has( 'wp_get_abilities' ) ) {
+			return self::get_mcp_tools_from_abilities();
 		}
+		return self::get_mcp_tools_from_registry();
+	}
 
+	/**
+	 * Build the MCP tools list from registered WordPress abilities (6.9+).
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function get_mcp_tools_from_abilities(): array {
 		$tools = array();
 		foreach ( WP_Optional_API::get_abilities() as $ability ) {
 			$name = $ability->get_name();
 
 			// Skip mcp-adapter meta-tools — they are not useful direct tools for the relay.
 			if ( str_starts_with( $name, 'mcp-adapter/' ) ) {
+				continue;
+			}
+
+			// Agent Builder's own abilities (agent-builder/*) go through the
+			// same MCP-safety posture as the registry fallback below, so a
+			// high-risk tool isn't advertised via MCP just because the site
+			// happens to be on 6.9+ — abilities from OTHER plugins are left
+			// alone; this plugin has no risk model for those.
+			$own_tool_name = self::own_ability_to_tool_name( $name );
+			if ( null !== $own_tool_name && ! self::is_tool_mcp_safe( $own_tool_name ) ) {
 				continue;
 			}
 
@@ -233,7 +259,121 @@ class Agentic_Relay_Connect {
 	}
 
 	/**
-	 * Execute an ability via MCP tools/call.
+	 * Build the MCP tools list directly from Agent Builder's own tool
+	 * registry — the pre-6.9 fallback, since core has no Abilities API to
+	 * read from yet. Same enabled/safety posture Abilities_Bridge applies
+	 * when it registers these same tools as native abilities on newer sites.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function get_mcp_tools_from_registry(): array {
+		$tools = array();
+		foreach ( Tool_Loader::get_instance()->get_all_definitions() as $definition ) {
+			$name = $definition['function']['name'] ?? '';
+			if ( '' === $name || ! Tools_Registry::is_enabled( $name ) || ! self::is_tool_mcp_safe( $name ) ) {
+				continue;
+			}
+
+			$schema = $definition['function']['parameters'] ?? array();
+			if ( empty( $schema ) || ! is_array( $schema ) ) {
+				$schema = array(
+					'type'       => 'object',
+					'properties' => new \stdClass(),
+				);
+			}
+
+			$tools[] = array(
+				'name'        => $name,
+				'description' => (string) ( $definition['function']['description'] ?? '' ),
+				'inputSchema' => $schema,
+				'annotations' => array( 'title' => self::tool_name_to_label( $name ) ),
+			);
+		}
+
+		return $tools;
+	}
+
+	/**
+	 * Whether an Agent Builder tool should ever be listed or callable via
+	 * MCP — shell/code-execution/remote-install tools and anything at
+	 * HIGH/EXTREME risk stay off the MCP surface entirely, matching the
+	 * posture Abilities_Bridge already applies for the native-adapter path.
+	 * Third-party tools have no risk model here and are never passed in.
+	 *
+	 * @param string $tool_name Tool name.
+	 * @return bool
+	 */
+	private static function is_tool_mcp_safe( string $tool_name ): bool {
+		$always_blocked = array(
+			'run_wp_cli',
+			'install_plugin_from_url',
+			'create_agent_files',
+			'add_custom_js',
+			'validate_agent_code',
+		);
+		if ( in_array( $tool_name, $always_blocked, true ) ) {
+			return false;
+		}
+		if ( str_starts_with( $tool_name, 'git_' ) || str_starts_with( $tool_name, 'cloudflare_' ) ) {
+			return false;
+		}
+		if ( class_exists( Risk_Level::class ) ) {
+			$risk = Risk_Level::get_tool_default( $tool_name );
+			if ( in_array( $risk, array( Risk_Level::HIGH, Risk_Level::EXTREME ), true ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Capability required to call a given Agent Builder tool via MCP —
+	 * read-only tools only need edit_posts, everything else needs
+	 * manage_options. Mirrors Abilities_Bridge's own read/write split.
+	 *
+	 * @param string $tool_name Tool name.
+	 * @return string
+	 */
+	private static function required_capability_for_tool( string $tool_name ): string {
+		$tool = Tool_Loader::get_instance()->get( $tool_name );
+		$readonly = $tool && ( $tool->get_annotations()['readonly'] ?? false );
+		return $readonly ? 'edit_posts' : 'manage_options';
+	}
+
+	/**
+	 * If $ability_name is one of Agent Builder's own (agent-builder/*),
+	 * return the underlying tool name; otherwise null (a third-party
+	 * ability this plugin has no risk model for).
+	 *
+	 * @param string $ability_name WP ability name.
+	 * @return string|null
+	 */
+	private static function own_ability_to_tool_name( string $ability_name ): ?string {
+		$prefix = 'agent-builder/';
+		if ( ! str_starts_with( $ability_name, $prefix ) ) {
+			return null;
+		}
+		return str_replace( '-', '_', substr( $ability_name, strlen( $prefix ) ) );
+	}
+
+	/**
+	 * Human-readable label for a tool name, e.g. "manage_skill" → "Manage Skill".
+	 *
+	 * @param string $tool_name Tool name.
+	 * @return string
+	 */
+	private static function tool_name_to_label( string $tool_name ): string {
+		return ucwords( str_replace( '_', ' ', $tool_name ) );
+	}
+
+	/**
+	 * Execute a tool via MCP tools/call.
+	 *
+	 * Prefers WordPress core's native Abilities API (6.9+, which itself
+	 * enforces the ability's own permission_callback). Falls back to Agent
+	 * Builder's own tool registry on older sites — see
+	 * handle_tool_call_via_registry() for the equivalent permission check
+	 * on that path.
 	 *
 	 * @param mixed $id     JSON-RPC request id.
 	 * @param array $params JSON-RPC params (name + arguments).
@@ -247,10 +387,21 @@ class Agentic_Relay_Connect {
 			return self::mcp_error( $id, -32602, 'Missing tool name.' );
 		}
 
-		if ( ! WP_Optional_API::has( 'wp_get_ability' ) ) {
-			return self::mcp_error( $id, -32603, 'Abilities API not available.' );
+		if ( WP_Optional_API::has( 'wp_get_ability' ) ) {
+			return self::handle_tool_call_via_ability( $id, $mcp_name, $arguments );
 		}
+		return self::handle_tool_call_via_registry( $id, $mcp_name, $arguments );
+	}
 
+	/**
+	 * Execute an ability via MCP tools/call (6.9+).
+	 *
+	 * @param mixed  $id        JSON-RPC request id.
+	 * @param string $mcp_name  MCP tool name.
+	 * @param array  $arguments Tool arguments.
+	 * @return array JSON-RPC response payload.
+	 */
+	private static function handle_tool_call_via_ability( mixed $id, string $mcp_name, array $arguments ): array {
 		// Convert MCP name → ability name and look up.
 		$ability = WP_Optional_API::get_ability( self::mcp_name_to_ability( $mcp_name ) );
 		if ( ! $ability ) {
@@ -260,6 +411,13 @@ class Agentic_Relay_Connect {
 
 		if ( ! $ability ) {
 			return self::mcp_error( $id, -32602, "Unknown tool: $mcp_name" );
+		}
+
+		// Same MCP-safety posture as the listing — a tool hidden from
+		// tools/list must not be callable directly by name either.
+		$own_tool_name = self::own_ability_to_tool_name( $ability->get_name() );
+		if ( null !== $own_tool_name && ! self::is_tool_mcp_safe( $own_tool_name ) ) {
+			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
 		}
 
 		try {
@@ -291,6 +449,47 @@ class Agentic_Relay_Connect {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Execute a tool directly via Agent Builder's own registry — the
+	 * pre-6.9 fallback. Enforces the same enabled/safety checks as the
+	 * listing, plus the read/write capability check the native path gets
+	 * for free from the ability's own permission_callback.
+	 *
+	 * @param mixed  $id        JSON-RPC request id.
+	 * @param string $mcp_name  MCP tool name (the raw tool name in this path).
+	 * @param array  $arguments Tool arguments.
+	 * @return array JSON-RPC response payload.
+	 */
+	private static function handle_tool_call_via_registry( mixed $id, string $mcp_name, array $arguments ): array {
+		$tool_name = $mcp_name;
+
+		if ( ! Tools_Registry::is_enabled( $tool_name ) || ! self::is_tool_mcp_safe( $tool_name ) ) {
+			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
+		}
+
+		if ( ! current_user_can( self::required_capability_for_tool( $tool_name ) ) ) {
+			return self::mcp_error( $id, -32603, 'Insufficient permissions for this tool.' );
+		}
+
+		$result = Tool_Loader::get_instance()->execute( $tool_name, $arguments );
+		if ( null === $result ) {
+			return self::mcp_error( $id, -32602, "Unknown tool: $mcp_name" );
+		}
+
+		return self::mcp_result(
+			$id,
+			array(
+				'content' => array(
+					array(
+						'type' => 'text',
+						'text' => (string) wp_json_encode( $result ),
+					),
+				),
+				'isError' => ! empty( $result['error'] ),
+			)
+		);
 	}
 
 	/**
