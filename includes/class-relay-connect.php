@@ -329,17 +329,41 @@ class Agentic_Relay_Connect {
 	 * @return bool
 	 */
 	private static function agent_mcp_ready( string $slug ): bool {
+		return self::mcp_readiness( $slug )['ready'];
+	}
+
+	/**
+	 * Same fail-closed check as agent_mcp_ready(), but with the reason a
+	 * caller can show a human — used by the Settings > MCP tab to explain
+	 * why a given agent isn't exposing any tools yet.
+	 *
+	 * @param string $slug Agent slug.
+	 * @return array{ready: bool, reason: string|null}
+	 */
+	public static function mcp_readiness( string $slug ): array {
 		if ( '' === $slug || ! class_exists( '\\Agentic_Agent_Registry' ) ) {
-			return false;
+			return array(
+				'ready'  => false,
+				'reason' => __( 'Unknown agent.', 'agent-builder' ),
+			);
 		}
 		if ( ! \Agentic_Agent_Registry::get_instance()->get_agent_instance( $slug ) ) {
-			return false;
+			return array(
+				'ready'  => false,
+				'reason' => __( 'Agent is not active.', 'agent-builder' ),
+			);
 		}
 		if ( ! class_exists( '\\Agentic\\Abilities_Manifest' ) ) {
-			return false;
+			return array(
+				'ready'  => false,
+				'reason' => __( 'Abilities manifest system unavailable.', 'agent-builder' ),
+			);
 		}
 		if ( ! \Agentic\Abilities_Manifest::load( $slug ) ) {
-			return false;
+			return array(
+				'ready'  => false,
+				'reason' => __( 'No abilities.json manifest for this agent.', 'agent-builder' ),
+			);
 		}
 		if ( ! \Agentic\Abilities_Manifest::verify_integrity( $slug ) ) {
 			\Agentic\Security_Log::log_system(
@@ -347,9 +371,27 @@ class Agentic_Relay_Connect {
 				$slug,
 				array( 'reason' => 'Manifest signature mismatch — MCP tools blocked for this agent.' )
 			);
-			return false;
+			return array(
+				'ready'  => false,
+				'reason' => __( 'Manifest signature mismatch — this agent\'s tools are blocked until it is re-signed.', 'agent-builder' ),
+			);
 		}
-		return true;
+		return array(
+			'ready'  => true,
+			'reason' => null,
+		);
+	}
+
+	/**
+	 * How many MCP tools a given agent's endpoint currently exposes —
+	 * used by the Settings > MCP tab's "Test" button, computed in-process
+	 * from the exact same logic tools/list itself uses (no HTTP loopback).
+	 *
+	 * @param string $slug Agent slug.
+	 * @return int
+	 */
+	public static function count_agent_tools( string $slug ): int {
+		return count( self::get_mcp_tools( $slug ) );
 	}
 
 	/**

@@ -85,6 +85,59 @@ class Admin_Settings_REST {
 				),
 			)
 		);
+
+		// MCP tab: live tool count for one agent's endpoint ("Test" button).
+		register_rest_route(
+			'agentic/v1',
+			'/admin-settings/mcp-test',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'mcp_test' ),
+				'permission_callback' => array( __CLASS__, 'can_manage' ),
+				'args'                => array(
+					'slug' => array(
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_key',
+					),
+				),
+			)
+		);
+
+		// MCP tab: mint a new "Agent Builder Relay" Application Password for
+		// the current user, for manually configuring a client like Cursor.
+		register_rest_route(
+			'agentic/v1',
+			'/admin-settings/mcp-create-credential',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'mcp_create_credential' ),
+				'permission_callback' => array( __CLASS__, 'can_manage_mcp_credentials' ),
+			)
+		);
+
+		// MCP tab: revoke an existing "Agent Builder Relay" credential.
+		register_rest_route(
+			'agentic/v1',
+			'/admin-settings/mcp-revoke-credential',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'mcp_revoke_credential' ),
+				'permission_callback' => array( __CLASS__, 'can_manage_mcp_credentials' ),
+				'args'                => array(
+					'user_id' => array(
+						'type'              => 'integer',
+						'required'          => true,
+						'sanitize_callback' => 'absint',
+					),
+					'uuid'    => array(
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -92,6 +145,18 @@ class Admin_Settings_REST {
 	 */
 	public static function can_manage(): bool {
 		return current_user_can( 'agentic_manage_settings' ) || current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Permission for minting/revoking MCP "Agent Builder Relay" Application
+	 * Passwords — a real authentication credential, not just a plugin
+	 * setting, so this requires actual site-administrator capability
+	 * (manage_options) rather than the broader agentic_manage_settings a
+	 * role could otherwise be granted. Matches the same default the
+	 * relay-connect approval flow itself uses (agentic_relay_connect_capability).
+	 */
+	public static function can_manage_mcp_credentials(): bool {
+		return current_user_can( 'manage_options' );
 	}
 
 	/**
@@ -111,6 +176,7 @@ class Admin_Settings_REST {
 			'security'  => __( 'Security', 'agent-builder' ),
 			'apis'      => __( 'APIs', 'agent-builder' ),
 			'endpoints' => __( 'Endpoints', 'agent-builder' ),
+			'mcp'       => __( 'MCP', 'agent-builder' ),
 		);
 		if ( $is_pro ) {
 			$tabs['license'] = __( 'License', 'agent-builder' );
@@ -126,7 +192,7 @@ class Admin_Settings_REST {
 			array(
 				'id'            => 'advanced',
 				'label'         => __( 'Advanced', 'agent-builder' ),
-				'slugs'         => array( 'apis', 'endpoints' ),
+				'slugs'         => array( 'apis', 'endpoints', 'mcp' ),
 				'advanced_only' => true,
 			),
 		);
@@ -174,6 +240,7 @@ class Admin_Settings_REST {
 					'users'        => self::data_users(),
 					'apis'         => self::data_apis(),
 					'endpoints'    => self::data_endpoints(),
+					'mcp'          => self::data_mcp(),
 				),
 			),
 			200
@@ -302,6 +369,130 @@ class Admin_Settings_REST {
 			),
 			200
 		);
+	}
+
+	/**
+	 * MCP tab "Test" button: how many tools a given agent's MCP endpoint
+	 * currently exposes, computed in-process (no HTTP loopback) from the
+	 * exact same logic tools/list itself uses.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function mcp_test( \WP_REST_Request $request ) {
+		$slug = sanitize_key( (string) $request->get_param( 'slug' ) );
+		if ( ! class_exists( '\\Agentic_Relay_Connect' ) ) {
+			return new \WP_Error( 'agentic_mcp_unavailable', __( 'MCP is not available on this site.', 'agent-builder' ), array( 'status' => 500 ) );
+		}
+
+		$readiness = \Agentic_Relay_Connect::mcp_readiness( $slug );
+		if ( ! $readiness['ready'] ) {
+			return new \WP_REST_Response(
+				array(
+					'ok'      => false,
+					'message' => $readiness['reason'] ?? __( 'This agent has no MCP tools available.', 'agent-builder' ),
+				),
+				200
+			);
+		}
+
+		$count = \Agentic_Relay_Connect::count_agent_tools( $slug );
+
+		return new \WP_REST_Response(
+			array(
+				'ok'         => true,
+				'tool_count' => $count,
+				'message'    => sprintf(
+					/* translators: %d: number of MCP tools */
+					_n( '%d tool available.', '%d tools available.', $count, 'agent-builder' ),
+					$count
+				),
+			),
+			200
+		);
+	}
+
+	/**
+	 * MCP tab "Create Application Password": mint a new "Agent Builder
+	 * Relay" credential for the current user, the same call
+	 * Agentic_Relay_Connect::process_approval() makes for the OAuth-style
+	 * connector flow — this is the manual-setup equivalent, for configuring
+	 * a generic MCP client (e.g. Cursor) that needs a username + password
+	 * rather than a browser-driven approval.
+	 *
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function mcp_create_credential() {
+		if ( ! class_exists( 'WP_Application_Passwords' ) || ! class_exists( '\\Agentic_Relay_Connect' ) ) {
+			return new \WP_Error( 'agentic_mcp_unavailable', __( 'Application Passwords are not available on this site.', 'agent-builder' ), array( 'status' => 500 ) );
+		}
+
+		$user_id = get_current_user_id();
+		$result  = \WP_Application_Passwords::create_new_application_password(
+			$user_id,
+			array( 'name' => \Agentic_Relay_Connect::APP_PASS_NAME )
+		);
+
+		if ( is_wp_error( $result ) ) {
+			return new \WP_Error( 'agentic_mcp_credential_failed', $result->get_error_message(), array( 'status' => 400 ) );
+		}
+
+		list( $plaintext_password, $item ) = $result;
+		$user = wp_get_current_user();
+
+		Audit_Log::log_admin(
+			'mcp_credential_created',
+			'agent_builder_relay',
+			array(
+				'user_id' => $user_id,
+				'uuid'    => $item['uuid'],
+			)
+		);
+
+		return new \WP_REST_Response(
+			array(
+				'ok'         => true,
+				'password'   => $plaintext_password,
+				'user_login' => $user->user_login,
+				'uuid'       => $item['uuid'],
+				'created'    => wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $item['created'] ),
+			),
+			200
+		);
+	}
+
+	/**
+	 * MCP tab "Revoke": delete an existing "Agent Builder Relay" credential.
+	 * Gated by can_manage_mcp_credentials() (manage_options), since this can
+	 * revoke a credential belonging to a *different* administrator than the
+	 * one making the request.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function mcp_revoke_credential( \WP_REST_Request $request ) {
+		if ( ! class_exists( 'WP_Application_Passwords' ) ) {
+			return new \WP_Error( 'agentic_mcp_unavailable', __( 'Application Passwords are not available on this site.', 'agent-builder' ), array( 'status' => 500 ) );
+		}
+
+		$user_id = absint( $request->get_param( 'user_id' ) );
+		$uuid    = sanitize_text_field( (string) $request->get_param( 'uuid' ) );
+
+		$result = \WP_Application_Passwords::delete_application_password( $user_id, $uuid );
+		if ( is_wp_error( $result ) ) {
+			return new \WP_Error( 'agentic_mcp_revoke_failed', $result->get_error_message(), array( 'status' => 400 ) );
+		}
+
+		Audit_Log::log_admin(
+			'mcp_credential_revoked',
+			'agent_builder_relay',
+			array(
+				'user_id' => $user_id,
+				'uuid'    => $uuid,
+			)
+		);
+
+		return new \WP_REST_Response( array( 'ok' => true ), 200 );
 	}
 
 	/**
@@ -739,6 +930,84 @@ class Admin_Settings_REST {
 				'default_url' => (string) ( $svc['default_url'] ?? '' ),
 				'is_custom'   => ! empty( $svc['is_custom'] ),
 			);
+		}
+		return $rows;
+	}
+
+	/**
+	 * Model Context Protocol status: whether MCP access is currently usable,
+	 * each active agent's own MCP endpoint and readiness, connected clients,
+	 * and the "Agent Builder Relay" credentials that authenticate them.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private static function data_mcp(): array {
+		$is_pro        = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
+		$has_connector = class_exists( License_Client::class ) && License_Client::get_instance()->has_connector();
+
+		$agents = array();
+		if ( class_exists( '\\Agentic_Agent_Registry' ) && class_exists( '\\Agentic_Relay_Connect' ) ) {
+			foreach ( \Agentic_Agent_Registry::get_instance()->get_all_instances() as $slug => $agent ) {
+				$readiness = \Agentic_Relay_Connect::mcp_readiness( $slug );
+				$agents[]  = array(
+					'slug'   => $slug,
+					'name'   => $agent->get_name(),
+					'icon'   => $agent->get_icon(),
+					'url'    => rest_url( 'agentic/' . $slug . '/mcp' ),
+					'ready'  => $readiness['ready'],
+					'reason' => $readiness['reason'],
+				);
+			}
+		}
+
+		$connectors = get_option( \Agentic_Relay_Connect::CONNECTORS_OPTION, array() );
+		$connectors = is_array( $connectors ) ? array_values( $connectors ) : array();
+
+		return array(
+			'rest_namespace' => 'agentic/v1',
+			'mcp_available'  => array(
+				'is_pro'        => $is_pro,
+				'has_connector' => $has_connector,
+				'can_use'       => $is_pro || $has_connector,
+			),
+			'agents'         => $agents,
+			'connectors'     => $connectors,
+			'credentials'    => self::data_mcp_credentials(),
+			'pricing_url'    => \Agentic\Distribution::PRICING_URL,
+		);
+	}
+
+	/**
+	 * "Agent Builder Relay" Application Passwords across every administrator
+	 * — the credential the relay connect flow (and the new manual-creation
+	 * button on this tab) both mint, scattered per-user by WordPress core
+	 * with no built-in cross-user listing, so gathered here for one place
+	 * to see and revoke them.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function data_mcp_credentials(): array {
+		if ( ! class_exists( 'WP_Application_Passwords' ) || ! class_exists( '\\Agentic_Relay_Connect' ) ) {
+			return array();
+		}
+
+		$rows  = array();
+		$users = get_users( array( 'role' => 'administrator' ) );
+		foreach ( $users as $user ) {
+			foreach ( \WP_Application_Passwords::get_user_application_passwords( $user->ID ) as $item ) {
+				if ( ( $item['name'] ?? '' ) !== \Agentic_Relay_Connect::APP_PASS_NAME ) {
+					continue;
+				}
+				$rows[] = array(
+					'user_id'    => $user->ID,
+					'user_login' => $user->user_login,
+					'uuid'       => $item['uuid'],
+					'created'   => wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $item['created'] ),
+					'last_used' => $item['last_used']
+						? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $item['last_used'] )
+						: __( 'Never', 'agent-builder' ),
+				);
+			}
 		}
 		return $rows;
 	}

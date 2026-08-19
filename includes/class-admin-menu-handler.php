@@ -1213,7 +1213,7 @@ class Admin_Menu_Handler {
 			Chat_Assets::maybe_add_chat_theme_overrides();
 			// Footer docs per tab for the React settings shell.
 			$footer_by_tab = array();
-			foreach ( array( 'interface', 'agents', 'providers', 'users', 'security', 'license', 'apis', 'endpoints' ) as $slug ) {
+			foreach ( array( 'interface', 'agents', 'providers', 'users', 'security', 'license', 'apis', 'endpoints', 'mcp' ) as $slug ) {
 				$footer_by_tab[ $slug ] = $this->get_admin_footer_data( 'agentic-settings', $slug );
 			}
 			wp_localize_script(

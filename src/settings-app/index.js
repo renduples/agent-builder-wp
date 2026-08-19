@@ -2074,6 +2074,389 @@ function EndpointsTab( { data, setData, onSave, saving, error, saved, clearSaved
 	);
 }
 
+function MCPTab( { data } ) {
+	const available = data.mcp_available || {};
+	const agents = data.agents || [];
+	const connectors = data.connectors || [];
+
+	const [ tests, setTests ] = useState( {} );
+	const [ copied, setCopied ] = useState( {} );
+	const [ credentials, setCredentials ] = useState( data.credentials || [] );
+	const [ creating, setCreating ] = useState( false );
+	const [ createError, setCreateError ] = useState( '' );
+	const [ newCredential, setNewCredential ] = useState( null );
+	const [ revoking, setRevoking ] = useState( '' );
+
+	const testAgent = ( slug ) => {
+		setTests( ( prev ) => ( {
+			...prev,
+			[ slug ]: { testing: true, ok: null, message: '' },
+		} ) );
+		apiFetch( {
+			path: REST + '/mcp-test',
+			method: 'POST',
+			data: { slug },
+		} )
+			.then( ( res ) => {
+				setTests( ( prev ) => ( {
+					...prev,
+					[ slug ]: {
+						testing: false,
+						ok: !! res.ok,
+						message: res.message || '',
+					},
+				} ) );
+			} )
+			.catch( ( err ) => {
+				setTests( ( prev ) => ( {
+					...prev,
+					[ slug ]: {
+						testing: false,
+						ok: false,
+						message:
+							err.message ||
+							__( 'Test failed.', 'agent-builder' ),
+					},
+				} ) );
+			} );
+	};
+
+	const copyUrl = ( slug, url ) => {
+		navigator.clipboard.writeText( url ).then( () => {
+			setCopied( ( prev ) => ( { ...prev, [ slug ]: true } ) );
+			setTimeout( () => {
+				setCopied( ( prev ) => ( { ...prev, [ slug ]: false } ) );
+			}, 2000 );
+		} );
+	};
+
+	const createCredential = () => {
+		setCreating( true );
+		setCreateError( '' );
+		apiFetch( { path: REST + '/mcp-create-credential', method: 'POST' } )
+			.then( ( res ) => {
+				setCreating( false );
+				setNewCredential( res );
+				setCredentials( ( prev ) => [
+					...prev,
+					{
+						user_id: undefined,
+						user_login: res.user_login,
+						uuid: res.uuid,
+						created: res.created,
+						last_used: __( 'Never', 'agent-builder' ),
+					},
+				] );
+			} )
+			.catch( ( err ) => {
+				setCreating( false );
+				setCreateError(
+					err.message ||
+						__( 'Could not create credential.', 'agent-builder' )
+				);
+			} );
+	};
+
+	const revokeCredential = ( cred ) => {
+		if (
+			! window.confirm(
+				__(
+					'Revoke this Application Password? Any client using it will stop working immediately.',
+					'agent-builder'
+				)
+			)
+		) {
+			return;
+		}
+		setRevoking( cred.uuid );
+		apiFetch( {
+			path: REST + '/mcp-revoke-credential',
+			method: 'POST',
+			data: { user_id: cred.user_id, uuid: cred.uuid },
+		} )
+			.then( () => {
+				setRevoking( '' );
+				setCredentials( ( prev ) =>
+					prev.filter( ( c ) => c.uuid !== cred.uuid )
+				);
+			} )
+			.catch( () => {
+				setRevoking( '' );
+			} );
+	};
+
+	return (
+		<>
+			<Panel title={ __( 'MCP', 'agent-builder' ) }>
+				<p className="agentic-react-lead">
+					{ __(
+						'The Model Context Protocol (MCP) lets external AI apps — Claude Desktop, Cursor, and others — use your agents directly, tool calls and all.',
+						'agent-builder'
+					) }
+				</p>
+				{ available.can_use ? (
+					<p>
+						<span className="agentic-react-led is-on" />{ ' ' }
+						<strong>
+							{ __( 'Available', 'agent-builder' ) }
+						</strong>
+					</p>
+				) : (
+					<Notice status="warning" isDismissible={ false }>
+						{ __(
+							'MCP access requires Agent Builder Pro or a connected client.',
+							'agent-builder'
+						) }{ ' ' }
+						{ data.pricing_url && (
+							<ExternalLink href={ data.pricing_url }>
+								{ __( 'See pricing', 'agent-builder' ) }
+							</ExternalLink>
+						) }
+					</Notice>
+				) }
+			</Panel>
+
+			<Panel title={ __( 'Agent endpoints', 'agent-builder' ) }>
+				<p className="agentic-react-lead">
+					{ __(
+						'Each agent has its own MCP URL, scoped to only the tools that agent is allowed to use.',
+						'agent-builder'
+					) }
+				</p>
+				<div className="agentic-react-table-wrap">
+					<table className="agentic-react-table">
+						<thead>
+							<tr>
+								<th>{ __( 'Agent', 'agent-builder' ) }</th>
+								<th>{ __( 'MCP URL', 'agent-builder' ) }</th>
+								<th>{ __( 'Status', 'agent-builder' ) }</th>
+								<th />
+							</tr>
+						</thead>
+						<tbody>
+							{ agents.map( ( a ) => {
+								const t = tests[ a.slug ] || {};
+								return (
+									<tr key={ a.slug }>
+										<td>
+											<strong>{ a.name }</strong>
+										</td>
+										<td>
+											<code>{ a.url }</code>{ ' ' }
+											<Button
+												variant="link"
+												onClick={ () =>
+													copyUrl( a.slug, a.url )
+												}
+											>
+												{ copied[ a.slug ]
+													? __(
+															'Copied!',
+															'agent-builder'
+													  )
+													: __(
+															'Copy',
+															'agent-builder'
+													  ) }
+											</Button>
+										</td>
+										<td>
+											<span
+												className={
+													'agentic-react-led' +
+													( a.ready ? ' is-on' : '' )
+												}
+											/>{ ' ' }
+											{ a.ready
+												? __(
+														'Ready',
+														'agent-builder'
+												  )
+												: a.reason }
+										</td>
+										<td>
+											<Button
+												variant="secondary"
+												isBusy={ t.testing }
+												disabled={
+													t.testing || ! a.ready
+												}
+												onClick={ () =>
+													testAgent( a.slug )
+												}
+											>
+												{ t.testing
+													? __(
+															'Testing…',
+															'agent-builder'
+													  )
+													: __(
+															'Test',
+															'agent-builder'
+													  ) }
+											</Button>
+											{ null !== ( t.ok ?? null ) && (
+												<p
+													style={ {
+														margin: '6px 0 0',
+													} }
+												>
+													<span
+														style={ {
+															color: t.ok
+																? '#008a20'
+																: '#cc1818',
+														} }
+													>
+														{ t.ok ? '✓' : '✗' }{ ' ' }
+														{ t.message }
+													</span>
+												</p>
+											) }
+										</td>
+									</tr>
+								);
+							} ) }
+						</tbody>
+					</table>
+				</div>
+			</Panel>
+
+			<Panel title={ __( 'Connected clients', 'agent-builder' ) }>
+				{ connectors.length ? (
+					<p>
+						{ connectors.map( ( c ) => (
+							<span
+								key={ c }
+								className="agentic-react-badge"
+								style={ { marginRight: 6 } }
+							>
+								{ c }
+							</span>
+						) ) }
+					</p>
+				) : (
+					<p className="agentic-react-lead">
+						{ __(
+							'No clients have connected via the approval flow yet.',
+							'agent-builder'
+						) }
+					</p>
+				) }
+			</Panel>
+
+			<Panel title={ __( 'Application Passwords', 'agent-builder' ) }>
+				<p className="agentic-react-lead">
+					{ __(
+						'Credentials for manually configuring an MCP client (e.g. Cursor) that needs a username and password rather than the browser-driven approval flow.',
+						'agent-builder'
+					) }
+				</p>
+				{ createError && (
+					<Notice
+						status="error"
+						isDismissible={ false }
+						style={ { marginBottom: 16 } }
+					>
+						{ createError }
+					</Notice>
+				) }
+				{ newCredential && (
+					<Notice
+						status="success"
+						isDismissible
+						onRemove={ () => setNewCredential( null ) }
+						style={ { marginBottom: 16 } }
+					>
+						<p>
+							{ __(
+								'Password created — copy it now, it will not be shown again:',
+								'agent-builder'
+							) }
+						</p>
+						<p>
+							<code>{ newCredential.password }</code>{ ' ' }
+							<Button
+								variant="link"
+								onClick={ () =>
+									navigator.clipboard.writeText(
+										newCredential.password
+									)
+								}
+							>
+								{ __( 'Copy', 'agent-builder' ) }
+							</Button>
+						</p>
+					</Notice>
+				) }
+				<div className="agentic-react-table-wrap">
+					<table className="agentic-react-table">
+						<thead>
+							<tr>
+								<th>{ __( 'User', 'agent-builder' ) }</th>
+								<th>{ __( 'Created', 'agent-builder' ) }</th>
+								<th>{ __( 'Last used', 'agent-builder' ) }</th>
+								<th />
+							</tr>
+						</thead>
+						<tbody>
+							{ credentials.map( ( c ) => (
+								<tr key={ c.uuid }>
+									<td>{ c.user_login }</td>
+									<td>{ c.created }</td>
+									<td>
+										{ c.last_used ||
+											__( 'Never', 'agent-builder' ) }
+									</td>
+									<td>
+										<Button
+											variant="secondary"
+											isDestructive
+											isBusy={
+												revoking === c.uuid
+											}
+											disabled={
+												revoking === c.uuid
+											}
+											onClick={ () =>
+												revokeCredential( c )
+											}
+										>
+											{ __( 'Revoke', 'agent-builder' ) }
+										</Button>
+									</td>
+								</tr>
+							) ) }
+							{ ! credentials.length && (
+								<tr>
+									<td colSpan={ 4 }>
+										<em className="agentic-react-lead">
+											{ __(
+												'No Application Passwords yet.',
+												'agent-builder'
+											) }
+										</em>
+									</td>
+								</tr>
+							) }
+						</tbody>
+					</table>
+				</div>
+				<p>
+					<Button
+						variant="primary"
+						isBusy={ creating }
+						disabled={ creating }
+						onClick={ createCredential }
+					>
+						{ __( 'Create Application Password', 'agent-builder' ) }
+					</Button>
+				</p>
+			</Panel>
+		</>
+	);
+}
+
 function PlaceholderTab( { title, message } ) {
 	return (
 		<Panel title={ title }>
@@ -2391,6 +2774,9 @@ function SettingsApp() {
 				break;
 			case 'endpoints':
 				body = <EndpointsTab { ...common } />;
+				break;
+			case 'mcp':
+				body = <MCPTab data={ data } />;
 				break;
 			case 'license':
 				body = (
