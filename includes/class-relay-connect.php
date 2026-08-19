@@ -106,9 +106,11 @@ class Agentic_Relay_Connect {
 	}
 
 	/**
-	 * MCP route permission: authenticated user + Pro license or active connector.
-	 *
-	 * Individual abilities enforce their own permission checks on execute.
+	 * MCP route permission: any authenticated WordPress user. Free and
+	 * unconditional on every WP version this plugin supports — per-agent
+	 * scoping (agent_is_declared()) and per-tool risk filtering
+	 * (is_tool_mcp_safe(), required_capability_for_tool()) are what actually
+	 * bound what a given credential can list or call.
 	 *
 	 * @return bool|\WP_Error
 	 */
@@ -119,17 +121,6 @@ class Agentic_Relay_Connect {
 				__( 'Authentication required.', 'agent-builder' ),
 				array( 'status' => 401 )
 			);
-		}
-
-		if ( class_exists( 'Agentic\\License_Client' ) ) {
-			$license = \Agentic\License_Client::get_instance();
-			if ( ! $license->can_use_mcp() ) {
-				return new \WP_Error(
-					'rest_forbidden',
-					__( 'MCP requires an active connector or Pro license.', 'agent-builder' ),
-					array( 'status' => 403 )
-				);
-			}
 		}
 
 		return true;

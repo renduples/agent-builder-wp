@@ -935,9 +935,11 @@ class Admin_Settings_REST {
 	}
 
 	/**
-	 * Model Context Protocol status: whether MCP access is currently usable,
-	 * each active agent's own MCP endpoint and readiness, connected clients,
-	 * and the "Agent Builder Relay" credentials that authenticate them.
+	 * Model Context Protocol status: each active agent's own MCP endpoint and
+	 * readiness, connected clients, and the "Agent Builder Relay" credentials
+	 * that authenticate them. MCP itself is free and unconditional — is_pro
+	 * / has_connector are informational only (Pro/connector status still
+	 * matters for other features), not a gate on MCP access.
 	 *
 	 * @return array<string,mixed>
 	 */
@@ -968,12 +970,11 @@ class Admin_Settings_REST {
 			'mcp_available'  => array(
 				'is_pro'        => $is_pro,
 				'has_connector' => $has_connector,
-				'can_use'       => $is_pro || $has_connector,
+				'can_use'       => true,
 			),
 			'agents'         => $agents,
 			'connectors'     => $connectors,
 			'credentials'    => self::data_mcp_credentials(),
-			'pricing_url'    => \Agentic\Distribution::PRICING_URL,
 		);
 	}
 

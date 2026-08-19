@@ -171,16 +171,6 @@ class License_Client {
 	}
 
 	/**
-	 * Whether the MCP endpoint should be accessible.
-	 * Granted when Pro is active OR a connector was installed via an AI provider.
-	 *
-	 * @return bool
-	 */
-	public function can_use_mcp(): bool {
-		return $this->is_pro() || $this->has_connector();
-	}
-
-	/**
 	 * Get the license type.
 	 *
 	 * @return string 'personal', 'agency', or 'free'

@@ -2075,7 +2075,6 @@ function EndpointsTab( { data, setData, onSave, saving, error, saved, clearSaved
 }
 
 function MCPTab( { data } ) {
-	const available = data.mcp_available || {};
 	const agents = data.agents || [];
 	const connectors = data.connectors || [];
 
@@ -2197,30 +2196,14 @@ function MCPTab( { data } ) {
 			<Panel title={ __( 'MCP', 'agent-builder' ) }>
 				<p className="agentic-react-lead">
 					{ __(
-						'The Model Context Protocol (MCP) lets external AI apps — Claude Desktop, Cursor, and others — use your agents directly, tool calls and all.',
+						'The Model Context Protocol (MCP) lets external AI apps — Claude Desktop, Cursor, and others — use your agents directly, tool calls and all. Free on every WordPress version this plugin supports — no Pro or connector required.',
 						'agent-builder'
 					) }
 				</p>
-				{ available.can_use ? (
-					<p>
-						<span className="agentic-react-led is-on" />{ ' ' }
-						<strong>
-							{ __( 'Available', 'agent-builder' ) }
-						</strong>
-					</p>
-				) : (
-					<Notice status="warning" isDismissible={ false }>
-						{ __(
-							'MCP access requires Agent Builder Pro or a connected client.',
-							'agent-builder'
-						) }{ ' ' }
-						{ data.pricing_url && (
-							<ExternalLink href={ data.pricing_url }>
-								{ __( 'See pricing', 'agent-builder' ) }
-							</ExternalLink>
-						) }
-					</Notice>
-				) }
+				<p>
+					<span className="agentic-react-led is-on" />{ ' ' }
+					<strong>{ __( 'Available', 'agent-builder' ) }</strong>
+				</p>
 			</Panel>
 
 			<Panel title={ __( 'Agent endpoints', 'agent-builder' ) }>
