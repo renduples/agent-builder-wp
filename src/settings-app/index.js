@@ -2082,6 +2082,13 @@ function MCPTab( { data } ) {
 	const [ tests, setTests ] = useState( {} );
 	const [ copied, setCopied ] = useState( {} );
 	const [ credentials, setCredentials ] = useState( data.credentials || [] );
+
+	// data.credentials can still be [] on MCPTab's first render (bootstrap
+	// arrives one render before SettingsApp's tabData sync effect catches
+	// up), so re-sync once the real prop value shows up.
+	useEffect( () => {
+		setCredentials( data.credentials || [] );
+	}, [ data.credentials ] );
 	const [ creating, setCreating ] = useState( false );
 	const [ createError, setCreateError ] = useState( '' );
 	const [ newCredential, setNewCredential ] = useState( null );
