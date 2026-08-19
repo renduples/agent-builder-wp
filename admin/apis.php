@@ -74,7 +74,7 @@ $agentic_third_party_apis = array(
 					<small class="agentic-text-green">Connected</small>
 				<?php else : ?>
 					<span class="dashicons dashicons-warning agentic-di-amber agentic-di-md-va"></span>
-					<small class="agentic-text-muted">Not configured — using shared key with limits</small>
+					<small class="agentic-text-muted">Not configured — Core Web Vitals checks won't run until you add a key</small>
 				<?php endif; ?>
 			</td>
 			<td><small><?php echo esc_html( $agentic_api_def['free_tier'] ); ?></small></td>
@@ -84,7 +84,7 @@ $agentic_third_party_apis = array(
 					<?php echo esc_html( $agentic_has_key ? __( 'Edit Key', 'agent-builder' ) : __( 'Add Key', 'agent-builder' ) ); ?>
 				</a>
 				<?php if ( $agentic_has_key ) : ?>
-				<form method="post" class="agentic-form-inline agentic-ml-8" data-agentic-confirm="<?php echo esc_attr( __( 'Remove this API key? The shared key (with limits) will be used instead.', 'agent-builder' ) ); ?>" data-agentic-confirm-danger>
+				<form method="post" class="agentic-form-inline agentic-ml-8" data-agentic-confirm="<?php echo esc_attr( __( 'Remove this API key? Core Web Vitals checks will stop working until you add a new one.', 'agent-builder' ) ); ?>" data-agentic-confirm-danger>
 					<?php wp_nonce_field( 'agentic_api_key_nonce' ); ?>
 					<input type="hidden" name="agentic_api_action" value="delete">
 					<input type="hidden" name="agentic_api_slug" value="<?php echo esc_attr( $agentic_api_slug ); ?>">

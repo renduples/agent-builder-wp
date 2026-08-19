@@ -236,9 +236,6 @@ final class Activator {
 			$results[ $key ] = add_option( $key, $value, '', $autoload ) ? 'added' : 'already_exists';
 		}
 
-		update_option( 'agentic_psi_shared_key_builtin', defined( 'AGENTIC_PSI_SHARED_KEY' ) ? AGENTIC_PSI_SHARED_KEY : '' );
-		$results['agentic_psi_shared_key_builtin'] = 'updated';
-
 		self::record( 'set_default_options', 'ok', $results );
 	}
 

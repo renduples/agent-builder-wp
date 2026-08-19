@@ -140,6 +140,7 @@ if ( isset( $_POST['agentic_hub_nonce'] ) && wp_verify_nonce( sanitize_text_fiel
 	// blob. json_decode() below fails safely on malformed input either way,
 	// and every individual field is sanitized on its own terms downstream in
 	// Skills_Registry::import_from_hub()/create().
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- see comment above: sanitize_text_field() would corrupt legitimate skill content; downstream code sanitizes each field individually.
 	$agentic_hub_json = wp_unslash( $_POST['agentic_hub_data'] ?? '' );
 	$agentic_hub_data = json_decode( $agentic_hub_json, true );
 

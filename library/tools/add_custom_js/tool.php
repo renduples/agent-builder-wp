@@ -23,7 +23,7 @@ class Add_Custom_Js extends Tool_Base {
 	}
 
 	public function get_description(): string {
-		return 'Add a custom JavaScript snippet to the site without modifying theme files. Snippets are stored and enqueued by Agent Builder on wp_head or wp_footer.';
+		return 'Store a custom JavaScript snippet for later reference (e.g. for a developer to add manually, or for a future release to enqueue). Snippets are saved to the database only — Agent Builder does not currently output them on the frontend.';
 	}
 
 	public function get_category(): string {
@@ -84,7 +84,7 @@ class Add_Custom_Js extends Tool_Base {
 			'label'      => $label,
 			'location'   => $location,
 			'js_preview' => substr( $js, 0, 100 ) . ( strlen( $js ) > 100 ? '...' : '' ),
-			'note'       => 'Enqueued by Agent Builder on wp_head/wp_footer when active.',
+			'note'       => 'Saved to the database only — not currently output on the site. Use list_code_snippets to review stored snippets.',
 		);
 	}
 }

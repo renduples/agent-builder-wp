@@ -1735,6 +1735,7 @@ class Admin_Pages_REST {
 
 		$redirect_base = admin_url( 'admin.php?page=agentic-skills' );
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- $_FILES[...]['error'] is a PHP-generated integer upload-error code (UPLOAD_ERR_* constant), not user-supplied string data.
 		if ( empty( $_FILES['agentic_skill_file']['tmp_name'] ) || UPLOAD_ERR_OK !== ( $_FILES['agentic_skill_file']['error'] ?? UPLOAD_ERR_NO_FILE ) ) {
 			wp_safe_redirect(
 				add_query_arg(

@@ -255,6 +255,12 @@ class Risk_Level {
 		'git_push'                             => self::HIGH,
 		'git_commit'                           => self::HIGH,
 
+		// Generic authenticated proxy to the full GitHub REST API (any method,
+		// any endpoint, using the admin's own PAT) — no risk_level override of
+		// its own, so without a floor here it would default to NONE if a
+		// future agent ever declares it.
+		'github_api'                           => self::HIGH,
+
 		// Account takeover surface.
 		'force_password_reset'                 => self::HIGH,
 

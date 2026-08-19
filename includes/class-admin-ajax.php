@@ -308,6 +308,7 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Permission denied.', 'agent-builder' ) );
 		}
 
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- every field is sanitized (sanitize_text_field/sanitize_textarea_field/absint) inside Agent_Lifecycle::save_user_trigger().
 		$result = Agent_Lifecycle::save_user_trigger(
 			array(
 				'id'         => wp_unslash( $_POST['trigger_id'] ?? '' ),
@@ -315,9 +316,10 @@ class Admin_Ajax {
 				'hook'       => wp_unslash( $_POST['hook'] ?? '' ),
 				'name'       => wp_unslash( $_POST['name'] ?? '' ),
 				'prompt'     => wp_unslash( $_POST['prompt'] ?? '' ),
-				'priority'   => $_POST['priority'] ?? 10,
+				'priority'   => wp_unslash( $_POST['priority'] ?? 10 ),
 			)
 		);
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( empty( $result['ok'] ) ) {
 			wp_send_json_error( $result['error'] ?? __( 'Could not save the event trigger.', 'agent-builder' ) );
@@ -365,6 +367,7 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Permission denied.', 'agent-builder' ) );
 		}
 
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- every field is sanitized (sanitize_key/sanitize_text_field/sanitize_textarea_field) inside Agent_Lifecycle::save_user_scheduled_task().
 		$result = Agent_Lifecycle::save_user_scheduled_task(
 			array(
 				'id'          => wp_unslash( $_POST['task_id'] ?? '' ),
@@ -375,6 +378,7 @@ class Admin_Ajax {
 				'schedule'    => wp_unslash( $_POST['schedule'] ?? 'daily' ),
 			)
 		);
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( empty( $result['ok'] ) ) {
 			wp_send_json_error( $result['error'] ?? __( 'Could not save the scheduled task.', 'agent-builder' ) );

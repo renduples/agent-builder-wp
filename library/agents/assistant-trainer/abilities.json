@@ -45,8 +45,8 @@
       "risk": "none"
     },
     "create_agent_files": {
-      "risk": "low",
-      "reason": "Writes files to plugin's own library directory"
+      "risk": "high",
+      "reason": "Writes a new agent's manifest/prompt files to disk; queued for admin approval before it runs"
     },
     "delete_agent": {
       "risk": "medium",

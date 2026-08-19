@@ -57,42 +57,23 @@ class Check_Core_Web_Vitals extends Tool_Base {
 		$url      = $args['url'] ?? home_url( '/' );
 		$strategy = in_array( $args['strategy'] ?? 'mobile', array( 'mobile', 'desktop' ), true ) ? ( $args['strategy'] ?? 'mobile' ) : 'mobile';
 
-		// Key priority: user's own key → shared bundled key.
-		$user_key     = get_option( 'agentic_psi_api_key', '' );
-		$has_own_key  = ! empty( $user_key );
-		$api_key      = $has_own_key ? $user_key : get_option( 'agentic_psi_shared_key_builtin', defined( 'AGENTIC_PSI_SHARED_KEY' ) ? AGENTIC_PSI_SHARED_KEY : '' );
-		$using_shared = ! $has_own_key && ! empty( $api_key );
-
-		// Rate limits for shared key: 10/day, 100 lifetime.
-		if ( $using_shared ) {
-			$daily_usage = (int) get_transient( 'agentic_psi_daily_usage' );
-			$total_usage = (int) get_option( 'agentic_psi_shared_total', 0 );
-
-			if ( $total_usage >= 100 ) {
-				return array(
-					'error'     => 'The shared PageSpeed API key has reached its lifetime limit (100 queries). Please add your own free API key — it takes 2 minutes and is completely free. See: https://agentic-plugin.com/pagespeed-insights-api-key/',
-					'setup_url' => 'https://agentic-plugin.com/pagespeed-insights-api-key/',
-				);
-			}
-
-			if ( $daily_usage >= 10 ) {
-				return array(
-					'error'     => 'Daily PageSpeed limit reached (10/day on shared key). You can run more tests tomorrow, or add your own free API key for unlimited checks. See: https://agentic-plugin.com/pagespeed-insights-api-key/',
-					'usage'     => $daily_usage,
-					'limit'     => 10,
-					'setup_url' => 'https://agentic-plugin.com/pagespeed-insights-api-key/',
-				);
-			}
+		// Free plugin: PageSpeed Insights requires the site's own Google API
+		// key — no bundled/shared key ships here. (Agent Builder Pro has its
+		// own separate, managed PageSpeed channel; this tool doesn't call it.)
+		$api_key = (string) get_option( 'agentic_psi_api_key', '' );
+		if ( empty( $api_key ) ) {
+			return array(
+				'error'     => 'Core Web Vitals checks need a free Google PageSpeed Insights API key — add yours in Settings > APIs (takes about 2 minutes, no cost). See: https://agentic-plugin.com/pagespeed-insights-api-key/. Agent Builder Pro includes managed PageSpeed access with no key required.',
+				'setup_url' => 'https://agentic-plugin.com/pagespeed-insights-api-key/',
+			);
 		}
 
 		$query_args = array(
 			'url'      => $url,
 			'strategy' => $strategy,
 			'category' => 'performance',
+			'key'      => $api_key,
 		);
-		if ( ! empty( $api_key ) ) {
-			$query_args['key'] = $api_key;
-		}
 
 		$api_url = add_query_arg( $query_args, 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed' );
 
@@ -107,12 +88,6 @@ class Check_Core_Web_Vitals extends Tool_Base {
 		if ( 200 !== $code || empty( $body ) ) {
 			$error_msg = $body['error']['message'] ?? 'Unknown API error (HTTP ' . $code . ')';
 			return array( 'error' => 'PageSpeed API error: ' . $error_msg );
-		}
-
-		if ( $using_shared ) {
-			$new_daily = ( (int) get_transient( 'agentic_psi_daily_usage' ) ) + 1;
-			set_transient( 'agentic_psi_daily_usage', $new_daily, DAY_IN_SECONDS );
-			update_option( 'agentic_psi_shared_total', ( (int) get_option( 'agentic_psi_shared_total', 0 ) ) + 1 );
 		}
 
 		$field_data        = $body['loadingExperience'] ?? array();
@@ -200,18 +175,6 @@ class Check_Core_Web_Vitals extends Tool_Base {
 			'lab_data'          => $lab_data,
 			'opportunities'     => $opportunities,
 		);
-
-		if ( $using_shared ) {
-			$new_daily = (int) get_transient( 'agentic_psi_daily_usage' );
-			$new_total = (int) get_option( 'agentic_psi_shared_total', 0 );
-			if ( $new_daily >= 7 || $new_total >= 80 ) {
-				$result['usage_warning'] = sprintf(
-					'Used %d of 10 daily checks and %d of 100 lifetime checks on shared key. Add your own free API key for unlimited use: https://agentic-plugin.com/pagespeed-insights-api-key/',
-					$new_daily,
-					$new_total
-				);
-			}
-		}
 
 		return $result;
 	}

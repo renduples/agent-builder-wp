@@ -1,10 +1,10 @@
-=== Agent Builder — AI Agents, Chatbots & Automation for WordPress ===
+=== Agent Builder ===
 Contributors: agenticplugin
 Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.78
+Stable tag: 3.3.85
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -118,7 +118,7 @@ On WordPress 6.9+, Agent Builder provides bidirectional integration:
 
 == External Services ==
 
-This plugin connects to external AI APIs to process prompts and tool executions. **No external request is made until you configure or explicitly activate a provider.**
+This plugin connects to external AI APIs to process prompts and tool executions — no request to any AI provider is made until you configure or explicitly activate it. A small number of non-AI, non-personal-data requests to Agentic's own platform (e.g. a daily model-pricing sync) happen automatically regardless of configuration; see "Agentic Account & Platform Services" below for exactly which ones and what they send.
 
 = OpenAI =
 * **Endpoint:** `https://api.openai.com/v1/chat/completions`
@@ -200,6 +200,24 @@ This plugin connects to external AI APIs to process prompts and tool executions.
 * **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
 * **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
 
+= Agentic Account & Platform Services (Optional) =
+* **Endpoints:**
+  * `https://agentic-plugin.com/wp-json/agentic/v1/model-pricing` — refreshes the LLM model/pricing catalog. Runs automatically once daily via WordPress Cron regardless of which AI provider you've configured, and can also be triggered manually from the Costs page's "Get Latest Pricing" button. A plain GET request; no personal data is sent, and the response is cached locally.
+  * `https://agentic-plugin.com/wp-json/agentic/v1/agents?per_page=1` — reads the number of community agents available, to display on the Dashboard. Runs automatically (cached for one hour) whenever an administrator views the Agent Builder Dashboard. A plain GET request; no personal data is sent.
+  * `https://agentic-plugin.com/wp-json/agentic/v1/register` — only when an administrator submits the plugin's sign-up form to obtain a free Agentic API key. Sends the administrator's email address, site URL, site name, plugin version, and plan tier.
+  * `https://agentic-plugin.com/wp-json/agentic-license/v1/cancellation-feedback` — only when a licensed, previously-consenting administrator submits a reason on the plugin-deactivation survey. Sends the license key, site URL, the selected reason, an optional free-text comment, and plugin version.
+  * `https://agentic-plugin.com/wp-json/agentic/v1/agents/activate-token` — only when installing an uploaded community or purchased agent package that includes a license file. Sends the license token, agent slug, and site URL.
+  * `https://agentic-plugin.com/wp-json/agentic/v1/report-issue` — only when an administrator explicitly confirms sending a diagnostic report via the in-chat "report an issue" tool (a preview is always shown first, and a second explicit confirmation is required before anything is sent). Sends site URL, license key (if any), recent error-log excerpts, the active AI provider, plugin/WordPress/PHP version information, and the administrator's own description of the problem.
+* **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
+* **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
+
+= Agentic Agent Marketplace (Agent Builder Pro Only, Optional) =
+* **Endpoints:** `https://agentic-plugin.com/wp-json/agentic/v1/agents/check-updates`, plus a per-agent marketplace manifest URL and package download URL under the same domain.
+* **When used:** Only on sites with an active Agent Builder Pro license, and only after an administrator separately opts in to agent update checks. Free and WordPress.org-only installs never contact this endpoint.
+* **Data sent:** For update checks, the slug and version of every installed non-bundled agent. For installs/updates, the agent's slug and its manifest or package download URL.
+* **Terms of Service:** [https://agentic-plugin.com/terms-of-service/](https://agentic-plugin.com/terms-of-service/)
+* **Privacy Policy:** [https://agentic-plugin.com/privacy-policy/](https://agentic-plugin.com/privacy-policy/)
+
 = Agentic MCP Connector Relay (Optional) =
 * **Endpoints:**
   * `https://mcp.agentic-plugin.com/api/verify-state`
@@ -211,15 +229,35 @@ This plugin connects to external AI APIs to process prompts and tool executions.
 
 = Community Agent Skills Repositories (Optional) =
 * **Endpoints:**
-  * WordPress.org Skills: `https://api.github.com/repos/WordPress/agent-skills/`
-  * Anthropic Skills: `https://api.github.com/repos/anthropics/skills/`
+  * WordPress.org Skills: `https://api.github.com/repos/WordPress/agent-skills/` and `https://raw.githubusercontent.com/WordPress/agent-skills/`
+  * Anthropic Skills: `https://api.github.com/repos/anthropics/skills/` and `https://raw.githubusercontent.com/anthropics/skills/`
   * Recommended Skills: `https://agentic-plugin.com/wp-json/agentic/v1/skills`
   * ClawHub: `https://wry-manatee-359.convex.site/api/v1/`
 * **When used:** When browsing or importing community skills from the Skills screen.
 * **Data sent:** Unauthenticated GET requests for public skills; search queries when using ClawHub.
 * **Terms of Service:** [GitHub Terms](https://docs.github.com/site-policy/github-terms/github-terms-of-service) | [OpenClaw Docs](https://docs.openclaw.ai/)
 
+= Google PageSpeed Insights (Optional) =
+* **Endpoint:** `https://www.googleapis.com/pagespeedonline/v5/runPagespeed`
+* **When used:** Only when the Core Web Vitals check tool is used, and only if you've added your own free Google PageSpeed Insights API key in Settings → APIs. This plugin does not ship or use a shared API key — without your own key, this tool returns setup instructions instead of making a request. (Agent Builder Pro provides managed PageSpeed access through a separate mechanism, without requiring your own key.)
+* **Data sent:** The URL being tested (defaults to your homepage), device strategy (mobile/desktop), and your Google API key.
+* **Terms of Service:** [https://developers.google.com/terms](https://developers.google.com/terms)
+* **Privacy Policy:** [https://policies.google.com/privacy](https://policies.google.com/privacy)
+
+= WordPress.org Plugin & Core Directory (Optional) =
+* **Endpoint:** `https://api.wordpress.org/`
+* **When used:** Only when specific site-health tools are used — checking core file integrity against official checksums, or checking a plugin's abandonment/maintenance status or changelog. The same official API WordPress core itself uses for plugin/theme browsing and update checks.
+* **Data sent:** WordPress version and locale, and the relevant plugin slug(s). No personal data.
+
+= User-Configured Webhooks (Optional) =
+* **Endpoint:** A URL you choose yourself when setting up a form.
+* **When used:** Only if you enable a webhook on a form you create, so that form's submissions are also sent to a destination you specify.
+* **Data sent:** Whatever data that form collects, sent only to the URL you configured — never to Agentic or any other third party.
+
 == Changelog ==
+
+= 3.3.85 - 2026-08-19 =
+* WordPress.org submission readiness: corrected plugin name/trademark and Stable Tag mismatches, disclosed every External Service the plugin contacts (including several automatic, low-data background syncs), and removed the bundled/shared Google PageSpeed Insights key — Core Web Vitals checks now require your own free key, matching the plugin's existing bring-your-own-key model for every other provider.
 
 = 3.3.78 - 2026-08-18 =
 * Housekeeping: Trimmed the changelog to major releases only per WordPress.org guidelines. Full version history available on git.
