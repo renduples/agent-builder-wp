@@ -882,10 +882,15 @@ class Provider_Registry {
 	 * gateway is already our own API, so it's asked directly for real-time
 	 * accuracy.
 	 *
-	 * @param string $slug Provider slug.
+	 * @param string $slug     Provider slug.
+	 * @param bool   $explicit True for an admin-initiated "Refresh" click —
+	 *                         bypasses the Guideline 7 opt-in gate on the
+	 *                         curated catalog, the same way "Get Latest
+	 *                         Pricing" already does. False (default) for the
+	 *                         daily cron, which stays gated.
 	 * @return array<int, string> Model IDs, or an empty array on failure.
 	 */
-	public static function fetch_live_models_from_api( string $slug ): array {
+	public static function fetch_live_models_from_api( string $slug, bool $explicit = false ): array {
 		$provider = self::get( $slug );
 		if ( ! $provider ) {
 			return array();
@@ -928,7 +933,7 @@ class Provider_Registry {
 
 		// Every other built-in LLM provider (openai, anthropic, google, xai,
 		// mistral, llama, kimi, deepseek, cohere, ...): our own curated catalog.
-		$catalog = self::fetch_curated_catalog();
+		$catalog = self::fetch_curated_catalog( $explicit );
 		return array_values( array_keys( (array) ( $catalog[ $slug ] ?? array() ) ) );
 	}
 
@@ -941,15 +946,17 @@ class Provider_Registry {
 	 *
 	 * @return array<string, array<string, array{in: float, out: float}>>
 	 */
-	private static function fetch_curated_catalog(): array {
+	private static function fetch_curated_catalog( bool $explicit = false ): array {
 		$cached = get_transient( 'agentic_curated_model_catalog' );
 		if ( is_array( $cached ) ) {
 			return $cached;
 		}
 
-		// Guideline 7: do not phone agentic-plugin.com unless the admin opted in
-		// (Settings → Security). "Get Latest Pricing" uses its own explicit GET.
-		if ( ! self::platform_sync_allowed() ) {
+		// Guideline 7 only restricts *automatic* phone-home (the daily cron).
+		// An explicit, user-initiated click — "Refresh Models" here, or "Get
+		// Latest Pricing"'s own separate direct GET — isn't what that
+		// guideline targets, so it bypasses the opt-in gate.
+		if ( ! $explicit && ! self::platform_sync_allowed() ) {
 			return array();
 		}
 

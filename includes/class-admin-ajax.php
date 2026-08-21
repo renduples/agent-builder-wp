@@ -1104,7 +1104,10 @@ class Admin_Ajax {
 		// Shared with the daily agentic_refresh_provider_models cron (see
 		// Provider_Registry::fetch_live_models_from_api()) so there is exactly
 		// one place that knows how to list models for each provider's API.
-		$models = Provider_Registry::fetch_live_models_from_api( $slug );
+		// $explicit=true: this is an admin clicking "Refresh," not the cron,
+		// so it bypasses the Settings > Security catalog-sync opt-in gate —
+		// same exemption "Get Latest Pricing" already has.
+		$models = Provider_Registry::fetch_live_models_from_api( $slug, true );
 
 		if ( empty( $models ) ) {
 			wp_send_json_error( array( 'message' => __( 'No models returned. Ensure your API key is saved and valid.', 'agent-builder' ) ) );
