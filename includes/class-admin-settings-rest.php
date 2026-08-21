@@ -165,8 +165,7 @@ class Admin_Settings_REST {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_bootstrap(): \WP_REST_Response {
-		$is_advanced = Admin_Menu_Handler::is_advanced_mode( 'settings' );
-		$is_pro      = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
+		$is_pro = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
 
 		$tabs = array(
 			'interface' => __( 'Interface', 'agent-builder' ),
@@ -190,10 +189,9 @@ class Admin_Settings_REST {
 				'slugs' => array( 'interface', 'agents', 'providers', 'license', 'users', 'security' ),
 			),
 			array(
-				'id'            => 'advanced',
-				'label'         => __( 'Advanced', 'agent-builder' ),
-				'slugs'         => array( 'apis', 'endpoints', 'mcp' ),
-				'advanced_only' => true,
+				'id'    => 'advanced',
+				'label' => __( 'Advanced', 'agent-builder' ),
+				'slugs' => array( 'apis', 'endpoints', 'mcp' ),
 			),
 		);
 
@@ -224,7 +222,6 @@ class Admin_Settings_REST {
 			array(
 				'tabs'         => $tabs,
 				'groups'       => $groups,
-				'is_advanced'  => $is_advanced,
 				'is_pro'       => $is_pro,
 				'classic_tabs' => $classic_tabs,
 				'admin_url'    => admin_url(),

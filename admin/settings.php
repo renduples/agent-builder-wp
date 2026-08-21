@@ -645,8 +645,6 @@ $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );
 		$agentic_active_tab = 'interface';
 	}
 
-	$agentic_is_advanced = \Agentic\Admin_Menu_Handler::is_advanced_mode( 'settings' );
-
 	// Group the flat settings tabs into labelled clusters (see UX/IA §5). Tabs are
 	// matched by slug; any tab not explicitly placed (for example a future add-on
 	// tab) falls back to the Basic cluster so it can never disappear from the UI.
@@ -657,9 +655,8 @@ $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );
 			'slugs' => array( 'interface', 'agents', 'providers', 'license', 'users', 'security', 'health' ),
 		),
 		'advanced' => array(
-			'label'         => __( 'Advanced', 'agent-builder' ),
-			'slugs'         => array( 'apis', 'endpoints' ),
-			'advanced_only' => true,
+			'label' => __( 'Advanced', 'agent-builder' ),
+			'slugs' => array( 'apis', 'endpoints' ),
 		),
 	);
 
@@ -692,12 +689,7 @@ $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );
 				<?php foreach ( $agentic_tab_groups as $agentic_group_key => $agentic_group ) : ?>
 					<?php
 					$agentic_group_tabs = $agentic_grouped[ $agentic_group_key ];
-					// Hide an advanced-only cluster from the nav in Basic mode (its tabs
-					// stay reachable by direct URL via the routing allowlist above).
 					if ( empty( $agentic_group_tabs ) ) {
-						continue;
-					}
-					if ( ! empty( $agentic_group['advanced_only'] ) && ! $agentic_is_advanced ) {
 						continue;
 					}
 					?>

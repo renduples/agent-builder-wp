@@ -5,7 +5,7 @@
  * Plugin Name:       Agent Builder
  * Plugin URI:        https://agentic-plugin.com
  * Description:       Orchestrate role-based AI agents and teams with simple job descriptions.
- * Version:           3.3.86
+ * Version:           3.3.87
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Agent Builder Team
@@ -57,7 +57,7 @@ spl_autoload_register(
 
 // Plugin constants.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-define( 'AGENT_BUILDER_VERSION', '3.3.86' );
+define( 'AGENT_BUILDER_VERSION', '3.3.87' );
 define( 'AGENT_BUILDER_FILE', __FILE__ );
 define( 'AGENT_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGENT_BUILDER_URL', plugin_dir_url( __FILE__ ) );
@@ -72,7 +72,7 @@ define( 'AGENT_BUILDER_DB_VERSION', '2.13.4' );
 // Free code prefers class_exists for add-on classes, file_exists checks, or hooks (e.g. agentic_settings_tabs) to gate optional features.
 define( 'AGENTIC_PRO', defined( 'AGENT_BUILDER_PRO_FILE' ) );
 
-// Distribution channel ('wporg' | 'self'). bin/build-zip.sh stamps
+// Distribution channel ('wporg' | 'self'). bin/export-wporg-tree.sh stamps
 // includes/dist-channel.php per profile; a dev checkout has no such file and
 // defaults to 'self' so the full feature set is exercisable locally. See
 // Agentic\Distribution. Self-hosted-only code (includes/self-hosted/,
@@ -240,7 +240,7 @@ final class Plugin {
 		// Registered in every context (admin, cron, update-transient rebuilds) and
 		// paired with the Update URI header so WordPress.org never manages this
 		// install. Physically absent from the WordPress.org build (see
-		// Agentic\Distribution + bin/build-zip.sh), so class_exists() is false there.
+		// Agentic\Distribution + bin/export-wporg-tree.sh), so class_exists() is false there.
 		if ( Distribution::is_self_hosted() && class_exists( '\Agentic\Self_Hosted\Free_Updater' ) ) {
 			Self_Hosted\Free_Updater::register();
 		}
@@ -303,7 +303,7 @@ final class Plugin {
 		// Self-hosted builds only: the one-click "Upgrade to Pro" installer
 		// (license field → download + install agent-builder-pro from the store).
 		// This code lives in includes/self-hosted/ and is physically stripped from
-		// the WordPress.org build (see Agentic\Distribution + bin/build-zip.sh), so
+		// the WordPress.org build (see Agentic\Distribution + bin/export-wporg-tree.sh), so
 		// class_exists() is false there. Skipped once Pro is already active.
 		if ( Distribution::is_self_hosted() && ! AGENTIC_PRO
 			&& class_exists( '\Agentic\Self_Hosted\Pro_Installer' ) ) {

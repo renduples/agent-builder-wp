@@ -172,9 +172,6 @@ function SettingsNav( { bootstrap, active, onChange, filter } ) {
 				onChange={ ( e ) => onChange( { type: 'filter', value: e.target.value } ) }
 			/>
 			{ groups.map( ( group ) => {
-				if ( group.advanced_only && ! bootstrap.is_advanced ) {
-					return null;
-				}
 				const items = ( group.slugs || [] )
 					.filter( ( slug ) => tabs[ slug ] )
 					.filter(
