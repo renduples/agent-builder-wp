@@ -57,7 +57,7 @@ spl_autoload_register(
 
 // Plugin constants.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-define( 'AGENT_BUILDER_VERSION', '3.3.87' );
+define( 'AGENT_BUILDER_VERSION', '3.3.88' );
 define( 'AGENT_BUILDER_FILE', __FILE__ );
 define( 'AGENT_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGENT_BUILDER_URL', plugin_dir_url( __FILE__ ) );

@@ -2,7 +2,7 @@
 Contributors: agenticplugin
 Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.1
 Stable tag: 3.3.88
 Donate link: https://agentic-plugin.com/donate/
