@@ -59,8 +59,21 @@ class Get_Agent_Template extends Tool_Base {
 		$library_path = \Agentic\Tool_Helpers::get_library_path();
 
 		if ( $minimal ) {
-			$template_file = $library_path . 'assistant-trainer/templates/minimal-agent.php.template';
-			$template      = file_exists( $template_file ) ? file_get_contents( $template_file ) : '';
+			// Bundled agents are declarative agent.json, not PHP classes — a
+			// minimal template is just the required fields of that schema.
+			$template = wp_json_encode(
+				array(
+					'$schema'     => 'https://agentic-plugin.com/schemas/agent/v1.json',
+					'slug'        => '[SLUG]',
+					'name'        => '[AGENT_NAME]',
+					'description' => '[DESCRIPTION]',
+					'category'    => '[CATEGORY]',
+					'version'     => '1.0.0',
+					'capabilities' => array(),
+					'tools'       => array(),
+				),
+				JSON_PRETTY_PRINT
+			);
 		} else {
 			$content_writer_file = $library_path . 'content-writer/agent.php';
 			if ( ! file_exists( $content_writer_file ) ) {
@@ -78,7 +91,6 @@ class Get_Agent_Template extends Tool_Base {
 			'placeholders' => array(
 				'[AGENT_NAME]'  => 'Display name',
 				'[SLUG]'        => 'kebab-case-slug',
-				'[CLASS_NAME]'  => 'Agentic_Your_Agent_Name',
 				'[DESCRIPTION]' => 'What your agent does',
 				'[CATEGORY]'    => 'Content, Admin, E-commerce, Frontend, Developer, or Marketing',
 			),
