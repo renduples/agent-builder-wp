@@ -23,6 +23,7 @@ vendor
 tests
 CLAUDE.md
 Claude.md
+SUBMISSION-NOTES.md
 .phpcs.xml
 phpcs.xml
 phpcs.xml.dist
