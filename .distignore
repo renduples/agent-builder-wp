@@ -30,5 +30,8 @@ library/tools/run_wp_cli
 library/tools/manage_cli_settings
 admin/deployment/deployment-cli.php
 
-# PHP class template leftover from the pre-manifest agent generator.
-library/agents/assistant-trainer/templates/minimal-agent.php.template
+# Self-hosted/Pro-only code. No-op in this free-tier checkout (these paths
+# don't exist here), but this script is also run from the private upstream
+# repo where they do — the exclusion has to live here either way.
+includes/self-hosted
+admin/upgrade-pro.php

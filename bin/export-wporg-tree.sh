@@ -6,12 +6,22 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEST="${1:-/tmp/agent-builder}"
+DEST="$(mkdir -p "$DEST" && cd "$DEST" && pwd)"
 IGNORE="$ROOT/.distignore"
 
 if [[ ! -f "$IGNORE" ]]; then
 	echo "Missing .distignore" >&2
 	exit 1
 fi
+
+# Refuse to rm -rf anything that isn't a scoped build-output directory —
+# a bare "." or a typo'd path must never resolve to the repo root, /, or $HOME.
+case "$DEST" in
+	"$ROOT"|"/"|"$HOME")
+		echo "Refusing to build into $DEST (too broad)." >&2
+		exit 1
+		;;
+esac
 
 rm -rf "$DEST"
 mkdir -p "$DEST"
@@ -26,6 +36,15 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 done < "$IGNORE"
 
 rsync -a "${EXCLUDES[@]}" "$ROOT/" "$DEST/"
+
+# .distignore excludes vendor/ (the dev checkout's copy may include
+# require-dev packages) — rebuild it here with production-only dependencies
+# for the tools that need them (spreadsheet/PDF/DOCX). composer.lock is
+# copied in just for this step so the exact locked versions are used, then
+# removed — it isn't part of the shipped plugin.
+cp "$ROOT/composer.lock" "$DEST/composer.lock"
+( cd "$DEST" && composer install --no-dev --optimize-autoloader --no-interaction )
+rm -f "$DEST/composer.lock"
 
 # Stamp the public channel so a zip built from a mixed checkout is still wporg.
 mkdir -p "$DEST/includes"
