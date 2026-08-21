@@ -4,6 +4,7 @@
 .git
 .github
 .gitignore
+.distignore
 bin
 
 # AI coding-tool directories — untracked, but rsync copies the raw working
