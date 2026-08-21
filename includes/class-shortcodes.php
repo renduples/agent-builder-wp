@@ -249,7 +249,7 @@ class Shortcodes {
 
 			<div id="agentic-typing" class="agentic-typing-indicator" style="display: none;">
 				<span></span><span></span><span></span>
-				<span id="agentic-typing-text">Agent is thinking...</span>
+				<span id="agentic-typing-text"><?php esc_html_e( 'Agent is thinking...', 'agent-builder' ); ?></span>
 			</div>
 
 			<div id="agentic-image-preview" class="agentic-image-preview" style="display:none;">

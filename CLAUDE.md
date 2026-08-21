@@ -2,10 +2,18 @@
 
 `renduples/agent-builder-wp` — the free/WordPress.org-facing repo for **Agent Builder**, a multi-agent AI orchestration plugin for WordPress. Live test/dev deployment is **lffci.org** (Lets Farm Financial Cooperative, Inc.), reachable via `ssh lffci`.
 
-## Current status (as of 2026-08-19)
+## Current status (as of 2026-08-20)
 
-- Git HEAD and lffci.org are in sync at **3.3.85**, pushed to `origin/main` through 3.3.75 (3.3.76–3.3.85 are local-only as of this writing).
-- **The plugin has not been submitted to WordPress.org for initial review/approval at all yet — still in pre-submission preparation, no SVN access exists.** `2235d8a` "Release free (WPorg) v3.3.46" (2026-08-03) is just a mirror commit labeling that snapshot as the intended free/WP.org-facing distribution point, not evidence of an actual submission — correcting an earlier assumption in this file that overstated it as a completed release. Everything from 3.3.47 through 3.3.85 — 39 versions — is committed and deployed to lffci.org only, as ongoing prep work toward a first submission. Compliance items (e.g. the External Services disclosures) matter for passing that initial review, not for protecting an existing listing.
+- Working tree is **3.3.86** on `wporg/submission-readiness` (HEAD was 3.3.85). Not pushed. lffci.org is still on 3.3.85 until this version is deployed.
+- **The plugin has not been submitted to WordPress.org for initial review/approval at all yet — still in pre-submission preparation, no SVN access exists.** `2235d8a` "Release free (WPorg) v3.3.46" (2026-08-03) is just a mirror commit labeling that snapshot as the intended free/WP.org-facing distribution point, not evidence of an actual submission — correcting an earlier assumption in this file that overstated it as a completed release. Everything from 3.3.47 through 3.3.86 is committed/deployed to lffci.org only (or local-only), as ongoing prep work toward a first submission. Compliance items (e.g. the External Services disclosures) matter for passing that initial review, not for protecting an existing listing.
+- **3.3.86 — Human-review blockers after Plugin Check went clean.** 3.3.85 cleared Plugin Check ERROR/WARNING; a guideline review then found items Plugin Check cannot see. Restored `includes/class-admin-settings-rest.php` after a SIGBUS truncated it to 0 bytes mid-edit. Remaining blockers from that review:
+  - Guideline 7: daily model-catalog cron and dashboard community-agent GET no longer phone home without opt-in (`agentic_allow_platform_sync` default off; dashboard count hardcoded 0). `/status` is admin-only and no longer hits `chat.agentic-plugin.com/health`.
+  - Common issues “Changing Active Plugins”: `install_plugin_from_url` no longer calls `activate_plugin()`.
+  - FAQ AI-execution: `add_custom_css` is store-only (no Customizer write); `generate_agent` description no longer claims PHP; `minimal-agent.php.template` deleted; `run_wp_cli` / `manage_cli_settings` / Publish → CLI omitted from the WP.org zip (`.distignore` + `Distribution::wporg_excluded_tools()`).
+  - Guideline 10: “Powered by” and WhatsApp CTA default off; Gutenberg editor preview no longer hardcodes the credit.
+  - Packaging: `.distignore` + `bin/export-wporg-tree.sh`; unused Chart.js removed.
+  - External Services: OpenRouter; GitHub/Convex privacy URLs; catalog sync described as opt-in; dashboard marketplace ping removed.
+  - `/feedback` requires the same permission as chat plus session ownership; uninstall usermeta delete is `$wpdb->prepare`d.
 - **3.3.85 — First real WP.org submission-readiness pass**, driven by running the official `plugin-check` WP-CLI tool (`wp plugin check agent-builder`, already installed on lffci.org) against the plugin, plus two parallel research-agent audits (high-risk tool capabilities; external-services disclosure completeness). Verified the fixes by re-running Plugin Check twice more after each round of edits until every real (non-hidden-file) finding cleared.
   - **Fixed, confirmed via Plugin Check ERROR/WARNING clearing:**
     - `readme.txt` title reverted from a marketing rewrite's `Agent Builder — AI Agents, Chatbots & Automation for WordPress` back to plain `Agent Builder` — WP.org flags "wordpress" in a plugin name as an outright restricted term, and the title must match `agent-builder.php`'s `Plugin Name:` header exactly.

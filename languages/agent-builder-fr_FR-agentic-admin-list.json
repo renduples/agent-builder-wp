@@ -1,0 +1,48 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "src/admin-list/index.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "fr_FR",
+        "plural-forms": "nplurals=2; plural=(n > 1);"
+      },
+      "Search…": [
+        "Rechercher…"
+      ],
+      "Items": [
+        "Éléments"
+      ],
+      "No items found.": [
+        "Aucun élément trouvé."
+      ],
+      "Basic": [
+        "Basique"
+      ],
+      "Advanced": [
+        "Avancé"
+      ],
+      "Saving…": [
+        "Enregistrement…"
+      ],
+      "Settings saved.": [
+        "Réglages enregistrés."
+      ],
+      "Save changes": [
+        "Enregistrer les modifications"
+      ],
+      "Loading…": [
+        "Chargement…"
+      ],
+      "Only changes this screen. Other screens and your site-wide default (Settings → Interface) are unaffected.": [
+        "Ne modifie que cet écran. Les autres écrans et votre valeur par défaut à l’échelle du site (Réglages → Interface) ne sont pas affectés."
+      ],
+      "More info": [
+        "Plus d’informations"
+      ]
+    }
+  }
+}

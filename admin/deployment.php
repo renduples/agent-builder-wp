@@ -32,8 +32,13 @@ $agentic_deploy_is_advanced = \Agentic\Admin_Menu_Handler::is_advanced_mode( 'de
 wp_enqueue_style( 'agentic-react-admin', AGENT_BUILDER_URL . 'assets/css/react-admin.css', array(), AGENT_BUILDER_VERSION );
 
 // Determine active tab (tabs ordered alphabetically by label below).
-$agentic_active_tab = sanitize_text_field( wp_unslash( $_GET['tab'] ?? 'admin-bar' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switch, not a form submission.
-if ( ! in_array( $agentic_active_tab, array( 'admin-bar', 'cli', 'admin-ui', 'event-listeners', 'gutenberg-blocks', 'website', 'scheduled-tasks', 'shortcodes' ), true ) ) {
+$agentic_active_tab      = sanitize_text_field( wp_unslash( $_GET['tab'] ?? 'admin-bar' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switch, not a form submission.
+$agentic_deploy_allowed  = array( 'admin-bar', 'cli', 'admin-ui', 'event-listeners', 'gutenberg-blocks', 'website', 'scheduled-tasks', 'shortcodes' );
+$agentic_ships_cli_tools = class_exists( '\Agentic\Distribution' ) && \Agentic\Distribution::ships_cli_tools();
+if ( ! $agentic_ships_cli_tools ) {
+	$agentic_deploy_allowed = array_values( array_diff( $agentic_deploy_allowed, array( 'cli' ) ) );
+}
+if ( ! in_array( $agentic_active_tab, $agentic_deploy_allowed, true ) ) {
 	$agentic_active_tab = 'admin-bar';
 }
 ?>
@@ -71,6 +76,9 @@ if ( ! in_array( $agentic_active_tab, array( 'admin-bar', 'cli', 'admin-ui', 'ev
 		'scheduled-tasks'  => __( 'Scheduled Tasks', 'agent-builder' ),
 		'shortcodes'       => __( 'Shortcodes', 'agent-builder' ),
 	);
+	if ( ! $agentic_ships_cli_tools ) {
+		unset( $agentic_deploy_tabs['cli'] );
+	}
 	$agentic_deploy_items = array();
 	foreach ( $agentic_deploy_tabs as $agentic_tab_slug => $agentic_tab_label ) {
 		$agentic_deploy_items[] = array(
@@ -111,7 +119,9 @@ if ( ! in_array( $agentic_active_tab, array( 'admin-bar', 'cli', 'admin-ui', 'ev
 			break;
 
 		case 'cli':
-			include AGENT_BUILDER_DIR . 'admin/deployment/deployment-cli.php';
+			if ( $agentic_ships_cli_tools && file_exists( AGENT_BUILDER_DIR . 'admin/deployment/deployment-cli.php' ) ) {
+				include AGENT_BUILDER_DIR . 'admin/deployment/deployment-cli.php';
+			}
 			break;
 
 		case 'admin-ui':

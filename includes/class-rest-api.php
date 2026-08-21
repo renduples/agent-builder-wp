@@ -118,8 +118,9 @@ class REST_API {
 						},
 					),
 					'image'              => array(
-						'type'    => 'string',
-						'default' => '',
+						'type'              => 'string',
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 					'turnstile_token'    => array(
 						'type'              => 'string',
@@ -185,7 +186,7 @@ class REST_API {
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_status' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( $this, 'check_admin' ),
 			)
 		);
 
@@ -399,7 +400,7 @@ class REST_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'handle_feedback' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( $this, 'check_logged_in' ),
 				'args'                => array(
 					'session_id' => array(
 						'required'          => true,
@@ -951,29 +952,9 @@ class REST_API {
 	public function get_status( \WP_REST_Request $_request ): \WP_REST_Response { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		$llm = new LLM_Client();
 
-		// Active agent slugs for external verification (e.g. marketplace reviews).
 		$active_slugs = get_option( 'agentic_active_agents', array() );
 		if ( ! is_array( $active_slugs ) ) {
 			$active_slugs = array();
-		}
-
-		// Status-LED signals: inference connectivity (cached 60s) + credit state.
-		$ai = get_transient( 'agentic_status_ai' );
-		if ( false === $ai ) {
-			$health = wp_remote_get( Service_Registry::url( 'agentic-chat', '/health' ), array( 'timeout' => 4 ) );
-			$ai     = ( ! is_wp_error( $health ) && 200 === (int) wp_remote_retrieve_response_code( $health ) ) ? 'ok' : 'unreachable';
-			set_transient( 'agentic_status_ai', $ai, MINUTE_IN_SECONDS );
-		}
-
-		global $wpdb;
-		$credits = 'ok';
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- fixed prefix table; read-only status probe.
-		$last_err = (string) $wpdb->get_var(
-			"SELECT details FROM {$wpdb->prefix}agentic_audit_log WHERE action = 'chat_error' AND created_at > DATE_SUB( NOW(), INTERVAL 30 MINUTE ) ORDER BY id DESC LIMIT 1"
-		);
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-		if ( '' !== $last_err && ( false !== stripos( $last_err, 'insufficient credits' ) || false !== stripos( $last_err, 'balance' ) ) ) {
-			$credits = 'exhausted';
 		}
 
 		return new \WP_REST_Response(
@@ -983,8 +964,6 @@ class REST_API {
 				'provider'      => $llm->get_provider(),
 				'model'         => $llm->get_model(),
 				'mode'          => get_option( 'agentic_agent_mode', 'supervised' ),
-				'ai'            => $ai,
-				'credits'       => $credits,
 				'active_agents' => array_values( $active_slugs ),
 				'capabilities'  => array(
 					'chat'         => true,
@@ -2464,8 +2443,9 @@ class REST_API {
 	 * Handle conversation feedback (thumbs up / down).
 	 *
 	 * Updates the most recent assistant message for the given session_id.
-	 * Accepts both authenticated and anonymous requests — the session_id
-	 * is the ownership token (same model as the chat API).
+	 * Requires the same permission as chat. Logged-in users may only rate
+	 * their own sessions; anonymous ratings are allowed only when anonymous
+	 * chat is enabled and the session belongs to user_id 0.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 * @return \WP_REST_Response
@@ -2476,17 +2456,19 @@ class REST_API {
 		$session_id = $request->get_param( 'session_id' );
 		$thumb      = $request->get_param( 'thumb' );
 		$feedback   = 'up' === $thumb ? 1 : -1;
+		$user_id    = get_current_user_id();
 
 		$conv_table = $wpdb->prefix . 'agentic_conversations';
 
-		// Find the most recent assistant row for this session.
+		// Find the most recent assistant row for this session owned by this user.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row_id = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				'SELECT id FROM %i WHERE session_id = %s AND role = %s ORDER BY id DESC LIMIT 1',
+				'SELECT id FROM %i WHERE session_id = %s AND role = %s AND user_id = %d ORDER BY id DESC LIMIT 1',
 				$conv_table,
 				$session_id,
-				'assistant'
+				'assistant',
+				$user_id
 			)
 		);
 
@@ -2494,7 +2476,7 @@ class REST_API {
 			return new \WP_REST_Response(
 				array(
 					'success' => false,
-					'error'   => 'Not found.',
+					'error'   => __( 'Not found.', 'agent-builder' ),
 				),
 				404
 			);

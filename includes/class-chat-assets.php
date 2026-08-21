@@ -123,10 +123,11 @@ class Chat_Assets {
 		wp_enqueue_script(
 			'agentic-chat-overlay',
 			AGENT_BUILDER_URL . 'assets/js/chat-overlay.js',
-			array( 'agentic-ui' ),
+			array( 'agentic-ui', 'wp-i18n' ),
 			AGENT_BUILDER_VERSION,
 			true
 		);
+		wp_set_script_translations( 'agentic-chat-overlay', 'agent-builder', AGENT_BUILDER_DIR . 'languages' );
 
 		// Build welcome messages and agent names map for active agents.
 		$agentic_welcome_messages = array();
@@ -144,7 +145,7 @@ class Chat_Assets {
 		}
 
 		$agentic_is_pro             = \Agentic\License_Client::get_instance()->is_pro();
-		$agentic_overlay_whitelabel = '1' === get_option( 'agentic_chat_whitelabel', '0' );
+		$agentic_overlay_whitelabel = '1' === get_option( 'agentic_chat_whitelabel', '1' );
 		$agentic_provider_labels    = array(
 			'openai'    => 'OpenAI',
 			'anthropic' => 'Anthropic',

@@ -754,7 +754,8 @@ class Admin_Settings_REST {
 			'chat_audio'         => '1' === (string) get_option( 'agentic_chat_audio', '0' ) || true === get_option( 'agentic_chat_audio', false ),
 			'chat_tts'           => '0' !== (string) get_option( 'agentic_chat_tts', '1' ),
 			'chat_vision'        => '1' === (string) get_option( 'agentic_chat_vision', '0' ) || true === get_option( 'agentic_chat_vision', false ),
-			'chat_whitelabel'    => '1' === (string) get_option( 'agentic_chat_whitelabel', '0' ),
+			'chat_whitelabel'    => '1' === (string) get_option( 'agentic_chat_whitelabel', '1' ),
+			'show_whatsapp_cta'  => '1' === (string) get_option( 'agentic_show_whatsapp_cta', '0' ),
 		);
 	}
 
@@ -790,6 +791,7 @@ class Admin_Settings_REST {
 			'retention_audit_log'      => (int) get_option( 'agentic_retention_audit_log', 30 ),
 			'rate_limit_authenticated' => (int) get_option( 'agentic_rate_limit_authenticated', 30 ),
 			'rate_limit_anonymous'     => (int) get_option( 'agentic_rate_limit_anonymous', 10 ),
+			'allow_platform_sync'      => '1' === (string) get_option( 'agentic_allow_platform_sync', '0' ),
 		);
 	}
 
@@ -1127,6 +1129,9 @@ class Admin_Settings_REST {
 		if ( isset( $data['rate_limit_anonymous'] ) ) {
 			update_option( 'agentic_rate_limit_anonymous', max( 1, absint( $data['rate_limit_anonymous'] ) ) );
 		}
+		if ( array_key_exists( 'allow_platform_sync', $data ) ) {
+			update_option( 'agentic_allow_platform_sync', ! empty( $data['allow_platform_sync'] ) ? '1' : '0' );
+		}
 	}
 
 	/**
@@ -1239,6 +1244,9 @@ class Admin_Settings_REST {
 			if ( array_key_exists( $key, $data ) ) {
 				update_option( 'agentic_' . $key, ! empty( $data[ $key ] ) ? '1' : '0' );
 			}
+		}
+		if ( array_key_exists( 'show_whatsapp_cta', $data ) ) {
+			update_option( 'agentic_show_whatsapp_cta', ! empty( $data['show_whatsapp_cta'] ) ? '1' : '0' );
 		}
 
 		return $warnings;

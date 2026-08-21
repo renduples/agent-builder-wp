@@ -207,6 +207,9 @@ final class Activator {
 			'agentic_chat_theme'              => 'light',
 			// GDPR: default retention to 30 days so data is not kept indefinitely on fresh installs.
 			'agentic_chat_tts'                => '1',
+			'agentic_chat_whitelabel'         => '1',
+			'agentic_show_whatsapp_cta'       => '0',
+			'agentic_allow_platform_sync'     => '0',
 			'agentic_retention_conversations' => 30,
 			'agentic_retention_audit_log'     => 30,
 			\Agentic\Usage_Limits::OPTION_KEY => \Agentic\Usage_Limits::get_install_defaults(),

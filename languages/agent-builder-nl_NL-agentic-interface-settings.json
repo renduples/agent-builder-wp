@@ -1,1 +1,105 @@
-{"domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"nl_NL","plural-forms":"nplurals=2; plural=(n != 1);"},"Saving…":["Opslaan…"],"Interface":["Interface"],"Basic":["Basis"],"Advanced":["Geavanceerd"],"Save changes":["Wijzigingen opslaan"],"Theme default":["Themastandaard"],"System UI":["Systeem-UI"],"Appearance":["Weergave"],"EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?":["NOODSTOP: agents deactiveren en hun status vastleggen, alle taken annuleren en providers loskoppelen. Doorgaan?"],"Turn off emergency stop?":["Noodstop uitschakelen?"],"Disable All Agents":["Alle agents uitschakelen"],"Emergency stop":["Noodstop"],": deactivate and log agent states, cancels all jobs and disconnects providers.":[": agents deactiveren en hun status vastleggen, annuleert alle taken en koppelt providers los."],"Could not load interface settings.":["Kon de interface-instellingen niet laden."],"Could not save interface settings.":["Kon de interface-instellingen niet opslaan."],"Loading interface settings…":["Interface-instellingen worden geladen…"],"Interface settings saved.":["Interface-instellingen opgeslagen."],"Interface mode":["Interfacemodus"],"Basic keeps the menu focused on everyday tasks. Advanced reveals developer tools such as Skills, APIs and Endpoints.":["Basis houdt het menu gericht op dagelijkse taken. Geavanceerd toont ontwikkelaarstools zoals Skills, API's en Endpoints."],"Show the Getting Started checklist on the dashboard":["Toon de checklist Aan de slag op het dashboard"],"Turn this off once you are set up to hide the onboarding checklist.":["Schakel dit uit zodra u klaar bent met instellen om de introductiechecklist te verbergen."],"Global look and feel for chat surfaces.":["Algemene look-and-feel voor chatkanalen."],"Fine-tune chat themes →":["Chatthema's verfijnen →"],"Chat font":["Chatlettertype"],"Font used across the chat interface. Choose “Theme default” to inherit from the selected theme.":["Lettertype dat in de hele chatinterface wordt gebruikt. Kies “Themastandaard” om dit over te nemen van het geselecteerde thema."],"Use theme accent colour":["Accentkleur van het thema gebruiken"],"When off, the colour below overrides the chat theme accent on every chat surface.":["Wanneer dit uit staat, overschrijft de onderstaande kleur het accent van het chatthema op elk chatkanaal."],"Accent colour":["Accentkleur"],"Selected: %s":["Geselecteerd: %s"],"Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until you turn this off.":["Noodstop is ACTIEF. Chat, taken en het activeren van agents zijn geblokkeerd totdat u dit uitschakelt."]}}}
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "src/interface-settings/index.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "nl_NL",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "Basic": [
+        "Basis"
+      ],
+      "Advanced": [
+        "Geavanceerd"
+      ],
+      "Saving…": [
+        "Opslaan…"
+      ],
+      "Interface": [
+        "Interface"
+      ],
+      "Save changes": [
+        "Wijzigingen opslaan"
+      ],
+      "Theme default": [
+        "Themastandaard"
+      ],
+      "System UI": [
+        "Systeem-UI"
+      ],
+      "Appearance": [
+        "Weergave"
+      ],
+      "EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?": [
+        "NOODSTOP: agents deactiveren en hun status vastleggen, alle taken annuleren en providers loskoppelen. Doorgaan?"
+      ],
+      "Turn off emergency stop?": [
+        "Noodstop uitschakelen?"
+      ],
+      "Disable All Agents": [
+        "Alle agents uitschakelen"
+      ],
+      "Emergency stop": [
+        "Noodstop"
+      ],
+      ": deactivate and log agent states, cancels all jobs and disconnects providers.": [
+        ": agents deactiveren en hun status vastleggen, annuleert alle taken en koppelt providers los."
+      ],
+      "Could not load interface settings.": [
+        "Kon de interface-instellingen niet laden."
+      ],
+      "Could not save interface settings.": [
+        "Kon de interface-instellingen niet opslaan."
+      ],
+      "Loading interface settings…": [
+        "Interface-instellingen worden geladen…"
+      ],
+      "Interface settings saved.": [
+        "Interface-instellingen opgeslagen."
+      ],
+      "Interface mode": [
+        "Interfacemodus"
+      ],
+      "Basic keeps the menu focused on everyday tasks. Advanced reveals developer tools such as Skills, APIs and Endpoints.": [
+        "Basis houdt het menu gericht op dagelijkse taken. Geavanceerd toont ontwikkelaarstools zoals Skills, API's en Endpoints."
+      ],
+      "Show the Getting Started checklist on the dashboard": [
+        "Toon de checklist Aan de slag op het dashboard"
+      ],
+      "Turn this off once you are set up to hide the onboarding checklist.": [
+        "Schakel dit uit zodra u klaar bent met instellen om de introductiechecklist te verbergen."
+      ],
+      "Global look and feel for chat surfaces.": [
+        "Algemene look-and-feel voor chatkanalen."
+      ],
+      "Fine-tune chat themes →": [
+        "Chatthema's verfijnen →"
+      ],
+      "Chat font": [
+        "Chatlettertype"
+      ],
+      "Font used across the chat interface. Choose “Theme default” to inherit from the selected theme.": [
+        "Lettertype dat in de hele chatinterface wordt gebruikt. Kies “Themastandaard” om dit over te nemen van het geselecteerde thema."
+      ],
+      "Use theme accent colour": [
+        "Accentkleur van het thema gebruiken"
+      ],
+      "When off, the colour below overrides the chat theme accent on every chat surface.": [
+        "Wanneer dit uit staat, overschrijft de onderstaande kleur het accent van het chatthema op elk chatkanaal."
+      ],
+      "Accent colour": [
+        "Accentkleur"
+      ],
+      "Selected: %s": [
+        "Geselecteerd: %s"
+      ],
+      "Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until you turn this off.": [
+        "Noodstop is ACTIEF. Chat, taken en het activeren van agents zijn geblokkeerd totdat u dit uitschakelt."
+      ]
+    }
+  }
+}

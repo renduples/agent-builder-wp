@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Agent Builder 3.3.45\n"
+"Project-Id-Version: Agent Builder 3.3.86\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/agent-builder\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-03T07:20:57+00:00\n"
+"POT-Creation-Date: 2026-08-21T03:20:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: agent-builder\n"
@@ -62,14 +62,14 @@ msgid "You do not have permission to access this page."
 msgstr ""
 
 #: admin/agent-wizard.php:52
-#: includes/class-admin-menu-handler.php:138
-#: includes/class-admin-menu-handler.php:365
-#: includes/class-admin-pages-rest.php:1543
+#: includes/class-admin-menu-handler.php:134
+#: includes/class-admin-menu-handler.php:352
+#: includes/class-admin-pages-rest.php:2033
 msgid "Train an Agent"
 msgstr ""
 
 #: admin/agent-wizard.php:54
-msgid "Create a new AI assistant in a few quick steps. You can refine everything later from the Agents and Settings pages."
+msgid "Create a new AI agent in a few quick steps. You can refine everything later from the Agents and Settings pages."
 msgstr ""
 
 #: admin/agent-wizard.php:58
@@ -81,7 +81,9 @@ msgid "The agent wizard needs JavaScript enabled. You can also create agents fro
 msgstr ""
 
 #: admin/agents.php:31
-msgid "AI Assistants"
+#: agent-builder.php:436
+#: src/settings-app/index.js:1075
+msgid "AI Agents"
 msgstr ""
 
 #: admin/agents.php:36
@@ -137,31 +139,31 @@ msgstr ""
 #. translators: 1: agent name, 2: chat URL
 #: admin/agents.php:121
 #, php-format
-msgid "%1$s activated. <a href=\"%2$s\">Chat with this assistant now →</a>"
+msgid "%1$s activated. <a href=\"%2$s\">Chat with this agent now →</a>"
 msgstr ""
 
 #: admin/agents.php:133
-msgid "Assistant deactivated."
+msgid "Agent deactivated."
 msgstr ""
 
 #: admin/agents.php:142
-msgid "Assistant deleted."
+msgid "Agent deleted."
 msgstr ""
 
 #. translators: 1: number of agents, 2: action label
 #: admin/agents.php:182
 #, php-format
-msgid "%1$d assistant %2$s."
-msgid_plural "%1$d assistants %2$s."
+msgid "%1$d agent %2$s."
+msgid_plural "%1$d agents %2$s."
 msgstr[0] ""
 msgstr[1] ""
 
 #: admin/agents.php:196
-msgid "You do not have permission to upload assistants."
+msgid "You do not have permission to upload agents."
 msgstr ""
 
 #: admin/agents.php:202
-msgid "Uploading assistant packages requires Agent Builder Pro. In the free plugin, create assistants with the Assistant Trainer. Learn more at agentic-plugin.com"
+msgid "Uploading agent packages requires Agent Builder Pro. In the free plugin, create agents with the Assistant Trainer. Learn more at agentic-plugin.com"
 msgstr ""
 
 #: admin/agents.php:204
@@ -187,7 +189,7 @@ msgstr ""
 #. translators: %s: error message
 #: admin/agents.php:323
 #, php-format
-msgid "Assistant installed but license activation failed: %s. Please re-install or contact support."
+msgid "Agent installed but license activation failed: %s. Please re-install or contact support."
 msgstr ""
 
 #: admin/agents.php:338
@@ -203,7 +205,7 @@ msgid "This license has already been activated on a different domain. Use your a
 msgstr ""
 
 #: admin/agents.php:341
-msgid "The license token is for a different assistant."
+msgid "The license token is for a different agent."
 msgstr ""
 
 #. translators: %s: error code
@@ -219,221 +221,230 @@ msgstr ""
 #. translators: %s: Agent name
 #: admin/agents.php:366
 #, php-format
-msgid "Assistant \"%s\" has been installed successfully. You can now activate it below."
+msgid "Agent \"%s\" has been installed successfully. You can now activate it below."
 msgstr ""
 
 #: admin/agents.php:405
+#: admin/deployment/deployment-admin-ui.php:232
 #: admin/security-log.php:209
-#: admin/settings.php:621
+#: admin/settings.php:628
 #: admin/tools.php:104
-#: includes/class-admin-menu-handler.php:93
-#: includes/class-admin-menu-handler.php:371
-#: includes/class-admin-pages-rest.php:312
-#: includes/class-admin-pages-rest.php:315
-#: includes/class-admin-settings-rest.php:108
-#: src/settings-app/index.js:1452
+#: includes/class-admin-menu-handler.php:88
+#: includes/class-admin-menu-handler.php:358
+#: includes/class-admin-pages-rest.php:440
+#: includes/class-admin-pages-rest.php:443
+#: includes/class-admin-settings-rest.php:173
+#: src/settings-app/index.js:1510
 msgid "Agents"
 msgstr ""
 
 #: admin/agents.php:406
-#: admin/agents.php:483
-#: src/dashboard-activity/index.js:142
-#: src/dashboard-app/index.js:311
-#: src/dashboard-app/index.js:752
-msgid "Community Agents"
-msgstr ""
-
-#: admin/agents.php:407
 msgid "Upload Agent"
 msgstr ""
 
-#: admin/agents.php:428
-msgid "If you have an assistant in a .zip format, you may install it by uploading it here."
+#: admin/agents.php:427
+msgid "If you have an agent in a .zip format, you may install it by uploading it here."
 msgstr ""
 
-#: admin/agents.php:432
+#: admin/agents.php:431
 msgid "Agent zip file"
 msgstr ""
 
-#: admin/agents.php:435
+#: admin/agents.php:434
 msgid "Install Now"
 msgstr ""
 
-#: admin/agents.php:439
-msgid "Installing assistant packages from a .zip is an Agent Builder Pro feature. In the free plugin, build assistants instantly with the Assistant Trainer."
+#: admin/agents.php:438
+msgid "Installing agent packages from a .zip is an Agent Builder Pro feature. In the free plugin, build agents instantly with the Assistant Trainer."
 msgstr ""
 
-#: admin/agents.php:440
+#: admin/agents.php:439
 #: admin/approvals.php:251
 msgid "Learn more"
 msgstr ""
 
-#: admin/agents.php:463
+#: admin/agents.php:462
 #: admin/partials/vector-store-pro.php:78
-#: admin/skills.php:562
+#: admin/skills.php:915
 #: admin/tools.php:95
-#: includes/class-admin-pages-rest.php:311
-#: includes/class-admin-pages-rest.php:1181
+#: includes/class-admin-pages-rest.php:439
+#: includes/class-admin-pages-rest.php:1543
 msgid "All"
 msgstr ""
 
-#: admin/agents.php:470
+#: admin/agents.php:469
 #: admin/deployment/deployment-scheduled-tasks.php:364
 #: admin/settings-llm.php:225
-#: admin/skills.php:547
+#: admin/skills.php:900
 msgid "Active"
 msgstr ""
 
-#: admin/agents.php:477
+#: admin/agents.php:476
 #: admin/settings-llm.php:227
 msgid "Inactive"
 msgstr ""
 
-#: admin/agents.php:495
-#: admin/agents.php:704
+#: admin/agents.php:482
+#: src/dashboard-activity/index.js:142
+#: src/dashboard-app/index.js:407
+#: src/dashboard-app/index.js:914
+msgid "Community Agents"
+msgstr ""
+
+#: admin/agents.php:494
+#: admin/agents.php:703
 msgid "Select bulk action"
 msgstr ""
 
-#: admin/agents.php:497
-#: admin/agents.php:706
+#: admin/agents.php:496
+#: admin/agents.php:705
 msgid "Bulk actions"
 msgstr ""
 
-#: admin/agents.php:498
-#: admin/agents.php:561
-#: admin/agents.php:707
+#: admin/agents.php:497
+#: admin/agents.php:560
+#: admin/agents.php:706
 msgid "Activate"
 msgstr ""
 
-#: admin/agents.php:499
-#: admin/agents.php:555
-#: admin/agents.php:708
+#: admin/agents.php:498
+#: admin/agents.php:554
+#: admin/agents.php:707
 msgid "Deactivate"
 msgstr ""
 
-#: admin/agents.php:500
+#: admin/agents.php:499
+#: admin/agents.php:566
 #: admin/agents.php:567
-#: admin/agents.php:568
-#: admin/agents.php:709
-#: admin/agents.php:775
+#: admin/agents.php:708
+#: admin/agents.php:774
 #: admin/conversations.php:289
 #: admin/deployment/deployment-scheduled-tasks.php:408
 #: admin/deployment/deployment-scheduled-tasks.php:436
-#: admin/deployment/deployment-shortcodes.php:332
+#: admin/deployment/deployment-shortcodes.php:307
 #: admin/providers.php:413
-#: admin/skills.php:586
+#: admin/skills.php:950
 #: admin/train-data.php:174
-#: src/admin-pages/index.js:621
-#: src/admin-pages/index.js:1247
+#: src/admin-pages/index.js:568
+#: src/admin-pages/index.js:1221
 msgid "Delete"
 msgstr ""
 
-#: admin/agents.php:502
-#: admin/agents.php:711
+#: admin/agents.php:501
+#: admin/agents.php:710
 msgid "Apply"
 msgstr ""
 
-#: admin/agents.php:515
-#: admin/agents.php:691
+#: admin/agents.php:514
+#: admin/agents.php:690
 #: admin/conversations.php:218
 #: admin/deployment/deployment-admin-bar.php:198
+#: admin/deployment/deployment-cli.php:244
+#: admin/deployment/deployment-event-listeners.php:156
+#: admin/deployment/deployment-event-listeners.php:239
 #: admin/deployment/deployment-gutenberg-blocks.php:145
 #: admin/deployment/deployment-modal.php:174
+#: admin/deployment/deployment-scheduled-tasks.php:251
 #: admin/deployment/deployment-scheduled-tasks.php:323
 #: admin/deployment/deployment-shortcodes-form.php:43
-#: admin/deployment/deployment-shortcodes.php:249
+#: admin/deployment/deployment-shortcodes.php:224
 #: admin/run-task.php:87
+#: admin/skills.php:887
+#: includes/class-approval-queue.php:241
 #: includes/class-gdpr.php:183
 #: includes/class-gdpr.php:458
 #: includes/class-gdpr.php:553
-#: src/admin-pages/index.js:1215
+#: src/admin-pages/index.js:1153
+#: src/admin-pages/index.js:1877
+#: src/settings-app/index.js:1597
+#: src/settings-app/index.js:2246
 msgid "Agent"
 msgstr ""
 
-#: admin/agents.php:518
-#: admin/agents.php:694
+#: admin/agents.php:517
+#: admin/agents.php:693
 #: admin/deployment/deployment-scheduled-tasks.php:295
 #: admin/run-task.php:99
-#: admin/skills.php:180
-#: admin/skills.php:308
-#: admin/skills.php:535
+#: admin/skills.php:339
+#: admin/skills.php:559
+#: admin/skills.php:886
 #: admin/tools.php:321
 #: admin/tools.php:382
 #: src/agent-wizard/index.js:718
 msgid "Description"
 msgstr ""
 
-#: admin/agents.php:526
-msgid "No assistants installed yet."
+#: admin/agents.php:525
+msgid "No agents installed yet."
 msgstr ""
 
-#: admin/agents.php:550
-#: includes/class-admin-menu-handler.php:87
+#: admin/agents.php:549
+#: includes/class-admin-menu-handler.php:82
 msgid "Chat"
 msgstr ""
 
-#: admin/agents.php:567
-msgid "Are you sure you want to delete this assistant?"
+#: admin/agents.php:566
+msgid "Are you sure you want to delete this agent?"
 msgstr ""
 
 #. translators: %s: agent version number
-#: admin/agents.php:583
+#: admin/agents.php:582
 #, php-format
 msgid "Version %s"
 msgstr ""
 
-#: admin/agents.php:591
+#: admin/agents.php:590
 msgid "By"
 msgstr ""
 
 #. translators: %s: comma-separated list of agent capabilities
-#: admin/agents.php:614
+#: admin/agents.php:613
 #, php-format
 msgid "Capabilities: %s"
 msgstr ""
 
 #. translators: 1: assistant name 2: new version number 3: details URL 4: zip download URL 5: slug 6: nonce
-#: admin/agents.php:635
+#: admin/agents.php:634
 #, php-format
 msgid "There is a new version of <strong>%1$s</strong> available. <a href=\"%3$s\" target=\"_blank\">View version %2$s details</a> or <a href=\"#\" class=\"agentic-update-now\" data-slug=\"%5$s\" data-nonce=\"%6$s\" data-url=\"%4$s\">update now</a>."
 msgstr ""
 
 #. translators: 1: assistant name 2: new version number 3: details URL
-#: admin/agents.php:661
+#: admin/agents.php:660
 #, php-format
 msgid "There is a new version of <strong>%1$s</strong> available. <a href=\"%3$s\" target=\"_blank\">View version %2$s details</a>."
 msgstr ""
 
-#: admin/agents.php:765
+#: admin/agents.php:764
 msgid "Please select a bulk action."
 msgstr ""
 
-#: admin/agents.php:770
+#: admin/agents.php:769
 msgid "Please select at least one agent."
 msgstr ""
 
-#: admin/agents.php:775
+#: admin/agents.php:774
 msgid "Are you sure you want to delete the selected agents?"
 msgstr ""
 
-#: admin/agents.php:798
+#: admin/agents.php:797
 msgid "Updating\\u2026"
 msgstr ""
 
-#: admin/agents.php:824
+#: admin/agents.php:823
 msgid "Update failed: "
 msgstr ""
 
-#: admin/agents.php:824
+#: admin/agents.php:823
 msgid "Unknown error."
 msgstr ""
 
-#: admin/agents.php:825
-#: admin/agents.php:831
+#: admin/agents.php:824
+#: admin/agents.php:830
 msgid "update now"
 msgstr ""
 
-#: admin/agents.php:830
+#: admin/agents.php:829
 msgid "Update failed due to a network error."
 msgstr ""
 
@@ -450,7 +461,7 @@ msgid "Add Key"
 msgstr ""
 
 #: admin/apis.php:87
-msgid "Remove this API key? The shared key (with limits) will be used instead."
+msgid "Remove this API key? Core Web Vitals checks will stop working until you add a new one."
 msgstr ""
 
 #: admin/apis.php:172
@@ -463,17 +474,17 @@ msgstr ""
 
 #: admin/approvals.php:47
 #: admin/security-log.php:225
-#: includes/class-admin-menu-handler.php:193
-#: includes/class-admin-menu-handler.php:395
-#: includes/class-admin-pages-rest.php:771
-#: includes/class-admin-pages-rest.php:779
-#: includes/class-admin-pages-rest.php:1189
-#: src/admin-pages/index.js:1949
+#: includes/class-admin-menu-handler.php:190
+#: includes/class-admin-menu-handler.php:382
+#: includes/class-admin-pages-rest.php:940
+#: includes/class-admin-pages-rest.php:949
+#: includes/class-admin-pages-rest.php:1551
+#: src/admin-pages/index.js:2103
 msgid "Approvals"
 msgstr ""
 
 #: admin/approvals.php:53
-#: includes/class-admin-pages-rest.php:784
+#: includes/class-admin-pages-rest.php:954
 msgid "Backups"
 msgstr ""
 
@@ -482,7 +493,7 @@ msgid "Approval sections"
 msgstr ""
 
 #: admin/approvals.php:122
-msgid "Review and approve actions requested by AI assistants before they are executed."
+msgid "Review and approve actions requested by AI agents before they are executed."
 msgstr ""
 
 #: admin/approvals.php:124
@@ -500,7 +511,7 @@ msgid "Autonomous — all actions execute automatically."
 msgstr ""
 
 #: admin/approvals.php:128
-msgid "Disabled — assistants cannot make file changes."
+msgid "Disabled — agents cannot make file changes."
 msgstr ""
 
 #: admin/approvals.php:130
@@ -544,12 +555,14 @@ msgid "Pending %d"
 msgstr ""
 
 #: admin/approvals.php:219
-#: src/admin-pages/index.js:1825
+#: src/admin-pages/index.js:1987
+#: src/shared/chat-embed.js:151
 msgid "Approve"
 msgstr ""
 
 #: admin/approvals.php:222
-#: src/admin-pages/index.js:1835
+#: src/admin-pages/index.js:2000
+#: src/shared/chat-embed.js:159
 msgid "Reject"
 msgstr ""
 
@@ -558,7 +571,7 @@ msgid "View Details"
 msgstr ""
 
 #: admin/approvals.php:250
-msgid "Automatic backups created before AI assistants modify files or database tables. Restore with one click."
+msgid "Automatic backups created before AI agents modify files or database tables. Restore with one click."
 msgstr ""
 
 #: admin/approvals.php:257
@@ -566,7 +579,7 @@ msgid "No backups yet"
 msgstr ""
 
 #: admin/approvals.php:258
-msgid "When assistants modify files or database tables, backups are created automatically and will appear here."
+msgid "When agents modify files or database tables, backups are created automatically and will appear here."
 msgstr ""
 
 #: admin/approvals.php:266
@@ -585,7 +598,7 @@ msgstr ""
 #: admin/partials/vector-store-pro.php:198
 #: admin/settings-memory.php:197
 #: admin/train-data.php:193
-#: src/admin-pages/index.js:2202
+#: src/admin-pages/index.js:2356
 msgid "Type"
 msgstr ""
 
@@ -606,14 +619,14 @@ msgstr ""
 #: admin/approvals.php:279
 #: admin/approvals.php:335
 #: admin/deployment/deployment-scheduled-tasks.php:331
-#: admin/deployment/deployment-shortcodes.php:255
+#: admin/deployment/deployment-shortcodes.php:230
 #: admin/partials/vector-store-pro.php:203
 #: admin/settings-endpoints.php:128
-#: admin/settings/tab-security.php:321
-#: admin/skills.php:539
-#: src/admin-pages/index.js:585
-#: src/admin-pages/index.js:1217
-#: src/settings-app/index.js:570
+#: admin/settings/tab-security.php:334
+#: admin/skills.php:892
+#: src/admin-pages/index.js:532
+#: src/admin-pages/index.js:1162
+#: src/settings-app/index.js:571
 msgid "Actions"
 msgstr ""
 
@@ -631,7 +644,7 @@ msgid "Restore"
 msgstr ""
 
 #: admin/approvals.php:323
-#: includes/class-admin-pages-rest.php:326
+#: includes/class-admin-pages-rest.php:454
 msgid "Files"
 msgstr ""
 
@@ -645,17 +658,18 @@ msgstr ""
 
 #: admin/approvals.php:334
 #: admin/deployment/deployment-scheduled-tasks.php:328
-#: admin/deployment/deployment-shortcodes.php:252
+#: admin/deployment/deployment-shortcodes.php:227
 #: admin/partials/vector-store-pro.php:201
 #: admin/providers.php:294
 #: admin/settings-llm.php:134
-#: admin/skills.php:533
+#: admin/skills.php:884
 #: admin/train-data.php:259
 #: includes/class-gdpr.php:557
-#: src/admin-pages/index.js:2203
-#: src/dashboard-app/index.js:127
-#: src/settings-app/index.js:566
-#: src/settings-app/index.js:1819
+#: src/admin-pages/index.js:2357
+#: src/dashboard-app/index.js:214
+#: src/settings-app/index.js:567
+#: src/settings-app/index.js:1890
+#: src/settings-app/index.js:2248
 msgid "Status"
 msgstr ""
 
@@ -689,7 +703,7 @@ msgstr ""
 
 #: admin/audit.php:63
 #: admin/logs.php:28
-#: includes/class-admin-pages-rest.php:1229
+#: includes/class-admin-pages-rest.php:1591
 msgid "Conversations"
 msgstr ""
 
@@ -709,6 +723,7 @@ msgstr ""
 
 #: admin/audit.php:105
 #: admin/conversations.php:163
+#: admin/skills.php:356
 msgid "All Agents"
 msgstr ""
 
@@ -788,6 +803,7 @@ msgstr ""
 
 #: admin/conversations.php:219
 #: admin/security-log.php:252
+#: src/settings-app/index.js:2412
 msgid "User"
 msgstr ""
 
@@ -803,10 +819,10 @@ msgstr ""
 #: admin/security-log.php:231
 #: admin/tools.php:200
 #: admin/tools.php:207
-#: includes/class-admin-menu-handler.php:176
-#: includes/class-admin-menu-handler.php:402
-#: includes/class-admin-pages-rest.php:591
-#: src/admin-pages/index.js:2308
+#: includes/class-admin-menu-handler.php:172
+#: includes/class-admin-menu-handler.php:389
+#: includes/class-admin-pages-rest.php:719
+#: src/admin-pages/index.js:2470
 #: src/agent-wizard/index.js:743
 msgid "Tools"
 msgstr ""
@@ -860,12 +876,12 @@ msgstr ""
 msgid "Change retention settings"
 msgstr ""
 
-#: admin/dashboard.php:56
+#: admin/dashboard.php:34
 msgid "Dashboard assets unavailable."
 msgstr ""
 
 #: admin/deploy-wizard.php:54
-#: includes/class-admin-menu-handler.php:158
+#: includes/class-admin-menu-handler.php:154
 msgid "Publish Your Agent"
 msgstr ""
 
@@ -881,57 +897,78 @@ msgstr ""
 msgid "The publish wizard needs JavaScript enabled. You can also publish agents from the Publish page."
 msgstr ""
 
-#: admin/deployment.php:33
+#: admin/deployment.php:48
 msgid "Agent Deployment"
 msgstr ""
 
-#: admin/deployment.php:34
-msgid "Manage how assistants are invoked: embed them on your site with shortcodes, schedule recurring tasks, or react to WordPress events."
+#: admin/deployment.php:49
+msgid "Manage how agents are invoked: embed them on your site with shortcodes, schedule recurring tasks, or react to WordPress events."
 msgstr ""
 
-#: admin/deployment.php:39
+#: admin/deployment.php:53
+#: admin/settings.php:655
+#: includes/class-admin-settings-rest.php:189
+#: src/dashboard-app/index.js:833
+#: src/interface-settings/index.js:182
+#: src/settings-app/index.js:264
+#: src/shared/components.js:179
+msgid "Basic"
+msgstr ""
+
+#: admin/deployment.php:56
+#: admin/settings.php:660
+#: includes/class-admin-settings-rest.php:194
+#: src/dashboard-app/index.js:663
+#: src/dashboard-app/index.js:844
+#: src/interface-settings/index.js:186
+#: src/settings-app/index.js:266
+#: src/shared/components.js:190
+msgid "Advanced"
+msgstr ""
+
+#: admin/deployment.php:70
 #: admin/deployment/deployment-cli.php:89
-#: admin/deployment/deployment-shortcodes.php:213
+#: admin/deployment/deployment-shortcodes.php:188
 msgid "Admin"
 msgstr ""
 
-#: admin/deployment.php:40
+#: admin/deployment.php:71
 #: admin/tools.php:107
-#: includes/class-admin-pages-rest.php:317
+#: includes/class-admin-pages-rest.php:445
 msgid "CLI"
 msgstr ""
 
-#: admin/deployment.php:41
+#: admin/deployment.php:72
 msgid "Editor"
 msgstr ""
 
-#: admin/deployment.php:42
+#: admin/deployment.php:73
 msgid "Event Listeners"
 msgstr ""
 
-#: admin/deployment.php:43
+#: admin/deployment.php:74
 msgid "Frontend Modal"
 msgstr ""
 
-#: admin/deployment.php:44
+#: admin/deployment.php:75
 #: admin/deployment/deployment-gutenberg-blocks.php:128
 msgid "Gutenberg Blocks"
 msgstr ""
 
-#: admin/deployment.php:45
+#: admin/deployment.php:76
 msgid "Scheduled Tasks"
 msgstr ""
 
-#: admin/deployment.php:46
-#: includes/class-admin-pages-rest.php:1533
+#: admin/deployment.php:77
+#: includes/class-admin-pages-rest.php:2023
 msgid "Shortcodes"
 msgstr ""
 
-#: admin/deployment.php:56
+#: admin/deployment.php:90
 msgid "Deployment"
 msgstr ""
 
-#: admin/deployment.php:62
+#: admin/deployment.php:96
 msgid "Deployment methods"
 msgstr ""
 
@@ -965,8 +1002,8 @@ msgstr ""
 #: admin/deployment/deployment-admin-bar.php:197
 #: admin/deployment/deployment-gutenberg-blocks.php:144
 #: admin/deployment/deployment-modal.php:173
-#: admin/deployment/deployment-shortcodes.php:308
-#: admin/skills.php:224
+#: admin/deployment/deployment-shortcodes.php:283
+#: admin/skills.php:388
 msgid "Enable"
 msgstr ""
 
@@ -1075,7 +1112,7 @@ msgid "Sidebar Agent"
 msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:212
-msgid "Add an AI assistant panel inside the block editor. When enabled, a sidebar panel appears while your team edits posts or pages — with full awareness of the current draft (title, content, post type, and status)."
+msgid "Add an AI agent panel inside the block editor. When enabled, a sidebar panel appears while your team edits posts or pages — with full awareness of the current draft (title, content, post type, and status)."
 msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:221
@@ -1083,11 +1120,7 @@ msgid "Enable Sidebar Agent"
 msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:226
-msgid "Show an AI assistant panel in the Gutenberg block editor"
-msgstr ""
-
-#: admin/deployment/deployment-admin-ui.php:232
-msgid "Assistants"
+msgid "Show an AI agent panel in the Gutenberg block editor"
 msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:242
@@ -1131,11 +1164,11 @@ msgid "Context Injection"
 msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:320
-msgid "Automatically share the current draft title and content with the assistant on the first message"
+msgid "Automatically share the current draft title and content with the agent on the first message"
 msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:323
-msgid "The assistant will be aware of what you are writing. Content is sent only when you open the chat — nothing is shared automatically."
+msgid "The agent will be aware of what you are writing. Content is sent only when you open the chat — nothing is shared automatically."
 msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:329
@@ -1148,6 +1181,21 @@ msgstr ""
 
 #: admin/deployment/deployment-admin-ui.php:337
 msgid "When enabled, shows a Magic Wand in the editor Block Toolbar. Click on it to open or close the Sidebar Agent."
+msgstr ""
+
+#: admin/deployment/deployment-basic.php:31
+msgid "The Agent Orchestrator is still activating."
+msgstr ""
+
+#: admin/deployment/deployment-basic.php:33
+#: admin/skills-basic.php:32
+#: src/shared/chat-embed.js:235
+msgid "Check the Agents page"
+msgstr ""
+
+#: admin/deployment/deployment-basic.php:35
+#: admin/skills-basic.php:34
+msgid "or switch to Advanced above in the meantime."
 msgstr ""
 
 #: admin/deployment/deployment-cli.php:79
@@ -1187,8 +1235,8 @@ msgstr ""
 #: admin/deployment/deployment-event-listeners.php:204
 #: admin/deployment/deployment-scheduled-tasks.php:287
 #: admin/deployment/deployment-shortcodes-form.php:32
-#: admin/deployment/deployment-shortcodes.php:248
-#: src/admin-pages/index.js:469
+#: admin/deployment/deployment-shortcodes.php:223
+#: src/admin-pages/index.js:416
 msgid "Label"
 msgstr ""
 
@@ -1224,17 +1272,8 @@ msgid "Control which agents can be invoked via WP-CLI and which can use the run_
 msgstr ""
 
 #: admin/deployment/deployment-cli.php:239
+#: src/settings-app/index.js:1815
 msgid "No agents installed."
-msgstr ""
-
-#: admin/deployment/deployment-cli.php:244
-#: admin/deployment/deployment-event-listeners.php:156
-#: admin/deployment/deployment-event-listeners.php:239
-#: admin/deployment/deployment-scheduled-tasks.php:251
-#: admin/skills.php:536
-#: includes/class-approval-queue.php:218
-#: src/settings-app/index.js:1526
-msgid "Assistant"
 msgstr ""
 
 #: admin/deployment/deployment-cli.php:246
@@ -1260,9 +1299,9 @@ msgstr ""
 #: admin/deployment/deployment-cli.php:334
 #: admin/deployment/deployment-event-listeners.php:340
 #: admin/deployment/deployment-scheduled-tasks.php:505
-#: src/dashboard-app/index.js:523
+#: src/dashboard-app/index.js:713
 #: src/interface-settings/index.js:378
-#: src/shared/components.js:93
+#: src/shared/components.js:103
 msgid "Saving…"
 msgstr ""
 
@@ -1283,30 +1322,33 @@ msgstr ""
 #: admin/deployment/deployment-event-listeners.php:98
 #: admin/tools.php:96
 #: admin/train-data.php:298
-#: includes/class-admin-pages-rest.php:319
+#: includes/class-admin-pages-rest.php:447
 msgid "Content"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:108
-#: includes/class-admin-surfaces.php:144
+#: includes/class-admin-surfaces.php:149
 msgid "Comments"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:115
-#: admin/settings.php:623
-#: includes/class-admin-pages-rest.php:341
-#: includes/class-admin-settings-rest.php:110
-#: includes/class-admin-surfaces.php:139
-#: src/settings-app/index.js:915
+#: admin/settings.php:630
+#: includes/class-admin-pages-rest.php:469
+#: includes/class-admin-settings-rest.php:175
+#: includes/class-admin-surfaces.php:144
+#: src/settings-app/index.js:953
+#: src/settings-app/index.js:970
+#: src/settings-app/index.js:972
 msgid "Users"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:123
-#: includes/class-admin-pages-rest.php:333
+#: includes/class-admin-pages-rest.php:461
 msgid "Media"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:128
+#: includes/class-skills-registry.php:764
 msgid "WooCommerce"
 msgstr ""
 
@@ -1319,16 +1361,16 @@ msgid "Add New Trigger"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:149
-msgid "When the chosen WordPress event fires, the selected assistant will be invoked asynchronously with the prompt you provide plus the event context."
+msgid "When the chosen WordPress event fires, the selected agent will be invoked asynchronously with the prompt you provide plus the event context."
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:160
 #: admin/deployment/deployment-scheduled-tasks.php:255
-msgid "— choose an assistant —"
+msgid "— choose an agent —"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:166
-msgid "No assistants installed. Install an assistant first."
+msgid "No agents installed. Install an agent first."
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:172
@@ -1343,7 +1385,7 @@ msgstr ""
 #: admin/deployment/deployment-event-listeners.php:272
 #: admin/deployment/deployment-scheduled-tasks.php:357
 #: admin/settings-endpoints.php:152
-#: includes/class-admin-pages-rest.php:320
+#: includes/class-admin-pages-rest.php:448
 msgid "Custom"
 msgstr ""
 
@@ -1361,7 +1403,7 @@ msgid "Prompt"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:199
-msgid "Describe what the assistant should do when this event fires. Event context is appended automatically."
+msgid "Describe what the agent should do when this event fires. Event context is appended automatically."
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:207
@@ -1390,12 +1432,12 @@ msgstr ""
 #: admin/run-task.php:133
 #: admin/security-log.php:372
 #: includes/class-chat-assets.php:57
-#: src/dashboard-app/index.js:531
+#: src/dashboard-app/index.js:721
 msgid "Cancel"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:233
-msgid "No event listeners active. Add a trigger above or activate assistants that define built-in listeners."
+msgid "No event listeners active. Add a trigger above or activate agents that define built-in listeners."
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:240
@@ -1414,11 +1456,12 @@ msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:244
 #: admin/deployment/deployment-scheduled-tasks.php:327
-#: admin/deployment/deployment-shortcodes.php:251
+#: admin/deployment/deployment-shortcodes.php:226
 #: admin/partials/vector-store-pro.php:197
-#: admin/skills.php:537
+#: admin/skills.php:889
 #: admin/tools.php:384
-#: src/admin-pages/index.js:1056
+#: src/admin-pages/index.js:993
+#: src/admin-pages/index.js:1156
 #: src/knowledge-wizard/index.js:39
 msgid "Source"
 msgstr ""
@@ -1450,12 +1493,12 @@ msgid "How it works:"
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:295
-msgid "When a WordPress event fires, the matched assistant is queued as an async AI task — it never blocks the current page load. WordPress hook arguments are serialised into the prompt as context."
+msgid "When a WordPress event fires, the matched agent is queued as an async AI task — it never blocks the current page load. WordPress hook arguments are serialised into the prompt as context."
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:337
 #: admin/deployment/deployment-scheduled-tasks.php:497
-msgid "Please choose an assistant."
+msgid "Please choose an agent."
 msgstr ""
 
 #: admin/deployment/deployment-event-listeners.php:338
@@ -1485,25 +1528,25 @@ msgid "Default (from Settings)"
 msgstr ""
 
 #: admin/deployment/deployment-gutenberg-blocks.php:110
-#: includes/class-admin-settings-rest.php:459
+#: includes/class-admin-settings-rest.php:650
 #: includes/class-gutenberg-blocks.php:265
 msgid "Dark"
 msgstr ""
 
 #: admin/deployment/deployment-gutenberg-blocks.php:111
-#: includes/class-admin-settings-rest.php:450
+#: includes/class-admin-settings-rest.php:641
 #: includes/class-gutenberg-blocks.php:266
 msgid "Light"
 msgstr ""
 
 #: admin/deployment/deployment-gutenberg-blocks.php:112
-#: includes/class-admin-settings-rest.php:468
+#: includes/class-admin-settings-rest.php:659
 #: includes/class-gutenberg-blocks.php:267
 msgid "Midnight"
 msgstr ""
 
 #: admin/deployment/deployment-gutenberg-blocks.php:113
-#: includes/class-admin-settings-rest.php:477
+#: includes/class-admin-settings-rest.php:668
 #: includes/class-gutenberg-blocks.php:268
 msgid "Ocean"
 msgstr ""
@@ -1621,11 +1664,11 @@ msgid "Add Scheduled Task"
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:244
-msgid "Run any active assistant on a WP-Cron schedule with an AI prompt. Built-in tasks from assistants also appear in the table below."
+msgid "Run any active agent on a WP-Cron schedule with an AI prompt. Built-in tasks from agents also appear in the table below."
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:261
-msgid "No assistants active. Activate an assistant first."
+msgid "No agents active. Activate an agent first."
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:267
@@ -1637,7 +1680,7 @@ msgid "Schedule"
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:282
-msgid "Describe what the assistant should do on each run…"
+msgid "Describe what the agent should do on each run…"
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:298
@@ -1652,7 +1695,7 @@ msgid "Add & Schedule"
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:317
-msgid "No scheduled tasks yet. Add one above, or activate assistants that define built-in scheduled tasks (for example Site Auditor or AI Radar)."
+msgid "No scheduled tasks yet. Add one above, or activate agents that define built-in scheduled tasks (for example Site Auditor or AI Radar)."
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:324
@@ -1673,7 +1716,7 @@ msgid "Runs through the LLM with AI reasoning and tool calls"
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:350
-#: templates/chat-interface.php:109
+#: templates/chat-interface.php:115
 msgid "AI"
 msgstr ""
 
@@ -1724,7 +1767,7 @@ msgid "Custom tasks you add here are scheduled immediately and run through the L
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:464
-msgid "Built-in tasks ship with some assistants; use Schedule to put them on the cron queue, or Unschedule to pause them without deleting the definition."
+msgid "Built-in tasks ship with some agents; use Schedule to put them on the cron queue, or Unschedule to pause them without deleting the definition."
 msgstr ""
 
 #: admin/deployment/deployment-scheduled-tasks.php:465
@@ -1761,11 +1804,11 @@ msgid "— Select Agent —"
 msgstr ""
 
 #: admin/deployment/deployment-shortcodes-form.php:54
-msgid "The assistant visitors will chat with."
+msgid "The agent visitors will chat with."
 msgstr ""
 
 #: admin/deployment/deployment-shortcodes-form.php:59
-#: assets/js/gutenberg-blocks.js:295
+#: assets/js/gutenberg-blocks.js:281
 msgid "Display Style"
 msgstr ""
 
@@ -1798,7 +1841,7 @@ msgid "Header"
 msgstr ""
 
 #: admin/deployment/deployment-shortcodes-form.php:84
-msgid "Show assistant name and icon header"
+msgid "Show agent name and icon header"
 msgstr ""
 
 #: admin/deployment/deployment-shortcodes-form.php:86
@@ -1806,7 +1849,7 @@ msgid "Display the agent name and avatar above the chat area."
 msgstr ""
 
 #: admin/deployment/deployment-shortcodes-form.php:91
-#: assets/js/gutenberg-blocks.js:324
+#: assets/js/gutenberg-blocks.js:310
 msgid "Placeholder Text"
 msgstr ""
 
@@ -1824,167 +1867,169 @@ msgstr ""
 msgid "Shortcode preview:"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:88
+#: admin/deployment/deployment-shortcodes.php:63
 msgid "Shortcode deployment removed."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:99
+#: admin/deployment/deployment-shortcodes.php:74
 msgid "Shortcode deployment disabled."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:100
+#: admin/deployment/deployment-shortcodes.php:75
 msgid "Shortcode deployment enabled."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:111
-#: admin/deployment/deployment-shortcodes.php:160
+#: admin/deployment/deployment-shortcodes.php:86
+#: admin/deployment/deployment-shortcodes.php:135
 msgid "Label and Agent are required."
 msgstr ""
 
 #. translators: %s: shortcode string
-#: admin/deployment/deployment-shortcodes.php:145
+#: admin/deployment/deployment-shortcodes.php:120
 #, php-format
 msgid "Shortcode created. Copy and paste it into any page, post, or widget: %s"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:184
+#: admin/deployment/deployment-shortcodes.php:159
 msgid "Shortcode deployment updated."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:217
+#: admin/deployment/deployment-shortcodes.php:192
 msgid "Auto-detected"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:221
+#: admin/deployment/deployment-shortcodes.php:196
 msgid "Hardcoded"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:238
+#: admin/deployment/deployment-shortcodes.php:213
 msgid "Shortcode Deployments"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:242
+#: admin/deployment/deployment-shortcodes.php:217
 msgid "No shortcode deployments yet. Use the form below to create one, or place [agentic_chat] in a page — it will be auto-detected here on first load."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:250
+#: admin/deployment/deployment-shortcodes.php:225
 msgid "Style"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:253
+#: admin/deployment/deployment-shortcodes.php:228
 msgid "Shortcode"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:254
+#: admin/deployment/deployment-shortcodes.php:229
+#: src/settings-app/index.js:2413
 msgid "Created"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:265
+#: admin/deployment/deployment-shortcodes.php:240
 #: assets/js/gutenberg-blocks.js:79
 msgid "Inline"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:266
+#: admin/deployment/deployment-shortcodes.php:241
 #: assets/js/gutenberg-blocks.js:80
 msgid "Popup"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:267
+#: admin/deployment/deployment-shortcodes.php:242
 #: assets/js/gutenberg-blocks.js:81
 msgid "Sidebar"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:289
+#: admin/deployment/deployment-shortcodes.php:264
 #: admin/tools.php:318
 #: admin/tools.php:380
-#: src/admin-pages/index.js:1041
+#: src/admin-pages/index.js:978
 msgid "Enabled"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:291
+#: admin/deployment/deployment-shortcodes.php:266
 #: admin/signup.php:97
 #: admin/signup.php:226
-#: admin/skills.php:549
+#: admin/skills.php:902
 msgid "Disabled"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:296
+#: admin/deployment/deployment-shortcodes.php:271
 msgid "Click to copy"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:308
+#: admin/deployment/deployment-shortcodes.php:283
 msgid "Disable"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:326
-#: admin/skills.php:585
-#: src/admin-pages/index.js:1237
-#: src/settings-app/index.js:612
+#: admin/deployment/deployment-shortcodes.php:301
+#: admin/skills.php:946
+#: src/admin-pages/index.js:1200
+#: src/settings-app/index.js:613
 msgid "Edit"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:328
+#: admin/deployment/deployment-shortcodes.php:303
 msgid "Remove this shortcode deployment?"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:347
+#: admin/deployment/deployment-shortcodes.php:322
 msgid "Edit Deployment"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:360
+#: admin/deployment/deployment-shortcodes.php:335
 msgid "&larr; Back"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:364
-msgid "No active assistants."
+#: admin/deployment/deployment-shortcodes.php:339
+#: src/settings-app/index.js:1589
+msgid "No active agents."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:371
+#: admin/deployment/deployment-shortcodes.php:346
 msgid "Save Changes"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:378
+#: admin/deployment/deployment-shortcodes.php:353
 msgid "Create New Deployment"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:382
-msgid "No active assistants. Activate at least one assistant before creating a shortcode deployment."
+#: admin/deployment/deployment-shortcodes.php:357
+msgid "No active agents. Activate at least one agent before creating a shortcode deployment."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:398
+#: admin/deployment/deployment-shortcodes.php:373
 msgid "Create Shortcode"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:405
+#: admin/deployment/deployment-shortcodes.php:380
 msgid "How Shortcodes Work"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:407
-msgid "Paste the shortcode into any page, post, or text widget to embed an assistant chat interface."
+#: admin/deployment/deployment-shortcodes.php:382
+msgid "Paste the shortcode into any page, post, or text widget to embed an agent chat interface."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:409
+#: admin/deployment/deployment-shortcodes.php:384
 msgid "Two shortcodes are available:"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:411
+#: admin/deployment/deployment-shortcodes.php:386
 msgid "Full interactive chat with conversation history"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:412
+#: admin/deployment/deployment-shortcodes.php:387
 msgid "One-shot query that displays a single response inline"
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:415
+#: admin/deployment/deployment-shortcodes.php:390
 msgid "Shortcodes placed directly in theme or plugin files are auto-detected on first page load and shown here with source \"Auto-detected\" or \"Hardcoded\"."
 msgstr ""
 
-#: admin/deployment/deployment-shortcodes.php:416
-msgid "All assistant interactions via shortcodes are logged in the Audit Log."
+#: admin/deployment/deployment-shortcodes.php:391
+msgid "All agent interactions via shortcodes are logged in the Audit Log."
 msgstr ""
 
 #: admin/knowledge-wizard.php:52
-#: includes/class-admin-menu-handler.php:148
+#: includes/class-admin-menu-handler.php:144
 #: src/agent-wizard/index.js:360
 msgid "Add Knowledge"
 msgstr ""
@@ -2003,22 +2048,22 @@ msgstr ""
 
 #: admin/logs.php:29
 #: admin/security-log.php:197
-#: admin/settings.php:624
+#: admin/settings.php:631
 #: admin/tools.php:103
 #: admin/tools.php:383
-#: includes/class-admin-pages-rest.php:336
-#: includes/class-admin-pages-rest.php:1234
-#: includes/class-admin-settings-rest.php:111
-#: src/settings-app/index.js:684
+#: includes/class-admin-pages-rest.php:464
+#: includes/class-admin-pages-rest.php:1596
+#: includes/class-admin-settings-rest.php:176
+#: src/settings-app/index.js:685
 msgid "Security"
 msgstr ""
 
 #: admin/logs.php:33
-#: includes/class-admin-menu-handler.php:220
-#: includes/class-admin-menu-handler.php:383
-#: includes/class-admin-pages-rest.php:1150
+#: includes/class-admin-menu-handler.php:216
+#: includes/class-admin-menu-handler.php:370
+#: includes/class-admin-pages-rest.php:1512
 #: src/dashboard-activity/index.js:88
-#: src/dashboard-app/index.js:263
+#: src/dashboard-app/index.js:358
 msgid "Activity"
 msgstr ""
 
@@ -2052,7 +2097,7 @@ msgid "Sources"
 msgstr ""
 
 #: admin/partials/vector-store-pro.php:32
-#: templates/chat-interface.php:112
+#: templates/chat-interface.php:118
 msgid "Credits"
 msgstr ""
 
@@ -2069,7 +2114,7 @@ msgid "Scan Your Website Content"
 msgstr ""
 
 #: admin/partials/vector-store-pro.php:52
-msgid "Select which content to train your assistants on. Published pages and posts will be sent to the Vector Store for embedding."
+msgid "Select which content to train your agents on. Published pages and posts will be sent to the Vector Store for embedding."
 msgstr ""
 
 #: admin/partials/vector-store-pro.php:58
@@ -2117,7 +2162,7 @@ msgid "Upload Documents"
 msgstr ""
 
 #: admin/partials/vector-store-pro.php:139
-msgid "Upload PDF or text files to train your assistants. Files are chunked, embedded, and stored in your private Vector Store."
+msgid "Upload PDF or text files to train your agents. Files are chunked, embedded, and stored in your private Vector Store."
 msgstr ""
 
 #: admin/partials/vector-store-pro.php:145
@@ -2165,7 +2210,7 @@ msgid "Chunks"
 msgstr ""
 
 #: admin/partials/vector-store-pro.php:200
-#: src/admin-pages/index.js:1958
+#: src/admin-pages/index.js:2112
 msgid "Tokens"
 msgstr ""
 
@@ -2184,7 +2229,7 @@ msgstr ""
 #: admin/providers.php:73
 #: admin/providers.php:85
 #: admin/providers.php:280
-#: src/settings-app/index.js:559
+#: src/settings-app/index.js:560
 msgid "Add Provider"
 msgstr ""
 
@@ -2201,25 +2246,25 @@ msgid "Update Provider"
 msgstr ""
 
 #: admin/providers.php:310
-#: src/settings-app/index.js:584
+#: src/settings-app/index.js:585
 msgid "Connected"
 msgstr ""
 
 #: admin/providers.php:311
-#: src/settings-app/index.js:588
+#: src/settings-app/index.js:589
 msgid "Not connected"
 msgstr ""
 
 #: admin/providers.php:397
 #: admin/settings-endpoints.php:180
 #: assets/js/gutenberg-blocks.js:65
-#: src/dashboard-app/index.js:376
-#: src/settings-app/index.js:618
+#: src/dashboard-app/index.js:528
+#: src/settings-app/index.js:619
 msgid "Default"
 msgstr ""
 
 #: admin/providers.php:404
-#: src/settings-app/index.js:657
+#: src/settings-app/index.js:658
 msgid "Set Default"
 msgstr ""
 
@@ -2234,13 +2279,14 @@ msgid "Invalid security token. Please go back and try again."
 msgstr ""
 
 #: admin/run-task.php:37
+#: includes/class-admin-ajax.php:1266
 msgid "Missing agent or task parameter."
 msgstr ""
 
 #. translators: %s: agent ID
 #: admin/run-task.php:48
 #, php-format
-msgid "Assistant \"%s\" not found or not active."
+msgid "Agent \"%s\" not found or not active."
 msgstr ""
 
 #. translators: %s: task ID
@@ -2397,7 +2443,7 @@ msgid "IP Address"
 msgstr ""
 
 #: admin/security-log.php:169
-#: src/admin-pages/index.js:1931
+#: src/admin-pages/index.js:2085
 msgid "Events"
 msgstr ""
 
@@ -2591,17 +2637,17 @@ msgid "Clearing an overridden URL (or saving an empty field) resets it to the bu
 msgstr ""
 
 #: admin/settings-endpoints.php:126
-#: src/settings-app/index.js:1818
+#: src/settings-app/index.js:1889
 msgid "Service"
 msgstr ""
 
 #: admin/settings-endpoints.php:127
-#: src/settings-app/index.js:1932
+#: src/settings-app/index.js:2003
 msgid "Base URL"
 msgstr ""
 
 #: admin/settings-endpoints.php:157
-#: src/settings-app/index.js:2008
+#: src/settings-app/index.js:2079
 msgid "Default:"
 msgstr ""
 
@@ -2611,6 +2657,7 @@ msgstr ""
 
 #: admin/settings-endpoints.php:177
 #: admin/signup.php:84
+#: admin/skills.php:298
 msgid "Reset"
 msgstr ""
 
@@ -2623,7 +2670,7 @@ msgid "The Interface panel assets are missing. Run \"npm install && npm run buil
 msgstr ""
 
 #: admin/settings-llm.php:28
-#: includes/class-relay-connect.php:443
+#: includes/class-relay-connect.php:750
 msgid "Security check failed."
 msgstr ""
 
@@ -2692,11 +2739,11 @@ msgid "Get Latest Pricing"
 msgstr ""
 
 #: admin/settings-llm.php:131
-#: assets/js/gutenberg-blocks.js:343
+#: assets/js/gutenberg-blocks.js:329
 #: src/agent-wizard/index.js:570
-#: src/dashboard-app/index.js:367
-#: src/settings-app/index.js:569
-#: src/settings-app/index.js:1532
+#: src/dashboard-app/index.js:505
+#: src/settings-app/index.js:570
+#: src/settings-app/index.js:1603
 msgid "Model"
 msgstr ""
 
@@ -2716,9 +2763,10 @@ msgstr ""
 
 #. translators: %s: link to Terms of Service
 #: admin/settings-llm.php:239
-#: includes/class-admin-menu-handler.php:987
-#: src/admin-pages/index.js:160
-#: src/settings-app/index.js:131
+#: includes/class-admin-menu-handler.php:976
+#: src/admin-pages/index.js:107
+#: src/dashboard-app/index.js:76
+#: src/settings-app/index.js:132
 msgid "Terms of Service"
 msgstr ""
 
@@ -2774,7 +2822,7 @@ msgid "No memory entries found."
 msgstr ""
 
 #: admin/settings-memory.php:191
-msgid "Agent memories will appear here as your assistants accumulate context across conversations."
+msgid "Agent memories will appear here as your agents accumulate context across conversations."
 msgstr ""
 
 #: admin/settings-memory.php:198
@@ -2782,7 +2830,7 @@ msgid "Entity"
 msgstr ""
 
 #: admin/settings-memory.php:199
-#: src/settings-app/index.js:1820
+#: src/settings-app/index.js:1891
 msgid "Key"
 msgstr ""
 
@@ -2802,101 +2850,82 @@ msgstr ""
 msgid "Delete this memory?"
 msgstr ""
 
-#: admin/settings.php:170
+#: admin/settings.php:172
 msgid "Settings reset to defaults."
 msgstr ""
 
 #. translators: %s is the name of the LLM provider set as global default.
-#: admin/settings.php:556
+#: admin/settings.php:562
 #, php-format
 msgid "Settings saved with %s as Global provider."
 msgstr ""
 
-#: admin/settings.php:558
-#: includes/class-admin-ajax.php:1179
-#: src/shared/components.js:115
+#: admin/settings.php:564
+#: includes/class-admin-ajax.php:973
+#: src/shared/components.js:125
 msgid "Settings saved."
 msgstr ""
 
-#: admin/settings.php:599
+#: admin/settings.php:606
 #: agent-builder.php:516
-#: includes/class-admin-menu-handler.php:229
-#: includes/class-admin-menu-handler.php:423
+#: includes/class-admin-menu-handler.php:225
+#: includes/class-admin-menu-handler.php:410
 #: includes/class-admin-notice-manager.php:108
-#: includes/class-admin-pages-rest.php:1197
-#: src/settings-app/index.js:2375
+#: includes/class-admin-pages-rest.php:1559
+#: src/settings-app/index.js:2833
 msgid "Settings"
 msgstr ""
 
-#: admin/settings.php:620
-#: includes/class-admin-settings-rest.php:107
+#: admin/settings.php:627
+#: includes/class-admin-settings-rest.php:172
 #: src/interface-settings/index.js:149
-#: src/settings-app/index.js:251
+#: src/settings-app/index.js:252
 msgid "Interface"
 msgstr ""
 
-#: admin/settings.php:622
-#: includes/class-admin-menu-handler.php:389
-#: includes/class-admin-settings-rest.php:109
-#: src/settings-app/index.js:550
+#: admin/settings.php:629
+#: includes/class-admin-menu-handler.php:376
+#: includes/class-admin-settings-rest.php:174
+#: src/settings-app/index.js:551
 msgid "Providers"
 msgstr ""
 
-#: admin/settings.php:625
-#: includes/class-admin-settings-rest.php:112
-#: src/settings-app/index.js:1807
+#: admin/settings.php:632
+#: includes/class-admin-settings-rest.php:177
+#: src/settings-app/index.js:1878
 msgid "APIs"
 msgstr ""
 
-#: admin/settings.php:626
-#: includes/class-admin-settings-rest.php:113
-#: src/settings-app/index.js:1919
+#: admin/settings.php:633
+#: includes/class-admin-settings-rest.php:178
+#: src/settings-app/index.js:1990
 msgid "Endpoints"
 msgstr ""
 
-#: admin/settings.php:629
+#: admin/settings.php:636
 msgid "Health"
 msgstr ""
 
-#: admin/settings.php:648
-#: includes/class-admin-settings-rest.php:123
-#: src/admin-pages/index.js:72
-#: src/dashboard-app/index.js:638
-#: src/interface-settings/index.js:182
-#: src/settings-app/index.js:263
-msgid "Basic"
-msgstr ""
-
-#: admin/settings.php:653
-#: includes/class-admin-settings-rest.php:128
-#: src/admin-pages/index.js:83
-#: src/dashboard-app/index.js:473
-#: src/dashboard-app/index.js:649
-#: src/interface-settings/index.js:186
-#: src/settings-app/index.js:265
-msgid "Advanced"
-msgstr ""
-
-#: admin/settings.php:682
-#: src/settings-app/index.js:169
+#: admin/settings.php:689
+#: src/settings-app/index.js:170
 msgid "Search settings…"
 msgstr ""
 
-#: admin/settings.php:682
+#: admin/settings.php:689
 msgid "Search settings"
 msgstr ""
 
-#: admin/settings.php:684
+#: admin/settings.php:691
 msgid "Settings sections"
 msgstr ""
 
-#: admin/settings.php:708
+#: admin/settings.php:715
 msgid "No settings match your search."
 msgstr ""
 
-#: admin/settings.php:763
+#: admin/settings.php:770
 #: src/interface-settings/index.js:379
-#: src/shared/components.js:94
+#: src/shared/components.js:104
 msgid "Save changes"
 msgstr ""
 
@@ -2913,7 +2942,7 @@ msgid "Chat features per agent"
 msgstr ""
 
 #: admin/settings/tab-general.php:23
-msgid "How assistants address people. Site facts and standing guidance belong in Knowledge Wiki."
+msgid "How agents address people. Site facts and standing guidance belong in Knowledge Wiki."
 msgstr ""
 
 #: admin/settings/tab-general.php:24
@@ -2921,7 +2950,7 @@ msgid "Personalization"
 msgstr ""
 
 #: admin/settings/tab-general.php:29
-#: src/settings-app/index.js:307
+#: src/settings-app/index.js:308
 msgid "What should agents call administrators?"
 msgstr ""
 
@@ -2934,7 +2963,7 @@ msgid "How agents address signed-in administrators in conversation. Leave blank 
 msgstr ""
 
 #: admin/settings/tab-general.php:38
-#: src/settings-app/index.js:324
+#: src/settings-app/index.js:325
 msgid "What should agents call frontend visitors?"
 msgstr ""
 
@@ -2953,7 +2982,7 @@ msgstr ""
 #. translators: %s: Knowledge admin URL
 #: admin/settings/tab-general.php:53
 #, php-format
-msgid "Standing facts, tone, and “always keep in mind” guidance are managed under <a href=\"%s\"><strong>Knowledge</strong></a>. Mark a concept <strong>Always include in prompts</strong> so every assistant receives it automatically (for example Site overview)."
+msgid "Standing facts, tone, and “always keep in mind” guidance are managed under <a href=\"%s\"><strong>Knowledge</strong></a>. Mark a concept <strong>Always include in prompts</strong> so every agent receives it automatically (for example Site overview)."
 msgstr ""
 
 #: admin/settings/tab-general.php:65
@@ -2961,21 +2990,47 @@ msgid "Open Knowledge"
 msgstr ""
 
 #. translators: %s: URL to Settings → Interface
-#: admin/settings/tab-global.php:29
+#: admin/settings/tab-global.php:30
 #, php-format
 msgid "Chat theme and appearance are managed under <a href=\"%s\"><strong>Interface</strong></a>."
 msgstr ""
 
-#: admin/settings/tab-instructions.php:28
-msgid "Customise how each assistant greets visitors and add context that shapes its personality. Instructions are appended to the assistant’s system prompt — they do not replace it."
+#: admin/settings/tab-global.php:136
+msgid "Hide “Powered by Agent Builder” branding (default on — credits stay off the site unless you uncheck this)"
 msgstr ""
 
-#: admin/settings/tab-security.php:320
-#: src/admin-pages/index.js:1043
+#: admin/settings/tab-global.php:138
+msgid "When unchecked, a small credit line appears in the chat footer. WordPress.org requires this to stay hidden unless you opt in."
+msgstr ""
+
+#: admin/settings/tab-global.php:141
+#: src/settings-app/index.js:1568
+msgid "Show the WhatsApp Pro promo in admin chat"
+msgstr ""
+
+#: admin/settings/tab-instructions.php:28
+msgid "Customise how each agent greets visitors and add context that shapes its personality. Instructions are appended to the agent’s system prompt — they do not replace it."
+msgstr ""
+
+#: admin/settings/tab-security.php:281
+msgid "Model catalog sync"
+msgstr ""
+
+#: admin/settings/tab-security.php:285
+msgid "Refresh the LLM model catalog from agentic-plugin.com once a day"
+msgstr ""
+
+#: admin/settings/tab-security.php:288
+msgid "Off by default. Bring-your-own-key providers work without this. Enable only if you want curated model names and list prices fetched from Agentic."
+msgstr ""
+
+#: admin/settings/tab-security.php:333
+#: src/admin-pages/index.js:980
 msgid "Tool"
 msgstr ""
 
-#: admin/settings/tab-security.php:336
+#: admin/settings/tab-security.php:349
+#: src/settings-app/index.js:2441
 msgid "Revoke"
 msgstr ""
 
@@ -3013,8 +3068,10 @@ msgid "Connect"
 msgstr ""
 
 #: admin/setup.php:464
-#: src/admin-pages/index.js:610
-#: src/settings-app/index.js:1991
+#: src/admin-pages/index.js:557
+#: src/dashboard-app/index.js:539
+#: src/settings-app/index.js:2062
+#: src/settings-app/index.js:2309
 msgid "Test"
 msgstr ""
 
@@ -3023,7 +3080,7 @@ msgid "Do you already have an account with an AI Provider?"
 msgstr ""
 
 #: admin/setup.php:479
-msgid "At least one AI Provider is needed in order for your AI Assistants to respond to requests."
+msgid "At least one AI Provider is needed in order for your AI Agents to respond to requests."
 msgstr ""
 
 #: admin/setup.php:480
@@ -3106,13 +3163,13 @@ msgid "Choose an agent mode"
 msgstr ""
 
 #: admin/setup.php:846
-msgid "Controls how much authority your AI assistants have. You can change this any time in Settings."
+msgid "Controls how much authority your AI agents have. You can change this any time in Settings."
 msgstr ""
 
 #: admin/setup.php:852
 #: admin/signup.php:95
 #: admin/signup.php:218
-#: src/settings-app/index.js:697
+#: src/settings-app/index.js:698
 msgid "Supervised"
 msgstr ""
 
@@ -3127,7 +3184,7 @@ msgstr ""
 #: admin/setup.php:861
 #: admin/signup.php:96
 #: admin/signup.php:222
-#: src/settings-app/index.js:701
+#: src/settings-app/index.js:702
 msgid "Autonomous"
 msgstr ""
 
@@ -3140,7 +3197,7 @@ msgid "Chat only"
 msgstr ""
 
 #: admin/setup.php:871
-msgid "Assistants can answer questions and give advice, but cannot read data from or make any changes to your site."
+msgid "Agents can answer questions and give advice, but cannot read data from or make any changes to your site."
 msgstr ""
 
 #: admin/setup.php:877
@@ -3173,12 +3230,13 @@ msgstr ""
 
 #: admin/setup.php:919
 #: includes/class-shortcodes.php:275
-#: templates/chat-interface.php:233
+#: templates/chat-interface.php:239
 #: templates/modal-widget.php:78
 msgid "Voice input"
 msgstr ""
 
 #: admin/setup.php:922
+#: src/shared/chat-embed.js:425
 msgid "Send"
 msgstr ""
 
@@ -3258,12 +3316,12 @@ msgid "Chat Model"
 msgstr ""
 
 #: admin/signup.php:106
-#: src/admin-pages/index.js:2243
+#: src/admin-pages/index.js:2397
 #: src/agent-wizard/index.js:303
 #: src/deploy-wizard/index.js:193
 #: src/knowledge-wizard/index.js:354
-#: src/settings-app/index.js:2110
-#: src/shared/components.js:71
+#: src/settings-app/index.js:2554
+#: src/shared/components.js:81
 msgid "Loading…"
 msgstr ""
 
@@ -3390,14 +3448,19 @@ msgid "Registration failed. Please try again."
 msgstr ""
 
 #: admin/signup.php:513
+#: src/shared/chat-embed.js:298
 msgid "Connection error. Please try again."
 msgstr ""
 
+#: admin/skills-basic.php:30
+msgid "The Skills Assistant is still activating."
+msgstr ""
+
 #: admin/skills.php:23
-#: admin/skills.php:404
-#: includes/class-admin-menu-handler.php:187
-#: includes/class-admin-menu-handler.php:409
-#: includes/class-admin-pages-rest.php:708
+#: admin/skills.php:755
+#: includes/class-admin-menu-handler.php:184
+#: includes/class-admin-menu-handler.php:396
+#: includes/class-admin-pages-rest.php:875
 msgid "Skills"
 msgstr ""
 
@@ -3421,264 +3484,392 @@ msgstr ""
 msgid "Skill deleted."
 msgstr ""
 
+#: admin/skills.php:117
+msgid "Skill reset to the shipped version."
+msgstr ""
+
+#: admin/skills.php:128
+msgid "Could not find the shipped SKILL.md file to reset from."
+msgstr ""
+
 #. translators: %s: skill name
-#: admin/skills.php:119
+#: admin/skills.php:166
 #, php-format
 msgid "Skill \"%s\" imported."
 msgstr ""
 
-#: admin/skills.php:123
+#: admin/skills.php:170
 msgid "Failed to import skill."
 msgstr ""
 
-#: admin/skills.php:126
+#: admin/skills.php:173
 msgid "Invalid skill data."
 msgstr ""
 
-#: admin/skills.php:165
-msgid "Edit Skill"
-msgstr ""
-
-#: admin/skills.php:165
-#: admin/skills.php:241
-#: admin/skills.php:405
-#: includes/class-admin-pages-rest.php:713
+#: admin/skills.php:220
+#: admin/skills.php:288
+#: admin/skills.php:431
+#: admin/skills.php:756
+#: includes/class-admin-pages-rest.php:882
 msgid "Create Skill"
 msgstr ""
 
-#: admin/skills.php:166
-#: admin/skills.php:251
+#: admin/skills.php:221
+#: admin/skills.php:289
+#: admin/skills.php:470
 msgid "Back to Skills"
 msgstr ""
 
-#: admin/skills.php:174
-#: admin/skills.php:307
-#: admin/skills.php:534
-#: src/admin-pages/index.js:582
-#: src/agent-wizard/index.js:710
-#: src/settings-app/index.js:567
-msgid "Name"
-msgstr ""
-
-#: admin/skills.php:183
-msgid "Brief summary of what this skill teaches the assistant to do."
-msgstr ""
-
-#: admin/skills.php:187
-msgid "SKILL.md Content"
-msgstr ""
-
-#: admin/skills.php:190
-msgid "Markdown instructions that get injected into the assistant's system prompt. Teaches the assistant when and how to use specific tools."
-msgstr ""
-
-#: admin/skills.php:194
-msgid "Assign to Assistant"
-msgstr ""
-
-#: admin/skills.php:197
-msgid "All Assistants"
-msgstr ""
-
-#: admin/skills.php:208
-msgid "Leave as \"All Assistants\" to make this skill available globally, or assign it to a specific assistant."
-msgstr ""
-
-#: admin/skills.php:212
-msgid "Author"
-msgstr ""
-
-#: admin/skills.php:212
-msgid "optional"
-msgstr ""
-
-#: admin/skills.php:218
-#: admin/skills.php:309
-#: admin/skills.php:538
-#: src/admin-pages/index.js:1216
-#: src/dashboard-app/index.js:161
-msgid "Version"
-msgstr ""
-
-#: admin/skills.php:228
-msgid "Active — inject this skill into assistant system prompts"
+#: admin/skills.php:223
+msgid "Start from a template close to what you need, or from a blank skill."
 msgstr ""
 
 #: admin/skills.php:236
+msgid "Or import an existing SKILL.md"
+msgstr ""
+
+#: admin/skills.php:237
+msgid "Any spec-compliant skill file — from ClawHub, Android Skills, Claude Skills, or elsewhere — can be dropped in directly."
+msgstr ""
+
+#: admin/skills.php:240
+msgid "Could not import that file — make sure it is a valid SKILL.md (YAML frontmatter followed by Markdown)."
+msgstr ""
+
+#: admin/skills.php:246
+msgid "Import File"
+msgstr ""
+
+#: admin/skills.php:281
+#: includes/class-okf-store.php:612
+#: includes/class-okf-store.php:738
+#: includes/class-skills-registry.php:153
+msgid "No description"
+msgstr ""
+
+#: admin/skills.php:288
+msgid "Edit Skill"
+msgstr ""
+
+#: admin/skills.php:296
+msgid "This bundled skill has local edits."
+msgstr ""
+
+#: admin/skills.php:297
+msgid "Plugin updates will not overwrite your changes."
+msgstr ""
+
+#: admin/skills.php:298
+msgid "Discard your edits and restore the shipped version of this skill?"
+msgstr ""
+
+#: admin/skills.php:298
+msgid "Reset to shipped version"
+msgstr ""
+
+#: admin/skills.php:300
+msgid "This is a bundled skill. Editing it will fork a local copy — your changes will be preserved across plugin updates."
+msgstr ""
+
+#: admin/skills.php:308
+msgid "Spec check — not blocking, but fixing these keeps the skill portable to other agent tools:"
+msgstr ""
+
+#. translators: %s: comma-separated tool names
+#: admin/skills.php:318
+#, php-format
+msgid "allowed-tools references unknown tool(s): %s"
+msgstr ""
+
+#: admin/skills.php:333
+#: admin/skills.php:558
+#: admin/skills.php:885
+#: src/admin-pages/index.js:529
+#: src/agent-wizard/index.js:710
+#: src/settings-app/index.js:568
+msgid "Name"
+msgstr ""
+
+#: admin/skills.php:342
+msgid "Brief summary of what this skill teaches the agent to do."
+msgstr ""
+
+#: admin/skills.php:346
+msgid "SKILL.md Content"
+msgstr ""
+
+#: admin/skills.php:349
+msgid "Markdown instructions that get injected into the agent's system prompt. Teaches the agent when and how to use specific tools."
+msgstr ""
+
+#: admin/skills.php:353
+msgid "Assign to Agent"
+msgstr ""
+
+#: admin/skills.php:367
+msgid "Leave as \"All Agents\" to make this skill available globally, or assign it to a specific agent."
+msgstr ""
+
+#: admin/skills.php:372
+msgid "Author"
+msgstr ""
+
+#: admin/skills.php:372
+msgid "optional"
+msgstr ""
+
+#: admin/skills.php:378
+#: admin/skills.php:890
+#: src/admin-pages/index.js:1158
+#: src/dashboard-app/index.js:248
+msgid "Version"
+msgstr ""
+
+#: admin/skills.php:392
+msgid "Active — inject this skill into agent system prompts"
+msgstr ""
+
+#: admin/skills.php:400
+msgid "Preview what this skill sends to the agent"
+msgstr ""
+
+#: admin/skills.php:403
+msgid "Always in context (progressive-disclosure \"metadata\" tier — every enabled skill's index line):"
+msgstr ""
+
+#: admin/skills.php:407
+msgid "Loaded only when the agent calls load_skill for this skill (the full body below):"
+msgstr ""
+
+#. translators: 1: line count, 2: estimated token count
+#: admin/skills.php:411
+#, php-format
+msgid "%1$d lines, ~%2$d tokens."
+msgstr ""
+
+#: admin/skills.php:417
+msgid "Over the spec's ~500-line guidance — consider moving reference material out."
+msgstr ""
+
+#: admin/skills.php:426
 msgid "This skill was imported from ClawHub. Local edits will be preserved unless you re-import."
 msgstr ""
 
-#: admin/skills.php:241
+#: admin/skills.php:431
 msgid "Update Skill"
 msgstr ""
 
-#: admin/skills.php:250
-msgid "Import from ClawHub"
+#: admin/skills.php:445
+#: includes/class-admin-pages-rest.php:826
+msgid "WordPress.org"
 msgstr ""
 
-#: admin/skills.php:253
-msgid "Search the ClawHub skill registry for community-contributed skills."
+#: admin/skills.php:454
+#: includes/class-admin-pages-rest.php:827
+msgid "Anthropic"
 msgstr ""
 
-#: admin/skills.php:256
+#: admin/skills.php:461
+msgid "OpenClaw / ClawHub"
+msgstr ""
+
+#: admin/skills.php:469
+msgid "Browse Community Skills"
+msgstr ""
+
+#: admin/skills.php:474
+msgid "Skill source"
+msgstr ""
+
+#: admin/skills.php:480
+msgid "Browsing skills from the official WordPress.org repository."
+msgstr ""
+
+#: admin/skills.php:484
 msgid "Search skills..."
 msgstr ""
 
-#: admin/skills.php:257
+#: admin/skills.php:485
 msgid "Search"
 msgstr ""
 
-#: admin/skills.php:261
-msgid "Enter a search term above to find skills on ClawHub."
-msgstr ""
-
-#: admin/skills.php:286
-msgid "Searching..."
-msgstr ""
-
-#: admin/skills.php:302
-msgid "No skills found. Try a different search term."
-msgstr ""
-
-#: admin/skills.php:310
-#: includes/class-approval-queue.php:217
-#: includes/class-gdpr.php:462
-#: src/admin-pages/index.js:1279
-msgid "Action"
-msgstr ""
-
-#: admin/skills.php:326
-#: admin/skills.php:335
-#: admin/skills.php:467
-#: admin/skills.php:476
-msgid "Import"
-msgstr ""
-
-#: admin/skills.php:335
-#: admin/skills.php:476
-msgid "Import this skill?"
-msgstr ""
-
-#: admin/skills.php:340
-#: admin/skills.php:480
-msgid "Importing..."
-msgstr ""
-
-#: admin/skills.php:379
-msgid "Failed to connect to ClawHub. Please try again."
-msgstr ""
-
-#: admin/skills.php:406
-#: includes/class-admin-pages-rest.php:718
-msgid "Browse Community"
-msgstr ""
-
-#: admin/skills.php:408
-msgid "Skills contain SKILL.md instructions that teach assistants when and how to use specific tools. They are injected into the system prompt at runtime."
-msgstr ""
-
-#: admin/skills.php:412
-msgid "Recommended Skills"
-msgstr ""
-
-#: admin/skills.php:413
-msgid "Curated skills verified to work with Agent Builder."
-msgstr ""
-
-#: admin/skills.php:415
+#: admin/skills.php:489
+#: admin/skills.php:667
+#: admin/skills.php:766
 msgid "Loading..."
 msgstr ""
 
-#: admin/skills.php:446
+#: admin/skills.php:560
+#: includes/class-approval-queue.php:240
+#: includes/class-gdpr.php:462
+#: src/admin-pages/index.js:1265
+msgid "Action"
+msgstr ""
+
+#: admin/skills.php:566
+#: admin/skills.php:577
+#: admin/skills.php:818
+#: admin/skills.php:827
+msgid "Import"
+msgstr ""
+
+#: admin/skills.php:577
+#: admin/skills.php:827
+msgid "Import this skill?"
+msgstr ""
+
+#: admin/skills.php:581
+#: admin/skills.php:831
+msgid "Importing..."
+msgstr ""
+
+#: admin/skills.php:631
+msgid "Searching..."
+msgstr ""
+
+#: admin/skills.php:654
+msgid "No skills found. Try a different search term."
+msgstr ""
+
+#: admin/skills.php:658
+msgid "Failed to connect to ClawHub. Please try again."
+msgstr ""
+
+#: admin/skills.php:664
+#: admin/skills.php:705
+msgid "No skills found in this repository."
+msgstr ""
+
+#: admin/skills.php:709
+msgid "Failed to load skills from"
+msgstr ""
+
+#: admin/skills.php:732
+msgid "Enter a search term above to find skills on ClawHub."
+msgstr ""
+
+#: admin/skills.php:757
+#: includes/class-admin-pages-rest.php:887
+msgid "Browse Community"
+msgstr ""
+
+#: admin/skills.php:759
+msgid "Skills contain SKILL.md instructions that teach agents when and how to use specific tools. They are injected into the system prompt at runtime."
+msgstr ""
+
+#: admin/skills.php:763
+msgid "Recommended Skills"
+msgstr ""
+
+#: admin/skills.php:764
+msgid "Curated skills verified to work with Agent Builder."
+msgstr ""
+
+#: admin/skills.php:797
 msgid "No recommended skills available yet. Create your own or browse the community."
 msgstr ""
 
-#: admin/skills.php:509
+#: admin/skills.php:860
 msgid "Could not load recommended skills. Create your own or browse the community."
 msgstr ""
 
-#: admin/skills.php:518
-#: admin/skills.php:522
+#: admin/skills.php:869
+#: admin/skills.php:873
 msgid "Your Skills"
 msgstr ""
 
-#: admin/skills.php:525
+#: admin/skills.php:876
 msgid "No skills installed yet."
 msgstr ""
 
-#: admin/skills.php:526
+#: admin/skills.php:877
 msgid "Import a recommended skill above, create your own, or browse the community."
 msgstr ""
 
-#: admin/skills.php:578
+#: admin/skills.php:928
+#: admin/tools.php:449
+#: includes/class-admin-pages-rest.php:823
+msgid "Core"
+msgstr ""
+
+#: admin/skills.php:938
+#: includes/class-admin-pages-rest.php:849
+#: src/admin-pages/index.js:1189
 msgid "Local"
 msgstr ""
 
-#: admin/skills.php:586
+#: admin/skills.php:948
+#: admin/train-data.php:152
+#: src/admin-pages/index.js:1206
+msgid "Export"
+msgstr ""
+
+#: admin/skills.php:950
 msgid "Delete this skill?"
 msgstr ""
 
-#: admin/skills.php:595
+#: admin/skills.php:959
 msgid "About Skills"
 msgstr ""
 
-#: admin/skills.php:597
-msgid "Skills contain SKILL.md instructions — markdown that gets injected into the assistant's system prompt."
+#: admin/skills.php:961
+msgid "Skills contain SKILL.md instructions — markdown that gets injected into the agent's system prompt."
 msgstr ""
 
-#: admin/skills.php:598
-msgid "They teach assistants when and how to use channel-specific tools (e.g., \"when a user asks to speak to a human, use the Slack handoff tool\")."
+#: admin/skills.php:962
+msgid "They teach agents when and how to use channel-specific tools (e.g., \"when a user asks to speak to a human, use the Slack handoff tool\")."
 msgstr ""
 
-#: admin/skills.php:599
-msgid "Skills never contain API keys or direct HTTP calls — they operate above channels in the stack: assistant → skill → channel → tool."
+#: admin/skills.php:963
+msgid "Skills never contain API keys or direct HTTP calls — they operate above channels in the stack: agent → skill → channel → tool."
 msgstr ""
 
-#: admin/skills.php:600
-msgid "Assign a skill to a specific assistant, or leave it as \"All\" to make it available globally."
+#: admin/skills.php:964
+msgid "Assign a skill to a specific agent, or leave it as \"All\" to make it available globally."
 msgstr ""
 
-#: admin/skills.php:601
+#: admin/skills.php:965
 msgid "Import curated skills from the Recommended section, browse community skills, or create your own."
 msgstr ""
 
 #: admin/tools.php:97
-#: includes/class-admin-pages-rest.php:322
+#: includes/class-admin-pages-rest.php:450
 msgid "Database"
 msgstr ""
 
 #: admin/tools.php:98
-#: includes/class-admin-pages-rest.php:337
+#: includes/class-admin-pages-rest.php:465
 msgid "SEO"
 msgstr ""
 
 #: admin/tools.php:99
-#: includes/class-admin-pages-rest.php:338
+#: includes/class-admin-pages-rest.php:466
 msgid "Site Audit"
 msgstr ""
 
 #: admin/tools.php:100
-#: includes/class-admin-pages-rest.php:339
+#: includes/class-admin-pages-rest.php:467
 msgid "Site Health"
 msgstr ""
 
 #: admin/tools.php:101
-#: includes/class-admin-pages-rest.php:316
+#: includes/class-admin-pages-rest.php:444
 msgid "Caching"
 msgstr ""
 
 #: admin/tools.php:102
-#: includes/class-admin-pages-rest.php:313
+#: includes/class-admin-pages-rest.php:441
 msgid "AI Visibility"
 msgstr ""
 
 #: admin/tools.php:105
-#: includes/class-admin-pages-rest.php:314
+#: includes/class-admin-pages-rest.php:442
 msgid "Analytics"
 msgstr ""
 
 #: admin/tools.php:106
-#: includes/class-admin-pages-rest.php:344
+#: includes/class-admin-pages-rest.php:472
+#: includes/class-skills-registry.php:758
 msgid "WordPress"
 msgstr ""
 
@@ -3754,7 +3945,7 @@ msgstr ""
 
 #: admin/tools.php:350
 #: admin/tools.php:487
-#: src/admin-pages/index.js:851
+#: src/admin-pages/index.js:793
 msgid "None"
 msgstr ""
 
@@ -3779,18 +3970,18 @@ msgid "Outbound abilities are your own Agent Builder tools, published for MCP, t
 msgstr ""
 
 #: admin/tools.php:373
-msgid "No tools found. Activate assistants to see their available tools."
+msgid "No tools found. Activate agents to see their available tools."
 msgstr ""
 
 #: admin/tools.php:385
-#: src/admin-pages/index.js:1046
+#: src/admin-pages/index.js:983
 #: src/agent-wizard/index.js:441
 #: src/agent-wizard/index.js:722
 msgid "Category"
 msgstr ""
 
 #: admin/tools.php:386
-#: includes/class-admin-menu-handler.php:433
+#: includes/class-admin-menu-handler.php:420
 msgid "Usage"
 msgstr ""
 
@@ -3814,16 +4005,12 @@ msgid "Read Only"
 msgstr ""
 
 #: admin/tools.php:425
-#: src/admin-pages/index.js:852
+#: src/admin-pages/index.js:794
 msgid "Low"
 msgstr ""
 
 #: admin/tools.php:427
 msgid "Bulk Write"
-msgstr ""
-
-#: admin/tools.php:449
-msgid "Core"
 msgstr ""
 
 #. translators: %s: number of times a tool was called
@@ -3843,15 +4030,15 @@ msgid "Tool Permission System"
 msgstr ""
 
 #: admin/tools.php:500
-msgid "Use the toggle switches above to control which tools assistants can access. When a tool is disabled:"
+msgid "Use the toggle switches above to control which tools agents can access. When a tool is disabled:"
 msgstr ""
 
 #: admin/tools.php:502
-msgid "The tool is hidden from the AI model — assistants will not know it exists and cannot request it."
+msgid "The tool is hidden from the AI model — agents will not know it exists and cannot request it."
 msgstr ""
 
 #: admin/tools.php:503
-msgid "Even if an assistant attempts to call a disabled tool directly, execution is blocked and an error is returned."
+msgid "Even if an agent attempts to call a disabled tool directly, execution is blocked and an error is returned."
 msgstr ""
 
 #: admin/tools.php:504
@@ -3875,15 +4062,15 @@ msgid "About Tools"
 msgstr ""
 
 #: admin/tools.php:516
-msgid "Core tools are available to all assistants and provide file operations, WordPress data access, and schedule management."
+msgid "Core tools are available to all agents and provide file operations, WordPress data access, and schedule management."
 msgstr ""
 
 #: admin/tools.php:517
-msgid "Assistant tools are defined by individual assistants for their specific functionality (e.g., security scans, content analysis)."
+msgid "Agent tools are defined by individual agents for their specific functionality (e.g., security scans, content analysis)."
 msgstr ""
 
 #: admin/tools.php:518
-msgid "When chatting with an assistant, the LLM decides which tools to call based on the conversation context."
+msgid "When chatting with an agent, the LLM decides which tools to call based on the conversation context."
 msgstr ""
 
 #: admin/tools.php:519
@@ -3901,30 +4088,30 @@ msgstr ""
 
 #: admin/train-data.php:34
 #: src/agent-wizard/index.js:726
-#: src/settings-app/index.js:1729
+#: src/settings-app/index.js:1800
 msgid "Instructions"
 msgstr ""
 
 #: admin/train-data.php:35
-#: src/settings-app/index.js:1310
+#: src/settings-app/index.js:1368
 msgid "Memory"
 msgstr ""
 
 #: admin/train-data.php:36
-#: includes/class-admin-pages-rest.php:1613
+#: includes/class-admin-pages-rest.php:2103
 msgid "Vector Store"
 msgstr ""
 
 #: admin/train-data.php:42
-msgid "Facts, policies, and FAQs every assistant can look up — the site's shared source of truth."
+msgid "Facts, policies, and FAQs every agent can look up — the site's shared source of truth."
 msgstr ""
 
 #: admin/train-data.php:43
-msgid "How one specific assistant talks: its tone, greeting, and persona. Not shared facts — that's the Wiki."
+msgid "How one specific agent talks: its tone, greeting, and persona. Not shared facts — that's the Wiki."
 msgstr ""
 
 #: admin/train-data.php:44
-msgid "Short notes an assistant keeps between chats, e.g. things a user told it. Optional and site-owned."
+msgid "Short notes an agent keeps between chats, e.g. things a user told it. Optional and site-owned."
 msgstr ""
 
 #: admin/train-data.php:45
@@ -3942,12 +4129,12 @@ msgid "Agent: %s"
 msgstr ""
 
 #: admin/train-data.php:65
-#: includes/class-admin-menu-handler.php:167
-#: includes/class-admin-menu-handler.php:377
-#: includes/class-admin-pages-rest.php:1599
+#: includes/class-admin-menu-handler.php:163
+#: includes/class-admin-menu-handler.php:364
+#: includes/class-admin-pages-rest.php:2089
 #: src/agent-wizard/index.js:34
 #: src/agent-wizard/index.js:751
-#: src/settings-app/index.js:298
+#: src/settings-app/index.js:299
 msgid "Knowledge"
 msgstr ""
 
@@ -3979,10 +4166,6 @@ msgstr ""
 msgid "Guided setup"
 msgstr ""
 
-#: admin/train-data.php:152
-msgid "Export"
-msgstr ""
-
 #: admin/train-data.php:153
 msgid "Import persona text"
 msgstr ""
@@ -4004,7 +4187,7 @@ msgid "No concepts yet. Create a FAQ, policy, or product fact to get started."
 msgstr ""
 
 #: admin/train-data.php:172
-#: src/admin-pages/index.js:2201
+#: src/admin-pages/index.js:2355
 msgid "Concept"
 msgstr ""
 
@@ -4110,7 +4293,7 @@ msgid "Always include in prompts"
 msgstr ""
 
 #: admin/train-data.php:286
-msgid "— inject this concept into every assistant’s system prompt (best for site overview, tone, standing policies). Keep short."
+msgid "— inject this concept into every agent’s system prompt (best for site overview, tone, standing policies). Keep short."
 msgstr ""
 
 #: admin/train-data.php:291
@@ -4158,7 +4341,7 @@ msgid "Your knowledge wiki"
 msgstr ""
 
 #: admin/train-data.php:318
-msgid "Add facts, policies, and FAQs your assistants can use."
+msgid "Add facts, policies, and FAQs your agents can use."
 msgstr ""
 
 #: admin/train-data.php:319
@@ -4176,7 +4359,7 @@ msgid "Vector Store &amp; RAG"
 msgstr ""
 
 #: admin/train-data.php:342
-msgid "Train assistants on large document sets and whole-site content with hosted embeddings. Semantic search retrieves the right passages at chat time — ideal for PDFs, long manuals, and fuzzy customer questions."
+msgid "Train agents on large document sets and whole-site content with hosted embeddings. Semantic search retrieves the right passages at chat time — ideal for PDFs, long manuals, and fuzzy customer questions."
 msgstr ""
 
 #: admin/train-data.php:344
@@ -4207,13 +4390,8 @@ msgstr ""
 msgid "How Vector Store works"
 msgstr ""
 
-#: agent-builder.php:436
-#: src/settings-app/index.js:1018
-msgid "AI Agents"
-msgstr ""
-
 #: agent-builder.php:439
-msgid "Chat with an AI Assistant"
+msgid "Chat with an AI Agent"
 msgstr ""
 
 #: agent-builder.php:492
@@ -4239,15 +4417,16 @@ msgstr ""
 #: includes/class-admin-ajax.php:219
 #: includes/class-admin-ajax.php:255
 #: includes/class-admin-ajax.php:308
-#: includes/class-admin-ajax.php:408
-#: includes/class-admin-ajax.php:449
-#: includes/class-admin-ajax.php:580
-#: includes/class-admin-ajax.php:632
-#: includes/class-admin-ajax.php:733
-#: includes/class-admin-ajax.php:1350
-#: includes/class-admin-ajax.php:1465
-#: includes/class-admin-pages-rest.php:879
-#: includes/class-admin-pages-rest.php:968
+#: includes/class-admin-ajax.php:345
+#: includes/class-admin-ajax.php:367
+#: includes/class-admin-ajax.php:404
+#: includes/class-admin-ajax.php:426
+#: includes/class-admin-ajax.php:527
+#: includes/class-admin-ajax.php:1144
+#: includes/class-admin-ajax.php:1259
+#: includes/class-admin-pages-rest.php:1048
+#: includes/class-admin-pages-rest.php:1137
+#: includes/class-admin-pages-rest.php:1192
 #: includes/class-okf-admin.php:52
 #: includes/class-rag-manager.php:301
 #: includes/class-rag-manager.php:348
@@ -4277,134 +4456,114 @@ msgstr ""
 msgid "Unknown ability."
 msgstr ""
 
-#: includes/class-admin-ajax.php:319
-msgid "Agent and hook are required."
+#: includes/class-admin-ajax.php:325
+msgid "Could not save the event trigger."
 msgstr ""
 
-#: includes/class-admin-ajax.php:413
-msgid "Missing trigger ID."
+#: includes/class-admin-ajax.php:352
+msgid "Could not delete the event trigger."
 msgstr ""
 
-#: includes/class-admin-ajax.php:460
-msgid "Assistant is required."
+#: includes/class-admin-ajax.php:384
+msgid "Could not save the scheduled task."
 msgstr ""
 
-#: includes/class-admin-ajax.php:464
-msgid "Prompt is required."
+#: includes/class-admin-ajax.php:411
+msgid "Could not delete the scheduled task."
 msgstr ""
 
-#: includes/class-admin-ajax.php:470
-msgid "Assistant not found or not active."
-msgstr ""
-
-#. translators: 1: schedule label, 2: agent name
-#. translators: 1: form title, 2: date/time
-#: includes/class-admin-ajax.php:480
-#: includes/class-native-forms.php:525
-#, php-format
-msgid "%1$s — %2$s"
-msgstr ""
-
-#: includes/class-admin-ajax.php:585
-msgid "Missing task ID."
-msgstr ""
-
-#: includes/class-admin-ajax.php:637
+#: includes/class-admin-ajax.php:431
 msgid "No commands provided."
 msgstr ""
 
-#: includes/class-admin-ajax.php:642
+#: includes/class-admin-ajax.php:436
 msgid "Invalid commands format."
 msgstr ""
 
-#: includes/class-admin-ajax.php:671
+#: includes/class-admin-ajax.php:465
 msgid "run_wp_cli tool not found. Visit the Tools page first."
 msgstr ""
 
-#: includes/class-admin-ajax.php:741
+#: includes/class-admin-ajax.php:535
 msgid "Missing agent slug."
 msgstr ""
 
-#: includes/class-admin-ajax.php:746
+#: includes/class-admin-ajax.php:540
 msgid "Invalid privilege key."
 msgstr ""
 
-#: includes/class-admin-ajax.php:772
-#: includes/class-admin-ajax.php:928
-#: includes/class-admin-ajax.php:1150
-#: includes/class-admin-ajax.php:1191
-#: includes/class-admin-ajax.php:1218
-#: includes/class-admin-ajax.php:1274
+#: includes/class-admin-ajax.php:566
+#: includes/class-admin-ajax.php:722
+#: includes/class-admin-ajax.php:944
+#: includes/class-admin-ajax.php:985
+#: includes/class-admin-ajax.php:1012
+#: includes/class-admin-ajax.php:1068
 #: includes/class-agent-updates.php:210
 #: includes/class-agent-updates.php:637
 msgid "Insufficient permissions."
 msgstr ""
 
-#: includes/class-admin-ajax.php:778
+#: includes/class-admin-ajax.php:572
 msgid "Missing required parameters."
 msgstr ""
 
-#: includes/class-admin-ajax.php:782
+#: includes/class-admin-ajax.php:576
 msgid "Agent updates require a premium license."
 msgstr ""
 
 #. translators: %s: agent slug
-#: includes/class-admin-ajax.php:795
+#: includes/class-admin-ajax.php:589
 #, php-format
 msgid "%s updated successfully."
 msgstr ""
 
-#: includes/class-admin-ajax.php:936
-#: includes/class-admin-ajax.php:1157
-#: includes/class-admin-ajax.php:1224
-#: includes/class-admin-ajax.php:1281
+#: includes/class-admin-ajax.php:730
+#: includes/class-admin-ajax.php:951
+#: includes/class-admin-ajax.php:1018
+#: includes/class-admin-ajax.php:1075
 msgid "Invalid provider."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1131
+#: includes/class-admin-ajax.php:925
 msgid "Connected successfully!"
 msgstr ""
 
 #. translators: %d: HTTP status code
-#: includes/class-admin-ajax.php:1136
+#: includes/class-admin-ajax.php:930
 #, php-format
 msgid "Connection failed (HTTP %d). Check your API key."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1162
+#: includes/class-admin-ajax.php:956
 msgid "API key is required."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1262
+#: includes/class-admin-ajax.php:1056
 msgid "Provider removed."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1316
+#: includes/class-admin-ajax.php:1110
 msgid "No models returned. Ensure your API key is saved and valid."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1371
+#: includes/class-admin-ajax.php:1165
 msgid "Email address is required."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1403
+#: includes/class-admin-ajax.php:1197
 msgid "No API key returned. Please try again."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1415
+#: includes/class-admin-ajax.php:1209
 msgid "Your API key was issued but could not be saved on this site. Please deactivate and reactivate Agent Builder to repair its database tables, then try again."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1450
+#: includes/class-admin-ajax.php:1244
 msgid "API key saved."
 msgstr ""
 
-#: includes/class-admin-ajax.php:1472
-msgid "Missing assistant or task parameter."
-msgstr ""
-
-#: includes/class-admin-ajax.php:1477
-msgid "Task not found on this assistant."
+#: includes/class-admin-ajax.php:1271
+msgid "Task not found on this agent."
 msgstr ""
 
 #: includes/class-admin-menu-handler.php:53
@@ -4416,250 +4575,260 @@ msgid "Quick Start"
 msgstr ""
 
 #: includes/class-admin-menu-handler.php:62
-#: includes/class-admin-menu-handler.php:238
+#: includes/class-admin-menu-handler.php:234
 msgid "Agent Builder — Setup Wizard"
 msgstr ""
 
 #: includes/class-admin-menu-handler.php:63
-#: includes/class-admin-menu-handler.php:239
-#: includes/class-admin-menu-handler.php:352
+#: includes/class-admin-menu-handler.php:235
+#: includes/class-admin-menu-handler.php:339
 msgid "Setup Wizard"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:78
+#: includes/class-admin-menu-handler.php:73
 msgid "Agent Builder — Dashboard"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:79
-#: includes/class-admin-surfaces.php:124
+#: includes/class-admin-menu-handler.php:74
+#: includes/class-admin-surfaces.php:129
 msgid "Dashboard"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:86
+#: includes/class-admin-menu-handler.php:81
 msgid "Agent Builder — Chat"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:105
+#: includes/class-admin-menu-handler.php:100
 msgid "Agent Builder — Agents"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:117
+#: includes/class-admin-menu-handler.php:113
 msgid "Agent Builder — Publish"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:118
-#: includes/class-admin-menu-handler.php:416
-#: includes/class-admin-pages-rest.php:1529
+#: includes/class-admin-menu-handler.php:114
+#: includes/class-admin-menu-handler.php:403
+#: includes/class-admin-pages-rest.php:2019
 #: src/deploy-wizard/index.js:410
 msgid "Publish"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:127
+#: includes/class-admin-menu-handler.php:123
 msgid "Agent Builder — Run"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:128
+#: includes/class-admin-menu-handler.php:124
 msgid "Run"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:137
+#: includes/class-admin-menu-handler.php:133
 msgid "Agent Builder — Train an Agent"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:147
+#: includes/class-admin-menu-handler.php:143
 msgid "Agent Builder — Add Knowledge"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:157
+#: includes/class-admin-menu-handler.php:153
 msgid "Agent Builder — Publish Your Agent"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:166
+#: includes/class-admin-menu-handler.php:162
 msgid "Agent Builder — Knowledge"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:175
+#: includes/class-admin-menu-handler.php:171
 msgid "Agent Builder — Tools"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:186
+#: includes/class-admin-menu-handler.php:183
 msgid "Agent Builder — Skills"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:205
+#: includes/class-admin-menu-handler.php:202
 msgid "Agent Builder — Approvals"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:219
+#: includes/class-admin-menu-handler.php:215
 msgid "Agent Builder — Activity"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:228
+#: includes/class-admin-menu-handler.php:224
 msgid "Agent Builder — Settings"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:248
+#: includes/class-admin-menu-handler.php:244
 msgid "Agent Builder — Get Started"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:359
-#: includes/class-admin-menu-handler.php:1159
+#: includes/class-admin-menu-handler.php:346
+#: includes/class-admin-menu-handler.php:1160
 msgid "Agent Chat"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:441
-#: includes/class-admin-settings-rest.php:116
-#: includes/class-admin-settings-rest.php:154
-#: src/dashboard-app/index.js:140
-#: src/settings-app/index.js:2342
+#: includes/class-admin-menu-handler.php:428
+#: includes/class-admin-settings-rest.php:182
+#: includes/class-admin-settings-rest.php:220
+#: src/dashboard-app/index.js:227
+#: src/settings-app/index.js:2800
 msgid "License"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:499
+#: includes/class-admin-menu-handler.php:486
 msgid "You do not have permission to customize Quick Actions."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:663
+#: includes/class-admin-menu-handler.php:650
 msgid "You do not have permission to use the emergency stop."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:690
+#: includes/class-admin-menu-handler.php:677
 msgid "You do not have permission to change the interface mode."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:727
+#: includes/class-admin-menu-handler.php:714
 msgid "You do not have permission to change update settings."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:813
-#: includes/class-admin-menu-handler.php:828
+#: includes/class-admin-menu-handler.php:800
+#: includes/class-admin-menu-handler.php:815
 msgid "Administrator access required"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:814
+#: includes/class-admin-menu-handler.php:801
 msgid "Agent Builder can only be set up and managed by a site administrator. Your account does not have the required permissions, so we cannot continue here."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:815
+#: includes/class-admin-menu-handler.php:802
 msgid "Please sign in with an administrator account, or ask a user with administrator access to complete the setup."
 msgstr ""
 
 #. translators: %s: site administrator email address, rendered as a mailto link.
-#: includes/class-admin-menu-handler.php:819
+#: includes/class-admin-menu-handler.php:806
 #, php-format
 msgid "Need help? Contact your site administrator at %s."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:823
+#: includes/class-admin-menu-handler.php:810
 msgid "Back to the WordPress dashboard"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:913
+#: includes/class-admin-menu-handler.php:900
 msgid "Agent Marketplace"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:917
-#: includes/class-admin-pages-rest.php:1562
-#: src/admin-pages/index.js:108
-#: src/admin-pages/index.js:423
-#: src/settings-app/index.js:79
+#: includes/class-admin-menu-handler.php:904
+#: includes/class-admin-pages-rest.php:2052
+#: src/admin-pages/index.js:55
+#: src/admin-pages/index.js:370
+#: src/dashboard-app/index.js:22
+#: src/settings-app/index.js:80
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:922
-#: src/settings-app/index.js:86
-msgid "Settings control how assistants behave on this site. Changes are stored locally and take effect for new conversations."
+#: includes/class-admin-menu-handler.php:909
+#: src/settings-app/index.js:87
+msgid "Settings control how agents behave on this site. Changes are stored locally and take effect for new conversations."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:924
-#: src/admin-pages/index.js:115
-msgid "Assistants only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings."
+#: includes/class-admin-menu-handler.php:911
+msgid "The dashboard summarizes agents, approvals, activity, and providers at a glance. Open any card's own page for full control."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:926
+#: includes/class-admin-menu-handler.php:913
+#: src/admin-pages/index.js:62
+msgid "Agents only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings."
+msgstr ""
+
+#: includes/class-admin-menu-handler.php:915
 msgid "Knowledge stays on your site for the free wiki; hosted vector features follow your license and provider terms."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:928
-msgid "Per-assistant instructions shape tone and greetings. Site-wide knowledge belongs in the Knowledge Wiki."
+#: includes/class-admin-menu-handler.php:917
+msgid "Per-agent instructions shape tone and greetings. Site-wide knowledge belongs in the Knowledge Wiki."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:930
-msgid "Local memory is optional and site-owned. Turn it off if you prefer assistants not to retain short notes across chats."
+#: includes/class-admin-menu-handler.php:919
+msgid "Local memory is optional and site-owned. Turn it off if you prefer agents not to retain short notes across chats."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:933
+#: includes/class-admin-menu-handler.php:922
 msgid "Approvals keep high-risk tool calls under human control before they change your site."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:935
-msgid "Activity helps you understand what assistants did. Logs are local; retention follows your Security settings."
+#: includes/class-admin-menu-handler.php:924
+msgid "Activity helps you understand what agents did. Logs are local; retention follows your Security settings."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:938
-msgid "Interface settings change how chat looks and how assistants address people. Theme applies to admin and frontend chat."
+#: includes/class-admin-menu-handler.php:927
+msgid "Interface settings change how chat looks and how agents address people. Theme applies to admin and frontend chat."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:939
-msgid "Agent chat features apply site-wide. Per-assistant provider/model overrides only when needed. Emergency stop deactivates all agents."
+#: includes/class-admin-menu-handler.php:928
+msgid "Agent chat features apply site-wide. Per-agent provider/model overrides only when needed. Emergency stop deactivates all agents."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:940
+#: includes/class-admin-menu-handler.php:929
 msgid "API keys stay on your site. Only connected providers can be set as the site default."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:941
+#: includes/class-admin-menu-handler.php:930
 msgid "Role privileges control who can administer the plugin and chat with agents. Administrators always retain full access."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:942
+#: includes/class-admin-menu-handler.php:931
 msgid "Security settings include consent, retention, scanning, and request rate limits. Review Approvals for high-risk actions."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:943
+#: includes/class-admin-menu-handler.php:932
 msgid "Your license unlocks Pro features. Keep keys private and only share them with trusted site admins."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:944
+#: includes/class-admin-menu-handler.php:933
 msgid "Advanced integrations and API endpoints. Prefer connected providers on the Providers tab for everyday use."
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:978
-#: src/admin-pages/index.js:128
-#: src/settings-app/index.js:99
+#: includes/class-admin-menu-handler.php:967
+#: src/admin-pages/index.js:75
+#: src/dashboard-app/index.js:42
+#: src/settings-app/index.js:100
 msgid "Need help?"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:979
-#: src/admin-pages/index.js:130
-#: src/settings-app/index.js:101
+#: includes/class-admin-menu-handler.php:968
+#: src/admin-pages/index.js:77
+#: src/dashboard-app/index.js:48
+#: src/settings-app/index.js:102
 msgid "Visit our Support Center"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:981
-#: src/admin-pages/index.js:134
-#: src/settings-app/index.js:105
+#: includes/class-admin-menu-handler.php:970
+#: src/admin-pages/index.js:81
+#: src/dashboard-app/index.js:52
+#: src/settings-app/index.js:106
 msgid "Documentation"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:989
-#: src/admin-pages/index.js:171
-#: src/settings-app/index.js:142
+#: includes/class-admin-menu-handler.php:978
+#: src/admin-pages/index.js:118
+#: src/dashboard-app/index.js:87
+#: src/settings-app/index.js:143
 msgid "Privacy Policy"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:991
-#: src/admin-pages/index.js:181
-#: src/settings-app/index.js:152
+#: includes/class-admin-menu-handler.php:980
+#: src/admin-pages/index.js:128
+#: src/dashboard-app/index.js:97
+#: src/settings-app/index.js:153
 msgid "GDPR Policy"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:1159
+#: includes/class-admin-menu-handler.php:1160
 #: assets/js/gutenberg-blocks.js:160
 msgid "Online"
 msgstr ""
 
-#: includes/class-admin-menu-handler.php:1161
+#: includes/class-admin-menu-handler.php:1162
 msgid "Manage Agent Deployments"
 msgstr ""
 
@@ -4701,771 +4870,860 @@ msgstr ""
 msgid "At least one of them was installed by an earlier version of the agent updater, which should never have offered it. That is fixed — the updater no longer touches agents that ship with a plugin."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:164
+#: includes/class-admin-pages-rest.php:166
 msgid "Unknown admin page."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:181
+#: includes/class-admin-pages-rest.php:183
 msgid "Invalid tool."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:214
+#: includes/class-admin-pages-rest.php:216
 msgid "Unknown ability profile."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:217
+#: includes/class-admin-pages-rest.php:219
 msgid "Tools registry unavailable."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:267
+#: includes/class-admin-pages-rest.php:273
 msgid "Invalid skill."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:283
+#: includes/class-admin-pages-rest.php:289
 msgid "Invalid screen or mode."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:301
+#: includes/class-admin-pages-rest.php:311
 msgid "Unknown action."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:318
+#: includes/class-admin-pages-rest.php:337
+msgid "Unknown provider."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:349
+msgid "No API key configured for this provider."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:407
+msgid "Connected successfully."
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/class-admin-pages-rest.php:416
+#, php-format
+msgid "Connection failed (HTTP %d)."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:446
+#: includes/class-skills-registry.php:776
 msgid "Communication"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:321
+#: includes/class-admin-pages-rest.php:449
 msgid "CRM"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:323
+#: includes/class-admin-pages-rest.php:451
 msgid "DataForSEO"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:324
+#: includes/class-admin-pages-rest.php:452
 msgid "Ecommerce"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:325
+#: includes/class-admin-pages-rest.php:453
 msgid "Email"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:327
+#: includes/class-admin-pages-rest.php:455
 #: includes/class-native-forms.php:113
 #: includes/class-native-forms.php:117
 msgid "Forms"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:328
+#: includes/class-admin-pages-rest.php:456
 msgid "Google Business"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:329
+#: includes/class-admin-pages-rest.php:457
 msgid "Git"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:330
+#: includes/class-admin-pages-rest.php:458
 msgid "Search Marketing"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:331
+#: includes/class-admin-pages-rest.php:459
 msgid "Google Workspace"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:332
+#: includes/class-admin-pages-rest.php:460
 msgid "Maintenance"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:334
+#: includes/class-admin-pages-rest.php:462
 msgid "Orchestration"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:335
-#: includes/class-admin-surfaces.php:129
+#: includes/class-admin-pages-rest.php:463
+#: includes/class-admin-surfaces.php:134
 msgid "Plugins"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:340
+#: includes/class-admin-pages-rest.php:468
 msgid "Themes"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:342
+#: includes/class-admin-pages-rest.php:470
 msgid "Utility"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:343
+#: includes/class-admin-pages-rest.php:471
 msgid "Web"
 msgstr ""
 
 #. translators: %d: tool count
-#: includes/class-admin-pages-rest.php:495
+#: includes/class-admin-pages-rest.php:623
 #, php-format
 msgid "All (%d)"
 msgstr ""
 
 #. translators: %d: site-local tool count
-#: includes/class-admin-pages-rest.php:504
+#: includes/class-admin-pages-rest.php:632
 #, php-format
 msgid "Custom (%d)"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:543
+#: includes/class-admin-pages-rest.php:671
 msgid "All tools"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:544
+#: includes/class-admin-pages-rest.php:672
 msgid "Site-local tools"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:594
-msgid "What may assistants do?"
+#: includes/class-admin-pages-rest.php:722
+msgid "What may agents do?"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:596
-msgid "Enable or disable tools assistants can use. Group by category using the tabs."
+#: includes/class-admin-pages-rest.php:724
+msgid "Enable or disable tools agents can use. Group by category using the tabs."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:597
+#: includes/class-admin-pages-rest.php:725
 msgid "Pick a simple safety profile. We turn tools on or off to match — no need to manage hundreds of tools one by one."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:612
-msgid "Assistants only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings. Provider processing of chat content is covered by our Privacy Policy."
+#: includes/class-admin-pages-rest.php:740
+msgid "Agents only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings. Provider processing of chat content is covered by our Privacy Policy."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:627
+#: includes/class-admin-pages-rest.php:755
 msgid "Browse & answer"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:628
+#: includes/class-admin-pages-rest.php:756
 msgid "Safest — read-only help"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:629
-msgid "Assistants can look things up and answer questions. They cannot change posts, settings, or your site."
+#: includes/class-admin-pages-rest.php:757
+msgid "Agents can look things up and answer questions. They cannot change posts, settings, or your site."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:634
+#: includes/class-admin-pages-rest.php:762
 msgid "Help with drafts"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:635
+#: includes/class-admin-pages-rest.php:763
 msgid "Balanced — create drafts with care"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:636
+#: includes/class-admin-pages-rest.php:764
 msgid "Read plus everyday writing (drafts and light edits). Riskier changes still ask for confirmation."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:641
+#: includes/class-admin-pages-rest.php:769
 msgid "Manage my site"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:642
+#: includes/class-admin-pages-rest.php:770
 msgid "Full productivity — approvals for big changes"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:643
+#: includes/class-admin-pages-rest.php:771
 msgid "Most tools on, including significant updates. High-risk actions go through the Approvals queue. Extreme tools stay off."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:648
+#: includes/class-admin-pages-rest.php:776
 msgid "Custom mix"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:649
+#: includes/class-admin-pages-rest.php:777
 msgid "You mixed tools manually"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:650
+#: includes/class-admin-pages-rest.php:778
 msgid "Individual tools were toggled outside a profile."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:709
-msgid "Instructions that teach agents when and how to use tools."
-msgstr ""
-
-#: includes/class-admin-pages-rest.php:772
-msgid "Things waiting for your OK"
-msgstr ""
-
-#: includes/class-admin-pages-rest.php:773
-msgid "When an assistant wants to change something important, it waits here until you approve or reject it."
-msgstr ""
-
-#: includes/class-admin-pages-rest.php:794
-msgid "Approvals keep high-risk assistant actions under human control. Email alerts use your admin address and never include passwords. See Privacy Policy for how providers process chat."
-msgstr ""
-
-#: includes/class-admin-pages-rest.php:813
-msgid "Always ask me"
-msgstr ""
-
-#: includes/class-admin-pages-rest.php:814
-msgid "Safest default"
-msgstr ""
-
-#: includes/class-admin-pages-rest.php:815
-msgid "Important or writing actions wait for you. Best when you want full control."
-msgstr ""
-
-#: includes/class-admin-pages-rest.php:816
-msgid "No automatic approvals beyond the safest reads."
-msgstr ""
-
 #: includes/class-admin-pages-rest.php:824
-msgid "Auto-approve low risk"
+msgid "Agentic"
 msgstr ""
 
 #: includes/class-admin-pages-rest.php:825
+msgid "ClawHub"
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:876
+msgid "Instructions that teach agents when and how to use tools."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:941
+msgid "Things waiting for your OK"
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:942
+msgid "When an agent wants to change something important, it waits here until you approve or reject it."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:964
+msgid "Approvals keep high-risk agent actions under human control. Email alerts use your admin address and never include passwords. See Privacy Policy for how providers process chat."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:982
+msgid "Always ask me"
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:983
+msgid "Safest default"
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:984
+msgid "Important or writing actions wait for you. Best when you want full control."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:985
+msgid "No automatic approvals beyond the safest reads."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:993
+msgid "Auto-approve low risk"
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:994
 msgid "Recommended for most sites"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:826
+#: includes/class-admin-pages-rest.php:995
 msgid "Simple look-ups run freely. Drafts and bigger changes still pause for confirmation or this queue."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:827
+#: includes/class-admin-pages-rest.php:996
 msgid "You accept that low-risk tools may run without a separate approval email."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:835
+#: includes/class-admin-pages-rest.php:1004
 msgid "Trust more (higher risk)"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:836
+#: includes/class-admin-pages-rest.php:1005
 msgid "Faster — use with care"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:837
-msgid "Assistants work with less interruption (autonomous mode). You can still review history. Extreme tools stay blocked."
+#: includes/class-admin-pages-rest.php:1006
+msgid "Agents work with less interruption (autonomous mode). You can still review history. Extreme tools stay blocked."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:838
-msgid "I understand assistants may change content without waiting in this queue, and I accept that increased risk."
+#: includes/class-admin-pages-rest.php:1007
+msgid "I understand agents may change content without waiting in this queue, and I accept that increased risk."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:898
+#: includes/class-admin-pages-rest.php:1067
 msgid "Please confirm you accept the increased risk for “Trust more”."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:904
+#: includes/class-admin-pages-rest.php:1073
 msgid "Enter a valid email address."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:973
+#: includes/class-admin-pages-rest.php:1142
+#: includes/class-admin-pages-rest.php:1200
 msgid "Invalid approval request."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1076
+#: includes/class-admin-pages-rest.php:1438
 msgid "Guest"
 msgstr ""
 
 #. translators: 1: agent name, 2: conversation id
-#: includes/class-admin-pages-rest.php:1081
+#: includes/class-admin-pages-rest.php:1443
 #, php-format
 msgid "Chat with %1$s (#%2$s)"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1142
+#: includes/class-admin-pages-rest.php:1504
 msgid "Today"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1143
+#: includes/class-admin-pages-rest.php:1505
 msgid "Last 7 days"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1144
+#: includes/class-admin-pages-rest.php:1506
 msgid "Last 30 days"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1152
+#: includes/class-admin-pages-rest.php:1514
 msgid "Recent conversations"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1153
+#: includes/class-admin-pages-rest.php:1515
 msgid "Security events"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1154
-msgid "What your assistants have been doing"
+#: includes/class-admin-pages-rest.php:1516
+msgid "What your agents have been doing"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1157
-msgid "Chats between people and assistants on this site."
+#: includes/class-admin-pages-rest.php:1519
+msgid "Chats between people and agents on this site."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1158
+#: includes/class-admin-pages-rest.php:1520
 msgid "Security-related events. Most sites stay quiet here."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1159
-msgid "A simple timeline of assistant work — tools used, approvals, and important system events. No technical jargon required."
+#: includes/class-admin-pages-rest.php:1521
+msgid "A simple timeline of agent work — tools used, approvals, and important system events. No technical jargon required."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1185
-#: src/admin-pages/index.js:1941
+#: includes/class-admin-pages-rest.php:1547
+#: src/admin-pages/index.js:2095
 msgid "Tools used"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1193
+#: includes/class-admin-pages-rest.php:1555
 msgid "Chats"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1201
+#: includes/class-admin-pages-rest.php:1563
 msgid "Other"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1217
-msgid "Activity helps you understand what assistants did on your site. Logs are stored locally and purged according to your retention settings. Chat content lives under Conversations."
+#: includes/class-admin-pages-rest.php:1579
+msgid "Activity helps you understand what agents did on your site. Logs are stored locally and purged according to your retention settings. Chat content lives under Conversations."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1224
+#: includes/class-admin-pages-rest.php:1586
 msgid "Timeline"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1253
+#: includes/class-admin-pages-rest.php:1615
 msgid "Security check failed. Please reload the Activity page and try exporting again."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1256
+#: includes/class-admin-pages-rest.php:1618
 msgid "You do not have permission to export logs."
 msgstr ""
 
+#: includes/class-admin-pages-rest.php:1695
+msgid "Security check failed. Please reload the Skills page and try exporting again."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:1698
+msgid "You do not have permission to export skills."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:1705
+msgid "Skill not found."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:1730
+msgid "Security check failed. Please reload the Skills page and try importing again."
+msgstr ""
+
+#: includes/class-admin-pages-rest.php:1733
+msgid "You do not have permission to import skills."
+msgstr ""
+
 #. translators: %s: tool name
-#: includes/class-admin-pages-rest.php:1347
+#: includes/class-admin-pages-rest.php:1837
 #, php-format
 msgid "Used tool: %s"
 msgstr ""
 
 #. translators: %s: token count
-#: includes/class-admin-pages-rest.php:1391
+#: includes/class-admin-pages-rest.php:1881
 #, php-format
 msgid "%s tokens"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1419
+#: includes/class-admin-pages-rest.php:1909
 msgid "Started a chat"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1420
+#: includes/class-admin-pages-rest.php:1910
 msgid "Finished a chat"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1421
+#: includes/class-admin-pages-rest.php:1911
 msgid "Used a tool"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1422
+#: includes/class-admin-pages-rest.php:1912
 msgid "Chose tools for a reply"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1423
+#: includes/class-admin-pages-rest.php:1913
 msgid "Ran an approved action"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1424
+#: includes/class-admin-pages-rest.php:1914
 msgid "Tool turned on"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1425
+#: includes/class-admin-pages-rest.php:1915
 msgid "Tool turned off"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1426
+#: includes/class-admin-pages-rest.php:1916
 msgid "Tools safety profile applied"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1427
+#: includes/class-admin-pages-rest.php:1917
 msgid "Site-local tool created"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1428
+#: includes/class-admin-pages-rest.php:1918
 msgid "Site-local tool updated"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1429
+#: includes/class-admin-pages-rest.php:1919
 msgid "Site-local tool deleted"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1430
+#: includes/class-admin-pages-rest.php:1920
 msgid "Action waiting for approval"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1431
-#: includes/class-admin-pages-rest.php:1433
+#: includes/class-admin-pages-rest.php:1921
+#: includes/class-admin-pages-rest.php:1923
 msgid "You approved an action"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1432
-#: includes/class-admin-pages-rest.php:1434
+#: includes/class-admin-pages-rest.php:1922
+#: includes/class-admin-pages-rest.php:1924
 msgid "You rejected an action"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1435
+#: includes/class-admin-pages-rest.php:1925
 msgid "Approval preferences saved"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1436
+#: includes/class-admin-pages-rest.php:1926
 msgid "Interface mode changed"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1437
-msgid "Default assistant mode changed"
+#: includes/class-admin-pages-rest.php:1927
+msgid "Default agent mode changed"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1438
+#: includes/class-admin-pages-rest.php:1928
 msgid "Deployment created"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1439
+#: includes/class-admin-pages-rest.php:1929
 msgid "Deployment updated"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1440
+#: includes/class-admin-pages-rest.php:1930
 msgid "Deployment enabled"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1441
+#: includes/class-admin-pages-rest.php:1931
 msgid "Deployment disabled"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1442
+#: includes/class-admin-pages-rest.php:1932
 msgid "Deployment deleted"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1443
+#: includes/class-admin-pages-rest.php:1933
 msgid "Settings changed"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1444
+#: includes/class-admin-pages-rest.php:1934
 msgid "Changed a service endpoint URL"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1445
+#: includes/class-admin-pages-rest.php:1935
 msgid "Added knowledge"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1446
-msgid "Assistant activated"
+#: includes/class-admin-pages-rest.php:1936
+msgid "Agent activated"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1447
-msgid "Assistant deactivated"
+#: includes/class-admin-pages-rest.php:1937
+msgid "Agent deactivated"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1448
-msgid "Assistant created"
+#: includes/class-admin-pages-rest.php:1938
+msgid "Agent created"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1462
+#: includes/class-admin-pages-rest.php:1952
 msgid "You / system"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1479
+#: includes/class-admin-pages-rest.php:1969
 msgid "Approved action failed while running"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1480
+#: includes/class-admin-pages-rest.php:1970
 msgid "Chat hit an error"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1481
+#: includes/class-admin-pages-rest.php:1971
 msgid "Chat error recorded"
 msgstr ""
 
 #. translators: %s: human time diff
-#: includes/class-admin-pages-rest.php:1518
+#: includes/class-admin-pages-rest.php:2008
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1530
-msgid "Deploy assistants to shortcodes, blocks, and channels."
+#: includes/class-admin-pages-rest.php:2020
+msgid "Deploy agents to shortcodes, blocks, and channels."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1535
+#: includes/class-admin-pages-rest.php:2025
 msgid "Embed chat on any page"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1538
+#: includes/class-admin-pages-rest.php:2028
 msgid "Open Agent Chat"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1540
-msgid "Test assistants in wp-admin"
+#: includes/class-admin-pages-rest.php:2030
+msgid "Test agents in wp-admin"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1545
-msgid "Wizard to create a new assistant"
+#: includes/class-admin-pages-rest.php:2035
+msgid "Wizard to create a new agent"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1548
+#: includes/class-admin-pages-rest.php:2038
 msgid "Full deployment editor (shortcode builder, CLI, modals) remains available when you open a deployment action from here."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1562
-#: src/dashboard-app/index.js:476
+#: includes/class-admin-pages-rest.php:2052
+#: src/dashboard-app/index.js:666
 msgid "Pro"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1564
+#: includes/class-admin-pages-rest.php:2054
 msgid "Pro is active on this site."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1565
+#: includes/class-admin-pages-rest.php:2055
 msgid "Unlock vector RAG, connectors, channels, and advanced metering."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1569
+#: includes/class-admin-pages-rest.php:2059
 msgid "Hosted vector store / RAG"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1570
+#: includes/class-admin-pages-rest.php:2060
 msgid "MCP connectors & channels"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1571
+#: includes/class-admin-pages-rest.php:2061
 msgid "Usage analytics & costs"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1572
+#: includes/class-admin-pages-rest.php:2062
 msgid "Priority support"
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1600
+#: includes/class-admin-pages-rest.php:2090
 msgid "Wiki concepts (OKF) and optional Pro vector store."
 msgstr ""
 
-#: includes/class-admin-pages-rest.php:1608
+#: includes/class-admin-pages-rest.php:2098
 msgid "Knowledge Wiki"
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:192
+#: includes/class-admin-settings-rest.php:179
+#: src/settings-app/index.js:2222
+msgid "MCP"
+msgstr ""
+
+#: includes/class-admin-settings-rest.php:259
 msgid "Invalid settings tab."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:206
+#: includes/class-admin-settings-rest.php:273
 msgid "This tab is not available as classic HTML."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:247
+#: includes/class-admin-settings-rest.php:314
 msgid "Unknown service."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:260
+#: includes/class-admin-settings-rest.php:327
 msgid "No URL configured for this service."
 msgstr ""
 
 #. translators: 1: HTTP status code, 2: response time in milliseconds
-#: includes/class-admin-settings-rest.php:293
+#: includes/class-admin-settings-rest.php:360
 #, php-format
 msgid "Reachable (HTTP %1$d, %2$dms)"
 msgstr ""
 
 #. translators: %d: HTTP status code
-#: includes/class-admin-settings-rest.php:299
+#: includes/class-admin-settings-rest.php:366
 #, php-format
 msgid "Unexpected response (HTTP %d)"
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:353
+#: includes/class-admin-settings-rest.php:385
+msgid "MCP is not available on this site."
+msgstr ""
+
+#: includes/class-admin-settings-rest.php:393
+msgid "This agent has no MCP tools available."
+msgstr ""
+
+#. translators: %d: number of MCP tools
+#: includes/class-admin-settings-rest.php:407
+#, php-format
+msgid "%d tool available."
+msgid_plural "%d tools available."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-admin-settings-rest.php:427
+#: includes/class-admin-settings-rest.php:475
+#: includes/class-relay-connect.php:762
+msgid "Application Passwords are not available on this site."
+msgstr ""
+
+#: includes/class-admin-settings-rest.php:544
 msgid "Unknown settings tab."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:410
+#: includes/class-admin-settings-rest.php:601
 #: src/interface-settings/index.js:30
 msgid "Theme default"
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:414
+#: includes/class-admin-settings-rest.php:605
 #: src/interface-settings/index.js:31
 msgid "System UI"
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:451
+#: includes/class-admin-settings-rest.php:642
 msgid "Clean white with WordPress blue accents — the default."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:460
+#: includes/class-admin-settings-rest.php:651
 msgid "Deep purple dark theme."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:469
+#: includes/class-admin-settings-rest.php:660
 msgid "Pure dark with emerald green accents."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:478
+#: includes/class-admin-settings-rest.php:669
 msgid "Deep blue with teal highlights."
 msgstr ""
 
-#: includes/class-admin-settings-rest.php:693
+#: includes/class-admin-settings-rest.php:912
 msgid "REST and webhook endpoints for integrations. Full editor remains available via Advanced tools."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:125
-msgid "Home screen widget"
+#: includes/class-admin-settings-rest.php:1011
+#: src/settings-app/index.js:2179
+#: src/settings-app/index.js:2425
+msgid "Never"
 msgstr ""
 
 #: includes/class-admin-surfaces.php:130
-msgid "Installed plugins list"
-msgstr ""
-
-#: includes/class-admin-surfaces.php:134
-msgid "Media Library"
+msgid "Home screen widget"
 msgstr ""
 
 #: includes/class-admin-surfaces.php:135
-msgid "Media grid and list"
+msgid "Installed plugins list"
+msgstr ""
+
+#: includes/class-admin-surfaces.php:139
+msgid "Media Library"
 msgstr ""
 
 #: includes/class-admin-surfaces.php:140
-msgid "Users list and row actions"
+msgid "Media grid and list"
 msgstr ""
 
 #: includes/class-admin-surfaces.php:145
+msgid "Users list and row actions"
+msgstr ""
+
+#: includes/class-admin-surfaces.php:150
 msgid "Comments list row actions"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:347
-#: includes/class-admin-surfaces.php:520
+#: includes/class-admin-surfaces.php:352
+#: includes/class-admin-surfaces.php:636
 msgid "Ask AI"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:348
-msgid "Open the AI assistant. Data is sent only when you press Send."
+#: includes/class-admin-surfaces.php:353
+msgid "Open the AI agent. Data is sent only when you press Send."
 msgstr ""
 
 #. translators: 1: total plugin count, 2: number of plugins with updates.
-#: includes/class-admin-surfaces.php:397
+#: includes/class-admin-surfaces.php:402
 #, php-format
 msgid "I'm on the Plugins screen (%1$d installed, %2$d with updates available). Give me a quick health check: flag anything abandoned, insecure, or redundant, and tell me what's safe to update first."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:406
+#: includes/class-admin-surfaces.php:411
 msgid "Ask AI about plugins"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:407
-msgid "Review installed plugins with the AI assistant. Data is sent only when you press Send."
+#: includes/class-admin-surfaces.php:412
+msgid "Review installed plugins with the AI agent. Data is sent only when you press Send."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:423
+#: includes/class-admin-surfaces.php:428
 msgid "I want to build a custom plugin. Help me scaffold it: ask me what it should do, then generate the plugin structure and code for me to review."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:424
+#: includes/class-admin-surfaces.php:429
 msgid "Create a plugin with AI"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:425
-msgid "Scaffold a custom plugin with the AI assistant. Data is sent only when you press Send."
+#: includes/class-admin-surfaces.php:430
+msgid "Scaffold a custom plugin with the AI agent. Data is sent only when you press Send."
+msgstr ""
+
+#: includes/class-admin-surfaces.php:491
+msgid "Give me an overview of my media library: any images missing alt text, unused files I could clean up, and anything else worth a look."
+msgstr ""
+
+#: includes/class-admin-surfaces.php:497
+msgid "Ask AI about media"
 msgstr ""
 
 #. translators: 1: attachment ID, 2: filename.
-#: includes/class-admin-surfaces.php:464
+#: includes/class-admin-surfaces.php:580
 #, php-format
 msgid "Write concise, descriptive alt text for image #%1$d (%2$s), then update it for me after I approve."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:473
+#: includes/class-admin-surfaces.php:589
 msgid "Generate alt text with AI"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:474
-msgid "Draft alt text with the AI assistant. Data is sent only when you press Send."
+#: includes/class-admin-surfaces.php:590
+msgid "Draft alt text with the AI agent. Data is sent only when you press Send."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:479
-msgid "AI assistant"
+#: includes/class-admin-surfaces.php:595
+msgid "AI agent"
 msgstr ""
 
 #. translators: %d: attachment ID.
-#: includes/class-admin-surfaces.php:507
+#: includes/class-admin-surfaces.php:623
 #, php-format
 msgid "Help me with image #%d: review its alt text, suggest a better version, and recommend how I could improve this image."
 msgstr ""
 
 #. translators: %d: attachment ID.
-#: includes/class-admin-surfaces.php:512
+#: includes/class-admin-surfaces.php:628
 #, php-format
 msgid "Help me manage media item #%d."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:550
+#: includes/class-admin-surfaces.php:666
 msgid "Give me an overview of my user base: recent registrations, inactive accounts, and anyone with elevated privileges I should review."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:556
+#: includes/class-admin-surfaces.php:672
 msgid "Ask AI about users"
 msgstr ""
 
 #. translators: 1: user ID, 2: display name.
-#: includes/class-admin-surfaces.php:589
+#: includes/class-admin-surfaces.php:705
 #, php-format
 msgid "Draft a friendly, professional email to user #%1$d (%2$s). Ask me the purpose first, then write it for my review."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:598
+#: includes/class-admin-surfaces.php:714
 msgid "Draft email with AI"
 msgstr ""
 
 #. translators: %d: comment ID.
-#: includes/class-admin-surfaces.php:631
+#: includes/class-admin-surfaces.php:747
 #, php-format
 msgid "Triage comment #%d: summarize it, suggest a priority and category, and draft a helpful reply for my review."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:639
+#: includes/class-admin-surfaces.php:755
 msgid "Triage with AI"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:668
+#: includes/class-admin-surfaces.php:784
 msgid "Ask Agent Builder"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:686
+#: includes/class-admin-surfaces.php:802
 msgid "Give me a quick health check of my site and the top 3 things I should do today."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:687
+#: includes/class-admin-surfaces.php:803
 msgid "What should I focus on today?"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:690
+#: includes/class-admin-surfaces.php:806
 msgid "Suggest a few blog post ideas based on my existing content and what might be missing."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:691
+#: includes/class-admin-surfaces.php:807
 msgid "Suggest content ideas"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:694
+#: includes/class-admin-surfaces.php:810
 msgid "Review my site for SEO, performance, and security issues and prioritize the fixes."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:695
+#: includes/class-admin-surfaces.php:811
 msgid "Audit my site"
 msgstr ""
 
-#: includes/class-admin-surfaces.php:699
+#: includes/class-admin-surfaces.php:815
 msgid "Pick a starting point — you can edit the prompt before sending."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:717
+#: includes/class-admin-surfaces.php:833
 msgid "Data is sent to your configured AI provider only when you press Send."
 msgstr ""
 
-#: includes/class-admin-surfaces.php:736
+#: includes/class-admin-surfaces.php:852
 msgid "Dismiss this launcher"
 msgstr ""
 
 #: includes/class-admin-vnav.php:73
-#: src/admin-list/index.js:47
+#: src/admin-list/index.js:48
 msgid "Search…"
 msgstr ""
 
 #: includes/class-admin-vnav.php:74
-#: src/admin-pages/index.js:267
+#: src/admin-pages/index.js:214
 msgid "Sections"
 msgstr ""
 
@@ -5486,40 +5744,85 @@ msgid ""
 "How can I help you today?"
 msgstr ""
 
+#: includes/class-agent-controller.php:140
+msgid "⚠️ This response was cut short — the model hit its token limit before finishing. Try asking me to continue, or break the request into smaller steps."
+msgstr ""
+
 #. translators: %s: agent identifier
-#: includes/class-agent-controller.php:474
+#: includes/class-agent-controller.php:486
 #, php-format
 msgid "Agent '%s' is not available or you don't have access to it."
 msgstr ""
 
-#: includes/class-agent-controller.php:485
+#: includes/class-agent-controller.php:497
 msgid "No agent selected. Please select an agent to chat with."
 msgstr ""
 
-#: includes/class-agent-controller.php:501
+#: includes/class-agent-controller.php:513
 msgid "This agent is currently disabled."
 msgstr ""
 
-#: includes/class-agent-controller.php:509
+#: includes/class-agent-controller.php:521
 msgid "The AI service is not configured. Please ask an administrator to set up the API key in Settings > Agentic."
 msgstr ""
 
-#: includes/class-agent-controller.php:550
+#: includes/class-agent-controller.php:562
 msgid "This agent has been temporarily disabled due to a security check. Please deactivate and reactivate the Agent Builder plugin to restore it."
 msgstr ""
 
 #. translators: %s: error message from AI provider
-#: includes/class-agent-controller.php:762
+#: includes/class-agent-controller.php:774
 #, php-format
 msgid "Error communicating with AI: %s"
 msgstr ""
 
-#: includes/class-agent-controller.php:779
+#: includes/class-agent-controller.php:791
 msgid "Invalid response from AI."
 msgstr ""
 
-#: includes/class-agent-controller.php:924
+#: includes/class-agent-controller.php:954
 msgid "Please review and approve the action below to proceed."
+msgstr ""
+
+#: includes/class-agent-controller.php:1266
+msgid "A tool action is waiting for approval before this task can continue."
+msgstr ""
+
+#: includes/class-agent-controller.php:1272
+msgid "[Note: this result was cut short — the model hit its token limit before finishing.]"
+msgstr ""
+
+#: includes/class-agent-lifecycle.php:216
+msgid "Agent is required."
+msgstr ""
+
+#: includes/class-agent-lifecycle.php:223
+msgid "Prompt is required."
+msgstr ""
+
+#: includes/class-agent-lifecycle.php:232
+#: includes/class-agent-lifecycle.php:594
+msgid "Agent not found or not active."
+msgstr ""
+
+#. translators: 1: schedule label, 2: agent name
+#. translators: 1: form title, 2: date/time
+#: includes/class-agent-lifecycle.php:243
+#: includes/class-native-forms.php:525
+#, php-format
+msgid "%1$s — %2$s"
+msgstr ""
+
+#: includes/class-agent-lifecycle.php:344
+msgid "Missing task ID."
+msgstr ""
+
+#: includes/class-agent-lifecycle.php:585
+msgid "Agent and hook are required."
+msgstr ""
+
+#: includes/class-agent-lifecycle.php:680
+msgid "Missing trigger ID."
 msgstr ""
 
 #: includes/class-agent-manifest-validator.php:104
@@ -5543,7 +5846,7 @@ msgid "Agent is already active."
 msgstr ""
 
 #: includes/class-agent-registry.php:517
-msgid "This assistant requires a premium license. Upgrade at agentic-plugin.com to activate it."
+msgid "This agent requires a premium license. Upgrade at agentic-plugin.com to activate it."
 msgstr ""
 
 #. translators: %s: validation errors
@@ -5553,6 +5856,7 @@ msgid "Agent abilities.json validation failed: %s"
 msgstr ""
 
 #: includes/class-agent-registry.php:646
+#: includes/class-relay-connect.php:330
 msgid "Agent is not active."
 msgstr ""
 
@@ -5597,7 +5901,7 @@ msgid "This agent ships with a plugin and is updated when that plugin updates."
 msgstr ""
 
 #: includes/class-agent-updates.php:235
-msgid "Updating installed assistant packages requires Agent Builder Pro."
+msgid "Updating installed agent packages requires Agent Builder Pro."
 msgstr ""
 
 #: includes/class-agent-updates.php:242
@@ -5650,7 +5954,7 @@ msgid "Failed to save the purchased agent."
 msgstr ""
 
 #: includes/class-agent-updates.php:642
-msgid "Installing purchased assistants requires Agent Builder Pro."
+msgid "Installing purchased agents requires Agent Builder Pro."
 msgstr ""
 
 #: includes/class-agent-updates.php:647
@@ -5688,40 +5992,40 @@ msgid "The agent creation tool is unavailable."
 msgstr ""
 
 #. translators: %s: site name
-#: includes/class-approval-queue.php:211
+#: includes/class-approval-queue.php:234
 #, php-format
-msgid "[%s] Assistant action waiting for your approval"
+msgid "[%s] Agent action waiting for your approval"
 msgstr ""
 
-#: includes/class-approval-queue.php:215
-msgid "An AI assistant wants to make a change that needs your OK before it runs."
+#: includes/class-approval-queue.php:238
+msgid "An AI agent wants to make a change that needs your OK before it runs."
 msgstr ""
 
-#: includes/class-approval-queue.php:219
-#: src/admin-pages/index.js:584
-#: src/admin-pages/index.js:1053
+#: includes/class-approval-queue.php:242
+#: src/admin-pages/index.js:531
+#: src/admin-pages/index.js:990
 msgid "Risk"
 msgstr ""
 
-#: includes/class-approval-queue.php:221
+#: includes/class-approval-queue.php:244
 msgid "Why"
 msgstr ""
 
 #. translators: %d: number of additional pending items since last email
-#: includes/class-approval-queue.php:227
+#: includes/class-approval-queue.php:250
 #, php-format
 msgid "Plus about %d more request(s) while email was paused to avoid spam."
 msgstr ""
 
-#: includes/class-approval-queue.php:233
+#: includes/class-approval-queue.php:256
 msgid "Review approvals in WordPress admin"
 msgstr ""
 
-#: includes/class-approval-queue.php:234
+#: includes/class-approval-queue.php:257
 msgid "You can turn these emails off under Approvals → Preferences."
 msgstr ""
 
-#: includes/class-approval-queue.php:242
+#: includes/class-approval-queue.php:265
 msgid "Approval needed"
 msgstr ""
 
@@ -5734,7 +6038,7 @@ msgid "Confirm"
 msgstr ""
 
 #: includes/class-chat-assets.php:58
-#: src/admin-pages/index.js:1585
+#: src/admin-pages/index.js:1662
 msgid "Dismiss"
 msgstr ""
 
@@ -5770,19 +6074,19 @@ msgstr ""
 msgid "Browse agents"
 msgstr ""
 
-#: includes/class-dashboard-rest.php:461
+#: includes/class-dashboard-rest.php:465
 msgid "Unknown dashboard action."
 msgstr ""
 
-#: includes/class-dashboard-rest.php:494
+#: includes/class-dashboard-rest.php:498
 msgid "Agency"
 msgstr ""
 
-#: includes/class-dashboard-rest.php:494
+#: includes/class-dashboard-rest.php:498
 msgid "Personal"
 msgstr ""
 
-#: includes/class-dashboard-rest.php:498
+#: includes/class-dashboard-rest.php:502
 msgid "Expiring"
 msgstr ""
 
@@ -5819,7 +6123,7 @@ msgid "AI Chat & Agent Data"
 msgstr ""
 
 #: includes/class-gdpr.php:72
-msgid "This site uses the Agent Builder plugin to provide AI-powered chat assistants. When you interact with the chat interface, the following data is collected and processed:"
+msgid "This site uses the Agent Builder plugin to provide AI-powered chat agents. When you interact with the chat interface, the following data is collected and processed:"
 msgstr ""
 
 #: includes/class-gdpr.php:74
@@ -5867,7 +6171,7 @@ msgid "<strong>agentic_consent_given</strong> — Records that you accepted the 
 msgstr ""
 
 #: includes/class-gdpr.php:87
-msgid "<strong>agentic_last_agent</strong> — Remembers your last-used AI assistant for convenience (1 year)."
+msgid "<strong>agentic_last_agent</strong> — Remembers your last-used AI agent for convenience (1 year)."
 msgstr ""
 
 #: includes/class-gdpr.php:89
@@ -5968,7 +6272,7 @@ msgstr ""
 #: includes/class-gutenberg-blocks.php:91
 #: includes/class-gutenberg-blocks.php:245
 #, php-format
-msgid "Embed the %s AI assistant as an interactive chat."
+msgid "Embed the %s AI agent as an interactive chat."
 msgstr ""
 
 #: includes/class-knowledge-wizard-rest.php:115
@@ -6023,15 +6327,15 @@ msgstr ""
 msgid "Added from pasted text."
 msgstr ""
 
-#: includes/class-llm-client.php:313
+#: includes/class-llm-client.php:324
 msgid "The AI service requires payment or additional credits to continue."
 msgstr ""
 
-#: includes/class-llm-client.php:314
+#: includes/class-llm-client.php:325
 msgid "Rate limit reached. Please wait a moment and try again."
 msgstr ""
 
-#: includes/class-llm-client.php:326
+#: includes/class-llm-client.php:337
 msgid "The AI model is currently busy. Please try again shortly."
 msgstr ""
 
@@ -6206,7 +6510,7 @@ msgid "This is demo example knowledge and is not available to agents. Edit it in
 msgstr ""
 
 #: includes/class-okf-store.php:341
-#: includes/class-okf-store.php:784
+#: includes/class-okf-store.php:796
 msgid "Invalid concept id."
 msgstr ""
 
@@ -6227,7 +6531,7 @@ msgid "Could not delete concept file."
 msgstr ""
 
 #: includes/class-okf-store.php:504
-msgid "Standing site knowledge from the Knowledge Wiki. Prefer this over guessing about the business."
+msgid "Standing site knowledge from the Knowledge Wiki. Prefer this over guessing about the business. This content is already fully loaded — do not call read_okf_concept, list_okf_concepts, or search_okf for anything covered below; that would be redundant."
 msgstr ""
 
 #: includes/class-okf-store.php:546
@@ -6236,37 +6540,32 @@ msgid "Site overview"
 msgstr ""
 
 #: includes/class-okf-store.php:547
-msgid "Standing guidance for every assistant. Always included in prompts."
+msgid "Standing guidance for every agent. Always included in prompts."
 msgstr ""
 
-#: includes/class-okf-store.php:600
-#: includes/class-okf-store.php:726
-msgid "No description"
-msgstr ""
-
-#: includes/class-okf-store.php:611
+#: includes/class-okf-store.php:623
 msgid "Curated local knowledge. The entries below are titles only, not the answer — before answering any question with one of them, call read_okf_concept with its [id] to load the full text. Never answer from a title alone; if you have not called read_okf_concept for it in this turn, you do not yet know its content."
 msgstr ""
 
-#: includes/class-okf-store.php:641
+#: includes/class-okf-store.php:653
 msgid "Imported from plain knowledge text."
 msgstr ""
 
-#: includes/class-okf-store.php:713
+#: includes/class-okf-store.php:725
 msgid "Knowledge index"
 msgstr ""
 
 #. translators: %d: concept count
-#: includes/class-okf-store.php:717
+#: includes/class-okf-store.php:729
 #, php-format
 msgid "%d concepts in this wiki."
 msgstr ""
 
-#: includes/class-okf-store.php:788
+#: includes/class-okf-store.php:800
 msgid "Knowledge wiki not found."
 msgstr ""
 
-#: includes/class-okf-store.php:794
+#: includes/class-okf-store.php:806
 msgid "Invalid concept path."
 msgstr ""
 
@@ -6325,169 +6624,184 @@ msgstr ""
 msgid "React admin assets for “%s” are missing. Run npm install && npm run build in the plugin directory."
 msgstr ""
 
-#: includes/class-relay-connect.php:116
+#: includes/class-relay-connect.php:107
 msgid "Authentication required."
 msgstr ""
 
-#: includes/class-relay-connect.php:126
-msgid "MCP requires an active connector or Pro license."
+#: includes/class-relay-connect.php:324
+msgid "Unknown agent."
 msgstr ""
 
-#: includes/class-relay-connect.php:392
+#: includes/class-relay-connect.php:336
+msgid "Abilities manifest system unavailable."
+msgstr ""
+
+#: includes/class-relay-connect.php:342
+msgid "No abilities.json manifest for this agent."
+msgstr ""
+
+#: includes/class-relay-connect.php:353
+msgid "Manifest signature mismatch — this agent's tools are blocked until it is re-signed."
+msgstr ""
+
+#: includes/class-relay-connect.php:699
 msgid "Invalid connector callback URL."
 msgstr ""
 
-#: includes/class-relay-connect.php:397
+#: includes/class-relay-connect.php:704
 msgid "This connection link has expired or is invalid. Please start again from Claude.ai."
 msgstr ""
 
-#: includes/class-relay-connect.php:417
+#: includes/class-relay-connect.php:724
 msgid "Sorry, you need administrator permissions to connect this site. Please ask your site administrator to approve the connection."
 msgstr ""
 
-#: includes/class-relay-connect.php:455
-msgid "Application Passwords are not available on this site."
-msgstr ""
-
-#: includes/class-relay-connect.php:504
+#: includes/class-relay-connect.php:811
 msgid "Could not reach the relay. Please try again."
 msgstr ""
 
-#: includes/class-relay-connect.php:604
+#: includes/class-relay-connect.php:911
 msgid "Allow Agent Builder Connector"
 msgstr ""
 
 #. translators: %s: AI provider name, e.g. "Claude (Anthropic)".
-#: includes/class-relay-connect.php:638
+#: includes/class-relay-connect.php:945
 #, php-format
 msgid "Allow %s to access this site?"
 msgstr ""
 
 #. translators: 1: AI provider name, 2: site URL.
-#: includes/class-relay-connect.php:645
+#: includes/class-relay-connect.php:952
 #, php-format
 msgid "The Agent Builder Connector will allow %1$s to read and use your AI agents on %2$s."
 msgstr ""
 
-#: includes/class-relay-connect.php:652
+#: includes/class-relay-connect.php:959
 msgid "Signed in as"
 msgstr ""
 
-#: includes/class-relay-connect.php:661
+#: includes/class-relay-connect.php:968
 msgid "What will be shared"
 msgstr ""
 
-#: includes/class-relay-connect.php:663
+#: includes/class-relay-connect.php:970
 msgid "An Application Password will be created so the relay can call your Agent Builder tools on behalf of Claude. You can revoke it at any time under Users → Profile → Application Passwords."
 msgstr ""
 
-#: includes/class-relay-connect.php:666
+#: includes/class-relay-connect.php:973
 msgid "Only your Agent Builder tools are exposed — no other site data."
 msgstr ""
 
-#: includes/class-relay-connect.php:674
+#: includes/class-relay-connect.php:981
+#: src/shared/chat-embed.js:194
 msgid "Deny"
 msgstr ""
 
-#: includes/class-relay-connect.php:675
+#: includes/class-relay-connect.php:982
 msgid "Allow Access"
 msgstr ""
 
 #. translators: %s: AI provider name, e.g. "Claude".
-#: includes/class-relay-connect.php:702
+#: includes/class-relay-connect.php:1009
 #, php-format
 msgid "Connected to %s!"
 msgstr ""
 
-#: includes/class-relay-connect.php:705
+#: includes/class-relay-connect.php:1012
 msgid "Your Agent Builder tools are now available. You can return to Claude.ai and start using them."
 msgstr ""
 
-#: includes/class-relay-connect.php:721
+#: includes/class-relay-connect.php:1028
 msgid "Access denied"
 msgstr ""
 
-#: includes/class-relay-connect.php:722
+#: includes/class-relay-connect.php:1029
 msgid "You chose not to connect this site. You can close this window."
 msgstr ""
 
-#: includes/class-rest-api.php:591
+#: includes/class-rest-api.php:592
+#: src/shared/chat-embed.js:95
+#: src/shared/chat-embed.js:273
 msgid "Something went wrong."
 msgstr ""
 
-#: includes/class-rest-api.php:600
-#: includes/class-rest-api.php:628
+#: includes/class-rest-api.php:601
+#: includes/class-rest-api.php:629
 msgid "Something went wrong. The issue has been reported to your site administrator."
 msgstr ""
 
 #. translators: %s: action name
-#: includes/class-rest-api.php:1080
+#: includes/class-rest-api.php:1059
 #, php-format
 msgid "Rejected — “%s” will not run."
 msgstr ""
 
 #. translators: 1: action name, 2: agent name
-#: includes/class-rest-api.php:1085
+#: includes/class-rest-api.php:1064
 #, php-format
 msgid "Approved “%1$s” for %2$s."
 msgstr ""
 
-#: includes/class-rest-api.php:1087
-msgid "assistant"
+#: includes/class-rest-api.php:1066
+msgid "agent"
 msgstr ""
 
-#: includes/class-rest-api.php:1221
+#: includes/class-rest-api.php:1200
 msgid "Could not write file — path is not allowed."
 msgstr ""
 
-#: includes/class-rest-api.php:1231
+#: includes/class-rest-api.php:1210
 msgid "Could not write file — invalid path."
 msgstr ""
 
-#: includes/class-rest-api.php:1243
+#: includes/class-rest-api.php:1222
 msgid "File write failed."
 msgstr ""
 
-#: includes/class-rest-api.php:1250
+#: includes/class-rest-api.php:1229
 msgid "File updated successfully."
 msgstr ""
 
-#: includes/class-rest-api.php:1258
+#: includes/class-rest-api.php:1237
 msgid "File was not writable."
 msgstr ""
 
 #. translators: %s: tool name
-#: includes/class-rest-api.php:1282
+#: includes/class-rest-api.php:1261
 #, php-format
 msgid "Tool “%s” is not available to run."
 msgstr ""
 
 #. translators: %s: tool name
-#: includes/class-rest-api.php:1302
+#: includes/class-rest-api.php:1281
 #, php-format
 msgid "“%s” failed while running."
 msgstr ""
 
 #. translators: %d: post ID
-#: includes/class-rest-api.php:1325
+#: includes/class-rest-api.php:1304
 #, php-format
 msgid "Post ID %d"
 msgstr ""
 
 #. translators: %s: tool name
-#: includes/class-rest-api.php:1348
+#: includes/class-rest-api.php:1327
 #, php-format
 msgid "“%s” completed successfully."
 msgstr ""
 
 #. translators: %s: tool name
-#: includes/class-rest-api.php:1353
+#: includes/class-rest-api.php:1332
 #, php-format
 msgid "“%s” ran but reported a problem."
 msgstr ""
 
-#: includes/class-rest-api.php:2290
+#: includes/class-rest-api.php:2269
 msgid "Text-to-speech rate limit reached. Please try again later."
+msgstr ""
+
+#: includes/class-rest-api.php:2479
+msgid "Not found."
 msgstr ""
 
 #: includes/class-shortcodes.php:217
@@ -6500,24 +6814,31 @@ msgid "Minimize"
 msgstr ""
 
 #: includes/class-shortcodes.php:237
-#: templates/chat-interface.php:176
+#: templates/chat-interface.php:182
+#: src/shared/chat-embed.js:346
 msgid "Try asking"
 msgstr ""
 
+#: includes/class-shortcodes.php:252
+#: includes/functions.php:30
+#: templates/modal-widget.php:50
+msgid "Agent is thinking..."
+msgstr ""
+
 #: includes/class-shortcodes.php:257
-#: templates/chat-interface.php:220
+#: templates/chat-interface.php:226
 #: templates/modal-widget.php:55
 msgid "Remove image"
 msgstr ""
 
 #: includes/class-shortcodes.php:267
-#: templates/chat-interface.php:224
+#: templates/chat-interface.php:230
 #: templates/modal-widget.php:70
 msgid "Attach image"
 msgstr ""
 
 #: includes/class-shortcodes.php:461
-msgid "Please log in to chat with our AI assistant."
+msgid "Please log in to chat with our AI agent."
 msgstr ""
 
 #: includes/class-shortcodes.php:463
@@ -6558,6 +6879,82 @@ msgstr ""
 
 #: includes/class-site-local-tools.php:1097
 msgid "Tool not found."
+msgstr ""
+
+#: includes/class-skills-registry.php:159
+msgid "The entries below are titles only. When a request matches one, call load_skill with its [slug] to load the full instructions before acting — do not guess at a workflow from the description alone. Skip skills that clearly do not apply."
+msgstr ""
+
+#: includes/class-skills-registry.php:592
+msgid "Name is required."
+msgstr ""
+
+#: includes/class-skills-registry.php:594
+msgid "Name must be 64 characters or fewer."
+msgstr ""
+
+#: includes/class-skills-registry.php:596
+msgid "Name may only contain lowercase letters, numbers, and single hyphens (no leading/trailing/double hyphens)."
+msgstr ""
+
+#: includes/class-skills-registry.php:600
+msgid "Description is required — it is what the agent matches against to decide when to use this skill."
+msgstr ""
+
+#: includes/class-skills-registry.php:602
+msgid "Description must be 1024 characters or fewer."
+msgstr ""
+
+#: includes/class-skills-registry.php:751
+msgid "Blank skill"
+msgstr ""
+
+#: includes/class-skills-registry.php:752
+msgid "General"
+msgstr ""
+
+#: includes/class-skills-registry.php:753
+msgid "Start from an empty SKILL.md skeleton."
+msgstr ""
+
+#: includes/class-skills-registry.php:757
+msgid "WordPress content workflow"
+msgstr ""
+
+#: includes/class-skills-registry.php:759
+msgid "For a skill that creates, edits, or reviews posts and pages."
+msgstr ""
+
+#: includes/class-skills-registry.php:763
+msgid "WooCommerce workflow"
+msgstr ""
+
+#: includes/class-skills-registry.php:765
+msgid "For a skill touching products, orders, or store data."
+msgstr ""
+
+#: includes/class-skills-registry.php:769
+msgid "Developer / technical workflow"
+msgstr ""
+
+#: includes/class-skills-registry.php:770
+msgid "Developer"
+msgstr ""
+
+#: includes/class-skills-registry.php:771
+msgid "For a skill wrapping technical or maintenance tools."
+msgstr ""
+
+#: includes/class-skills-registry.php:775
+msgid "Communication / support workflow"
+msgstr ""
+
+#: includes/class-skills-registry.php:777
+msgid "For a skill handling messaging, notifications, or support handoffs."
+msgstr ""
+
+#: includes/class-tool-helpers.php:41
+msgid "Administrator privileges are required for this action."
 msgstr ""
 
 #. translators: %d: daily query limit
@@ -7044,11 +7441,6 @@ msgstr ""
 msgid "Filter by namespace (e.g., wp/v2, wc/v3)."
 msgstr ""
 
-#: includes/functions.php:30
-#: templates/modal-widget.php:50
-msgid "Agent is thinking..."
-msgstr ""
-
 #: includes/functions.php:31
 msgid "Warming up the AI model, please wait\\u2026"
 msgstr ""
@@ -7058,10 +7450,13 @@ msgid "Preparing audio\\u2026"
 msgstr ""
 
 #: includes/functions.php:33
+#: src/settings-app/index.js:2269
 msgid "Copied!"
 msgstr ""
 
 #: includes/functions.php:34
+#: src/settings-app/index.js:2273
+#: src/settings-app/index.js:2403
 msgid "Copy"
 msgstr ""
 
@@ -7078,7 +7473,7 @@ msgid "Agent wants to make a change."
 msgstr ""
 
 #: includes/functions.php:38
-msgid "An assistant wants to perform a high-risk action."
+msgid "An agent wants to perform a high-risk action."
 msgstr ""
 
 #: includes/functions.php:39
@@ -7243,13 +7638,22 @@ msgstr ""
 msgid "not signed in"
 msgstr ""
 
-#: templates/chat-interface.php:209
+#: templates/chat-interface.php:215
 #: templates/modal-widget.php:60
 msgid "I Understand"
 msgstr ""
 
-#: templates/chat-interface.php:236
+#: templates/chat-interface.php:242
 msgid "Read aloud"
+msgstr ""
+
+#: templates/chat-interface.php:286
+#: assets/js/chat-overlay.js:253
+msgid "Powered by Agent Builder"
+msgstr ""
+
+#: templates/chat-interface.php:302
+msgid "<strong>Continue on WhatsApp</strong> — control your whole site from your phone"
 msgstr ""
 
 #: templates/modal-widget.php:34
@@ -7257,7 +7661,7 @@ msgid "Close"
 msgstr ""
 
 #: templates/modal-widget.php:97
-msgid "Choose an assistant"
+msgid "Choose an agent"
 msgstr ""
 
 #: templates/modal-widget.php:114
@@ -7276,50 +7680,50 @@ msgstr ""
 msgid "Floating mode — appears as a popup button on the frontend"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:293
+#: assets/js/gutenberg-blocks.js:279
 #: src/interface-settings/index.js:224
 msgid "Appearance"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:301
+#: assets/js/gutenberg-blocks.js:287
 msgid "Height"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:304
+#: assets/js/gutenberg-blocks.js:290
 msgid "CSS height value (e.g. 500px, 60vh)."
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:307
+#: assets/js/gutenberg-blocks.js:293
 msgid "Theme"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:313
+#: assets/js/gutenberg-blocks.js:299
 msgid "Show Header"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:318
+#: assets/js/gutenberg-blocks.js:304
 msgid "Floating Button"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:321
+#: assets/js/gutenberg-blocks.js:307
 msgid "Display as a floating chat button instead of inline."
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:332
+#: assets/js/gutenberg-blocks.js:318
 msgid "LLM Settings"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:334
-#: src/dashboard-app/index.js:359
-#: src/settings-app/index.js:1529
+#: assets/js/gutenberg-blocks.js:320
+#: src/dashboard-app/index.js:494
+#: src/settings-app/index.js:1600
 msgid "Provider"
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:340
+#: assets/js/gutenberg-blocks.js:326
 msgid "Override the LLM provider for this block."
 msgstr ""
 
-#: assets/js/gutenberg-blocks.js:347
+#: assets/js/gutenberg-blocks.js:333
 msgid "Select a provider first to see available models."
 msgstr ""
 
@@ -7327,443 +7731,492 @@ msgstr ""
 msgid "Items"
 msgstr ""
 
-#: src/admin-list/index.js:58
+#: src/admin-list/index.js:59
 msgid "No items found."
 msgstr ""
 
-#: src/admin-pages/index.js:21
+#: src/admin-pages/index.js:22
 msgid "Safe to run automatically — read-only, no approval needed."
 msgstr ""
 
-#: src/admin-pages/index.js:22
+#: src/admin-pages/index.js:23
 msgid "Runs automatically by default; may read data that includes personal information."
 msgstr ""
 
-#: src/admin-pages/index.js:23
-msgid "Changes something — assistants pause for your in-chat confirmation first."
-msgstr ""
-
 #: src/admin-pages/index.js:24
-msgid "A significant or bulk change — waits in the Approvals queue for you to allow it."
+msgid "Changes something — agents pause for your in-chat confirmation first."
 msgstr ""
 
 #: src/admin-pages/index.js:25
-msgid "Too risky to allow at all — hidden from assistants entirely, cannot be enabled."
+msgid "A significant or bulk change — waits in the Approvals queue for you to allow it."
 msgstr ""
 
-#: src/admin-pages/index.js:28
-msgid "An assistant tried to run this specific action and paused here first. Nothing happens until you decide — approve to let it run once, or reject to cancel it."
+#: src/admin-pages/index.js:26
+msgid "Too risky to allow at all — hidden from agents entirely, cannot be enabled."
 msgstr ""
 
-#: src/admin-pages/index.js:86
-msgid "Only changes this screen. Other screens and your site-wide default (Settings → Interface) are unaffected."
+#: src/admin-pages/index.js:29
+msgid "An agent tried to run this specific action and paused here first. Nothing happens until you decide — approve to let it run once, or reject to cancel it."
 msgstr ""
 
-#: src/admin-pages/index.js:231
+#: src/admin-pages/index.js:178
 msgid "Could not load page."
 msgstr ""
 
-#: src/admin-pages/index.js:343
+#: src/admin-pages/index.js:290
 msgid "Site-local tool saved."
 msgstr ""
 
-#: src/admin-pages/index.js:349
+#: src/admin-pages/index.js:296
 msgid "Could not save tool (Pro required)."
 msgstr ""
 
-#: src/admin-pages/index.js:358
+#: src/admin-pages/index.js:305
 msgid "Delete this site-local tool?"
 msgstr ""
 
-#: src/admin-pages/index.js:370
-#: src/admin-pages/index.js:1174
+#: src/admin-pages/index.js:317
+#: src/admin-pages/index.js:1112
 msgid "Delete failed."
 msgstr ""
 
-#: src/admin-pages/index.js:380
+#: src/admin-pages/index.js:327
 msgid "Test arguments must be valid JSON."
 msgstr ""
 
-#: src/admin-pages/index.js:396
-#: src/settings-app/index.js:1911
+#: src/admin-pages/index.js:343
+#: src/dashboard-app/index.js:449
+#: src/settings-app/index.js:1982
+#: src/settings-app/index.js:2150
 msgid "Test failed."
 msgstr ""
 
-#: src/admin-pages/index.js:417
+#: src/admin-pages/index.js:364
 msgid "Site-local tool builder is a Pro feature. Free includes using shipped tools, risk/approvals, and developer Tool_Base packages."
 msgstr ""
 
-#: src/admin-pages/index.js:429
+#: src/admin-pages/index.js:376
 msgid "Docs: Free vs Pro"
 msgstr ""
 
-#: src/admin-pages/index.js:450
+#: src/admin-pages/index.js:397
 msgid "Add site-local tool"
 msgstr ""
 
-#: src/admin-pages/index.js:452
+#: src/admin-pages/index.js:399
 msgid "Declarative handlers only — no PHP. Empty agent list = available to all active agents."
 msgstr ""
 
-#: src/admin-pages/index.js:460
+#: src/admin-pages/index.js:407
 msgid "Name (snake_case)"
 msgstr ""
 
-#: src/admin-pages/index.js:477
+#: src/admin-pages/index.js:424
 msgid "Description (for the LLM)"
 msgstr ""
 
-#: src/admin-pages/index.js:487
-#: src/admin-pages/index.js:583
+#: src/admin-pages/index.js:434
+#: src/admin-pages/index.js:530
 msgid "Handler"
 msgstr ""
 
-#: src/admin-pages/index.js:500
+#: src/admin-pages/index.js:447
 msgid "Risk level"
 msgstr ""
 
-#: src/admin-pages/index.js:517
+#: src/admin-pages/index.js:464
 msgid "Allowed option keys (comma-separated)"
 msgstr ""
 
-#: src/admin-pages/index.js:534
+#: src/admin-pages/index.js:481
 msgid "Extra allowed hosts (comma-separated; site host always allowed)"
 msgstr ""
 
-#: src/admin-pages/index.js:549
+#: src/admin-pages/index.js:496
 msgid "Agents (optional)"
 msgstr ""
 
-#: src/admin-pages/index.js:571
+#: src/admin-pages/index.js:518
 msgid "Save site-local tool"
 msgstr ""
 
-#: src/admin-pages/index.js:577
+#: src/admin-pages/index.js:524
 msgid "Your site-local tools"
 msgstr ""
 
-#: src/admin-pages/index.js:631
+#: src/admin-pages/index.js:578
 msgid "Test arguments (JSON object)"
 msgstr ""
 
 #. translators: 1: enabled count, 2: disabled count
-#: src/admin-pages/index.js:680
+#: src/admin-pages/index.js:627
 #, js-format
 msgid "Profile applied: %1$d tools on, %2$d tools off."
 msgstr ""
 
-#: src/admin-pages/index.js:693
+#: src/admin-pages/index.js:640
 msgid "Could not apply profile."
 msgstr ""
 
-#: src/admin-pages/index.js:705
-msgid "These profiles control which tools every assistant may use. Approvals still apply for riskier actions."
+#: src/admin-pages/index.js:652
+msgid "These profiles control which tools every agent may use. Approvals still apply for riskier actions."
 msgstr ""
 
-#: src/admin-pages/index.js:709
-msgid "Switch to Advanced for the full tool-by-tool list:"
+#: src/admin-pages/index.js:656
+msgid "Switch to Advanced (top right) for the full tool-by-tool list."
 msgstr ""
 
-#: src/admin-pages/index.js:733
+#: src/admin-pages/index.js:675
 msgid "Tools were customized outside a profile. Choose a card below to reset to a simple safety level."
 msgstr ""
 
 #. translators: %s: risk level
-#: src/admin-pages/index.js:776
+#: src/admin-pages/index.js:718
 #, js-format
 msgid "Up to %s risk"
 msgstr ""
 
-#: src/admin-pages/index.js:783
-#: src/admin-pages/index.js:1658
+#: src/admin-pages/index.js:725
+#: src/admin-pages/index.js:1735
 msgid "Current"
 msgstr ""
 
 #. translators: 1: enabled tools, 2: disabled tools, 3: max risk
-#: src/admin-pages/index.js:793
+#: src/admin-pages/index.js:735
 #, js-format
 msgid "Right now: %1$d tools on, %2$d off · highest enabled risk: %3$s"
 msgstr ""
 
-#: src/admin-pages/index.js:850
+#: src/admin-pages/index.js:792
 msgid "All risks"
 msgstr ""
 
-#: src/admin-pages/index.js:853
+#: src/admin-pages/index.js:795
 msgid "Medium"
 msgstr ""
 
-#: src/admin-pages/index.js:854
+#: src/admin-pages/index.js:796
 msgid "High"
 msgstr ""
 
-#: src/admin-pages/index.js:855
+#: src/admin-pages/index.js:797
 msgid "Extreme"
 msgstr ""
 
-#: src/admin-pages/index.js:928
+#: src/admin-pages/index.js:870
 msgid "Toggle failed."
 msgstr ""
 
-#: src/admin-pages/index.js:953
+#: src/admin-pages/index.js:895
 msgid "You are in Advanced view (full tool list)."
 msgstr ""
 
-#: src/admin-pages/index.js:967
+#: src/admin-pages/index.js:904
 msgid "Search tools…"
 msgstr ""
 
-#: src/admin-pages/index.js:972
+#: src/admin-pages/index.js:909
 msgid "1 tool"
 msgstr ""
 
-#: src/admin-pages/index.js:973
+#: src/admin-pages/index.js:910
 msgid "tools"
 msgstr ""
 
-#: src/admin-pages/index.js:982
+#: src/admin-pages/index.js:919
 msgid "Custom tools (Pro)"
 msgstr ""
 
-#: src/admin-pages/index.js:987
+#: src/admin-pages/index.js:924
 msgid "Filter by risk"
 msgstr ""
 
-#: src/admin-pages/index.js:1026
+#: src/admin-pages/index.js:963
 msgid "No tools match this search or risk filter."
 msgstr ""
 
-#: src/admin-pages/index.js:1030
+#: src/admin-pages/index.js:967
 msgid "No tools in this category."
 msgstr ""
 
-#: src/admin-pages/index.js:1114
+#: src/admin-pages/index.js:1051
 msgid "none"
 msgstr ""
 
-#: src/admin-pages/index.js:1161
+#: src/admin-pages/index.js:1099
 msgid "Delete this skill? This cannot be undone."
 msgstr ""
 
-#: src/admin-pages/index.js:1214
+#: src/admin-pages/index.js:1152
 msgid "Skill"
 msgstr ""
 
-#: src/admin-pages/index.js:1294
+#: src/admin-pages/index.js:1280
 msgid "Recording your approval…"
 msgstr ""
 
-#: src/admin-pages/index.js:1299
+#: src/admin-pages/index.js:1285
 msgid "Running the approved action…"
 msgstr ""
 
-#: src/admin-pages/index.js:1304
+#: src/admin-pages/index.js:1290
 msgid "Confirming result…"
 msgstr ""
 
-#: src/admin-pages/index.js:1319
+#: src/admin-pages/index.js:1305
 msgid "Rejecting this request…"
 msgstr ""
 
-#: src/admin-pages/index.js:1355
-#: src/admin-pages/index.js:1372
+#: src/admin-pages/index.js:1341
+#: src/admin-pages/index.js:1358
 msgid "Rejected — the action will not run."
 msgstr ""
 
-#: src/admin-pages/index.js:1362
+#: src/admin-pages/index.js:1348
 msgid "Request rejected"
 msgstr ""
 
-#: src/admin-pages/index.js:1385
+#: src/admin-pages/index.js:1371
 msgid "Approved, but the action could not be started."
 msgstr ""
 
-#: src/admin-pages/index.js:1391
+#: src/admin-pages/index.js:1377
 msgid "Action completed successfully."
 msgstr ""
 
-#: src/admin-pages/index.js:1396
+#: src/admin-pages/index.js:1382
 msgid "Action ran but reported a problem."
 msgstr ""
 
-#: src/admin-pages/index.js:1415
+#: src/admin-pages/index.js:1401
 msgid "Approval recorded"
 msgstr ""
 
-#: src/admin-pages/index.js:1433
-msgid "Done — assistant task finished"
+#: src/admin-pages/index.js:1419
+msgid "Done — agent task finished"
 msgstr ""
 
-#: src/admin-pages/index.js:1437
+#: src/admin-pages/index.js:1423
 msgid "Finished with errors — check detail below"
 msgstr ""
 
-#: src/admin-pages/index.js:1449
+#: src/admin-pages/index.js:1435
 msgid "Approved and completed."
 msgstr ""
 
-#: src/admin-pages/index.js:1461
+#: src/admin-pages/index.js:1447
 msgid "Could not update that item."
 msgstr ""
 
-#: src/admin-pages/index.js:1486
+#. translators: %d: number of pending actions
+#: src/admin-pages/index.js:1479
+#, js-format
+msgid "Approve all %d actions in this group? They will run in order."
+msgstr ""
+
+#. translators: %d: number of pending actions
+#: src/admin-pages/index.js:1487
+#, js-format
+msgid "Reject all %d actions in this group?"
+msgstr ""
+
+#. translators: %d: number of approved actions
+#: src/admin-pages/index.js:1518
+#, js-format
+msgid "Approved %d actions."
+msgstr ""
+
+#. translators: %d: number of rejected actions
+#: src/admin-pages/index.js:1523
+#, js-format
+msgid "Rejected %d actions."
+msgstr ""
+
+#. translators: 1: number completed, 2: number requested, 3: failure reason
+#: src/admin-pages/index.js:1535
+#, js-format
+msgid "Stopped after %1$d of %2$d — %3$s"
+msgstr ""
+
+#: src/admin-pages/index.js:1542
+msgid "one action failed."
+msgstr ""
+
+#. translators: 1: number succeeded, 2: number failed
+#: src/admin-pages/index.js:1546
+#, js-format
+msgid "%1$d succeeded, %2$d failed."
+msgstr ""
+
+#: src/admin-pages/index.js:1557
+msgid "Could not process that group."
+msgstr ""
+
+#: src/admin-pages/index.js:1568
 msgid "Check the box to accept the increased risk before choosing “Trust more”."
 msgstr ""
 
-#: src/admin-pages/index.js:1509
+#: src/admin-pages/index.js:1591
 msgid "Preferences saved."
 msgstr ""
 
-#: src/admin-pages/index.js:1515
+#: src/admin-pages/index.js:1597
 msgid "Could not save preferences."
 msgstr ""
 
-#: src/admin-pages/index.js:1526
+#: src/admin-pages/index.js:1608
 msgid "Advanced view shows technical detail."
 msgstr ""
 
-#: src/admin-pages/index.js:1530
+#: src/admin-pages/index.js:1612
 msgid "Simple view for non-technical admins."
 msgstr ""
 
-#: src/admin-pages/index.js:1572
+#: src/admin-pages/index.js:1649
 msgid "Complete"
 msgstr ""
 
-#: src/admin-pages/index.js:1573
+#: src/admin-pages/index.js:1650
 msgid "Needs attention"
 msgstr ""
 
-#: src/admin-pages/index.js:1574
-#: src/admin-pages/index.js:1824
+#: src/admin-pages/index.js:1651
+#: src/admin-pages/index.js:1898
+#: src/admin-pages/index.js:1983
 msgid "Working…"
 msgstr ""
 
-#: src/admin-pages/index.js:1613
+#: src/admin-pages/index.js:1690
 msgid "Preferences"
 msgstr ""
 
-#: src/admin-pages/index.js:1615
-msgid "Choose how closely you want to watch assistants, and whether we should email you when something is waiting."
+#: src/admin-pages/index.js:1692
+msgid "Choose how closely you want to watch agents, and whether we should email you when something is waiting."
 msgstr ""
 
-#: src/admin-pages/index.js:1675
-msgid "I understand assistants may change my site with less waiting, and I accept that increased risk."
+#: src/admin-pages/index.js:1752
+msgid "I understand agents may change my site with less waiting, and I accept that increased risk."
 msgstr ""
 
-#: src/admin-pages/index.js:1690
+#: src/admin-pages/index.js:1767
 msgid "Save “Trust more” preference"
 msgstr ""
 
-#: src/admin-pages/index.js:1708
+#: src/admin-pages/index.js:1785
 msgid "Email me when an action is waiting for approval"
 msgstr ""
 
-#: src/admin-pages/index.js:1717
+#: src/admin-pages/index.js:1794
 msgid "Send alerts to"
 msgstr ""
 
-#: src/admin-pages/index.js:1735
+#: src/admin-pages/index.js:1812
 msgid "Save email preferences"
 msgstr ""
 
-#: src/admin-pages/index.js:1743
+#: src/admin-pages/index.js:1820
 msgid "Waiting for you"
 msgstr ""
 
-#: src/admin-pages/index.js:1753
+#: src/admin-pages/index.js:1830
 msgid "You’re all caught up"
 msgstr ""
 
-#: src/admin-pages/index.js:1757
-msgid "Approvals pause any action an assistant rates as risky until you say yes — nothing waiting here means nothing is on hold right now."
+#: src/admin-pages/index.js:1834
+msgid "Approvals pause any action an agent rates as risky until you say yes — nothing waiting here means nothing is on hold right now."
 msgstr ""
 
-#: src/admin-pages/index.js:1763
-msgid "When an assistant needs permission for a bigger change, it will show up here"
+#: src/admin-pages/index.js:1840
+msgid "When an agent needs permission for a bigger change, it will show up here"
 msgstr ""
 
-#: src/admin-pages/index.js:1768
+#: src/admin-pages/index.js:1845
 msgid " — and we’ll email you."
 msgstr ""
 
-#: src/admin-pages/index.js:1844
-msgid "Assistants back up files and database tables automatically before changing them."
+#. translators: 1: agent name, 2: number of actions, 3: relative time
+#: src/admin-pages/index.js:1872
+#, js-format
+msgid "%1$s · %2$d actions · %3$s ago"
 msgstr ""
 
-#: src/admin-pages/index.js:1849
+#: src/admin-pages/index.js:1902
+msgid "Approve all"
+msgstr ""
+
+#: src/admin-pages/index.js:1919
+msgid "Reject all"
+msgstr ""
+
+#: src/admin-pages/index.js:2012
+msgid "Agents back up files and database tables automatically before changing them."
+msgstr ""
+
+#: src/admin-pages/index.js:2017
 msgid "View backups and restore"
 msgstr ""
 
-#: src/admin-pages/index.js:1854
-msgid "· Need batch approve tools?"
-msgstr ""
-
-#: src/admin-pages/index.js:1856
-msgid "Open classic queue"
-msgstr ""
-
-#: src/admin-pages/index.js:1913
+#: src/admin-pages/index.js:2072
 msgid "This is a friendly activity feed. Technical names stay in Advanced detail when useful."
 msgstr ""
 
-#: src/admin-pages/index.js:1971
+#: src/admin-pages/index.js:2125
 msgid "Time period"
 msgstr ""
 
-#: src/admin-pages/index.js:1992
+#: src/admin-pages/index.js:2146
 msgid "Activity type"
 msgstr ""
 
-#: src/admin-pages/index.js:2024
+#: src/admin-pages/index.js:2178
 msgid "Search activity…"
 msgstr ""
 
-#: src/admin-pages/index.js:2029
+#: src/admin-pages/index.js:2183
 msgid "1 event"
 msgstr ""
 
-#: src/admin-pages/index.js:2030
+#: src/admin-pages/index.js:2184
 msgid "events"
 msgstr ""
 
-#: src/admin-pages/index.js:2036
+#: src/admin-pages/index.js:2190
 msgid "Download this log as a CSV file — handy to attach when emailing support about an issue."
 msgstr ""
 
-#: src/admin-pages/index.js:2041
+#: src/admin-pages/index.js:2195
 msgid "Export CSV"
 msgstr ""
 
-#: src/admin-pages/index.js:2050
+#: src/admin-pages/index.js:2204
 msgid "Nothing here yet"
 msgstr ""
 
-#: src/admin-pages/index.js:2055
+#: src/admin-pages/index.js:2209
 msgid "No events match this filter. Try another period or clear search."
 msgstr ""
 
-#: src/admin-pages/index.js:2059
-msgid "When assistants chat or use tools, their activity will show up here."
+#: src/admin-pages/index.js:2213
+msgid "When agents chat or use tools, their activity will show up here."
 msgstr ""
 
-#: src/admin-pages/index.js:2172
+#: src/admin-pages/index.js:2326
 msgid "Pro active"
 msgstr ""
 
-#: src/admin-pages/index.js:2178
+#: src/admin-pages/index.js:2332
 msgid "View pricing"
 msgstr ""
 
-#: src/admin-pages/index.js:2194
+#: src/admin-pages/index.js:2348
 msgid "Open full Knowledge editor"
 msgstr ""
 
-#: src/admin-pages/index.js:2254
+#: src/admin-pages/index.js:2408
 msgid "Unavailable."
 msgstr ""
 
-#: src/admin-pages/index.js:2303
+#: src/admin-pages/index.js:2465
 msgid "Unknown page."
 msgstr ""
 
@@ -7829,7 +8282,7 @@ msgstr ""
 
 #: src/agent-wizard/index.js:337
 #, js-format
-msgid "Training your assistant on your knowledge… %s"
+msgid "Training your agent on your knowledge… %s"
 msgstr ""
 
 #: src/agent-wizard/index.js:338
@@ -7955,11 +8408,11 @@ msgid "If you don’t pick any, a safe set of read-only tools is added so your a
 msgstr ""
 
 #: src/agent-wizard/index.js:663
-msgid "Knowledge (RAG) uses the Agentic AI service. Connect your license to train assistants on your content — you can also add knowledge later from the Knowledge page."
+msgid "Knowledge (RAG) uses the Agentic AI service. Connect your license to train agents on your content — you can also add knowledge later from the Knowledge page."
 msgstr ""
 
 #: src/agent-wizard/index.js:668
-msgid "Optionally give your assistants knowledge to draw on. Selected pages, posts and files are embedded into your shared Vector Store after the agent is created — training runs in the background."
+msgid "Optionally give your agents knowledge to draw on. Selected pages, posts and files are embedded into your shared Vector Store after the agent is created — training runs in the background."
 msgstr ""
 
 #: src/agent-wizard/index.js:670
@@ -8006,7 +8459,7 @@ msgid "Create agent"
 msgstr ""
 
 #: src/dashboard-activity/index.js:93
-#: src/dashboard-app/index.js:269
+#: src/dashboard-app/index.js:364
 msgid "View Activity →"
 msgstr ""
 
@@ -8015,273 +8468,287 @@ msgid "Could not load activity."
 msgstr ""
 
 #: src/dashboard-activity/index.js:106
-#: src/dashboard-app/index.js:275
+#: src/dashboard-app/index.js:370
 msgid "Total Actions"
 msgstr ""
 
 #: src/dashboard-activity/index.js:111
-#: src/dashboard-app/index.js:280
+#: src/dashboard-app/index.js:375
 msgid "Tokens Used"
 msgstr ""
 
 #: src/dashboard-activity/index.js:119
-#: src/dashboard-app/index.js:288
+#: src/dashboard-app/index.js:383
 msgid "Est. Cost"
 msgstr ""
 
 #: src/dashboard-activity/index.js:120
-#: src/dashboard-app/index.js:289
+#: src/dashboard-app/index.js:384
 msgid "Estimated Usage"
 msgstr ""
 
 #: src/dashboard-activity/index.js:127
-#: src/dashboard-app/index.js:296
+#: src/dashboard-app/index.js:391
 msgid "Active Agents"
 msgstr ""
 
 #: src/dashboard-activity/index.js:132
-#: src/dashboard-app/index.js:301
+#: src/dashboard-app/index.js:396
 msgid "Uploaded Agents"
 msgstr ""
 
 #: src/dashboard-activity/index.js:137
-#: src/dashboard-app/index.js:306
+#: src/dashboard-app/index.js:401
 msgid "User-Created Agents"
 msgstr ""
 
-#: src/dashboard-app/index.js:67
+#: src/dashboard-app/index.js:29
+msgid "The dashboard summarizes agents, approvals, activity, and providers at a glance."
+msgstr ""
+
+#: src/dashboard-app/index.js:154
 msgid "Drag to rearrange"
 msgstr ""
 
-#: src/dashboard-app/index.js:75
+#: src/dashboard-app/index.js:162
 msgid "Drag to rearrange dashboard card"
 msgstr ""
 
-#: src/dashboard-app/index.js:134
+#: src/dashboard-app/index.js:221
 msgid "Manage License →"
 msgstr ""
 
-#: src/dashboard-app/index.js:156
+#: src/dashboard-app/index.js:243
 msgid "Renew"
 msgstr ""
 
-#: src/dashboard-app/index.js:164
+#: src/dashboard-app/index.js:251
 msgid "Schema"
 msgstr ""
 
-#: src/dashboard-app/index.js:168
+#: src/dashboard-app/index.js:255
 msgid "Pending Jobs"
 msgstr ""
 
-#: src/dashboard-app/index.js:174
+#: src/dashboard-app/index.js:261
 msgid "abandoned — auto-recovered"
 msgstr ""
 
-#: src/dashboard-app/index.js:182
+#: src/dashboard-app/index.js:269
 msgid "Running Jobs"
 msgstr ""
 
-#: src/dashboard-app/index.js:188
+#: src/dashboard-app/index.js:275
 msgid "stuck — auto-recovered"
 msgstr ""
 
-#: src/dashboard-app/index.js:192
+#: src/dashboard-app/index.js:279
 msgid "Completed Jobs"
 msgstr ""
 
-#: src/dashboard-app/index.js:210
+#: src/dashboard-app/index.js:297
 msgid "Approvals & Backups"
 msgstr ""
 
-#: src/dashboard-app/index.js:216
+#: src/dashboard-app/index.js:303
 msgid "View Approvals →"
 msgstr ""
 
-#: src/dashboard-app/index.js:221
+#: src/dashboard-app/index.js:308
 msgid "Pending Approvals"
 msgstr ""
 
-#: src/dashboard-app/index.js:227
+#: src/dashboard-app/index.js:314
+msgid "Completed Approvals"
+msgstr ""
+
+#: src/dashboard-app/index.js:322
 msgid "Files Backed Up"
 msgstr ""
 
-#: src/dashboard-app/index.js:233
+#: src/dashboard-app/index.js:328
 msgid "DB Tables Backed Up"
 msgstr ""
 
 #. translators: %s: number of pending approvals.
-#: src/dashboard-app/index.js:244
+#: src/dashboard-app/index.js:339
 #, js-format
 msgid "%s waiting for your OK."
 msgstr ""
 
-#: src/dashboard-app/index.js:326
+#: src/dashboard-app/index.js:459
 msgid "Connected Providers"
 msgstr ""
 
-#: src/dashboard-app/index.js:332
+#: src/dashboard-app/index.js:465
 msgid "Manage Providers →"
 msgstr ""
 
-#: src/dashboard-app/index.js:338
+#: src/dashboard-app/index.js:471
 msgid "No AI providers connected."
 msgstr ""
 
-#: src/dashboard-app/index.js:340
+#: src/dashboard-app/index.js:473
 msgid "Run the Setup Wizard"
 msgstr ""
 
-#: src/dashboard-app/index.js:441
-msgid "Quick Actions"
+#: src/dashboard-app/index.js:538
+#: src/settings-app/index.js:2061
+#: src/settings-app/index.js:2305
+msgid "Testing…"
 msgstr ""
 
-#: src/dashboard-app/index.js:448
-msgid "Manage Actions →"
-msgstr ""
-
-#: src/dashboard-app/index.js:454
-msgid "Chatbot offline —"
-msgstr ""
-
-#: src/dashboard-app/index.js:456
-msgid "Configure now"
-msgstr ""
-
-#: src/dashboard-app/index.js:464
-msgid "Choose which links appear in Quick Actions. Setup Wizard is always available."
-msgstr ""
-
-#: src/dashboard-app/index.js:479
-msgid "Required"
-msgstr ""
-
-#: src/dashboard-app/index.js:524
-msgid "Save Quick Actions"
-msgstr ""
-
-#: src/dashboard-app/index.js:577
+#: src/dashboard-app/index.js:562
 #: src/interface-settings/index.js:336
-#: src/settings-app/index.js:1687
+#: src/settings-app/index.js:1758
 msgid "EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?"
 msgstr ""
 
-#: src/dashboard-app/index.js:581
+#: src/dashboard-app/index.js:566
 #: src/interface-settings/index.js:340
-#: src/settings-app/index.js:1691
+#: src/settings-app/index.js:1762
 msgid "Turn off emergency stop?"
 msgstr ""
 
-#: src/dashboard-app/index.js:591
+#: src/dashboard-app/index.js:576
 msgid "Emergency stop restore finished with warnings:"
 msgstr ""
 
-#: src/dashboard-app/index.js:614
-msgid "Interface Settings"
+#: src/dashboard-app/index.js:631
+msgid "Quick Actions"
 msgstr ""
 
-#: src/dashboard-app/index.js:620
-msgid "Manage Interface →"
+#: src/dashboard-app/index.js:638
+msgid "Manage Actions →"
 msgstr ""
 
-#: src/dashboard-app/index.js:627
-msgid "Default interface:"
+#: src/dashboard-app/index.js:644
+msgid "Chatbot offline —"
 msgstr ""
 
-#: src/dashboard-app/index.js:652
-msgid "Used by any screen you have not set individually. Tools, Approvals, and Activity each have their own Basic/Advanced switch now."
+#: src/dashboard-app/index.js:646
+msgid "Configure now"
 msgstr ""
 
-#: src/dashboard-app/index.js:664
-#: src/settings-app/index.js:234
-msgid "Reset every screen back to your default interface? Any screen you switched individually will lose that override."
+#: src/dashboard-app/index.js:654
+msgid "Choose which links appear in Quick Actions. Setup Wizard is always available."
 msgstr ""
 
-#: src/dashboard-app/index.js:680
-#: src/settings-app/index.js:281
-msgid "Reset all screens to my default"
+#: src/dashboard-app/index.js:669
+msgid "Required"
 msgstr ""
 
-#: src/dashboard-app/index.js:690
+#: src/dashboard-app/index.js:714
+msgid "Save Quick Actions"
+msgstr ""
+
+#: src/dashboard-app/index.js:755
 #: src/interface-settings/index.js:318
-#: src/settings-app/index.js:1672
+#: src/settings-app/index.js:1743
 msgid "Disable All Agents"
 msgstr ""
 
-#: src/dashboard-app/index.js:693
+#: src/dashboard-app/index.js:758
 msgid "ACTIVE"
 msgstr ""
 
-#: src/dashboard-app/index.js:711
+#: src/dashboard-app/index.js:776
 #: src/interface-settings/index.js:322
-#: src/settings-app/index.js:1676
+#: src/settings-app/index.js:1747
 msgid "Emergency stop"
 msgstr ""
 
-#: src/dashboard-app/index.js:713
+#: src/dashboard-app/index.js:778
 #: src/interface-settings/index.js:324
-#: src/settings-app/index.js:1678
+#: src/settings-app/index.js:1749
 msgid ": deactivate and log agent states, cancels all jobs and disconnects providers."
 msgstr ""
 
-#: src/dashboard-app/index.js:724
+#: src/dashboard-app/index.js:809
+msgid "Interface Settings"
+msgstr ""
+
+#: src/dashboard-app/index.js:815
+msgid "Manage Interface →"
+msgstr ""
+
+#: src/dashboard-app/index.js:822
+msgid "Default interface:"
+msgstr ""
+
+#: src/dashboard-app/index.js:847
+msgid "Used by any screen you have not set individually. Tools, Approvals, and Activity each have their own Basic/Advanced switch now."
+msgstr ""
+
+#: src/dashboard-app/index.js:859
+#: src/settings-app/index.js:235
+msgid "Reset every screen back to your default interface? Any screen you switched individually will lose that override."
+msgstr ""
+
+#: src/dashboard-app/index.js:875
+#: src/settings-app/index.js:282
+msgid "Reset all screens to my default"
+msgstr ""
+
+#: src/dashboard-app/index.js:886
 msgid "Automatic Agent Updates"
 msgstr ""
 
-#: src/dashboard-app/index.js:742
+#: src/dashboard-app/index.js:904
 msgid "Keep installed agents updated automatically. Opt out any time."
 msgstr ""
 
-#: src/dashboard-app/index.js:763
-msgid "Browse marketplace →"
+#: src/dashboard-app/index.js:925
+msgid "Browse →"
 msgstr ""
 
-#: src/dashboard-app/index.js:767
-msgid "Discover and install community agents from the Agent Builder marketplace."
+#: src/dashboard-app/index.js:929
+msgid "Discover and install agents created by the WordPress community."
 msgstr ""
 
-#: src/dashboard-app/index.js:785
+#: src/dashboard-app/index.js:947
 msgid "Getting Started"
 msgstr ""
 
 #. translators: 1: done count, 2: total
-#: src/dashboard-app/index.js:790
+#: src/dashboard-app/index.js:952
 #, js-format
 msgid "%1$d of %2$d steps complete"
 msgstr ""
 
-#: src/dashboard-app/index.js:876
+#: src/dashboard-app/index.js:1038
 msgid "Could not load dashboard."
 msgstr ""
 
-#: src/dashboard-app/index.js:1010
+#: src/dashboard-app/index.js:1172
 msgid "Loading dashboard…"
 msgstr ""
 
-#: src/dashboard-app/index.js:1020
+#: src/dashboard-app/index.js:1182
 msgid "Dashboard unavailable."
 msgstr ""
 
-#: src/dashboard-app/index.js:1107
+#: src/dashboard-app/index.js:1270
 msgid "Saving layout…"
 msgstr ""
 
-#: src/dashboard-app/index.js:1117
+#: src/dashboard-app/index.js:1280
 msgid "Reset layout"
 msgstr ""
 
-#: src/dashboard-app/index.js:1121
+#: src/dashboard-app/index.js:1284
 msgid "Drag ⋮⋮ to rearrange cards"
 msgstr ""
 
-#: src/dashboard-app/index.js:1130
+#: src/dashboard-app/index.js:1293
 msgid "Emergency stop is ACTIVE"
 msgstr ""
 
-#: src/dashboard-app/index.js:1136
+#: src/dashboard-app/index.js:1299
 msgid "All agents are deactivated, jobs are cancelled, and LLM providers are disconnected. Chat and agent activation are blocked."
 msgstr ""
 
-#: src/dashboard-app/index.js:1141
+#: src/dashboard-app/index.js:1304
 msgid "Manage Interface"
 msgstr ""
 
@@ -8440,7 +8907,7 @@ msgid "Basic keeps the menu focused on everyday tasks. Advanced reveals develope
 msgstr ""
 
 #: src/interface-settings/index.js:195
-#: src/settings-app/index.js:527
+#: src/settings-app/index.js:528
 msgid "Show the Getting Started checklist on the dashboard"
 msgstr ""
 
@@ -8457,7 +8924,7 @@ msgid "Fine-tune chat themes →"
 msgstr ""
 
 #: src/interface-settings/index.js:245
-#: src/settings-app/index.js:467
+#: src/settings-app/index.js:468
 msgid "Chat font"
 msgstr ""
 
@@ -8466,7 +8933,7 @@ msgid "Font used across the chat interface. Choose “Theme default” to inheri
 msgstr ""
 
 #: src/interface-settings/index.js:259
-#: src/settings-app/index.js:479
+#: src/settings-app/index.js:480
 msgid "Use theme accent colour"
 msgstr ""
 
@@ -8475,7 +8942,7 @@ msgid "When off, the colour below overrides the chat theme accent on every chat 
 msgstr ""
 
 #: src/interface-settings/index.js:277
-#: src/settings-app/index.js:500
+#: src/settings-app/index.js:501
 msgid "Accent colour"
 msgstr ""
 
@@ -8595,349 +9062,477 @@ msgstr ""
 msgid "Save knowledge"
 msgstr ""
 
-#: src/settings-app/index.js:46
+#: src/settings-app/index.js:48
 msgid "Could not load settings."
 msgstr ""
 
-#: src/settings-app/index.js:260
+#: src/settings-app/index.js:261
 msgid "Default interface mode"
 msgstr ""
 
-#: src/settings-app/index.js:270
+#: src/settings-app/index.js:271
 msgid "Used by any screen you have not set individually. Tools, Approvals, and Activity each have their own Basic/Advanced switch now — this is just the starting point for screens you have not touched."
 msgstr ""
 
-#: src/settings-app/index.js:291
-msgid "How assistants address people"
+#: src/settings-app/index.js:292
+msgid "How agents address people"
 msgstr ""
 
-#: src/settings-app/index.js:293
+#: src/settings-app/index.js:294
 msgid "Site knowledge and standing guidance are under"
 msgstr ""
 
-#: src/settings-app/index.js:301
+#: src/settings-app/index.js:302
 msgid "Per-agent personality is under Knowledge → Instructions."
 msgstr ""
 
-#: src/settings-app/index.js:315
+#: src/settings-app/index.js:316
 msgid "Leave blank to use the WordPress display name."
 msgstr ""
 
-#: src/settings-app/index.js:336
+#: src/settings-app/index.js:337
 msgid "Chat theme"
 msgstr ""
 
-#: src/settings-app/index.js:338
+#: src/settings-app/index.js:339
 msgid "Visual theme for admin chat and frontend shortcodes. Click a preview to select."
 msgstr ""
 
-#: src/settings-app/index.js:405
-msgid "AI Assistant"
+#: src/settings-app/index.js:406
+msgid "AI Agent"
 msgstr ""
 
-#: src/settings-app/index.js:425
+#: src/settings-app/index.js:426
 msgid "Hello! How can I help?"
 msgstr ""
 
-#: src/settings-app/index.js:446
+#: src/settings-app/index.js:447
 msgid "Update my homepage"
 msgstr ""
 
-#: src/settings-app/index.js:552
+#: src/settings-app/index.js:553
 msgid "Configure the AI providers available on this site. Only a connected provider can be set as the site default."
 msgstr ""
 
-#: src/settings-app/index.js:568
+#: src/settings-app/index.js:569
 msgid "Slug"
 msgstr ""
 
-#: src/settings-app/index.js:672
-msgid "API keys: use Edit on a provider. Setting a default updates the global provider and model used by assistants."
+#: src/settings-app/index.js:673
+msgid "API keys: use Edit on a provider. Setting a default updates the global provider and model used by agents."
 msgstr ""
 
-#: src/settings-app/index.js:693
+#: src/settings-app/index.js:694
 msgid "Default agent mode"
 msgstr ""
 
-#: src/settings-app/index.js:705
+#: src/settings-app/index.js:706
 msgid "Read-only"
 msgstr ""
 
-#: src/settings-app/index.js:717
+#: src/settings-app/index.js:718
 msgid "Message scanning"
 msgstr ""
 
-#: src/settings-app/index.js:726
+#: src/settings-app/index.js:727
 msgid "Require chat consent"
 msgstr ""
 
-#: src/settings-app/index.js:736
+#: src/settings-app/index.js:737
 msgid "Consent text"
 msgstr ""
 
-#: src/settings-app/index.js:748
+#: src/settings-app/index.js:749
 msgid "Conversation retention (days)"
 msgstr ""
 
-#: src/settings-app/index.js:765
+#: src/settings-app/index.js:766
 msgid "Audit log retention (days)"
 msgstr ""
 
-#: src/settings-app/index.js:778
+#: src/settings-app/index.js:780
+msgid "Refresh model catalog from Agentic"
+msgstr ""
+
+#: src/settings-app/index.js:781
+msgid "Off by default. When on, a daily cron fetches model names and list prices from agentic-plugin.com. BYOK providers work without this; enable it only if you want the curated catalog."
+msgstr ""
+
+#: src/settings-app/index.js:792
 msgid "Request Rate Limits"
 msgstr ""
 
-#: src/settings-app/index.js:780
+#: src/settings-app/index.js:794
 msgid "IP-based throttle applied before role-based daily quotas. Protects against rapid-fire requests."
 msgstr ""
 
-#: src/settings-app/index.js:786
+#: src/settings-app/index.js:800
 msgid "Authenticated users (requests per minute)"
 msgstr ""
 
-#: src/settings-app/index.js:803
+#: src/settings-app/index.js:817
 msgid "Anonymous visitors (requests per minute)"
 msgstr ""
 
-#: src/settings-app/index.js:924
+#: src/settings-app/index.js:954
+msgid "Control who can administer the plugin and use AI agents."
+msgstr ""
+
+#: src/settings-app/index.js:981
 msgid "Control which WordPress roles can administer the plugin and interact with AI agents. Administrators always retain full access."
 msgstr ""
 
-#: src/settings-app/index.js:930
+#: src/settings-app/index.js:987
 msgid "These rules apply site-wide. A user needs at least one ticked box to access the corresponding feature. Removing a role from all plugin privileges will hide the Agent Builder menu from that role entirely."
 msgstr ""
 
-#: src/settings-app/index.js:937
+#: src/settings-app/index.js:994
 msgid "Plugin Administration"
 msgstr ""
 
-#: src/settings-app/index.js:939
+#: src/settings-app/index.js:996
 msgid "Who can access and configure the Agent Builder admin pages."
 msgstr ""
 
-#: src/settings-app/index.js:949
+#: src/settings-app/index.js:1006
 msgid "Permission"
 msgstr ""
 
-#: src/settings-app/index.js:994
-#: src/settings-app/index.js:1112
+#: src/settings-app/index.js:1051
+#: src/settings-app/index.js:1169
 msgid "Administrators always have full access"
 msgstr ""
 
-#: src/settings-app/index.js:1020
+#: src/settings-app/index.js:1077
 msgid "Who can chat with and interact with installed AI agents, and how much they may use per day."
 msgstr ""
 
-#: src/settings-app/index.js:1030
+#: src/settings-app/index.js:1087
 msgid "Permission / Limit"
 msgstr ""
 
-#: src/settings-app/index.js:1036
+#: src/settings-app/index.js:1093
 msgid "Visitor"
 msgstr ""
 
-#: src/settings-app/index.js:1038
+#: src/settings-app/index.js:1095
 msgid "Not logged in"
 msgstr ""
 
-#: src/settings-app/index.js:1078
+#: src/settings-app/index.js:1135
 msgid "Allow non-logged-in visitors to use frontend chat"
 msgstr ""
 
-#: src/settings-app/index.js:1135
+#: src/settings-app/index.js:1192
 msgid "Daily Limits"
 msgstr ""
 
-#: src/settings-app/index.js:1141
+#: src/settings-app/index.js:1198
 msgid "0 = unlimited, resets at midnight UTC. Administrators are never limited."
 msgstr ""
 
-#: src/settings-app/index.js:1152
+#: src/settings-app/index.js:1209
 msgid "Queries / day"
 msgstr ""
 
-#: src/settings-app/index.js:1159
-#: src/settings-app/index.js:1163
+#: src/settings-app/index.js:1216
+#: src/settings-app/index.js:1220
 msgid "Max AI chat messages per user per day."
 msgstr ""
 
-#: src/settings-app/index.js:1224
+#: src/settings-app/index.js:1281
 msgid "Tokens / day"
 msgstr ""
 
-#: src/settings-app/index.js:1231
-#: src/settings-app/index.js:1235
+#: src/settings-app/index.js:1288
+#: src/settings-app/index.js:1292
 msgid "Max AI tokens consumed per user per day."
 msgstr ""
 
-#: src/settings-app/index.js:1298
+#: src/settings-app/index.js:1355
 msgid "How enforcement works: these settings control WordPress admin menu visibility, admin bar chat access, the REST chat API, and AJAX task triggers. Unchecked roles are blocked at the server, not just hidden in the UI. Request rate limits are under Security."
 msgstr ""
 
-#: src/settings-app/index.js:1319
+#: src/settings-app/index.js:1377
 msgid "Persistent key-value memory agents use across conversations."
 msgstr ""
 
-#: src/settings-app/index.js:1325
+#: src/settings-app/index.js:1383
 msgid "Default memory TTL (days)"
 msgstr ""
 
-#: src/settings-app/index.js:1326
+#: src/settings-app/index.js:1384
 msgid "0 = never expires"
 msgstr ""
 
-#: src/settings-app/index.js:1340
+#: src/settings-app/index.js:1398
 msgid "Enable local browser memory"
 msgstr ""
 
-#: src/settings-app/index.js:1413
+#: src/settings-app/index.js:1471
 msgid "(default)"
 msgstr ""
 
-#: src/settings-app/index.js:1461
+#: src/settings-app/index.js:1519
 msgid "Chat capabilities and per-agent provider/model. Set the site default provider on the Providers tab. Theme is under Interface."
 msgstr ""
 
-#: src/settings-app/index.js:1466
+#: src/settings-app/index.js:1524
 msgid "Chat features"
 msgstr ""
 
-#: src/settings-app/index.js:1468
+#: src/settings-app/index.js:1526
 msgid "Features available in agent chat."
 msgstr ""
 
-#: src/settings-app/index.js:1474
+#: src/settings-app/index.js:1532
 msgid "Audio input"
 msgstr ""
 
-#: src/settings-app/index.js:1481
+#: src/settings-app/index.js:1539
 msgid "Text-to-speech"
 msgstr ""
 
-#: src/settings-app/index.js:1488
+#: src/settings-app/index.js:1546
 msgid "Vision / image input"
 msgstr ""
 
-#: src/settings-app/index.js:1497
-msgid "White-label branding"
+#: src/settings-app/index.js:1555
+msgid "Hide “Powered by Agent Builder” branding"
 msgstr ""
 
-#: src/settings-app/index.js:1498
-msgid "Hide “Powered by Agent Builder” in the chat footer."
+#: src/settings-app/index.js:1556
+msgid "On by default. Uncheck only if you want a small credit line in the chat footer."
 msgstr ""
 
-#: src/settings-app/index.js:1509
+#: src/settings-app/index.js:1569
+msgid "Off by default. When on, admin chat shows a link to the WhatsApp connector."
+msgstr ""
+
+#: src/settings-app/index.js:1580
 msgid "Active agent overrides"
 msgstr ""
 
-#: src/settings-app/index.js:1511
-msgid "Each row starts on the site default provider and model (Providers tab). Change only the assistants that need a different setup."
+#: src/settings-app/index.js:1582
+msgid "Each row starts on the site default provider and model (Providers tab). Change only the agents that need a different setup."
 msgstr ""
 
-#: src/settings-app/index.js:1518
-msgid "No active agents."
-msgstr ""
-
-#: src/settings-app/index.js:1552
+#: src/settings-app/index.js:1623
 msgid "provider"
 msgstr ""
 
-#: src/settings-app/index.js:1606
+#: src/settings-app/index.js:1677
 msgid "model"
 msgstr ""
 
-#: src/settings-app/index.js:1738
-msgid "Customise greetings and personality notes per assistant."
+#: src/settings-app/index.js:1809
+msgid "Customise greetings and personality notes per agent."
 msgstr ""
 
-#: src/settings-app/index.js:1744
-msgid "No assistants installed."
+#: src/settings-app/index.js:1819
+msgid "Select agent"
 msgstr ""
 
-#: src/settings-app/index.js:1748
-msgid "Select assistant"
-msgstr ""
-
-#: src/settings-app/index.js:1761
+#: src/settings-app/index.js:1832
 msgid "Welcome message"
 msgstr ""
 
-#: src/settings-app/index.js:1774
+#: src/settings-app/index.js:1845
 msgid "Persona notes"
 msgstr ""
 
-#: src/settings-app/index.js:1785
+#: src/settings-app/index.js:1856
 msgid "Response style"
 msgstr ""
 
-#: src/settings-app/index.js:1809
+#: src/settings-app/index.js:1880
 msgid "Third-party API keys used by agent tools."
 msgstr ""
 
-#: src/settings-app/index.js:1831
+#: src/settings-app/index.js:1902
 msgid "Get a key"
 msgstr ""
 
-#: src/settings-app/index.js:1847
+#: src/settings-app/index.js:1918
 msgid "Configured"
 msgstr ""
 
-#: src/settings-app/index.js:1848
+#: src/settings-app/index.js:1919
 msgid "Not configured"
 msgstr ""
 
-#: src/settings-app/index.js:1922
+#: src/settings-app/index.js:1993
 msgid "REST endpoints for integrations."
 msgstr ""
 
-#: src/settings-app/index.js:1928
+#: src/settings-app/index.js:1999
 msgid "Namespace"
 msgstr ""
 
-#: src/settings-app/index.js:1937
+#: src/settings-app/index.js:2008
 msgid "Agentic Services"
 msgstr ""
 
-#: src/settings-app/index.js:1948
+#: src/settings-app/index.js:2019
 msgid "Base URLs the plugin calls for AI chat, knowledge search, and media generation. Leave these on their defaults unless you’re self-hosting a proxy or support asked you to change one."
 msgstr ""
 
-#: src/settings-app/index.js:1990
-msgid "Testing…"
-msgstr ""
-
-#: src/settings-app/index.js:2017
+#: src/settings-app/index.js:2088
 msgid "Reset to default"
 msgstr ""
 
-#: src/settings-app/index.js:2071
+#: src/settings-app/index.js:2187
+msgid "Could not create credential."
+msgstr ""
+
+#: src/settings-app/index.js:2195
+msgid "Revoke this Application Password? Any client using it will stop working immediately."
+msgstr ""
+
+#: src/settings-app/index.js:2224
+msgid "The Model Context Protocol (MCP) lets external AI apps — Claude Desktop, Cursor, and others — use your agents directly, tool calls and all. Free on every WordPress version this plugin supports — no Pro or connector required."
+msgstr ""
+
+#: src/settings-app/index.js:2231
+msgid "Available"
+msgstr ""
+
+#: src/settings-app/index.js:2235
+msgid "Agent endpoints"
+msgstr ""
+
+#: src/settings-app/index.js:2237
+msgid "Each agent has its own MCP URL, scoped to only the tools that agent is allowed to use."
+msgstr ""
+
+#: src/settings-app/index.js:2247
+msgid "MCP URL"
+msgstr ""
+
+#: src/settings-app/index.js:2287
+msgid "Ready"
+msgstr ""
+
+#: src/settings-app/index.js:2341
+msgid "Connected clients"
+msgstr ""
+
+#: src/settings-app/index.js:2356
+msgid "No clients have connected via the approval flow yet."
+msgstr ""
+
+#: src/settings-app/index.js:2364
+msgid "Application Passwords"
+msgstr ""
+
+#: src/settings-app/index.js:2366
+msgid "Credentials for manually configuring an MCP client (e.g. Cursor) that needs a username and password rather than the browser-driven approval flow."
+msgstr ""
+
+#: src/settings-app/index.js:2388
+msgid "Password created — copy it now, it will not be shown again:"
+msgstr ""
+
+#: src/settings-app/index.js:2414
+msgid "Last used"
+msgstr ""
+
+#: src/settings-app/index.js:2450
+msgid "No Application Passwords yet."
+msgstr ""
+
+#: src/settings-app/index.js:2468
+msgid "Create Application Password"
+msgstr ""
+
+#: src/settings-app/index.js:2515
 msgid "Could not load this settings panel."
 msgstr ""
 
-#: src/settings-app/index.js:2223
+#: src/settings-app/index.js:2667
 msgid "Settings saved with warnings:"
 msgstr ""
 
-#: src/settings-app/index.js:2257
+#: src/settings-app/index.js:2701
 msgid "Could not save settings."
 msgstr ""
 
-#: src/settings-app/index.js:2267
+#: src/settings-app/index.js:2711
 msgid "Loading settings…"
 msgstr ""
 
-#: src/settings-app/index.js:2278
+#: src/settings-app/index.js:2722
 msgid "Settings unavailable."
 msgstr ""
 
-#: src/settings-app/index.js:2343
+#: src/settings-app/index.js:2801
 msgid "Activate Agent Builder Pro to manage your license key here."
 msgstr ""
 
-#: src/settings-app/index.js:2354
+#: src/settings-app/index.js:2812
 msgid "This tab is available via the classic view or an add-on."
 msgstr ""
 
-#: src/shared/components.js:154
+#: src/shared/chat-embed.js:88
+msgid "Denied — no change made."
+msgstr ""
+
+#: src/shared/chat-embed.js:89
+msgid "Done — change applied."
+msgstr ""
+
+#: src/shared/chat-embed.js:105
+msgid "Needs Your Approval"
+msgstr ""
+
+#: src/shared/chat-embed.js:106
+msgid "Proposed Change"
+msgstr ""
+
+#: src/shared/chat-embed.js:110
+msgid "The agent wants to make a change."
+msgstr ""
+
+#: src/shared/chat-embed.js:123
+msgid "Hide Diff"
+msgstr ""
+
+#: src/shared/chat-embed.js:124
+msgid "Show Diff"
+msgstr ""
+
+#: src/shared/chat-embed.js:170
+msgid "Allow Once"
+msgstr ""
+
+#: src/shared/chat-embed.js:178
+msgid "Allow this Session"
+msgstr ""
+
+#: src/shared/chat-embed.js:186
+msgid "Always Allow"
+msgstr ""
+
+#: src/shared/chat-embed.js:435
+msgid "This assistant"
+msgstr ""
+
+#: src/shared/chat-embed.js:437
+msgid "is still activating."
+msgstr ""
+
+#: src/shared/chat-embed.js:442
+msgid "is thinking…"
+msgstr ""
+
+#: src/shared/chat-embed.js:446
+msgid "Ask"
+msgstr ""
+
+#: src/shared/components.js:193
+msgid "Only changes this screen. Other screens and your site-wide default (Settings → Interface) are unaffected."
+msgstr ""
+
+#: src/shared/components.js:223
 msgid "More info"
 msgstr ""

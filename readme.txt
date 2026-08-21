@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.85
+Stable tag: 3.3.86
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,7 +46,7 @@ Equipped with a **Basic / Advanced interface switch**, Agent Builder is designed
   * *Inbound:* Automatically transforms abilities declared by other plugins into callable agent tools.
 * **Multi-LLM & BYOK (Bring Your Own Key):** Connect OpenAI, Anthropic (Claude), Google Gemini, DeepSeek, xAI (Grok), Kimi (Moonshot), Mistral, Cohere, or run 100% private local models via **Ollama**.
 * **Open Skill Architecture:** Full support for the `agentskills.io` open standard, WordPress.org Community Skills, and Anthropic Skills repositories.
-* **Developer Controls:** Programmatic orchestration via REST API, WP-CLI commands, automated cron triggers, and detailed JSON activity audit logs.
+* **Developer Controls:** Programmatic orchestration via REST API, automated cron triggers, and detailed JSON activity audit logs. React admin sources live in `src/`; production bundles in `build/` (`npm run build` with `@wordpress/scripts`).
 
 Documentation & Guides: [agentic-plugin.com/documentation](https://agentic-plugin.com/documentation/)
 
@@ -106,6 +106,12 @@ On WordPress 6.9+, Agent Builder provides bidirectional integration:
 * **Tools:** Single, permission-controlled actions an agent can execute (e.g., `create_draft_post`, `get_site_health`).
 * **Skills:** Pre-packaged instruction sets and tool workflows following the open `agentskills.io` standard that teach agents multi-step capabilities without writing code.
 
+= What happens to my data if I delete the plugin? =
+Uninstall keeps your data unless you check “Delete data” on the deactivation dialog. If you do choose to delete, conversation history, options, and most custom tables are removed. Custom agents you created and skills you imported are kept so a reinstall can find them.
+
+= Where is the React admin source? =
+React admin sources live in `src/`; production bundles are in `build/`. Rebuild with `npm run build` (`@wordpress/scripts`).
+
 == Screenshots ==
 
 1. Dashboard — Overview of active agents, connected providers, and quick actions.
@@ -118,7 +124,7 @@ On WordPress 6.9+, Agent Builder provides bidirectional integration:
 
 == External Services ==
 
-This plugin connects to external AI APIs to process prompts and tool executions — no request to any AI provider is made until you configure or explicitly activate it. A small number of non-AI, non-personal-data requests to Agentic's own platform (e.g. a daily model-pricing sync) happen automatically regardless of configuration; see "Agentic Account & Platform Services" below for exactly which ones and what they send.
+This plugin connects to external AI APIs to process prompts and tool executions — no request to any AI provider is made until you configure or explicitly activate it. Optional catalog refresh from Agentic is off by default and only runs after you enable it in Settings → Security. See "Agentic Account & Platform Services" below for every Agentic endpoint, when it is used, and what is sent.
 
 = OpenAI =
 * **Endpoint:** `https://api.openai.com/v1/chat/completions`
@@ -183,6 +189,13 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **Terms of Service:** [https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html](https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html)
 * **Privacy Policy:** [https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
 
+= OpenRouter =
+* **Endpoint:** `https://openrouter.ai/api/v1/chat/completions`
+* **When used:** When OpenRouter is selected as your AI provider.
+* **Data sent:** Chat prompts, system instructions, tool definitions, and execution payloads.
+* **Terms of Service:** [https://openrouter.ai/terms](https://openrouter.ai/terms)
+* **Privacy Policy:** [https://openrouter.ai/privacy](https://openrouter.ai/privacy)
+
 = Ollama (Local) =
 * **Endpoint:** User-configured local URL (default: `http://localhost:11434`)
 * **When used:** When Ollama is selected as your AI provider.
@@ -202,8 +215,7 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 
 = Agentic Account & Platform Services (Optional) =
 * **Endpoints:**
-  * `https://agentic-plugin.com/wp-json/agentic/v1/model-pricing` — refreshes the LLM model/pricing catalog. Runs automatically once daily via WordPress Cron regardless of which AI provider you've configured, and can also be triggered manually from the Costs page's "Get Latest Pricing" button. A plain GET request; no personal data is sent, and the response is cached locally.
-  * `https://agentic-plugin.com/wp-json/agentic/v1/agents?per_page=1` — reads the number of community agents available, to display on the Dashboard. Runs automatically (cached for one hour) whenever an administrator views the Agent Builder Dashboard. A plain GET request; no personal data is sent.
+  * `https://agentic-plugin.com/wp-json/agentic/v1/model-pricing` — refreshes the LLM model/pricing catalog. Runs only after an administrator enables “Refresh model catalog from Agentic” in Settings → Security (off by default). Can also be triggered manually from the Costs page's "Get Latest Pricing" button. A plain GET request; no personal data is sent, and the response is cached locally.
   * `https://agentic-plugin.com/wp-json/agentic/v1/register` — only when an administrator submits the plugin's sign-up form to obtain a free Agentic API key. Sends the administrator's email address, site URL, site name, plugin version, and plan tier.
   * `https://agentic-plugin.com/wp-json/agentic-license/v1/cancellation-feedback` — only when a licensed, previously-consenting administrator submits a reason on the plugin-deactivation survey. Sends the license key, site URL, the selected reason, an optional free-text comment, and plugin version.
   * `https://agentic-plugin.com/wp-json/agentic/v1/agents/activate-token` — only when installing an uploaded community or purchased agent package that includes a license file. Sends the license token, agent slug, and site URL.
@@ -235,7 +247,7 @@ This plugin connects to external AI APIs to process prompts and tool executions 
   * ClawHub: `https://wry-manatee-359.convex.site/api/v1/`
 * **When used:** When browsing or importing community skills from the Skills screen.
 * **Data sent:** Unauthenticated GET requests for public skills; search queries when using ClawHub.
-* **Terms of Service:** [GitHub Terms](https://docs.github.com/site-policy/github-terms/github-terms-of-service) | [OpenClaw Docs](https://docs.openclaw.ai/)
+* **Terms of Service:** [GitHub Terms](https://docs.github.com/site-policy/github-terms/github-terms-of-service) | [GitHub Privacy](https://docs.github.com/site-policy/privacy-policies/github-privacy-statement) | [Convex Terms](https://www.convex.dev/legal/tos) | [Convex Privacy](https://www.convex.dev/legal/privacy) | [OpenClaw Docs](https://docs.openclaw.ai/)
 
 = Google PageSpeed Insights (Optional) =
 * **Endpoint:** `https://www.googleapis.com/pagespeedonline/v5/runPagespeed`
@@ -255,6 +267,9 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **Data sent:** Whatever data that form collects, sent only to the URL you configured — never to Agentic or any other third party.
 
 == Changelog ==
+
+= 3.3.86 - 2026-08-20 =
+* WordPress.org submission: catalog sync is now opt-in (off by default), branding and WhatsApp promo default off, plugin install no longer auto-activates, unused Chart.js removed, WP-CLI agent tools omitted from the directory zip, and External Services entries added for OpenRouter and GitHub/Convex privacy.
 
 = 3.3.85 - 2026-08-19 =
 * WordPress.org submission readiness: corrected plugin name/trademark and Stable Tag mismatches, disclosed every External Service the plugin contacts (including several automatic, low-data background syncs), and removed the bundled/shared Google PageSpeed Insights key — Core Web Vitals checks now require your own free key, matching the plugin's existing bring-your-own-key model for every other provider.

@@ -114,9 +114,10 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 					update_option( 'agentic_chat_audio', '1' );
 					update_option( 'agentic_chat_tts', '1' );
 					update_option( 'agentic_chat_vision', '1' );
+					update_option( 'agentic_chat_whitelabel', '1' );
+					update_option( 'agentic_show_whatsapp_cta', '0' );
 					if ( \Agentic\License_Client::get_instance()->is_pro() ) {
 						update_option( 'agentic_chat_costs', '1' );
-						update_option( 'agentic_chat_whitelabel', '1' );
 					}
 					update_option( 'agentic_response_cache_enabled', true );
 					update_option( 'agentic_response_cache_ttl', 3600 );
@@ -140,6 +141,7 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 					update_option( 'agentic_retention_audit_log', 30 );
 					update_option( 'agentic_chat_consent_enabled', false );
 					update_option( 'agentic_chat_consent_text', 'By chatting you agree to your messages being processed by an AI. We do not share your data with third parties.' );
+					update_option( 'agentic_allow_platform_sync', '0' );
 				},
 			),
 			'users'           => array( // Users tab defaults.
@@ -269,6 +271,7 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 			'chat_consent_enabled'        => (bool) get_option( 'agentic_chat_consent_enabled', false ),
 			'chat_consent_text'           => (string) get_option( 'agentic_chat_consent_text', '' ),
 			'local_memory_enabled'        => (bool) ( '1' === get_option( 'agentic_local_memory_enabled', '0' ) ),
+			'allow_platform_sync'         => (string) get_option( 'agentic_allow_platform_sync', '0' ),
 		);
 
 		$agentic_valid_modes = array( 'disabled', 'supervised', 'autonomous' );
@@ -288,6 +291,7 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 		update_option( 'agentic_chat_consent_enabled', isset( $_POST['agentic_chat_consent_enabled'] ) );
 		update_option( 'agentic_chat_consent_text', sanitize_textarea_field( wp_unslash( $_POST['agentic_chat_consent_text'] ?? '' ) ) );
 		update_option( 'agentic_local_memory_enabled', isset( $_POST['agentic_local_memory_enabled'] ) ? '1' : '0' );
+		update_option( 'agentic_allow_platform_sync', isset( $_POST['agentic_allow_platform_sync'] ) ? '1' : '0' );
 
 		// Log any changes to the audit log.
 		$agentic_sec_after = array(
@@ -301,6 +305,7 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 			'chat_consent_enabled'        => (bool) get_option( 'agentic_chat_consent_enabled' ),
 			'chat_consent_text'           => (string) get_option( 'agentic_chat_consent_text' ),
 			'local_memory_enabled'        => (bool) ( '1' === get_option( 'agentic_local_memory_enabled', '0' ) ),
+			'allow_platform_sync'         => (string) get_option( 'agentic_allow_platform_sync', '0' ),
 		);
 		$agentic_sec_diff  = array();
 		foreach ( $agentic_sec_after as $agentic_sec_key => $agentic_sec_val ) {
@@ -487,7 +492,7 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 			'chat_audio'      => (string) get_option( 'agentic_chat_audio', '0' ),
 			'chat_tts'        => (string) get_option( 'agentic_chat_tts', '1' ),
 			'chat_vision'     => (string) get_option( 'agentic_chat_vision', '0' ),
-			'chat_whitelabel' => (string) get_option( 'agentic_chat_whitelabel', '0' ),
+			'chat_whitelabel' => (string) get_option( 'agentic_chat_whitelabel', '1' ),
 		);
 		if ( \Agentic\License_Client::get_instance()->is_pro() ) {
 			$agentic_styles_bef['chat_costs'] = (string) get_option( 'agentic_chat_costs', '0' );
@@ -503,6 +508,7 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 		update_option( 'agentic_chat_tts', isset( $_POST['agentic_chat_tts'] ) ? '1' : '0' );
 		update_option( 'agentic_chat_vision', isset( $_POST['agentic_chat_vision'] ) ? '1' : '0' );
 		update_option( 'agentic_chat_whitelabel', isset( $_POST['agentic_chat_whitelabel'] ) ? '1' : '0' );
+		update_option( 'agentic_show_whatsapp_cta', isset( $_POST['agentic_show_whatsapp_cta'] ) ? '1' : '0' );
 		if ( \Agentic\License_Client::get_instance()->is_pro() ) {
 			update_option( 'agentic_chat_costs', isset( $_POST['agentic_chat_costs'] ) ? '1' : '0' );
 		}
@@ -516,7 +522,7 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 			'chat_audio'      => (string) get_option( 'agentic_chat_audio', '0' ),
 			'chat_tts'        => (string) get_option( 'agentic_chat_tts', '1' ),
 			'chat_vision'     => (string) get_option( 'agentic_chat_vision', '0' ),
-			'chat_whitelabel' => (string) get_option( 'agentic_chat_whitelabel', '0' ),
+			'chat_whitelabel' => (string) get_option( 'agentic_chat_whitelabel', '1' ),
 		);
 		if ( \Agentic\License_Client::get_instance()->is_pro() ) {
 			$agentic_styles_aft['chat_costs'] = (string) get_option( 'agentic_chat_costs', '0' );
@@ -591,6 +597,7 @@ $agentic_retention_audit_log     = get_option( 'agentic_retention_audit_log', 30
 $agentic_chat_consent_enabled    = get_option( 'agentic_chat_consent_enabled', false );
 $agentic_chat_consent_text       = get_option( 'agentic_chat_consent_text', 'By chatting you agree to your messages being processed by an AI. We do not share your data with third parties.' );
 $agentic_local_memory_enabled    = '1' === get_option( 'agentic_local_memory_enabled', '0' );
+$agentic_allow_platform_sync     = '1' === get_option( 'agentic_allow_platform_sync', '0' );
 // Rate limit settings (read near Users tab).
 $agentic_rate_limit_auth = get_option( 'agentic_rate_limit_authenticated', 30 );
 $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );

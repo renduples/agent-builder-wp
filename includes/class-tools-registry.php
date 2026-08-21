@@ -398,6 +398,9 @@ class Tools_Registry {
 			'run_wp_cli',
 			'manage_cache',
 		);
+		if ( class_exists( Distribution::class ) && Distribution::is_wporg() ) {
+			$core_names = array_values( array_diff( $core_names, Distribution::wporg_excluded_tools() ) );
+		}
 
 		$loader = Tool_Loader::get_instance();
 

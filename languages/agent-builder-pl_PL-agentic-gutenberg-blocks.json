@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "pl_PL",
+        "plural-forms": "nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+      },
+      "Default (from Settings)": [
+        "Domyślny (z Ustawień)"
+      ],
+      "Display Style": [
+        "Styl wyświetlania"
+      ],
+      "Placeholder Text": [
+        "Tekst zastępczy"
+      ],
+      "Type your message...": [
+        "Wpisz swoją wiadomość..."
+      ],
+      "Inline": [
+        "Osadzony"
+      ],
+      "Popup": [
+        "Wyskakujący"
+      ],
+      "Sidebar": [
+        "Panel boczny"
+      ],
+      "Default": [
+        "Domyślny"
+      ],
+      "Model": [
+        "Model"
+      ],
+      "Online": [
+        "Online"
+      ],
+      "Hello! I'm ": [
+        "Witaj! Jestem "
+      ],
+      "How can I help you today?": [
+        "W czym mogę dzisiaj pomóc?"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "Tryb pływający — wyświetla się jako wyskakujący przycisk na stronie witryny"
+      ],
+      "Appearance": [
+        "Wygląd"
+      ],
+      "Height": [
+        "Wysokość"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "Wartość wysokości CSS (np. 500px, 60vh)."
+      ],
+      "Theme": [
+        "Motyw"
+      ],
+      "Show Header": [
+        "Pokaż nagłówek"
+      ],
+      "Floating Button": [
+        "Przycisk pływający"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "Wyświetlaj jako pływający przycisk czatu zamiast wewnątrz treści."
+      ],
+      "LLM Settings": [
+        "Ustawienia LLM"
+      ],
+      "Provider": [
+        "Dostawca"
+      ],
+      "Override the LLM provider for this block.": [
+        "Zastąp dostawcę LLM dla tego bloku."
+      ],
+      "Select a provider first to see available models.": [
+        "Najpierw wybierz dostawcę, aby zobaczyć dostępne modele."
+      ]
+    }
+  }
+}

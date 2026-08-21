@@ -277,6 +277,19 @@ global $wpdb;
 		</td>
 	</tr>
 
+	<tr>
+		<th scope="row"><label for="agentic_allow_platform_sync"><?php esc_html_e( 'Model catalog sync', 'agent-builder' ); ?></label></th>
+		<td>
+			<label>
+				<input type="checkbox" name="agentic_allow_platform_sync" id="agentic_allow_platform_sync" value="1" <?php checked( $agentic_allow_platform_sync ); ?> />
+				<?php esc_html_e( 'Refresh the LLM model catalog from agentic-plugin.com once a day', 'agent-builder' ); ?>
+			</label>
+			<p class="description">
+				<?php esc_html_e( 'Off by default. Bring-your-own-key providers work without this. Enable only if you want curated model names and list prices fetched from Agentic.', 'agent-builder' ); ?>
+			</p>
+		</td>
+	</tr>
+
 	<tr id="agentic_consent_text_row" <?php echo $agentic_chat_consent_enabled ? '' : 'style="display:none;"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static HTML attribute. ?>>
 		<th scope="row"><label for="agentic_chat_consent_text">Consent Notice Text</label></th>
 		<td>

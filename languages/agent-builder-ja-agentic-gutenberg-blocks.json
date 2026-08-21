@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "ja",
+        "plural-forms": "nplurals=1; plural=0;"
+      },
+      "Default (from Settings)": [
+        "デフォルト (設定から)"
+      ],
+      "Display Style": [
+        "表示スタイル"
+      ],
+      "Placeholder Text": [
+        "プレースホルダーテキスト"
+      ],
+      "Type your message...": [
+        "メッセージを入力してください..."
+      ],
+      "Inline": [
+        "インライン"
+      ],
+      "Popup": [
+        "ポップアップ"
+      ],
+      "Sidebar": [
+        "サイドバー"
+      ],
+      "Default": [
+        "デフォルト"
+      ],
+      "Model": [
+        "モデル"
+      ],
+      "Online": [
+        "オンライン"
+      ],
+      "Hello! I'm ": [
+        "こんにちは！私は"
+      ],
+      "How can I help you today?": [
+        "本日はどのようなご用件でしょうか？"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "フローティングモード — フロントエンドにポップアップボタンとして表示されます"
+      ],
+      "Appearance": [
+        "外観"
+      ],
+      "Height": [
+        "高さ"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "CSS の高さの値（例: 500px、60vh）。"
+      ],
+      "Theme": [
+        "テーマ"
+      ],
+      "Show Header": [
+        "ヘッダーを表示"
+      ],
+      "Floating Button": [
+        "フローティングボタン"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "インラインではなく、フローティングのチャットボタンとして表示します。"
+      ],
+      "LLM Settings": [
+        "LLM 設定"
+      ],
+      "Provider": [
+        "プロバイダー"
+      ],
+      "Override the LLM provider for this block.": [
+        "このブロックの LLM プロバイダーを上書きします。"
+      ],
+      "Select a provider first to see available models.": [
+        "利用可能なモデルを表示するには、先にプロバイダーを選択してください。"
+      ]
+    }
+  }
+}

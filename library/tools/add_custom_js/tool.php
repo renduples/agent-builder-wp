@@ -44,7 +44,7 @@ class Add_Custom_Js extends Tool_Base {
 				),
 				'location' => array(
 					'type'        => 'string',
-					'description' => 'Where to output the JS: "footer" (default, recommended) or "head".',
+					'description' => 'Stored for reference only (not output): "footer" or "head".',
 					'enum'        => array( 'head', 'footer' ),
 				),
 			),

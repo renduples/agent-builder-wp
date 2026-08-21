@@ -547,33 +547,11 @@ class Dashboard_REST {
 			}
 		}
 
-		$community = get_transient( 'agentic_dashboard_marketplace_agent_count' );
-		if ( false === $community ) {
-			$api_base  = class_exists( Service_Registry::class )
-				? Service_Registry::url( 'agentic-api' )
-				: 'https://agentic-plugin.com';
-			$response  = wp_remote_get(
-				trailingslashit( untrailingslashit( $api_base ) ) . 'wp-json/agentic/v1/agents?per_page=1',
-				array(
-					'timeout'   => 3,
-					'sslverify' => true,
-				)
-			);
-			$community = 0;
-			if ( ! is_wp_error( $response ) ) {
-				$body = json_decode( wp_remote_retrieve_body( $response ), true );
-				if ( isset( $body['total'] ) ) {
-					$community = (int) $body['total'];
-				}
-			}
-			set_transient( 'agentic_dashboard_marketplace_agent_count', (int) $community, HOUR_IN_SECONDS );
-		}
-
 		return array(
 			'active'       => $active,
 			'uploaded'     => $uploaded,
 			'user_created' => $user_created,
-			'community'    => (int) $community,
+			'community'    => 0,
 		);
 	}
 }

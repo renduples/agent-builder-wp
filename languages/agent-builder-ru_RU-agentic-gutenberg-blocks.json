@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "ru_RU",
+        "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+      },
+      "Default (from Settings)": [
+        "По умолчанию (из настроек)"
+      ],
+      "Display Style": [
+        "Стиль отображения"
+      ],
+      "Placeholder Text": [
+        "Текст подсказки"
+      ],
+      "Type your message...": [
+        "Введите сообщение..."
+      ],
+      "Inline": [
+        "Встроенный"
+      ],
+      "Popup": [
+        "Всплывающий"
+      ],
+      "Sidebar": [
+        "Боковая панель"
+      ],
+      "Default": [
+        "По умолчанию"
+      ],
+      "Model": [
+        "Модель"
+      ],
+      "Online": [
+        "В сети"
+      ],
+      "Hello! I'm ": [
+        "Здравствуйте! Я "
+      ],
+      "How can I help you today?": [
+        "Чем я могу Вам помочь?"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "Плавающий режим — отображается как всплывающая кнопка на сайте"
+      ],
+      "Appearance": [
+        "Внешний вид"
+      ],
+      "Height": [
+        "Высота"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "Значение высоты CSS (например, 500px, 60vh)."
+      ],
+      "Theme": [
+        "Тема"
+      ],
+      "Show Header": [
+        "Показывать заголовок"
+      ],
+      "Floating Button": [
+        "Плавающая кнопка"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "Отображать как плавающую кнопку чата вместо встроенного блока."
+      ],
+      "LLM Settings": [
+        "Настройки LLM"
+      ],
+      "Provider": [
+        "Провайдер"
+      ],
+      "Override the LLM provider for this block.": [
+        "Переопределить провайдера LLM для этого блока."
+      ],
+      "Select a provider first to see available models.": [
+        "Сначала выберите провайдера, чтобы увидеть доступные модели."
+      ]
+    }
+  }
+}

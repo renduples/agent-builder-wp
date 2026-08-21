@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "zh_CN",
+        "plural-forms": "nplurals=1; plural=0;"
+      },
+      "Default (from Settings)": [
+        "默认（来自设置）"
+      ],
+      "Display Style": [
+        "显示样式"
+      ],
+      "Placeholder Text": [
+        "占位文本"
+      ],
+      "Type your message...": [
+        "输入您的消息..."
+      ],
+      "Inline": [
+        "内联"
+      ],
+      "Popup": [
+        "弹出"
+      ],
+      "Sidebar": [
+        "侧边栏"
+      ],
+      "Default": [
+        "默认"
+      ],
+      "Model": [
+        "模型"
+      ],
+      "Online": [
+        "在线"
+      ],
+      "Hello! I'm ": [
+        "您好！我是 "
+      ],
+      "How can I help you today?": [
+        "今天有什么可以帮您？"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "浮动模式 — 在前端显示为弹出按钮"
+      ],
+      "Appearance": [
+        "外观"
+      ],
+      "Height": [
+        "高度"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "CSS 高度值（例如 500px、60vh）。"
+      ],
+      "Theme": [
+        "主题"
+      ],
+      "Show Header": [
+        "显示标题栏"
+      ],
+      "Floating Button": [
+        "浮动按钮"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "以浮动聊天按钮显示，而非内嵌显示。"
+      ],
+      "LLM Settings": [
+        "LLM 设置"
+      ],
+      "Provider": [
+        "提供商"
+      ],
+      "Override the LLM provider for this block.": [
+        "为此区块覆盖 LLM 提供商。"
+      ],
+      "Select a provider first to see available models.": [
+        "请先选择提供商以查看可用模型。"
+      ]
+    }
+  }
+}

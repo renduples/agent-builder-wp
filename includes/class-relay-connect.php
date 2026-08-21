@@ -65,24 +65,10 @@ class Agentic_Relay_Connect {
 	 * @return WP_REST_Response
 	 */
 	public static function handle_ping(): WP_REST_Response {
-		$agents = array();
-
-		// Collect registered agent slugs from the filesystem.
-		$agents_dir = defined( 'AGENT_BUILDER_DIR' ) ? AGENT_BUILDER_DIR . 'library/agents/' : '';
-		if ( $agents_dir && is_dir( $agents_dir ) ) {
-			foreach ( glob( $agents_dir . '*/agent.php' ) as $file ) {
-				$slug = basename( dirname( $file ) );
-				if ( $slug ) {
-					$agents[] = $slug;
-				}
-			}
-		}
-
 		return new WP_REST_Response(
 			array(
 				'relay_ready' => true,
 				'version'     => defined( 'AGENT_BUILDER_VERSION' ) ? AGENT_BUILDER_VERSION : '1.0.0',
-				'agents'      => $agents,
 			),
 			200
 		);

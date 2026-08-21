@@ -2,7 +2,7 @@
 /**
  * Email Provider Interface
  *
- * Allows pluggable transactional email backends (Cloudflare, Brevo, SMTP, etc.).
+ * Allows pluggable transactional email backends (Cloudflare Worker, SMTP, etc.).
  * This is the foundation for making Cloudflare Email a first-class citizen
  * for drips and transactional sends.
  *
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 interface Email_Provider {
 
 	/**
-	 * Unique slug for the provider (e.g. 'cloudflare', 'brevo').
+	 * Unique slug for the provider (e.g. 'cloudflare').
 	 */
 	public function get_slug(): string;
 

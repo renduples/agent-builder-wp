@@ -1,1 +1,105 @@
-{"domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"it_IT","plural-forms":"nplurals=2; plural=(n != 1);"},"Saving…":["Salvataggio…"],"Interface":["Interfaccia"],"Basic":["Base"],"Advanced":["Avanzate"],"Save changes":["Salva le modifiche"],"Theme default":["Predefinito del tema"],"System UI":["Interfaccia di sistema"],"Appearance":["Aspetto"],"EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?":["ARRESTO DI EMERGENZA: disattiva e registra lo stato degli agenti, annulla tutti i processi e scollega i provider. Continuare?"],"Turn off emergency stop?":["Disattivare l'arresto di emergenza?"],"Disable All Agents":["Disattiva tutti gli agenti"],"Emergency stop":["Arresto di emergenza"],": deactivate and log agent states, cancels all jobs and disconnects providers.":[": disattiva e registra lo stato degli agenti, annulla tutti i processi e scollega i provider."],"Could not load interface settings.":["Impossibile caricare le impostazioni dell'interfaccia."],"Could not save interface settings.":["Impossibile salvare le impostazioni dell'interfaccia."],"Loading interface settings…":["Caricamento delle impostazioni dell'interfaccia…"],"Interface settings saved.":["Impostazioni dell'interfaccia salvate."],"Interface mode":["Modalità interfaccia"],"Basic keeps the menu focused on everyday tasks. Advanced reveals developer tools such as Skills, APIs and Endpoints.":["La modalità Base mantiene il menu focalizzato sulle attività quotidiane. La modalità Avanzata mostra gli strumenti per sviluppatori come Skill, API ed Endpoint."],"Show the Getting Started checklist on the dashboard":["Mostra la checklist Per iniziare nella bacheca"],"Turn this off once you are set up to hide the onboarding checklist.":["Disattiva questa opzione una volta completata la configurazione, per nascondere la checklist di avvio."],"Global look and feel for chat surfaces.":["Aspetto generale dei canali di chat."],"Fine-tune chat themes →":["Perfeziona i temi della chat →"],"Chat font":["Carattere della chat"],"Font used across the chat interface. Choose “Theme default” to inherit from the selected theme.":["Carattere usato in tutta l'interfaccia di chat. Scegli “Predefinito del tema” per ereditarlo dal tema selezionato."],"Use theme accent colour":["Usa il colore d'accento del tema"],"When off, the colour below overrides the chat theme accent on every chat surface.":["Se disattivata, il colore qui sotto sostituisce l'accento del tema di chat su tutti i canali di chat."],"Accent colour":["Colore d'accento"],"Selected: %s":["Selezionato: %s"],"Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until you turn this off.":["L'arresto di emergenza è ATTIVO. La chat, i processi e l'attivazione degli agenti restano bloccati finché non lo disattivi."]}}}
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "src/interface-settings/index.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "it_IT",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "Basic": [
+        "Base"
+      ],
+      "Advanced": [
+        "Avanzate"
+      ],
+      "Saving…": [
+        "Salvataggio…"
+      ],
+      "Interface": [
+        "Interfaccia"
+      ],
+      "Save changes": [
+        "Salva le modifiche"
+      ],
+      "Theme default": [
+        "Predefinito del tema"
+      ],
+      "System UI": [
+        "Interfaccia di sistema"
+      ],
+      "Appearance": [
+        "Aspetto"
+      ],
+      "EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?": [
+        "ARRESTO DI EMERGENZA: disattiva e registra lo stato degli agenti, annulla tutti i processi e scollega i provider. Continuare?"
+      ],
+      "Turn off emergency stop?": [
+        "Disattivare l'arresto di emergenza?"
+      ],
+      "Disable All Agents": [
+        "Disattiva tutti gli agenti"
+      ],
+      "Emergency stop": [
+        "Arresto di emergenza"
+      ],
+      ": deactivate and log agent states, cancels all jobs and disconnects providers.": [
+        ": disattiva e registra lo stato degli agenti, annulla tutti i processi e scollega i provider."
+      ],
+      "Could not load interface settings.": [
+        "Impossibile caricare le impostazioni dell'interfaccia."
+      ],
+      "Could not save interface settings.": [
+        "Impossibile salvare le impostazioni dell'interfaccia."
+      ],
+      "Loading interface settings…": [
+        "Caricamento delle impostazioni dell'interfaccia…"
+      ],
+      "Interface settings saved.": [
+        "Impostazioni dell'interfaccia salvate."
+      ],
+      "Interface mode": [
+        "Modalità interfaccia"
+      ],
+      "Basic keeps the menu focused on everyday tasks. Advanced reveals developer tools such as Skills, APIs and Endpoints.": [
+        "La modalità Base mantiene il menu focalizzato sulle attività quotidiane. La modalità Avanzata mostra gli strumenti per sviluppatori come Skill, API ed Endpoint."
+      ],
+      "Show the Getting Started checklist on the dashboard": [
+        "Mostra la checklist Per iniziare nella bacheca"
+      ],
+      "Turn this off once you are set up to hide the onboarding checklist.": [
+        "Disattiva questa opzione una volta completata la configurazione, per nascondere la checklist di avvio."
+      ],
+      "Global look and feel for chat surfaces.": [
+        "Aspetto generale dei canali di chat."
+      ],
+      "Fine-tune chat themes →": [
+        "Perfeziona i temi della chat →"
+      ],
+      "Chat font": [
+        "Carattere della chat"
+      ],
+      "Font used across the chat interface. Choose “Theme default” to inherit from the selected theme.": [
+        "Carattere usato in tutta l'interfaccia di chat. Scegli “Predefinito del tema” per ereditarlo dal tema selezionato."
+      ],
+      "Use theme accent colour": [
+        "Usa il colore d'accento del tema"
+      ],
+      "When off, the colour below overrides the chat theme accent on every chat surface.": [
+        "Se disattivata, il colore qui sotto sostituisce l'accento del tema di chat su tutti i canali di chat."
+      ],
+      "Accent colour": [
+        "Colore d'accento"
+      ],
+      "Selected: %s": [
+        "Selezionato: %s"
+      ],
+      "Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until you turn this off.": [
+        "L'arresto di emergenza è ATTIVO. La chat, i processi e l'attivazione degli agenti restano bloccati finché non lo disattivi."
+      ]
+    }
+  }
+}

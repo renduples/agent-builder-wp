@@ -1,1 +1,105 @@
-{"domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"ru_RU","plural-forms":"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"},"Saving…":["Сохранение…"],"Interface":["Интерфейс"],"Basic":["Основные"],"Advanced":["Дополнительно"],"Save changes":["Сохранить изменения"],"Theme default":["Тема по умолчанию"],"System UI":["Системный интерфейс"],"Appearance":["Внешний вид"],"EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?":["АВАРИЙНАЯ ОСТАНОВКА: деактивировать агентов с записью их состояний в журнал, отменить все задачи и отключить провайдеров. Продолжить?"],"Turn off emergency stop?":["Отключить аварийную остановку?"],"Disable All Agents":["Отключить всех агентов"],"Emergency stop":["Аварийная остановка"],": deactivate and log agent states, cancels all jobs and disconnects providers.":[": деактивирует агентов с записью их состояний в журнал, отменяет все задачи и отключает провайдеров."],"Could not load interface settings.":["Не удалось загрузить настройки интерфейса."],"Could not save interface settings.":["Не удалось сохранить настройки интерфейса."],"Loading interface settings…":["Загрузка настроек интерфейса…"],"Interface settings saved.":["Настройки интерфейса сохранены."],"Interface mode":["Режим интерфейса"],"Basic keeps the menu focused on everyday tasks. Advanced reveals developer tools such as Skills, APIs and Endpoints.":["Базовый режим оставляет в меню только повседневные задачи. Расширенный открывает инструменты разработчика, такие как навыки, API и конечные точки."],"Show the Getting Started checklist on the dashboard":["Показывать список «Начало работы» в консоли"],"Turn this off once you are set up to hide the onboarding checklist.":["Отключите этот параметр после завершения настройки, чтобы скрыть список первых шагов."],"Global look and feel for chat surfaces.":["Общий внешний вид всех мест размещения чата."],"Fine-tune chat themes →":["Настроить темы чата →"],"Chat font":["Шрифт чата"],"Font used across the chat interface. Choose “Theme default” to inherit from the selected theme.":["Шрифт, используемый в интерфейсе чата. Выберите «По умолчанию из темы», чтобы наследовать шрифт выбранной темы."],"Use theme accent colour":["Использовать акцентный цвет темы"],"When off, the colour below overrides the chat theme accent on every chat surface.":["Если параметр отключён, указанный ниже цвет заменяет акцентный цвет темы чата во всех местах размещения."],"Accent colour":["Акцентный цвет"],"Selected: %s":["Выбрано: %s"],"Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until you turn this off.":["Аварийная остановка АКТИВНА. Чат, задачи и активация агентов заблокированы, пока Вы её не отключите."]}}}
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "src/interface-settings/index.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "ru_RU",
+        "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+      },
+      "Basic": [
+        "Основные"
+      ],
+      "Advanced": [
+        "Дополнительно"
+      ],
+      "Saving…": [
+        "Сохранение…"
+      ],
+      "Interface": [
+        "Интерфейс"
+      ],
+      "Save changes": [
+        "Сохранить изменения"
+      ],
+      "Theme default": [
+        "Тема по умолчанию"
+      ],
+      "System UI": [
+        "Системный интерфейс"
+      ],
+      "Appearance": [
+        "Внешний вид"
+      ],
+      "EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?": [
+        "АВАРИЙНАЯ ОСТАНОВКА: деактивировать агентов с записью их состояний в журнал, отменить все задачи и отключить провайдеров. Продолжить?"
+      ],
+      "Turn off emergency stop?": [
+        "Отключить аварийную остановку?"
+      ],
+      "Disable All Agents": [
+        "Отключить всех агентов"
+      ],
+      "Emergency stop": [
+        "Аварийная остановка"
+      ],
+      ": deactivate and log agent states, cancels all jobs and disconnects providers.": [
+        ": деактивирует агентов с записью их состояний в журнал, отменяет все задачи и отключает провайдеров."
+      ],
+      "Could not load interface settings.": [
+        "Не удалось загрузить настройки интерфейса."
+      ],
+      "Could not save interface settings.": [
+        "Не удалось сохранить настройки интерфейса."
+      ],
+      "Loading interface settings…": [
+        "Загрузка настроек интерфейса…"
+      ],
+      "Interface settings saved.": [
+        "Настройки интерфейса сохранены."
+      ],
+      "Interface mode": [
+        "Режим интерфейса"
+      ],
+      "Basic keeps the menu focused on everyday tasks. Advanced reveals developer tools such as Skills, APIs and Endpoints.": [
+        "Базовый режим оставляет в меню только повседневные задачи. Расширенный открывает инструменты разработчика, такие как навыки, API и конечные точки."
+      ],
+      "Show the Getting Started checklist on the dashboard": [
+        "Показывать список «Начало работы» в консоли"
+      ],
+      "Turn this off once you are set up to hide the onboarding checklist.": [
+        "Отключите этот параметр после завершения настройки, чтобы скрыть список первых шагов."
+      ],
+      "Global look and feel for chat surfaces.": [
+        "Общий внешний вид всех мест размещения чата."
+      ],
+      "Fine-tune chat themes →": [
+        "Настроить темы чата →"
+      ],
+      "Chat font": [
+        "Шрифт чата"
+      ],
+      "Font used across the chat interface. Choose “Theme default” to inherit from the selected theme.": [
+        "Шрифт, используемый в интерфейсе чата. Выберите «По умолчанию из темы», чтобы наследовать шрифт выбранной темы."
+      ],
+      "Use theme accent colour": [
+        "Использовать акцентный цвет темы"
+      ],
+      "When off, the colour below overrides the chat theme accent on every chat surface.": [
+        "Если параметр отключён, указанный ниже цвет заменяет акцентный цвет темы чата во всех местах размещения."
+      ],
+      "Accent colour": [
+        "Акцентный цвет"
+      ],
+      "Selected: %s": [
+        "Выбрано: %s"
+      ],
+      "Emergency stop is ACTIVE. Chat, jobs, and agent activation are blocked until you turn this off.": [
+        "Аварийная остановка АКТИВНА. Чат, задачи и активация агентов заблокированы, пока Вы её не отключите."
+      ]
+    }
+  }
+}

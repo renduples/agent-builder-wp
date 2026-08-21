@@ -1,0 +1,48 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "src/admin-list/index.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "ko_KR",
+        "plural-forms": "nplurals=1; plural=0;"
+      },
+      "Search…": [
+        "검색…"
+      ],
+      "Items": [
+        "항목"
+      ],
+      "No items found.": [
+        "항목을 찾을 수 없습니다."
+      ],
+      "Basic": [
+        "기본"
+      ],
+      "Advanced": [
+        "고급"
+      ],
+      "Saving…": [
+        "저장 중…"
+      ],
+      "Settings saved.": [
+        "설정이 저장되었습니다."
+      ],
+      "Save changes": [
+        "변경 사항 저장"
+      ],
+      "Loading…": [
+        "불러오는 중…"
+      ],
+      "Only changes this screen. Other screens and your site-wide default (Settings → Interface) are unaffected.": [
+        "이 화면에만 적용됩니다. 다른 화면과 사이트 전체 기본값(설정 → 인터페이스)에는 영향을 주지 않습니다."
+      ],
+      "More info": [
+        "자세히 보기"
+      ]
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "pt_BR",
+        "plural-forms": "nplurals=2; plural=(n > 1);"
+      },
+      "Default (from Settings)": [
+        "Padrão (das configurações)"
+      ],
+      "Display Style": [
+        "Estilo de exibição"
+      ],
+      "Placeholder Text": [
+        "Texto de espaço reservado"
+      ],
+      "Type your message...": [
+        "Digite sua mensagem..."
+      ],
+      "Inline": [
+        "Inline"
+      ],
+      "Popup": [
+        "Popup"
+      ],
+      "Sidebar": [
+        "Barra lateral"
+      ],
+      "Default": [
+        "Padrão"
+      ],
+      "Model": [
+        "Modelo"
+      ],
+      "Online": [
+        "Online"
+      ],
+      "Hello! I'm ": [
+        "Olá! Eu sou "
+      ],
+      "How can I help you today?": [
+        "Como posso ajudar você hoje?"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "Modo flutuante — aparece como um botão pop-up no site"
+      ],
+      "Appearance": [
+        "Aparência"
+      ],
+      "Height": [
+        "Altura"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "Valor de altura CSS (ex.: 500px, 60vh)."
+      ],
+      "Theme": [
+        "Tema"
+      ],
+      "Show Header": [
+        "Exibir cabeçalho"
+      ],
+      "Floating Button": [
+        "Botão flutuante"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "Exibir como um botão de chat flutuante em vez de embutido."
+      ],
+      "LLM Settings": [
+        "Configurações do LLM"
+      ],
+      "Provider": [
+        "Provedor"
+      ],
+      "Override the LLM provider for this block.": [
+        "Substituir o provedor de LLM para este bloco."
+      ],
+      "Select a provider first to see available models.": [
+        "Selecione um provedor primeiro para ver os modelos disponíveis."
+      ]
+    }
+  }
+}

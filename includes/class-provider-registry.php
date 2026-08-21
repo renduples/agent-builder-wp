@@ -817,9 +817,19 @@ class Provider_Registry {
 	public static function init(): void {
 		add_action( 'agentic_refresh_provider_models', array( self::class, 'cron_refresh_all_live_models' ) );
 
-		if ( ! wp_next_scheduled( 'agentic_refresh_provider_models' ) ) {
+		if ( is_admin() && ! wp_next_scheduled( 'agentic_refresh_provider_models' ) ) {
 			wp_schedule_event( time(), 'daily', 'agentic_refresh_provider_models' );
 		}
+	}
+
+	/**
+	 * Whether the admin opted in to daily model-catalog refresh from
+	 * agentic-plugin.com (Guideline 7). Default off.
+	 *
+	 * @return bool
+	 */
+	public static function platform_sync_allowed(): bool {
+		return '1' === (string) get_option( 'agentic_allow_platform_sync', '0' );
 	}
 
 	/**
@@ -832,6 +842,7 @@ class Provider_Registry {
 	 * @return void
 	 */
 	public static function cron_refresh_all_live_models(): void {
+		$allow_catalog = self::platform_sync_allowed();
 		foreach ( self::get_all() as $p ) {
 			if ( ! ( $p['is_builtin'] ?? false ) ) {
 				continue; // Custom providers manage their own model lists.
@@ -839,6 +850,12 @@ class Provider_Registry {
 			$slug = (string) ( $p['slug'] ?? '' );
 			if ( 'agentic' === $slug && empty( $p['api_key'] ) ) {
 				continue; // The hosted gateway requires its own key to authenticate.
+			}
+			// Guideline 7: BYOK providers must not phone agentic-plugin.com
+			// unless the admin opted in. Ollama is local; the Agentic gateway
+			// is a configured SaaS (key present).
+			if ( ! $allow_catalog && 'ollama' !== $slug && 'agentic' !== $slug ) {
+				continue;
 			}
 			$models = self::fetch_live_models_from_api( $slug );
 			if ( ! empty( $models ) ) {
@@ -928,6 +945,12 @@ class Provider_Registry {
 		$cached = get_transient( 'agentic_curated_model_catalog' );
 		if ( is_array( $cached ) ) {
 			return $cached;
+		}
+
+		// Guideline 7: do not phone agentic-plugin.com unless the admin opted in
+		// (Settings → Security). "Get Latest Pricing" uses its own explicit GET.
+		if ( ! self::platform_sync_allowed() ) {
+			return array();
 		}
 
 		$resp = wp_remote_get(

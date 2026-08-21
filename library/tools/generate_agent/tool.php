@@ -24,7 +24,7 @@ class Generate_Agent extends Tool_Base {
 	}
 
 	public function get_description(): string {
-		return 'Generate complete agent PHP code from a specification.';
+		return 'Generate a declarative agent.json spec (not PHP) from a job description. Follow by calling create_agent_files.';
 	}
 
 	public function get_category(): string {

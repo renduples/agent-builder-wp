@@ -23,7 +23,7 @@ class Add_Custom_Css extends Tool_Base {
 	}
 
 	public function get_description(): string {
-		return 'Add a custom CSS snippet to the site without modifying theme files. Snippets are stored and enqueued by Agent Builder. Global snippets are also registered with the WordPress customizer.';
+		return 'Store a custom CSS snippet for later reference (e.g. for a developer to paste into Appearance → Customize). Snippets are saved to the database only — Agent Builder does not output them on the frontend.';
 	}
 
 	public function get_category(): string {
@@ -44,7 +44,7 @@ class Add_Custom_Css extends Tool_Base {
 				),
 				'location' => array(
 					'type'        => 'string',
-					'description' => 'Where to output the CSS: "global" (all pages, default) or "frontend_only" (non-admin pages only).',
+					'description' => 'Stored for reference only (not output): "global" or "frontend_only".',
 					'enum'        => array( 'global', 'frontend_only' ),
 				),
 			),
@@ -79,17 +79,12 @@ class Add_Custom_Css extends Tool_Base {
 
 		update_option( 'agentic_custom_css', $snippets );
 
-		// For global location, also register with the customizer.
-		if ( 'global' === $location ) {
-			$existing_css = wp_get_custom_css();
-			wp_update_custom_css_post( $existing_css . "\n/* Snippet: {$label} */\n" . $css );
-		}
-
 		return array(
 			'snippet_id'  => $snippet_id,
 			'label'       => $label,
 			'location'    => $location,
 			'css_preview' => substr( $css, 0, 100 ) . ( strlen( $css ) > 100 ? '...' : '' ),
+			'message'     => 'Stored only. Agent Builder does not output this CSS — paste it into Appearance → Customize if you want it on the site.',
 		);
 	}
 }

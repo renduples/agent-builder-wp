@@ -775,6 +775,19 @@ function SecurityTab( { data, setData, onSave, saving, error, saved, clearSaved 
 				__nextHasNoMarginBottom
 				__next40pxDefaultSize
 			/>
+			<div style={ { height: 16 } } />
+			<ToggleControl
+				label={ __( 'Refresh model catalog from Agentic', 'agent-builder' ) }
+				help={ __(
+					'Off by default. When on, a daily cron fetches model names and list prices from agentic-plugin.com. BYOK providers work without this; enable it only if you want the curated catalog.',
+					'agent-builder'
+				) }
+				checked={ !! data.allow_platform_sync }
+				onChange={ ( v ) =>
+					setData( { ...data, allow_platform_sync: v } )
+				}
+				__nextHasNoMarginBottom
+			/>
 			<div style={ { height: 24 } } />
 			<Section title={ __( 'Request Rate Limits', 'agent-builder' ) }>
 				<p className="agentic-react-muted" style={ { marginTop: 0 } }>
@@ -1539,14 +1552,27 @@ function AgentsTab( { data, setData, onSave, saving, error, saved, clearSaved } 
 				/>
 				<div style={ { height: 8 } } />
 				<ToggleControl
-					label={ __( 'White-label branding', 'agent-builder' ) }
+					label={ __( 'Hide “Powered by Agent Builder” branding', 'agent-builder' ) }
 					help={ __(
-						'Hide “Powered by Agent Builder” in the chat footer.',
+						'On by default. Uncheck only if you want a small credit line in the chat footer.',
 						'agent-builder'
 					) }
 					checked={ !! data.chat_whitelabel }
 					onChange={ ( v ) =>
 						setData( { ...data, chat_whitelabel: v } )
+					}
+					__nextHasNoMarginBottom
+				/>
+				<div style={ { height: 8 } } />
+				<ToggleControl
+					label={ __( 'Show the WhatsApp Pro promo in admin chat', 'agent-builder' ) }
+					help={ __(
+						'Off by default. When on, admin chat shows a link to the WhatsApp connector.',
+						'agent-builder'
+					) }
+					checked={ !! data.show_whatsapp_cta }
+					onChange={ ( v ) =>
+						setData( { ...data, show_whatsapp_cta: v } )
 					}
 					__nextHasNoMarginBottom
 				/>

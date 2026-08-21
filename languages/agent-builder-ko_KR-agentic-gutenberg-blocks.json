@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "ko_KR",
+        "plural-forms": "nplurals=1; plural=0;"
+      },
+      "Default (from Settings)": [
+        "기본값(설정에서 가져옴)"
+      ],
+      "Display Style": [
+        "표시 스타일"
+      ],
+      "Placeholder Text": [
+        "플레이스홀더 텍스트"
+      ],
+      "Type your message...": [
+        "메시지를 입력하세요..."
+      ],
+      "Inline": [
+        "인라인"
+      ],
+      "Popup": [
+        "팝업"
+      ],
+      "Sidebar": [
+        "사이드바"
+      ],
+      "Default": [
+        "기본값"
+      ],
+      "Model": [
+        "모델"
+      ],
+      "Online": [
+        "온라인"
+      ],
+      "Hello! I'm ": [
+        "안녕하세요! 저는 "
+      ],
+      "How can I help you today?": [
+        "오늘 무엇을 도와드릴까요?"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "플로팅 모드 — 프런트엔드에 팝업 버튼으로 표시됩니다"
+      ],
+      "Appearance": [
+        "모양"
+      ],
+      "Height": [
+        "높이"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "CSS 높이 값입니다(예: 500px, 60vh)."
+      ],
+      "Theme": [
+        "테마"
+      ],
+      "Show Header": [
+        "헤더 표시"
+      ],
+      "Floating Button": [
+        "플로팅 버튼"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "인라인 대신 플로팅 채팅 버튼으로 표시합니다."
+      ],
+      "LLM Settings": [
+        "LLM 설정"
+      ],
+      "Provider": [
+        "제공업체"
+      ],
+      "Override the LLM provider for this block.": [
+        "이 블록에 사용할 LLM 제공업체를 재정의합니다."
+      ],
+      "Select a provider first to see available models.": [
+        "사용 가능한 모델을 보려면 먼저 제공업체를 선택하세요."
+      ]
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "fr_FR",
+        "plural-forms": "nplurals=2; plural=(n > 1);"
+      },
+      "Default (from Settings)": [
+        "Par défaut (depuis les réglages)"
+      ],
+      "Display Style": [
+        "Style d’affichage"
+      ],
+      "Placeholder Text": [
+        "Texte indicatif"
+      ],
+      "Type your message...": [
+        "Saisissez votre message..."
+      ],
+      "Inline": [
+        "En ligne"
+      ],
+      "Popup": [
+        "Fenêtre surgissante"
+      ],
+      "Sidebar": [
+        "Barre latérale"
+      ],
+      "Default": [
+        "Par défaut"
+      ],
+      "Model": [
+        "Modèle"
+      ],
+      "Online": [
+        "En ligne"
+      ],
+      "Hello! I'm ": [
+        "Bonjour ! Je suis "
+      ],
+      "How can I help you today?": [
+        "Comment puis-je vous aider aujourd’hui ?"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "Mode flottant — s’affiche sous forme de bouton contextuel sur le site public"
+      ],
+      "Appearance": [
+        "Apparence"
+      ],
+      "Height": [
+        "Hauteur"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "Valeur CSS de hauteur (par ex. 500px, 60vh)."
+      ],
+      "Theme": [
+        "Thème"
+      ],
+      "Show Header": [
+        "Afficher l’en-tête"
+      ],
+      "Floating Button": [
+        "Bouton flottant"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "Afficher sous forme de bouton de discussion flottant au lieu d’un affichage intégré."
+      ],
+      "LLM Settings": [
+        "Réglages LLM"
+      ],
+      "Provider": [
+        "Fournisseur"
+      ],
+      "Override the LLM provider for this block.": [
+        "Remplacer le fournisseur LLM pour ce bloc."
+      ],
+      "Select a provider first to see available models.": [
+        "Sélectionnez d’abord un fournisseur pour voir les modèles disponibles."
+      ]
+    }
+  }
+}

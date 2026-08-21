@@ -402,11 +402,13 @@ function ActivityCard( { data, activity, dnd } ) {
 					value={ formatInt( agents.user_created ) }
 					href={ data.urls?.admin + 'admin.php?page=agentic-agents' }
 				/>
-				<Metric
-					label={ __( 'Community Agents', 'agent-builder' ) }
-					value={ formatInt( agents.community ) }
-					href={ data.urls?.community }
-				/>
+				{ agents.community > 0 && (
+					<Metric
+						label={ __( 'Community Agents', 'agent-builder' ) }
+						value={ formatInt( agents.community ) }
+						href={ data.urls?.community }
+					/>
+				) }
 			</div>
 		</Card>
 	);

@@ -62,6 +62,28 @@ final class Distribution {
 	}
 
 	/**
+	 * Tools omitted from the WordPress.org zip (Guideline 8 / FAQ: no
+	 * arbitrary code execution, no activating other plugins via WP-CLI).
+	 * Self-hosted builds keep them. `.distignore` strips the files from the
+	 * submission zip; this list also skips loading if the files are present
+	 * (e.g. a wporg-stamped checkout that still has the tree on disk).
+	 *
+	 * @return string[]
+	 */
+	public static function wporg_excluded_tools(): array {
+		return array( 'run_wp_cli', 'manage_cli_settings' );
+	}
+
+	/**
+	 * Whether WP-CLI agent tools and the Publish → CLI tab ship in this build.
+	 *
+	 * @return bool
+	 */
+	public static function ships_cli_tools(): bool {
+		return self::is_self_hosted();
+	}
+
+	/**
 	 * Public pricing / licensing page (off-site). Used for free → Pro promo when
 	 * the in-plugin Upgrade screen is not available (WPorg free, or stripped build).
 	 */

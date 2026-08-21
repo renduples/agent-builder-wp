@@ -275,6 +275,7 @@ class Gutenberg_Blocks {
 			(string) filemtime( AGENT_BUILDER_DIR . 'assets/js/gutenberg-blocks.js' ),
 			false
 		);
+		wp_set_script_translations( 'agentic-gutenberg-blocks', 'agent-builder', AGENT_BUILDER_DIR . 'languages' );
 
 		wp_localize_script(
 			'agentic-gutenberg-blocks',

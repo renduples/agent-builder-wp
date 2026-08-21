@@ -23,7 +23,7 @@ class Install_Plugin_From_Url extends Tool_Base {
 	}
 
 	public function get_description(): string {
-		return 'Install a WordPress plugin from an official WordPress.org ZIP URL (downloads.wordpress.org). Optionally activates the plugin after installation.';
+		return 'Install a WordPress plugin from an official WordPress.org ZIP URL (downloads.wordpress.org). Does not activate the plugin — activate it from Plugins → Installed Plugins.';
 	}
 
 	public function get_category(): string {
@@ -45,13 +45,9 @@ class Install_Plugin_From_Url extends Tool_Base {
 		return array(
 			'type'       => 'object',
 			'properties' => array(
-				'zip_url'  => array(
+				'zip_url' => array(
 					'type'        => 'string',
 					'description' => 'HTTPS URL of the plugin ZIP file to install.',
-				),
-				'activate' => array(
-					'type'        => 'boolean',
-					'description' => 'If true, activate the plugin after installation. Defaults to false.',
 				),
 			),
 			'required'   => array( 'zip_url' ),
@@ -66,8 +62,7 @@ class Install_Plugin_From_Url extends Tool_Base {
 	}
 
 	public function execute( array $args ): array {
-		$zip_url  = trim( $args['zip_url'] ?? '' );
-		$activate = (bool) ( $args['activate'] ?? false );
+		$zip_url = trim( $args['zip_url'] ?? '' );
 
 		if ( ! $zip_url ) {
 			return array( 'error' => 'zip_url is required.' );
@@ -115,15 +110,9 @@ class Install_Plugin_From_Url extends Tool_Base {
 
 		$installed_plugin = $upgrader->plugin_info();
 		$plugin_data      = array();
-		$activated        = false;
 
 		if ( $installed_plugin ) {
 			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $installed_plugin, false, false );
-
-			if ( $activate ) {
-				$activation = activate_plugin( $installed_plugin );
-				$activated  = ! is_wp_error( $activation );
-			}
 		}
 
 		return array(
@@ -131,7 +120,7 @@ class Install_Plugin_From_Url extends Tool_Base {
 			'plugin_name' => $plugin_data['Name'] ?? basename( $zip_url, '.zip' ),
 			'version'     => $plugin_data['Version'] ?? 'unknown',
 			'plugin_file' => $installed_plugin ?? '',
-			'activated'   => $activated,
+			'message'     => 'Installed but not activated. Activate it from Plugins → Installed Plugins.',
 		);
 	}
 }

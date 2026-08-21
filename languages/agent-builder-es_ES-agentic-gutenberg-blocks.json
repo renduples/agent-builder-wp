@@ -1,0 +1,87 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "assets/js/gutenberg-blocks.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "es_ES",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "Default (from Settings)": [
+        "Por defecto (de los ajustes)"
+      ],
+      "Display Style": [
+        "Estilo de visualización"
+      ],
+      "Placeholder Text": [
+        "Texto del marcador de posición"
+      ],
+      "Type your message...": [
+        "Escriba su mensaje..."
+      ],
+      "Inline": [
+        "En línea"
+      ],
+      "Popup": [
+        "Ventana emergente"
+      ],
+      "Sidebar": [
+        "Barra lateral"
+      ],
+      "Default": [
+        "Por defecto"
+      ],
+      "Model": [
+        "Modelo"
+      ],
+      "Online": [
+        "En línea"
+      ],
+      "Hello! I'm ": [
+        "¡Hola! Soy "
+      ],
+      "How can I help you today?": [
+        "¿En qué puedo ayudarle hoy?"
+      ],
+      "Floating mode — appears as a popup button on the frontend": [
+        "Modo flotante — aparece como un botón emergente en la parte pública"
+      ],
+      "Appearance": [
+        "Apariencia"
+      ],
+      "Height": [
+        "Altura"
+      ],
+      "CSS height value (e.g. 500px, 60vh).": [
+        "Valor de altura CSS (p. ej. 500px, 60vh)."
+      ],
+      "Theme": [
+        "Tema"
+      ],
+      "Show Header": [
+        "Mostrar la cabecera"
+      ],
+      "Floating Button": [
+        "Botón flotante"
+      ],
+      "Display as a floating chat button instead of inline.": [
+        "Mostrar como un botón de chat flotante en lugar de en línea."
+      ],
+      "LLM Settings": [
+        "Ajustes del LLM"
+      ],
+      "Provider": [
+        "Proveedor"
+      ],
+      "Override the LLM provider for this block.": [
+        "Sustituye el proveedor de LLM para este bloque."
+      ],
+      "Select a provider first to see available models.": [
+        "Seleccione primero un proveedor para ver los modelos disponibles."
+      ]
+    }
+  }
+}

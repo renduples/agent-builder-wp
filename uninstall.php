@@ -139,10 +139,12 @@ $wpdb->query(
  * 4. Clean up user meta.
  * -------------------------------------------------------------------------
  */
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall cleanup of this plugin's usermeta only.
 $wpdb->query(
-	"DELETE FROM {$wpdb->usermeta}
-	WHERE meta_key LIKE 'agentic_%'"
+	$wpdb->prepare(
+		"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s",
+		$wpdb->esc_like( 'agentic_' ) . '%'
+	)
 );
 
 /*

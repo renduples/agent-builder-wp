@@ -265,20 +265,6 @@
 									flexShrink: 0,
 								},
 							}, '\u2191' )
-						),
-						// Footer branding.
-						createElement(
-							'div',
-							{
-								style: {
-									padding: '6px 16px',
-									fontSize: '10px',
-									opacity: 0.4,
-									textAlign: 'center',
-									flexShrink: 0,
-								},
-							},
-							'Powered by Agent Builder'
 						)
 					)
 				);

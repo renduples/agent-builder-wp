@@ -1,0 +1,48 @@
+{
+  "translation-revision-date": "2026-08-20 16:00+0000",
+  "generator": "WP-CLI/2.12.0",
+  "source": "src/admin-list/index.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "nl_NL",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "Search…": [
+        "Zoeken…"
+      ],
+      "Items": [
+        "Items"
+      ],
+      "No items found.": [
+        "Geen items gevonden."
+      ],
+      "Basic": [
+        "Basis"
+      ],
+      "Advanced": [
+        "Geavanceerd"
+      ],
+      "Saving…": [
+        "Opslaan…"
+      ],
+      "Settings saved.": [
+        "Instellingen opgeslagen."
+      ],
+      "Save changes": [
+        "Wijzigingen opslaan"
+      ],
+      "Loading…": [
+        "Laden…"
+      ],
+      "Only changes this screen. Other screens and your site-wide default (Settings → Interface) are unaffected.": [
+        "Wijzigt alleen dit scherm. Andere schermen en uw sitebrede standaard (Instellingen → Interface) blijven ongewijzigd."
+      ],
+      "More info": [
+        "Meer info"
+      ]
+    }
+  }
+}

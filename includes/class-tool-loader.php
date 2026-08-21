@@ -122,6 +122,10 @@ class Tool_Loader {
 		$tool_files = $unique_files;
 
 		foreach ( $tool_files as $tool_file ) {
+			$tool_slug = basename( dirname( (string) $tool_file ) );
+			if ( Distribution::is_wporg() && in_array( $tool_slug, Distribution::wporg_excluded_tools(), true ) ) {
+				continue;
+			}
 			// include_once prevents fatal "Cannot redeclare class" if load() is
 			// called more than once in a request (e.g. after sync_to_registry reset).
 			$tool_instance = include_once $tool_file;
