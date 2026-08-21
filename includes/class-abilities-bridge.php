@@ -116,6 +116,11 @@ class Abilities_Bridge {
 			if ( empty( $tool_name ) ) {
 				continue;
 			}
+			// Respect Tools hub enable/disable — disabled tools must not register
+			// as abilities or appear on the Abilities-backed MCP path.
+			if ( ! Tools_Registry::is_enabled( $tool_name ) ) {
+				continue;
+			}
 
 			$ability_args = $this->tool_to_ability_args( $tool );
 			if ( $ability_args ) {
@@ -234,7 +239,10 @@ class Abilities_Bridge {
 			|| str_starts_with( $tool_name, 'git_' )
 			|| str_starts_with( $tool_name, 'cloudflare_' );
 
-			$ability_args['meta']['mcp.public'] = ! $block_mcp;
+			// Official MCP Adapter expects nested meta.mcp.public (not a dotted key).
+			$ability_args['meta']['mcp'] = array(
+				'public' => ! $block_mcp,
+			);
 
 			// Provide rich instructions for the model when using native AI Client.
 			$instructions                         = "Use the '{$label}' ability when the user needs to {$description}. Always respect the permission model.";

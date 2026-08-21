@@ -2169,7 +2169,7 @@ function MCPTab( { data } ) {
 				setCredentials( ( prev ) => [
 					...prev,
 					{
-						user_id: undefined,
+						user_id: res.user_id,
 						user_login: res.user_login,
 						uuid: res.uuid,
 						created: res.created,

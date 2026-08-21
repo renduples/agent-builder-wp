@@ -450,6 +450,7 @@ class Admin_Settings_REST {
 			array(
 				'ok'         => true,
 				'password'   => $plaintext_password,
+				'user_id'    => $user_id,
 				'user_login' => $user->user_login,
 				'uuid'       => $item['uuid'],
 				'created'    => wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $item['created'] ),

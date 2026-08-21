@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 3.3.87
+Stable tag: 3.3.88
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -267,6 +267,9 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **Data sent:** Whatever data that form collects, sent only to the URL you configured — never to Agentic or any other third party.
 
 == Changelog ==
+
+= 3.3.88 - 2026-08-21 =
+* Fix: MCP/abilities skip disabled tools; nested meta.mcp.public; MCP credential create returns user_id; HIGH floors for manage_skill / manage_user_privileges.
 
 = 3.3.87 - 2026-08-21 =
 * Fixed four regressions found in code review before 3.3.86 shipped anywhere: the Settings Advanced group (APIs, Endpoints, MCP) no longer disappears from the nav in Basic mode (it's still just a direct link away, but now discoverable); the manual "Refresh Models" button no longer fails by default now that catalog sync is opt-in; a dangling reference to a deleted agent template file no longer silently returns an empty result; and the WP.org export script now rebuilds a production-only `vendor/` instead of stripping it outright (was breaking every spreadsheet/PDF/DOCX tool in a real build).

@@ -218,8 +218,10 @@ class Agentic_Relay_Connect {
 			// happens to be on 6.9+ — abilities from OTHER plugins are left
 			// alone; this plugin has no risk model for those.
 			$own_tool_name = self::own_ability_to_tool_name( $name );
-			if ( null !== $own_tool_name && ! self::is_tool_mcp_safe( $own_tool_name ) ) {
-				continue;
+			if ( null !== $own_tool_name ) {
+				if ( ! Tools_Registry::is_enabled( $own_tool_name ) || ! self::is_tool_mcp_safe( $own_tool_name ) ) {
+					continue;
+				}
 			}
 
 			// Scope to this agent's own declared tools — own abilities are

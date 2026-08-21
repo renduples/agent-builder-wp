@@ -26,8 +26,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Admin_Notice_Manager {
 
 	/**
+	 * Whether the current request is an Agent Builder wp-admin screen.
+	 *
+	 * Used to keep setup / product notices off core Dashboard, Posts, Plugins,
+	 * etc. (WP.org Guideline-style non-intrusive admin UX; UI/UX plan suite 2.1).
+	 *
+	 * @return bool
+	 */
+	private function is_plugin_admin_screen(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page identification.
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		if ( 'agent-builder' === $page || str_starts_with( $page, 'agentic-' ) ) {
+			return true;
+		}
+
+		if ( function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( $screen && is_string( $screen->id ) ) {
+				// toplevel_page_agent-builder, agent-builder_page_agentic-*, etc.
+				if ( str_contains( $screen->id, 'agent-builder' ) || str_contains( $screen->id, 'agentic-' ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Show a one-time banner to finish plugin setup.
-	 * Displayed until onboarding is complete or the user explicitly skips.
+	 *
+	 * Shown only on Agent Builder admin screens until onboarding is complete
+	 * or the user dismisses it - never on core WP admin pages.
 	 *
 	 * @return void
 	 */
@@ -44,9 +74,14 @@ class Admin_Notice_Manager {
 			return;
 		}
 
-		// Don't show the banner on the signup pages themselves.
+		// Plugin pages only - do not nag Dashboard / Plugins / Posts / etc.
+		if ( ! $this->is_plugin_admin_screen() ) {
+			return;
+		}
+
+		// Don't show the banner on the signup / setup wizard pages themselves.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page identification.
-		$current_page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
+		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 		if ( in_array( $current_page, array( 'agentic-signup', 'agentic-setup' ), true ) ) {
 			return;
 		}

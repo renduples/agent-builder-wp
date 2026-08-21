@@ -306,6 +306,11 @@ class Risk_Level {
 		'manage_scheduled_task'                => self::MEDIUM,
 		'manage_event_listener'                => self::MEDIUM,
 		'manage_cli_settings'                  => self::HIGH,
+		// Skills / Users admin tools (3.3.75–3.3.76) — floor HIGH so MCP
+		// is_tool_mcp_safe() excludes them (chat still uses abilities risk).
+		'manage_skill'                         => self::HIGH,
+		'manage_user_privileges'               => self::HIGH,
+		'browse_community_skills'              => self::MEDIUM,
 	);
 
 	/**
