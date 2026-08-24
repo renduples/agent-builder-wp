@@ -85,16 +85,8 @@ class Ajax_Dispatcher {
 			'agentic_agent_breakdown'            => array( Admin_Ajax::class, 'agent_breakdown' ),
 			'agentic_update_model_pricing'       => array( Admin_Ajax::class, 'update_model_pricing' ),
 
-			// Vector Store (Pro) — page=agentic-train-data&tab=vector; RAG_Manager enforces Pro.
-			'agentic_td_get_overview'            => array( RAG_Manager::class, 'ajax_get_overview' ),
-			'agentic_td_scan_content'            => array( RAG_Manager::class, 'ajax_scan_content' ),
-			'agentic_td_train_post'              => array( RAG_Manager::class, 'ajax_train_post' ),
-			'agentic_td_upload_file'             => array( RAG_Manager::class, 'ajax_upload_file' ),
-			'agentic_td_get_sources'             => array( RAG_Manager::class, 'ajax_get_sources' ),
-			'agentic_td_delete_source'           => array( RAG_Manager::class, 'ajax_delete_source' ),
-			'agentic_td_get_credits'             => array( RAG_Manager::class, 'ajax_get_credits' ),
-			'agentic_td_get_pricing'             => array( RAG_Manager::class, 'ajax_get_pricing' ),
-			'agentic_td_get_transactions'        => array( RAG_Manager::class, 'ajax_get_transactions' ),
+			// Vector Store AJAX lives in Agent Builder Pro (RAG_Manager +
+			// Vector_Store::register_ajax_handlers). Free does not register them.
 
 			// Free Knowledge Wiki (OKF).
 			'agentic_okf_list'                   => array( Okf_Admin::class, 'ajax_list' ),

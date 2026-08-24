@@ -1271,14 +1271,15 @@ class Admin_Menu_Handler {
 			);
 		}
 
-		// Hosted Vector Store UI only when Pro is active (train-data.js talks to RAG API).
-		// Free users still get the Vector tab with the Pro upgrade card from train-data.php.
-		if ( $is_pro && 'vector' === $active_tab ) {
+		// Hosted Vector Store UI script is owned by Pro (filter). Free users
+		// still get the Vector tab with the Pro upgrade card from train-data.php.
+		$agentic_vs_script = apply_filters( 'agentic_vector_store_admin_script', '' );
+		if ( $is_pro && 'vector' === $active_tab && is_string( $agentic_vs_script ) && '' !== $agentic_vs_script ) {
 			wp_enqueue_script(
 				'agentic-train-data',
-				AGENT_BUILDER_URL . 'assets/js/train-data.js',
+				$agentic_vs_script,
 				array( 'jquery', 'agentic-ui' ),
-				AGENT_BUILDER_VERSION,
+				defined( 'AGENT_BUILDER_PRO_VERSION' ) ? AGENT_BUILDER_PRO_VERSION : AGENT_BUILDER_VERSION,
 				true
 			);
 			wp_localize_script(

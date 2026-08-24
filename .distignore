@@ -47,5 +47,8 @@ admin/deployment/deployment-cli.php
 includes/self-hosted
 admin/upgrade-pro.php
 
-# Pro Vector Store UI (lives in agent-builder-pro)
+# Pro Vector Store / RAG (lives in agent-builder-pro). Explicit paths — never
+# glob *pro* (false positives on provider/proposal/approvals/…).
 admin/partials/vector-store-pro.php
+includes/class-rag-manager.php
+assets/js/train-data.js
