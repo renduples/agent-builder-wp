@@ -17,3 +17,6 @@
 # AppleDouble / SMB junk
 ._*
 .DS_Store
+
+# WP.org review notes — keep local/SVN-only, not the public GitHub tree
+/SUBMISSION-NOTES.md
