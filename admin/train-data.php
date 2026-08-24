@@ -326,12 +326,19 @@ if ( class_exists( '\Agentic_Agent_Registry' ) ) {
 
 		<?php if ( $agentic_is_pro ) : ?>
 			<?php
-			// Pro owns the hosted vector UI; free ships the shared train panels when Pro is active.
+			// Vector Store admin UI lives only in Agent Builder Pro (filter).
+			// Free never ships Pro markup — see bin/strip-free-pro-paths.sh.
 			$agentic_vector_partial = apply_filters( 'agentic_vector_store_admin_partial', '' );
 			if ( is_string( $agentic_vector_partial ) && '' !== $agentic_vector_partial && file_exists( $agentic_vector_partial ) ) {
 				include $agentic_vector_partial;
 			} else {
-				include AGENT_BUILDER_DIR . 'admin/partials/vector-store-pro.php';
+				?>
+				<div class="notice notice-warning inline" style="margin:12px 0;">
+					<p>
+						<?php esc_html_e( 'Pro is active but the Vector Store admin UI was not found. Reinstall or update Agent Builder Pro.', 'agent-builder' ); ?>
+					</p>
+				</div>
+				<?php
 			}
 			?>
 		<?php else : ?>

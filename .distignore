@@ -46,3 +46,6 @@ admin/deployment/deployment-cli.php
 # repo where they do — the exclusion has to live here either way.
 includes/self-hosted
 admin/upgrade-pro.php
+
+# Pro Vector Store UI (lives in agent-builder-pro)
+admin/partials/vector-store-pro.php
