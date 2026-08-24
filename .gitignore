@@ -3,3 +3,17 @@
 /.phpunit.result.cache
 /.DS_Store
 ._*
+
+# AI coding assistants / local tooling — never ship in the public plugin repo
+/CLAUDE.md
+/Claude.md
+/.claude/
+/.cursor/
+/.windsurf/
+/.continue/
+.aider.chat.history.md
+.aider.tags.cache.v4
+
+# AppleDouble / SMB junk
+._*
+.DS_Store
