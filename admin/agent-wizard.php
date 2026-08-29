@@ -42,7 +42,7 @@ if ( file_exists( $agentic_aw_asset_file ) ) {
 		array(
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 			'nonce'        => wp_create_nonce( 'agentic_train_data' ),
-			'hasLicense'   => '' !== (string) get_option( \Agentic\License_Client::OPTION_LICENSE_KEY, '' ),
+			'hasLicense'   => false,
 			'knowledgeUrl' => admin_url( 'admin.php?page=agentic-train-data' ),
 		)
 	);

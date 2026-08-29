@@ -418,16 +418,10 @@ class Abilities_Manifest {
 			// them from the manifest cross-check.
 			$global = apply_filters( 'agentic_global_agent_tools', array( 'report_issue' ), null );
 
-			// Site-local (Pro declarative) tools are injected via agentic_agent_tool_names
-			// and must not fail bundled agent activation.
+			// Site tools registered outside a bundled agent's own manifest (source =
+			// 'site') are injected via agentic_agent_tool_names and must not fail
+			// bundled agent activation.
 			$site_local = array();
-			if ( class_exists( __NAMESPACE__ . '\\Site_Local_Tools' ) ) {
-				foreach ( Site_Local_Tools::all() as $def ) {
-					if ( ! empty( $def['name'] ) ) {
-						$site_local[] = (string) $def['name'];
-					}
-				}
-			}
 			if ( class_exists( __NAMESPACE__ . '\\Tools_Registry' ) ) {
 				foreach ( Tools_Registry::get_all() as $name => $row ) {
 					if ( is_array( $row ) && 'site' === ( $row['source'] ?? '' ) ) {

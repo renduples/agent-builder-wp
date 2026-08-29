@@ -185,7 +185,7 @@ class Dashboard_REST {
 	 */
 	public static function get_dashboard( array $warnings = array() ): \WP_REST_Response {
 		$llm         = new LLM_Client();
-		$is_pro      = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
+		$is_pro      = false;
 		$is_advanced = Admin_Menu_Handler::is_advanced_mode( 'dashboard' );
 		$provider    = $llm->get_provider();
 		$site_model  = (string) get_option( 'agentic_model', '' );
@@ -209,7 +209,7 @@ class Dashboard_REST {
 		}
 
 		// License tile.
-		$license = self::license_tile( $is_pro );
+		$license = self::license_tile();
 
 		// Jobs.
 		$job_health = ( class_exists( Job_Manager::class ) && method_exists( Job_Manager::class, 'get_health' ) )
@@ -295,11 +295,6 @@ class Dashboard_REST {
 			),
 		);
 
-		$has_channels = class_exists( '\Agentic\Channels\WhatsApp_Channel' );
-		$show_nudge   = ! get_user_meta( get_current_user_id(), 'agentic_pro_nudge_dismissed', true )
-			&& ! $is_pro
-			&& ! $has_channels;
-
 		return new \WP_REST_Response(
 			array(
 				'version'                 => AGENT_BUILDER_VERSION,
@@ -309,7 +304,6 @@ class Dashboard_REST {
 				'is_configured'           => $is_configured,
 				'emergency_stop'          => Emergency_Stop::is_active(),
 				'show_onboarding'         => '0' !== get_option( 'agentic_show_onboarding', '1' ),
-				'show_pro_nudge'          => (bool) $show_nudge,
 				'agent_updates'           => class_exists( Agent_Updates::class ) && Agent_Updates::is_opted_in(),
 				// Pro-only: free / WPorg never expose the opt-in toggle (marketplace link instead).
 				'has_agent_updates_class' => class_exists( Agent_Updates::class ) && Agent_Updates::is_remote_check_available(),
@@ -469,46 +463,16 @@ class Dashboard_REST {
 	}
 
 	/**
-	 * License display payload for Status tile.
+	 * License display payload for Status tile. This build has no license path.
 	 *
-	 * @param bool $is_pro Pro active.
 	 * @return array<string,mixed>
 	 */
-	private static function license_tile( bool $is_pro ): array {
-		if ( ! $is_pro ) {
-			return array(
-				'status' => 'free',
-				'label'  => 'GPL-2.0-or-later',
-				'tier'   => 'free',
-				'class'  => '',
-			);
-		}
-
-		$lc     = License_Client::get_instance();
-		$status = $lc->get_status();
-		$st     = (string) ( $status['status'] ?? 'pending' );
-		$tier   = strtolower( (string) ( $status['type'] ?? '' ) );
-		if ( ! in_array( $tier, array( 'personal', 'agency' ), true ) ) {
-			$stored = get_option( License_Client::OPTION_LICENSE_DATA, array() );
-			$tier   = strtolower( (string) ( $stored['type'] ?? 'personal' ) );
-		}
-		if ( ! in_array( $tier, array( 'personal', 'agency' ), true ) ) {
-			$tier = 'personal';
-		}
-		$label = ( 'agency' === $tier ) ? __( 'Agency', 'agent-builder' ) : __( 'Personal', 'agent-builder' );
-		$class = 'active';
-		if ( 'grace_period' === $st ) {
-			$class = 'expiring';
-			$label = $label . ' (' . __( 'Expiring', 'agent-builder' ) . ')';
-		} elseif ( in_array( $st, array( 'expired', 'license_expired', 'revoked', 'license_revoked', 'invalid', 'invalid_key' ), true ) ) {
-			$class = 'error';
-		}
-
+	private static function license_tile(): array {
 		return array(
-			'status' => $st,
-			'label'  => $label,
-			'tier'   => $tier,
-			'class'  => $class,
+			'status' => 'free',
+			'label'  => 'GPL-2.0-or-later',
+			'tier'   => 'free',
+			'class'  => '',
 		);
 	}
 

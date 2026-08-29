@@ -11,8 +11,6 @@
     "manage_admin_bar_launcher": { "risk": "low", "risk_by_action": { "get": "none" }, "reason": "Toggles wp-admin chat launchers — reversible." },
     "manage_scheduled_task": { "risk": "medium", "risk_by_action": { "list": "none" }, "reason": "Creates a recurring task an agent runs unattended on a schedule." },
     "manage_event_listener": { "risk": "medium", "risk_by_action": { "list": "none" }, "reason": "Creates a trigger that runs an agent unattended when a WordPress event fires." },
-    "manage_cli_settings": { "risk": "high", "risk_by_action": { "get_whitelist": "none", "get_agent_privileges": "none" }, "reason": "Expands what the extreme-risk run_wp_cli tool is allowed to run, and which agents may call it." },
-    "run_wp_cli": { "risk": "extreme", "reason": "Executes WP-CLI commands directly; matches the tool's own baseline risk floor." },
     "agents_available": { "risk": "none", "reason": "Read-only browsing of the community agent catalog." }
   }
 }

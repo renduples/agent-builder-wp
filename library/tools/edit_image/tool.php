@@ -42,7 +42,7 @@ class Edit_Image extends \Agentic\Tool_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return 'Edit an existing image from the WordPress media library using AI. Describe what to change — the image is updated and saved as a new media library item. Optionally provide a mask attachment ID as a best-effort hint of which region to change; the edit is applied conversationally from the prompt, not pixel-precise inpainting. Credit costs: 5 (imagen-4-fast), 10 (imagen-4, default), 23 (imagen-4-ultra). Requires Vector Store Pro.';
+		return 'Edit an existing image from the WordPress media library using AI. Describe what to change — the image is updated and saved as a new media library item. Optionally provide a mask attachment ID as a best-effort hint of which region to change; the edit is applied conversationally from the prompt, not pixel-precise inpainting. Credit costs: 5 (imagen-4-fast), 10 (imagen-4, default), 23 (imagen-4-ultra). Requires a connected Agentic AI account.';
 	}
 
 	/**
@@ -185,10 +185,13 @@ class Edit_Image extends \Agentic\Tool_Base {
 		if ( empty( $api_key ) && defined( 'AGENTIC_RAG_API_KEY' ) ) {
 			$api_key = AGENTIC_RAG_API_KEY;
 		}
-		$user_id = (string) get_option( \Agentic\License_Client::OPTION_LICENSE_KEY, '' );
+		if ( empty( $api_key ) ) {
+			$api_key = (string) ( \Agentic\Provider_Registry::get( 'agentic' )['api_key'] ?? '' );
+		}
+		$user_id = $api_key;
 
-		if ( empty( $api_key ) || empty( $user_id ) ) {
-			return array( 'error' => 'Agentic Image Generation requires an active license. Activate your license in Agentic → Settings.' );
+		if ( empty( $api_key ) ) {
+			return array( 'error' => 'Agentic Image Generation requires connecting an Agentic AI account — go to Agent Builder → Settings → Providers and connect Agentic AI.' );
 		}
 
 		return array(

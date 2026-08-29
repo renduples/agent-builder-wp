@@ -60,7 +60,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<button type="button" id="agentic-consent-accept" class="agentic-consent-accept"><?php esc_html_e( 'I Understand', 'agent-builder' ); ?></button>
 		</div>
 
-		<?php if ( class_exists( '\Agentic\Pro\Turnstile' ) && \Agentic\Pro\Turnstile::is_required() ) : ?>
+		<?php if ( \Agentic\Turnstile::is_required() ) : ?>
 		<div id="agentic-turnstile" style="display:none"></div>
 		<?php endif; ?>
 

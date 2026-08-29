@@ -2791,17 +2791,6 @@ function SettingsApp() {
 			case 'mcp':
 				body = <MCPTab data={ data } />;
 				break;
-			case 'license':
-				body = (
-					<PlaceholderTab
-						title={ __( 'License', 'agent-builder' ) }
-						message={ __(
-							'Activate Agent Builder Pro to manage your license key here.',
-							'agent-builder'
-						) }
-					/>
-				);
-				break;
 			default:
 				body = (
 					<PlaceholderTab

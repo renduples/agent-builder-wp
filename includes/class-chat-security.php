@@ -446,42 +446,33 @@ class Chat_Security {
 	}
 
 	/**
-	 * Verify Turnstile token — delegates to pro class.
-	 * Returns null (pass) if add-on Turnstile is not available.
+	 * Verify Turnstile token. Returns null (pass) or an array with 'pass' => false
+	 * and a human-readable 'reason' on failure.
 	 *
 	 * @param string $token  Turnstile response token.
 	 * @param int    $user_id User ID (0 for anonymous).
 	 * @return array|null
 	 */
 	public static function verify_turnstile( string $token, int $user_id = 0 ): ?array {
-		if ( class_exists( '\Agentic\Pro\Turnstile' ) ) {
-			return \Agentic\Pro\Turnstile::verify( $token, $user_id );
-		}
-		return null;
+		return \Agentic\Turnstile::verify( $token, $user_id );
 	}
 
 	/**
-	 * Check if Turnstile is required — delegates to pro class.
+	 * Check if Turnstile is required.
 	 *
 	 * @return bool
 	 */
 	public static function is_turnstile_required(): bool {
-		if ( class_exists( '\Agentic\Pro\Turnstile' ) ) {
-			return \Agentic\Pro\Turnstile::is_required();
-		}
-		return false;
+		return \Agentic\Turnstile::is_required();
 	}
 
 	/**
-	 * Get Turnstile site key — delegates to pro class.
+	 * Get Turnstile site key.
 	 *
 	 * @return string
 	 */
 	public static function get_turnstile_site_key(): string {
-		if ( class_exists( '\Agentic\Pro\Turnstile' ) ) {
-			return \Agentic\Pro\Turnstile::get_site_key();
-		}
-		return '';
+		return \Agentic\Turnstile::get_site_key();
 	}
 
 		/**

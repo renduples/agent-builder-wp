@@ -42,7 +42,7 @@ class Generate_Video extends \Agentic\Tool_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return 'Generate a video clip from a text prompt using Vertex AI Veo 2 or Veo 3. Supported durations: 6 or 8 seconds (requested value is snapped to the nearest — the service rejects 4-second requests). Returns a CDN URL for immediate embedding. Credit costs: 50 credits/second (veo-2) or 85 credits/second (veo-3 with native audio). 1 credit = $0.01 USD. Requires an active Agentic license.';
+		return 'Generate a video clip from a text prompt using Vertex AI Veo 2 or Veo 3. Supported durations: 6 or 8 seconds (requested value is snapped to the nearest — the service rejects 4-second requests). Returns a CDN URL for immediate embedding. Credit costs: 50 credits/second (veo-2) or 85 credits/second (veo-3 with native audio). 1 credit = $0.01 USD. Requires a connected Agentic AI account.';
 	}
 
 	/**
@@ -176,10 +176,13 @@ class Generate_Video extends \Agentic\Tool_Base {
 		if ( empty( $api_key ) && defined( 'AGENTIC_RAG_API_KEY' ) ) {
 			$api_key = AGENTIC_RAG_API_KEY;
 		}
-		$user_id = (string) get_option( \Agentic\License_Client::OPTION_LICENSE_KEY, '' );
+		if ( empty( $api_key ) ) {
+			$api_key = (string) ( \Agentic\Provider_Registry::get( 'agentic' )['api_key'] ?? '' );
+		}
+		$user_id = $api_key;
 
-		if ( empty( $api_key ) || empty( $user_id ) ) {
-			return array( 'error' => 'Agentic Video Generation requires an active license. Activate your license in Agentic → Settings.' );
+		if ( empty( $api_key ) ) {
+			return array( 'error' => 'Agentic Video Generation requires connecting an Agentic AI account — go to Agent Builder → Settings → Providers and connect Agentic AI.' );
 		}
 
 		return array(

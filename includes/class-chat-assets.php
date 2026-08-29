@@ -144,7 +144,6 @@ class Chat_Assets {
 			}
 		}
 
-		$agentic_is_pro             = \Agentic\License_Client::get_instance()->is_pro();
 		$agentic_overlay_whitelabel = '1' === get_option( 'agentic_chat_whitelabel', '1' );
 		$agentic_provider_labels    = array(
 			'openai'    => 'OpenAI',
@@ -159,7 +158,7 @@ class Chat_Assets {
 			'meta'      => 'Meta Llama',
 			'cohere'    => 'Cohere',
 		);
-		$agentic_overlay_provider   = $agentic_is_pro ? get_option( 'agentic_llm_provider', 'agentic' ) : '';
+		$agentic_overlay_provider   = get_option( 'agentic_llm_provider', 'agentic' );
 
 		wp_localize_script(
 			'agentic-chat-overlay',
@@ -177,8 +176,8 @@ class Chat_Assets {
 				'welcomeMessages' => $agentic_welcome_messages,
 				'agentNames'      => $agentic_agent_names,
 				'showBranding'    => $agentic_overlay_whitelabel ? '0' : '1',
-				'provider'        => $agentic_is_pro ? ( $agentic_provider_labels[ $agentic_overlay_provider ] ?? ucfirst( $agentic_overlay_provider ) ) : '',
-				'model'           => $agentic_is_pro ? get_option( 'agentic_model', '' ) : '',
+				'provider'        => $agentic_provider_labels[ $agentic_overlay_provider ] ?? ucfirst( $agentic_overlay_provider ),
+				'model'           => get_option( 'agentic_model', '' ),
 				'slashCommands'   => self::get_slash_commands_for_js(),
 				'i18n'            => agentic_chat_i18n(),
 			)
@@ -416,9 +415,9 @@ class Chat_Assets {
 				'i18n'           => agentic_chat_i18n(),
 			);
 
-			if ( class_exists( '\Agentic\Pro\Turnstile' ) && \Agentic\Pro\Turnstile::is_required() ) {
-				$localize_data['turnstileSiteKey'] = \Agentic\Pro\Turnstile::get_site_key();
-				\Agentic\Pro\Turnstile::enqueue_script();
+			if ( Turnstile::is_required() ) {
+				$localize_data['turnstileSiteKey'] = Turnstile::get_site_key();
+				Turnstile::enqueue_script();
 			}
 
 			wp_localize_script( 'agentic-chat-frontend', 'agenticChat', $localize_data );

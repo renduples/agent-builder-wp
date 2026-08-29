@@ -445,7 +445,6 @@ class Admin_Pages_REST {
 			'cli'                     => __( 'CLI', 'agent-builder' ),
 			'communication'           => __( 'Communication', 'agent-builder' ),
 			'content'                 => __( 'Content', 'agent-builder' ),
-			'custom'                  => __( 'Custom', 'agent-builder' ),
 			'crm'                     => __( 'CRM', 'agent-builder' ),
 			'database'                => __( 'Database', 'agent-builder' ),
 			'dataforseo'              => __( 'DataForSEO', 'agent-builder' ),
@@ -541,20 +540,10 @@ class Admin_Pages_REST {
 			}
 		}
 
-		// Pro site-local tools → registry (source = site).
-		if ( class_exists( Site_Local_Tools::class ) ) {
-			Site_Local_Tools::sync_all_to_registry();
-		}
-
 		$tools = class_exists( Tools_Registry::class ) ? Tools_Registry::get_all() : array();
 		$tab   = self::normalize_tool_category( $tab );
 		if ( 'general' === $tab ) {
 			$tab = 'all';
-		}
-		// Special tabs: site-local custom tools.
-		$is_site_tab = ( 'custom' === $tab || 'site' === $tab );
-		if ( $is_site_tab ) {
-			$tab = 'custom';
 		}
 
 		// Counts per normalized category.
@@ -584,13 +573,13 @@ class Admin_Pages_REST {
 			);
 		}
 
-		// Build tabs: All first, then Custom (site-local), then categories A–Z.
+		// Build tabs: All first, then categories A–Z.
 		$cat_slugs = array_keys( $counts );
 		$cat_slugs = array_values(
 			array_filter(
 				$cat_slugs,
 				static function ( $slug ) use ( $counts ) {
-					return 'all' !== $slug && 'custom' !== $slug && ( $counts[ $slug ] ?? 0 ) > 0;
+					return 'all' !== $slug && ( $counts[ $slug ] ?? 0 ) > 0;
 				}
 			)
 		);
@@ -601,17 +590,7 @@ class Admin_Pages_REST {
 			}
 		);
 
-		$site_count = 0;
-		foreach ( $rows_all as $row ) {
-			if ( 'site' === ( $row['source'] ?? '' ) || 'custom' === ( $row['category'] ?? '' ) ) {
-				++$site_count;
-			}
-		}
-		if ( class_exists( Site_Local_Tools::class ) ) {
-			$site_count = max( $site_count, count( Site_Local_Tools::all() ) );
-		}
-
-		if ( ! $is_site_tab && 'all' !== $tab && ! in_array( $tab, $cat_slugs, true ) ) {
+		if ( 'all' !== $tab && ! in_array( $tab, $cat_slugs, true ) ) {
 			$tab = 'all';
 		}
 
@@ -624,15 +603,6 @@ class Admin_Pages_REST {
 				(int) ( $counts['all'] ?? 0 )
 			),
 			'url'   => admin_url( 'admin.php?page=agentic-tools&tab=all' ),
-		);
-		$tabs[] = array(
-			'id'    => 'custom',
-			'label' => sprintf(
-				/* translators: %d: site-local tool count */
-				__( 'Custom (%d)', 'agent-builder' ),
-				$site_count
-			),
-			'url'   => admin_url( 'admin.php?page=agentic-tools&tab=custom' ),
 		);
 		foreach ( $cat_slugs as $slug ) {
 			$tabs[] = array(
@@ -647,16 +617,7 @@ class Admin_Pages_REST {
 		}
 
 		$rows = $rows_all;
-		if ( $is_site_tab ) {
-			$rows = array_values(
-				array_filter(
-					$rows_all,
-					static function ( $row ) {
-						return 'site' === ( $row['source'] ?? '' ) || 'custom' === ( $row['category'] ?? '' );
-					}
-				)
-			);
-		} elseif ( 'all' !== $tab ) {
+		if ( 'all' !== $tab ) {
 			$rows = array_values(
 				array_filter(
 					$rows_all,
@@ -669,17 +630,7 @@ class Admin_Pages_REST {
 
 		$panel_title = 'all' === $tab
 			? __( 'All tools', 'agent-builder' )
-			: ( $is_site_tab ? __( 'Site-local tools', 'agent-builder' ) : self::tool_category_label( $tab ) );
-
-		$site_local = class_exists( Site_Local_Tools::class )
-			? Site_Local_Tools::admin_payload()
-			: array(
-				'pro'        => false,
-				'can_manage' => false,
-				'handlers'   => array(),
-				'site_tools' => array(),
-				'agents'     => array(),
-			);
+			: self::tool_category_label( $tab );
 
 		$is_advanced = class_exists( Admin_Menu_Handler::class )
 			? Admin_Menu_Handler::is_advanced_mode( 'tools' )
@@ -715,7 +666,6 @@ class Admin_Pages_REST {
 		return array(
 			'page'             => 'tools',
 			'tab'              => $tab,
-			'site_local'       => $site_local,
 			'title'            => __( 'Tools', 'agent-builder' ),
 			'panel_title'      => $is_advanced
 				? $panel_title
@@ -2043,18 +1993,12 @@ class Admin_Pages_REST {
 	 * @return array<string,mixed>
 	 */
 	private static function upgrade_payload(): array {
-		$is_pro  = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
-		$pricing = class_exists( Distribution::class )
-			? Distribution::PRICING_URL
-			: 'https://agentic-plugin.com/pricing/';
 		return array(
 			'page'        => 'upgrade-pro',
-			'title'       => $is_pro ? __( 'Pro', 'agent-builder' ) : __( 'Upgrade to Pro', 'agent-builder' ),
-			'description' => $is_pro
-				? __( 'Pro is active on this site.', 'agent-builder' )
-				: __( 'Unlock vector RAG, connectors, channels, and advanced metering.', 'agent-builder' ),
-			'is_pro'      => $is_pro,
-			'pricing_url' => $pricing,
+			'title'       => __( 'Upgrade to Pro', 'agent-builder' ),
+			'description' => __( 'Unlock vector RAG, connectors, channels, and advanced metering.', 'agent-builder' ),
+			'is_pro'      => false,
+			'pricing_url' => 'https://agentic-plugin.com/pricing/',
 			'features'    => array(
 				__( 'Hosted vector store / RAG', 'agent-builder' ),
 				__( 'MCP connectors & channels', 'agent-builder' ),
@@ -2081,14 +2025,12 @@ class Admin_Pages_REST {
 				);
 			}
 		}
-		$is_pro = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
-
 		return array(
 			'page'        => 'train-data',
 			'tab'         => $tab,
 			'title'       => __( 'Knowledge', 'agent-builder' ),
 			'description' => __( 'Wiki concepts (OKF) and optional Pro vector store.', 'agent-builder' ),
-			'is_pro'      => $is_pro,
+			'is_pro'      => false,
 			'concepts'    => $concepts,
 			'tabs'        => array_values(
 				array_filter(

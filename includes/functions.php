@@ -130,7 +130,7 @@ function agentic_get_effective_chat_features( string $agent_slug = '' ): array {
 	$rag_key = ! empty( $rag_key ) ? $rag_key : ( \Agentic\Provider_Registry::get( 'agentic' )['api_key'] ?? '' );
 	$tts     = ( '1' === get_option( 'agentic_chat_tts', '1' ) && ! empty( $rag_key ) ) ? '1' : '0';
 	$vision  = get_option( 'agentic_chat_vision', '1' );
-	$costs   = \Agentic\License_Client::get_instance()->is_pro() ? get_option( 'agentic_chat_costs', '1' ) : '0';
+	$costs   = '0'; // This build has no license path — cost display stays off.
 
 	if ( $agent_slug ) {
 		$ov_audio  = \Agentic\Agent_Settings::get( $agent_slug, 'override_audio' );
@@ -145,12 +145,6 @@ function agentic_get_effective_chat_features( string $agent_slug = '' ): array {
 		}
 		if ( '' !== $ov_vision ) {
 			$vision = $ov_vision;
-		}
-		if ( \Agentic\License_Client::get_instance()->is_pro() ) {
-			$ov_costs = \Agentic\Agent_Settings::get( $agent_slug, 'override_costs' );
-			if ( '' !== $ov_costs ) {
-				$costs = $ov_costs;
-			}
 		}
 	}
 

@@ -33,11 +33,7 @@ wp_enqueue_style( 'agentic-react-admin', AGENT_BUILDER_URL . 'assets/css/react-a
 
 // Determine active tab (tabs ordered alphabetically by label below).
 $agentic_active_tab      = sanitize_text_field( wp_unslash( $_GET['tab'] ?? 'admin-bar' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab switch, not a form submission.
-$agentic_deploy_allowed  = array( 'admin-bar', 'cli', 'admin-ui', 'event-listeners', 'gutenberg-blocks', 'website', 'scheduled-tasks', 'shortcodes' );
-$agentic_ships_cli_tools = class_exists( '\Agentic\Distribution' ) && \Agentic\Distribution::ships_cli_tools();
-if ( ! $agentic_ships_cli_tools ) {
-	$agentic_deploy_allowed = array_values( array_diff( $agentic_deploy_allowed, array( 'cli' ) ) );
-}
+$agentic_deploy_allowed  = array( 'admin-bar', 'admin-ui', 'event-listeners', 'gutenberg-blocks', 'website', 'scheduled-tasks', 'shortcodes' );
 if ( ! in_array( $agentic_active_tab, $agentic_deploy_allowed, true ) ) {
 	$agentic_active_tab = 'admin-bar';
 }
@@ -68,7 +64,6 @@ if ( ! in_array( $agentic_active_tab, $agentic_deploy_allowed, true ) ) {
 	// Labels A–Z for nav order.
 	$agentic_deploy_tabs  = array(
 		'admin-bar'        => __( 'Admin', 'agent-builder' ),
-		'cli'              => __( 'CLI', 'agent-builder' ),
 		'admin-ui'         => __( 'Editor', 'agent-builder' ),
 		'event-listeners'  => __( 'Event Listeners', 'agent-builder' ),
 		'website'          => __( 'Frontend Modal', 'agent-builder' ),
@@ -76,9 +71,6 @@ if ( ! in_array( $agentic_active_tab, $agentic_deploy_allowed, true ) ) {
 		'scheduled-tasks'  => __( 'Scheduled Tasks', 'agent-builder' ),
 		'shortcodes'       => __( 'Shortcodes', 'agent-builder' ),
 	);
-	if ( ! $agentic_ships_cli_tools ) {
-		unset( $agentic_deploy_tabs['cli'] );
-	}
 	$agentic_deploy_items = array();
 	foreach ( $agentic_deploy_tabs as $agentic_tab_slug => $agentic_tab_label ) {
 		$agentic_deploy_items[] = array(
@@ -116,12 +108,6 @@ if ( ! in_array( $agentic_active_tab, $agentic_deploy_allowed, true ) ) {
 
 		case 'gutenberg-blocks':
 			include AGENT_BUILDER_DIR . 'admin/deployment/deployment-gutenberg-blocks.php';
-			break;
-
-		case 'cli':
-			if ( $agentic_ships_cli_tools && file_exists( AGENT_BUILDER_DIR . 'admin/deployment/deployment-cli.php' ) ) {
-				include AGENT_BUILDER_DIR . 'admin/deployment/deployment-cli.php';
-			}
 			break;
 
 		case 'admin-ui':

@@ -68,7 +68,7 @@ class Admin_Settings_REST {
 			)
 		);
 
-		// Pro (and other add-ons) can render classic PHP tab bodies inside the React shell.
+		// Add-ons can render classic PHP tab bodies inside the React shell.
 		register_rest_route(
 			'agentic/v1',
 			'/admin-settings/classic-tab',
@@ -165,8 +165,6 @@ class Admin_Settings_REST {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_bootstrap(): \WP_REST_Response {
-		$is_pro = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
-
 		$tabs = array(
 			'interface' => __( 'Interface', 'agent-builder' ),
 			'agents'    => __( 'Agents', 'agent-builder' ),
@@ -177,16 +175,13 @@ class Admin_Settings_REST {
 			'endpoints' => __( 'Endpoints', 'agent-builder' ),
 			'mcp'       => __( 'MCP', 'agent-builder' ),
 		);
-		if ( $is_pro ) {
-			$tabs['license'] = __( 'License', 'agent-builder' );
-		}
 		$tabs = apply_filters( 'agentic_settings_tabs', $tabs );
 
 		$groups = array(
 			array(
 				'id'    => 'basic',
 				'label' => __( 'Basic', 'agent-builder' ),
-				'slugs' => array( 'interface', 'agents', 'providers', 'license', 'users', 'security' ),
+				'slugs' => array( 'interface', 'agents', 'providers', 'users', 'security' ),
 			),
 			array(
 				'id'    => 'advanced',
@@ -195,17 +190,14 @@ class Admin_Settings_REST {
 			),
 		);
 
-		// Pro plugin present (even before key activation) owns License HTML.
-		$pro_present = $is_pro || defined( 'AGENT_BUILDER_PRO_VERSION' ) || defined( 'AGENT_BUILDER_PRO_FILE' );
 		/**
-		 * Tabs whose body is rendered by PHP (Pro License, etc.) and injected into React.
+		 * Tabs whose body is rendered by PHP and injected into React. Empty by
+		 * default in this standalone free build — add-ons may still hook in
+		 * their own classic-HTML tabs via this filter.
 		 *
 		 * @param string[] $classic_tabs Tab slugs.
 		 */
-		$classic_tabs = apply_filters(
-			'agentic_settings_classic_html_tabs',
-			$pro_present ? array( 'license' ) : array()
-		);
+		$classic_tabs = apply_filters( 'agentic_settings_classic_html_tabs', array() );
 		$classic_tabs = array_values(
 			array_unique(
 				array_filter(
@@ -213,16 +205,12 @@ class Admin_Settings_REST {
 				)
 			)
 		);
-		// Always list License in nav when Pro is present (key may still be free).
-		if ( $pro_present && empty( $tabs['license'] ) ) {
-			$tabs['license'] = __( 'License', 'agent-builder' );
-		}
 
 		return new \WP_REST_Response(
 			array(
 				'tabs'         => $tabs,
 				'groups'       => $groups,
-				'is_pro'       => $is_pro,
+				'is_pro'       => false,
 				'classic_tabs' => $classic_tabs,
 				'admin_url'    => admin_url(),
 				'rest_url'     => rest_url( 'agentic/v1/' ),
@@ -245,7 +233,8 @@ class Admin_Settings_REST {
 	}
 
 	/**
-	 * HTML body for a classic settings tab (Pro License, etc.).
+	 * HTML body for a classic settings tab, rendered by an add-on via the
+	 * agentic_settings_classic_html_tabs / agentic_render_settings_tab hooks.
 	 *
 	 * @param \WP_REST_Request $request Request.
 	 * @return \WP_REST_Response|\WP_Error
@@ -256,12 +245,7 @@ class Admin_Settings_REST {
 			return new \WP_Error( 'agentic_invalid_tab', __( 'Invalid settings tab.', 'agent-builder' ), array( 'status' => 400 ) );
 		}
 
-		$is_pro       = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
-		$pro_present  = $is_pro || defined( 'AGENT_BUILDER_PRO_VERSION' ) || defined( 'AGENT_BUILDER_PRO_FILE' );
-		$classic_tabs = apply_filters(
-			'agentic_settings_classic_html_tabs',
-			$pro_present ? array( 'license' ) : array()
-		);
+		$classic_tabs = apply_filters( 'agentic_settings_classic_html_tabs', array() );
 		$classic_tabs = array_map( 'sanitize_key', (array) $classic_tabs );
 
 		if ( ! in_array( $tab, $classic_tabs, true ) ) {
@@ -281,7 +265,7 @@ class Admin_Settings_REST {
 
 		ob_start();
 		/**
-		 * Render classic settings tab body (Pro registers License here).
+		 * Render classic settings tab body.
 		 *
 		 * @param string $tab Tab slug.
 		 */
@@ -937,16 +921,12 @@ class Admin_Settings_REST {
 	/**
 	 * Model Context Protocol status: each active agent's own MCP endpoint and
 	 * readiness, connected clients, and the "Agent Builder Relay" credentials
-	 * that authenticate them. MCP itself is free and unconditional — is_pro
-	 * / has_connector are informational only (Pro/connector status still
-	 * matters for other features), not a gate on MCP access.
+	 * that authenticate them. MCP is free and unconditional — has_connector is
+	 * informational only, not a gate on MCP access.
 	 *
 	 * @return array<string,mixed>
 	 */
 	private static function data_mcp(): array {
-		$is_pro        = class_exists( License_Client::class ) && License_Client::get_instance()->is_pro();
-		$has_connector = class_exists( License_Client::class ) && License_Client::get_instance()->has_connector();
-
 		$agents = array();
 		if ( class_exists( '\\Agentic_Agent_Registry' ) && class_exists( '\\Agentic_Relay_Connect' ) ) {
 			foreach ( \Agentic_Agent_Registry::get_instance()->get_all_instances() as $slug => $agent ) {
@@ -968,8 +948,8 @@ class Admin_Settings_REST {
 		return array(
 			'rest_namespace' => 'agentic/v1',
 			'mcp_available'  => array(
-				'is_pro'        => $is_pro,
-				'has_connector' => $has_connector,
+				'is_pro'        => false,
+				'has_connector' => ! empty( $connectors ),
 				'can_use'       => true,
 			),
 			'agents'         => $agents,

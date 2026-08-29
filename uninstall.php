@@ -20,8 +20,8 @@ global $wpdb;
  * -----------------------------------------------------------------–––––––––––––--------
  * Notify Agentic AI that this site is being removed — only when the admin has
  * explicitly opted in (agentic_allow_deregister_on_uninstall) AND an API key is
- * configured on a Pro install. The endpoint is disclosed under
- * "== External Services ==" in readme.txt.
+ * configured. The endpoint is disclosed under "== External Services ==" in
+ * readme.txt.
  * ----------------------------------------------------------------------–––––––––––––---
  */
 $agentic_api_svc     = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -40,7 +40,6 @@ $agentic_api_key_row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDataba
 $agentic_api_key     = $agentic_api_key_row ? $agentic_api_key_row->api_key : get_option( 'agentic_ai_api_key_builtin', '' );
 
 if ( ! empty( $agentic_api_key )
-	&& class_exists( '\Agentic\Pro' )
 	&& '1' === get_option( 'agentic_allow_deregister_on_uninstall', '0' )
 ) {
 	wp_remote_post(

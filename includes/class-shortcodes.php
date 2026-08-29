@@ -103,10 +103,10 @@ class Shortcodes {
 			'i18n'           => agentic_chat_i18n(),
 		);
 
-		// Turnstile configuration for frontend (add-on only — free uses nonce + rate limiting).
-		if ( class_exists( '\Agentic\Pro\Turnstile' ) && \Agentic\Pro\Turnstile::is_required() ) {
-			$localize_data['turnstileSiteKey'] = \Agentic\Pro\Turnstile::get_site_key();
-			\Agentic\Pro\Turnstile::enqueue_script();
+		// Turnstile configuration for frontend, when configured and required.
+		if ( Turnstile::is_required() ) {
+			$localize_data['turnstileSiteKey'] = Turnstile::get_site_key();
+			Turnstile::enqueue_script();
 		}
 
 		wp_localize_script( 'agentic-chat-frontend', 'agenticChat', $localize_data );
@@ -257,7 +257,7 @@ class Shortcodes {
 				<button type="button" id="agentic-remove-image" class="agentic-remove-image" title="<?php esc_attr_e( 'Remove image', 'agent-builder' ); ?>">&times;</button>
 			</div>
 
-			<?php if ( class_exists( '\Agentic\Pro\Turnstile' ) && \Agentic\Pro\Turnstile::is_required() ) : ?>
+			<?php if ( Turnstile::is_required() ) : ?>
 			<div id="agentic-turnstile" style="display:none"></div>
 			<?php endif; ?>
 

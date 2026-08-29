@@ -229,374 +229,6 @@ function TabBar( { tabs, active, className = '' } ) {
 	);
 }
 
-function SiteLocalToolsPanel( { siteLocal, reload } ) {
-	const pro = !! siteLocal?.pro;
-	const canManage = !! siteLocal?.can_manage;
-	const handlers = siteLocal?.handlers || [];
-	const agents = siteLocal?.agents || [];
-	const [ err, setErr ] = useState( '' );
-	const [ msg, setMsg ] = useState( '' );
-	const [ busy, setBusy ] = useState( false );
-	const [ testOut, setTestOut ] = useState( '' );
-	const [ form, setForm ] = useState( {
-		name: '',
-		label: '',
-		description: '',
-		handler: handlers[ 0 ]?.id || 'wp_list_posts',
-		risk_level: 'low',
-		category: 'custom',
-		enabled: true,
-		agent_slugs: [],
-		allowed_options: 'blogname,blogdescription',
-		allowed_hosts: '',
-		test_args: '{}',
-	} );
-
-	const setField = ( k, v ) => setForm( ( f ) => ( { ...f, [ k ]: v } ) );
-
-	const onHandlerChange = ( id ) => {
-		const h = handlers.find( ( x ) => x.id === id );
-		setForm( ( f ) => ( {
-			...f,
-			handler: id,
-			risk_level: h?.risk || f.risk_level,
-		} ) );
-	};
-
-	const save = () => {
-		setBusy( true );
-		setErr( '' );
-		setMsg( '' );
-		const payload = {
-			name: form.name,
-			label: form.label || form.name,
-			description: form.description,
-			handler: form.handler,
-			risk_level: form.risk_level,
-			category: form.category || 'custom',
-			enabled: form.enabled,
-			agent_slugs: form.agent_slugs,
-			config: {
-				allowed_options: form.allowed_options,
-				allowed_hosts: form.allowed_hosts,
-			},
-		};
-		apiFetch( {
-			path: 'agentic/v1/site-local-tools',
-			method: 'POST',
-			data: payload,
-		} )
-			.then( () => {
-				setMsg( __( 'Site-local tool saved.', 'agent-builder' ) );
-				reload();
-			} )
-			.catch( ( e ) =>
-				setErr(
-					e.message ||
-						__( 'Could not save tool (Pro required).', 'agent-builder' )
-				)
-			)
-			.finally( () => setBusy( false ) );
-	};
-
-	const remove = ( name ) => {
-		if (
-			! window.confirm(
-				__( 'Delete this site-local tool?', 'agent-builder' )
-			)
-		) {
-			return;
-		}
-		setBusy( true );
-		apiFetch( {
-			path: `agentic/v1/site-local-tools/${ encodeURIComponent( name ) }`,
-			method: 'DELETE',
-		} )
-			.then( () => reload() )
-			.catch( ( e ) =>
-				setErr( e.message || __( 'Delete failed.', 'agent-builder' ) )
-			)
-			.finally( () => setBusy( false ) );
-	};
-
-	const runTest = ( name ) => {
-		let args = {};
-		try {
-			args = JSON.parse( form.test_args || '{}' );
-		} catch ( e ) {
-			setErr( __( 'Test arguments must be valid JSON.', 'agent-builder' ) );
-			return;
-		}
-		setBusy( true );
-		setTestOut( '' );
-		apiFetch( {
-			path: `agentic/v1/site-local-tools/${ encodeURIComponent(
-				name
-			) }/test`,
-			method: 'POST',
-			data: { arguments: args },
-		} )
-			.then( ( res ) =>
-				setTestOut( JSON.stringify( res.result || res, null, 2 ) )
-			)
-			.catch( ( e ) =>
-				setErr( e.message || __( 'Test failed.', 'agent-builder' ) )
-			)
-			.finally( () => setBusy( false ) );
-	};
-
-	const toggleAgent = ( id ) => {
-		setForm( ( f ) => {
-			const has = f.agent_slugs.includes( id );
-			return {
-				...f,
-				agent_slugs: has
-					? f.agent_slugs.filter( ( x ) => x !== id )
-					: [ ...f.agent_slugs, id ],
-			};
-		} );
-	};
-
-	if ( ! pro ) {
-		return (
-			<div className="agentic-react-site-local-upsell">
-				<Notice status="info" isDismissible={ false }>
-					{ __(
-						'Site-local tool builder is a Pro feature. Free includes using shipped tools, risk/approvals, and developer Tool_Base packages.',
-						'agent-builder'
-					) }{ ' ' }
-					{ siteLocal?.upgrade_url && (
-						<ExternalLink href={ siteLocal.upgrade_url }>
-							{ __( 'Upgrade to Pro', 'agent-builder' ) }
-						</ExternalLink>
-					) }
-					{ ' · ' }
-					{ siteLocal?.docs_url && (
-						<ExternalLink href={ siteLocal.docs_url }>
-							{ __( 'Docs: Free vs Pro', 'agent-builder' ) }
-						</ExternalLink>
-					) }
-				</Notice>
-			</div>
-		);
-	}
-
-	return (
-		<div className="agentic-react-site-local">
-			{ err && (
-				<Notice status="error" isDismissible={ false }>
-					{ err }
-				</Notice>
-			) }
-			{ msg && (
-				<Notice status="success" isDismissible={ false }>
-					{ msg }
-				</Notice>
-			) }
-
-			<h3>{ __( 'Add site-local tool', 'agent-builder' ) }</h3>
-			<p className="agentic-react-muted">
-				{ __(
-					'Declarative handlers only — no PHP. Empty agent list = available to all active agents.',
-					'agent-builder'
-				) }
-			</p>
-
-			<div className="agentic-react-form-grid">
-				<label>
-					<span>{ __( 'Name (snake_case)', 'agent-builder' ) }</span>
-					<input
-						type="text"
-						value={ form.name }
-						onChange={ ( e ) => setField( 'name', e.target.value ) }
-						placeholder="my_list_drafts"
-					/>
-				</label>
-				<label>
-					<span>{ __( 'Label', 'agent-builder' ) }</span>
-					<input
-						type="text"
-						value={ form.label }
-						onChange={ ( e ) => setField( 'label', e.target.value ) }
-					/>
-				</label>
-				<label className="agentic-react-form-full">
-					<span>{ __( 'Description (for the LLM)', 'agent-builder' ) }</span>
-					<textarea
-						rows={ 3 }
-						value={ form.description }
-						onChange={ ( e ) =>
-							setField( 'description', e.target.value )
-						}
-					/>
-				</label>
-				<label>
-					<span>{ __( 'Handler', 'agent-builder' ) }</span>
-					<select
-						value={ form.handler }
-						onChange={ ( e ) => onHandlerChange( e.target.value ) }
-					>
-						{ handlers.map( ( h ) => (
-							<option key={ h.id } value={ h.id }>
-								{ h.label } ({ h.risk })
-							</option>
-						) ) }
-					</select>
-				</label>
-				<label>
-					<span>{ __( 'Risk level', 'agent-builder' ) }</span>
-					<select
-						value={ form.risk_level }
-						onChange={ ( e ) =>
-							setField( 'risk_level', e.target.value )
-						}
-					>
-						{ [ 'none', 'low', 'medium', 'high' ].map( ( r ) => (
-							<option key={ r } value={ r }>
-								{ r }
-							</option>
-						) ) }
-					</select>
-				</label>
-				{ form.handler === 'wp_get_option' && (
-					<label className="agentic-react-form-full">
-						<span>
-							{ __(
-								'Allowed option keys (comma-separated)',
-								'agent-builder'
-							) }
-						</span>
-						<input
-							type="text"
-							value={ form.allowed_options }
-							onChange={ ( e ) =>
-								setField( 'allowed_options', e.target.value )
-							}
-						/>
-					</label>
-				) }
-				{ form.handler === 'http_get' && (
-					<label className="agentic-react-form-full">
-						<span>
-							{ __(
-								'Extra allowed hosts (comma-separated; site host always allowed)',
-								'agent-builder'
-							) }
-						</span>
-						<input
-							type="text"
-							value={ form.allowed_hosts }
-							onChange={ ( e ) =>
-								setField( 'allowed_hosts', e.target.value )
-							}
-						/>
-					</label>
-				) }
-				<div className="agentic-react-form-full">
-					<span>{ __( 'Agents (optional)', 'agent-builder' ) }</span>
-					<div className="agentic-react-chip-row">
-						{ agents.map( ( a ) => (
-							<label key={ a.id } className="agentic-react-chip">
-								<input
-									type="checkbox"
-									checked={ form.agent_slugs.includes( a.id ) }
-									onChange={ () => toggleAgent( a.id ) }
-								/>
-								{ a.name }
-							</label>
-						) ) }
-					</div>
-				</div>
-			</div>
-
-			<div className="agentic-react-tools-toolbar">
-				<Button
-					variant="primary"
-					disabled={ busy || ! canManage }
-					onClick={ save }
-				>
-					{ __( 'Save site-local tool', 'agent-builder' ) }
-				</Button>
-			</div>
-
-			{ ( siteLocal.site_tools || [] ).length > 0 && (
-				<>
-					<h3>{ __( 'Your site-local tools', 'agent-builder' ) }</h3>
-					<div className="agentic-react-table-wrap">
-						<table className="agentic-react-table">
-							<thead>
-								<tr>
-									<th>{ __( 'Name', 'agent-builder' ) }</th>
-									<th>{ __( 'Handler', 'agent-builder' ) }</th>
-									<th>{ __( 'Risk', 'agent-builder' ) }</th>
-									<th>{ __( 'Actions', 'agent-builder' ) }</th>
-								</tr>
-							</thead>
-							<tbody>
-								{ siteLocal.site_tools.map( ( t ) => (
-									<tr key={ t.name }>
-										<td>
-											<strong>{ t.name }</strong>
-											<div className="agentic-react-muted">
-												{ t.description }
-											</div>
-										</td>
-										<td>
-											<code>{ t.handler }</code>
-										</td>
-										<td>{ t.risk_level }</td>
-										<td>
-											<Button
-												variant="secondary"
-												isSmall
-												disabled={ busy }
-												onClick={ () =>
-													runTest( t.name )
-												}
-											>
-												{ __( 'Test', 'agent-builder' ) }
-											</Button>{ ' ' }
-											<Button
-												variant="secondary"
-												isDestructive
-												isSmall
-												disabled={ busy }
-												onClick={ () =>
-													remove( t.name )
-												}
-											>
-												{ __( 'Delete', 'agent-builder' ) }
-											</Button>
-										</td>
-									</tr>
-								) ) }
-							</tbody>
-						</table>
-					</div>
-					<label className="agentic-react-form-full">
-						<span>
-							{ __(
-								'Test arguments (JSON object)',
-								'agent-builder'
-							) }
-						</span>
-						<textarea
-							rows={ 2 }
-							value={ form.test_args }
-							onChange={ ( e ) =>
-								setField( 'test_args', e.target.value )
-							}
-						/>
-					</label>
-					{ testOut && (
-						<pre className="agentic-react-test-out">{ testOut }</pre>
-					) }
-				</>
-			) }
-		</div>
-	);
-}
-
 function ToolsBasicProfiles( { data, reload } ) {
 	const [ busy, setBusy ] = useState( '' );
 	const [ err, setErr ] = useState( '' );
@@ -751,7 +383,6 @@ function ToolsView( { data, reload, patchData } ) {
 	const [ busy, setBusy ] = useState( '' );
 	const [ err, setErr ] = useState( '' );
 	const activeTab = data.tab || 'all';
-	const isCustom = activeTab === 'custom';
 	const isAdvanced = !! data.is_advanced;
 	const categoryHref = ( slug ) => {
 		const found = ( data.tabs || [] ).find( ( t ) => t.id === slug );
@@ -882,44 +513,30 @@ function ToolsView( { data, reload, patchData } ) {
 				</Notice>
 			) }
 
-			{ isCustom && (
-				<SiteLocalToolsPanel
-					siteLocal={ data.site_local || {} }
-					reload={ reload }
-				/>
-			) }
-
-			{ ! isCustom && (
-				<>
-					<p className="agentic-react-muted" style={ { marginTop: 0 } }>
-						{ __(
-							'You are in Advanced view (full tool list).',
-							'agent-builder'
-						) }
-					</p>
-					<div className="agentic-react-tools-toolbar">
-						<SearchControl
-							value={ q }
-							onChange={ setQ }
-							placeholder={ __( 'Search tools…', 'agent-builder' ) }
-							__nextHasNoMarginBottom
-						/>
-						<span className="agentic-react-muted">
-							{ rows.length === 1
-								? __( '1 tool', 'agent-builder' )
-								: `${ rows.length } ${ __(
-										'tools',
-										'agent-builder'
-								  ) }` }
-						</span>
-						<a
-							className="components-button is-secondary"
-							href="admin.php?page=agentic-tools&tab=custom"
-						>
-							{ __( 'Custom tools (Pro)', 'agent-builder' ) }
-						</a>
-					</div>
-					<nav
+			<>
+				<p className="agentic-react-muted" style={ { marginTop: 0 } }>
+					{ __(
+						'You are in Advanced view (full tool list).',
+						'agent-builder'
+					) }
+				</p>
+				<div className="agentic-react-tools-toolbar">
+					<SearchControl
+						value={ q }
+						onChange={ setQ }
+						placeholder={ __( 'Search tools…', 'agent-builder' ) }
+						__nextHasNoMarginBottom
+					/>
+					<span className="agentic-react-muted">
+						{ rows.length === 1
+							? __( '1 tool', 'agent-builder' )
+							: `${ rows.length } ${ __(
+									'tools',
+									'agent-builder'
+							  ) }` }
+					</span>
+				</div>
+				<nav
 						className="agentic-react-risk-filters"
 						aria-label={ __( 'Filter by risk', 'agent-builder' ) }
 					>
@@ -1070,10 +687,9 @@ function ToolsView( { data, reload, patchData } ) {
 						</div>
 					) }
 				</>
-			) }
-		</>
-	);
-}
+			</>
+		);
+	}
 
 function SkillsView( { data, reload } ) {
 	const [ q, setQ ] = useState( '' );

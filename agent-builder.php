@@ -5,7 +5,7 @@
  * Plugin Name:       Agent Builder
  * Plugin URI:        https://agentic-plugin.com
  * Description:       Orchestrate role-based AI agents and teams with simple job descriptions.
- * Version:           3.3.88
+ * Version:           3.3.89
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Agent Builder Team
@@ -57,37 +57,18 @@ spl_autoload_register(
 
 // Plugin constants.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-define( 'AGENT_BUILDER_VERSION', '3.3.88' );
 define( 'AGENT_BUILDER_FILE', __FILE__ );
+define( 'AGENT_BUILDER_VERSION', '3.3.89' );
+define( 'AGENT_BUILDER_DB_VERSION', '2.13.5' );
 define( 'AGENT_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGENT_BUILDER_URL', plugin_dir_url( __FILE__ ) );
 define( 'AGENT_BUILDER_BASENAME', plugin_basename( __FILE__ ) );
 define( 'AGENTIC_AGENTS_DIR', WP_CONTENT_DIR . '/agentic-agents' );
 define( 'AGENTIC_KNOWLEDGE_DIR', WP_CONTENT_DIR . '/agentic-knowledge' );
 define( 'AGENTIC_BACKUPS_DIR', WP_CONTENT_DIR . '/agentic-backups' );
-define( 'AGENT_BUILDER_DB_VERSION', '2.13.4' );
 // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 
-// AGENTIC_PRO is true when an add-on is installed and active (detected via its early constant AGENT_BUILDER_PRO_FILE).
-// Free code prefers class_exists for add-on classes, file_exists checks, or hooks (e.g. agentic_settings_tabs) to gate optional features.
-define( 'AGENTIC_PRO', defined( 'AGENT_BUILDER_PRO_FILE' ) );
-
-// Distribution channel ('wporg' | 'self'). bin/export-wporg-tree.sh stamps
-// includes/dist-channel.php per profile; a dev checkout has no such file and
-// defaults to 'self' so the full feature set is exercisable locally. See
-// Agentic\Distribution. Self-hosted-only code (includes/self-hosted/,
-// admin/upgrade-pro.php) is physically stripped from the wporg build.
-if ( file_exists( AGENT_BUILDER_DIR . 'includes/dist-channel.php' ) ) {
-	require_once AGENT_BUILDER_DIR . 'includes/dist-channel.php';
-}
-if ( ! defined( 'AGENTIC_DIST_CHANNEL' ) ) {
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-	define( 'AGENTIC_DIST_CHANNEL', 'self' );
-}
-
-// Composer runtime dependencies (PhpSpreadsheet, PhpWord, PdfParser, mPDF).
-// These power the document tools in library/tools/. Each tool still guards with
-// class_exists(), so the plugin degrades gracefully when a library is absent.
+// Composer runtime dependencies.
 if ( file_exists( AGENT_BUILDER_DIR . 'vendor/autoload.php' ) ) {
 	require_once AGENT_BUILDER_DIR . 'vendor/autoload.php';
 }
@@ -236,15 +217,6 @@ final class Plugin {
 			}
 		);
 
-		// Self-hosted builds only: keep the free plugin updated from the store.
-		// Registered in every context (admin, cron, update-transient rebuilds) and
-		// paired with the Update URI header so WordPress.org never manages this
-		// install. Physically absent from the WordPress.org build (see
-		// Agentic\Distribution + bin/export-wporg-tree.sh), so class_exists() is false there.
-		if ( Distribution::is_self_hosted() && class_exists( '\Agentic\Self_Hosted\Free_Updater' ) ) {
-			Self_Hosted\Free_Updater::register();
-		}
-
 		// --- Admin-only hooks (menus, settings, AJAX, admin bar, admin assets) ---
 		if ( is_admin() ) {
 			$this->init_admin_hooks();
@@ -286,29 +258,17 @@ final class Plugin {
 		add_action( 'admin_notices', array( $notices, 'show_quota_reached_notice' ) );
 		add_action( 'admin_notices', array( $notices, 'show_shadowed_agent_notice' ) );
 
-		// Agent update checks — free / WPorg never phone home (marketplace link
-		// instead). Pro sites may opt in; maybe_check_on_agents_page() no-ops
-		// except on ?page=agentic-agents when remote checks are available + opted in.
+		// Agent update checks — free / WPorg never phone home, Pro users may opt in.
 		add_action( 'admin_init', array( Agent_Updates::class, 'maybe_check_on_agents_page' ) );
 
 		// Core settings registration — lives in Admin_Ajax alongside save_agent_mode.
 		add_action( 'admin_init', array( Admin_Ajax::class, 'register_settings' ) );
 
-		// Contextual launchers on core admin screens (Plugins, Media, Users,
-		// Comments, Dashboard). Administrator-only, opt-out, per-user dismissible.
+		// Contextual launchers on core admin screens (Plugins, Media, Users, Comments, Dashboard).
+		// Administrator-only, opt-out, per-user dismissible.
 		( new Admin_Surfaces() )->register_hooks();
 
 		( new Ajax_Dispatcher() )->register();
-
-		// Self-hosted builds only: the one-click "Upgrade to Pro" installer
-		// (license field → download + install agent-builder-pro from the store).
-		// This code lives in includes/self-hosted/ and is physically stripped from
-		// the WordPress.org build (see Agentic\Distribution + bin/export-wporg-tree.sh), so
-		// class_exists() is false there. Skipped once Pro is already active.
-		if ( Distribution::is_self_hosted() && ! AGENTIC_PRO
-			&& class_exists( '\Agentic\Self_Hosted\Pro_Installer' ) ) {
-			Self_Hosted\Pro_Installer::register();
-		}
 	}
 
 	/**
@@ -413,7 +373,7 @@ final class Plugin {
 			array(
 				'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
 				'nonce'           => wp_create_nonce( 'agentic_plugin_deactivate' ),
-				'canSendFeedback' => get_option( 'agentic_service_consent' ) && get_option( License_Client::OPTION_LICENSE_KEY ),
+				'canSendFeedback' => (bool) get_option( 'agentic_service_consent' ),
 			)
 		);
 	}
@@ -565,9 +525,6 @@ final class Plugin {
 		// GDPR — privacy exporters/erasers and retention cron.
 		GDPR::init();
 
-		// License client — handles revalidation, update gating, feature degradation.
-		License_Client::get_instance();
-
 		// Bridge to WordPress Abilities API (WP 6.9+).
 		if ( WP_Optional_API::has( 'wp_register_ability' ) ) {
 			( new Abilities_Bridge() )->register_hooks();
@@ -700,20 +657,6 @@ require_once AGENT_BUILDER_DIR . 'includes/class-agent-wizard-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-knowledge-wizard-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-deploy-wizard-rest.php';
 require_once AGENT_BUILDER_DIR . 'includes/class-security-log.php';
-// Cloudflare Email stack is Agent Builder Pro (not shipped in free / WPorg builds).
-// Load only when present so free packages that strip these files do not fatally require them.
-if ( file_exists( AGENT_BUILDER_DIR . 'includes/class-cloudflare-client.php' ) ) {
-	require_once AGENT_BUILDER_DIR . 'includes/class-cloudflare-client.php';
-}
-if ( file_exists( AGENT_BUILDER_DIR . 'includes/class-email-provider-registry.php' ) ) {
-	require_once AGENT_BUILDER_DIR . 'includes/class-email-provider-registry.php';
-}
-if ( file_exists( AGENT_BUILDER_DIR . 'includes/email-providers/interface-email-provider.php' ) ) {
-	require_once AGENT_BUILDER_DIR . 'includes/email-providers/interface-email-provider.php';
-}
-if ( file_exists( AGENT_BUILDER_DIR . 'includes/email-providers/class-cloudflare-email-provider.php' ) ) {
-	require_once AGENT_BUILDER_DIR . 'includes/email-providers/class-cloudflare-email-provider.php';
-}
 
 // WP 7.0+ AI Client adapter layer (the bridge).
 // We always load the detection + registry + both adapters so that
@@ -763,7 +706,6 @@ Dashboard_REST::init();
 Agent_Wizard_REST::init();
 Knowledge_Wizard_REST::init();
 Deploy_Wizard_REST::init();
-Site_Local_Tools::init();
 Login_Monitor::init();
 
 // Activation/Deactivation hooks — must be registered at global scope in the main

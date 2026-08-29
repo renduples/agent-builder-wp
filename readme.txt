@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 3.3.88
+Stable tag: 3.3.89
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -267,6 +267,9 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **Data sent:** Whatever data that form collects, sent only to the URL you configured — never to Agentic or any other third party.
 
 == Changelog ==
+
+= 3.3.89 - 2026-08-28 =
+* This is now a permanently standalone WordPress.org codebase — removed all remaining dead code for detecting a self-hosted/Pro install (it can never happen here): the License and Distribution-channel systems, the agent-package upload/purchase flow, the no-code Site Tools builder, and the WP-CLI execution tools. Fixed real bugs found along the way: image/video generation and text-to-speech now correctly connect through the same free "Connect to Agentic AI" account as chat instead of a broken license check; a real Cloudflare Turnstile bot-protection implementation replaces a check that always silently no-opped; and the deactivation feedback survey and uninstall deregistration notice, both previously gated on a license that could never exist in this build, now work as designed.
 
 = 3.3.88 - 2026-08-21 =
 * Fix: MCP/abilities skip disabled tools; nested meta.mcp.public; MCP credential create returns user_id; HIGH floors for manage_skill / manage_user_privileges.

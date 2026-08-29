@@ -59,7 +59,6 @@ return array(
 		'agentic-settings:providers'          => 'https://agentic-plugin.com/manage-llm-providers/',
 		'agentic-settings:users'              => 'https://agentic-plugin.com/user-roles-and-privileges/',
 		'agentic-settings:security'           => 'https://agentic-plugin.com/important-security-settings/',
-		'agentic-settings:license'            => 'https://agentic-plugin.com/licensing-and-pricing/',
 		'agentic-settings:apis'               => 'https://agentic-plugin.com/connecting-an-ai-provider/',
 		'agentic-settings:endpoints'          => 'https://agentic-plugin.com/connecting-an-ai-provider/',
 		// Legacy settings tabs (redirected in UI; keep docs for bookmarks).
@@ -85,7 +84,6 @@ return array(
 		'agentic-deployment:admin-bar'        => 'https://agentic-plugin.com/admin-bar-deployment/',
 		'agentic-deployment:scheduled-tasks'  => 'https://agentic-plugin.com/scheduled-tasks/',
 		'agentic-deployment:event-listeners'  => 'https://agentic-plugin.com/event-automation/',
-		'agentic-deployment:cli'              => 'https://agentic-plugin.com/wp-cli-commands/',
 
 		// Tools sections.
 		'agentic-tools:tools'                 => 'https://agentic-plugin.com/agent-tools/',

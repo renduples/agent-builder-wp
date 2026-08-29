@@ -332,8 +332,6 @@ class Admin_Menu_Handler {
 	 * @return array<string, array{label:string,url:string,locked?:bool,default?:bool,group?:string,advanced?:bool,pro?:bool}>
 	 */
 	public static function quick_actions_catalog(): array {
-		$is_pro = class_exists( '\Agentic\License_Client' ) && License_Client::get_instance()->is_pro();
-
 		$catalog = array(
 			'setup'     => array(
 				'label'   => __( 'Setup Wizard', 'agent-builder' ),
@@ -414,24 +412,6 @@ class Admin_Menu_Handler {
 				'advanced' => true,
 			),
 		);
-
-		if ( $is_pro ) {
-			$catalog['usage']   = array(
-				'label'    => __( 'Usage', 'agent-builder' ),
-				'url'      => admin_url( 'admin.php?page=agentic-costs' ),
-				'default'  => true,
-				'group'    => 'secondary',
-				'advanced' => true,
-				'pro'      => true,
-			);
-			$catalog['license'] = array(
-				'label'   => __( 'License', 'agent-builder' ),
-				'url'     => admin_url( 'admin.php?page=agentic-settings&tab=license' ),
-				'default' => false,
-				'group'   => 'secondary',
-				'pro'     => true,
-			);
-		}
 
 		/**
 		 * Filter the dashboard Quick Actions catalog.
@@ -519,7 +499,7 @@ class Admin_Menu_Handler {
 	/**
 	 * Redirect removed Account settings tab (admin_init, before headers).
 	 *
-	 * Free → Providers; Pro → License (MCP summary moved there).
+	 * Always redirects to Providers — there is no License tab in this build.
 	 *
 	 * @return void
 	 */
@@ -539,10 +519,7 @@ class Admin_Menu_Handler {
 		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'agentic_manage_settings' ) ) {
 			return;
 		}
-		$dest = class_exists( '\Agentic\License_Client' ) && License_Client::get_instance()->is_pro()
-			? 'license'
-			: 'providers';
-		wp_safe_redirect( admin_url( 'admin.php?page=agentic-settings&tab=' . $dest ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=agentic-settings&tab=providers' ) );
 		exit;
 	}
 
@@ -892,18 +869,11 @@ class Admin_Menu_Handler {
 	 * @return array<string, mixed>
 	 */
 	public function get_admin_footer_data( string $page, string $tab = '' ): array {
-		$doc_url     = $this->get_page_doc_url( $page, $tab );
-		$support_url = 'https://agentic-plugin.com/support/';
-		$is_pro      = class_exists( '\Agentic\License_Client' ) && License_Client::get_instance()->is_pro();
-		if ( $is_pro ) {
-			$promo_url      = Distribution::COMMUNITY_AGENTS_URL;
-			$promo_label    = __( 'Agent Marketplace', 'agent-builder' );
-			$promo_external = true;
-		} else {
-			$promo_url      = Distribution::free_pro_promo_url();
-			$promo_label    = __( 'Upgrade to Pro', 'agent-builder' );
-			$promo_external = Distribution::free_pro_promo_is_external();
-		}
+		$doc_url        = $this->get_page_doc_url( $page, $tab );
+		$support_url    = 'https://agentic-plugin.com/support/';
+		$promo_url      = 'https://agentic-plugin.com/pricing/';
+		$promo_label    = __( 'Upgrade to Pro', 'agent-builder' );
+		$promo_external = true;
 
 		// Short policy blurb — contextual by page/tab.
 		$policy = __( 'Settings control how agents behave on this site. Changes are stored locally and take effect for new conversations.', 'agent-builder' );
@@ -912,7 +882,7 @@ class Admin_Menu_Handler {
 		} elseif ( 'agentic-tools' === $page ) {
 			$policy = __( 'Agents only use the tools you allow. Higher-risk actions still follow Approvals and your safety settings.', 'agent-builder' );
 		} elseif ( str_starts_with( $page, 'agentic-train' ) ) {
-			$policy = __( 'Knowledge stays on your site for the free wiki; hosted vector features follow your license and provider terms.', 'agent-builder' );
+			$policy = __( 'Knowledge stays on your site for the free wiki; hosted vector features require Agent Builder Pro.', 'agent-builder' );
 			if ( 'instructions' === $tab ) {
 				$policy = __( 'Per-agent instructions shape tone and greetings. Site-wide knowledge belongs in the Knowledge Wiki.', 'agent-builder' );
 			} elseif ( 'memory' === $tab ) {
@@ -929,7 +899,6 @@ class Admin_Menu_Handler {
 				'providers' => __( 'API keys stay on your site. Only connected providers can be set as the site default.', 'agent-builder' ),
 				'users'     => __( 'Role privileges control who can administer the plugin and chat with agents. Administrators always retain full access.', 'agent-builder' ),
 				'security'  => __( 'Security settings include consent, retention, scanning, and request rate limits. Review Approvals for high-risk actions.', 'agent-builder' ),
-				'license'   => __( 'Your license unlocks Pro features. Keep keys private and only share them with trusted site admins.', 'agent-builder' ),
 				'apis', 'endpoints' => __( 'Advanced integrations and API endpoints. Prefer connected providers on the Providers tab for everyday use.', 'agent-builder' ),
 				default     => $policy,
 			};
@@ -941,7 +910,7 @@ class Admin_Menu_Handler {
 			'promo_url'      => $promo_url,
 			'promo_label'    => $promo_label,
 			'promo_external' => $promo_external,
-			'is_pro'         => $is_pro,
+			'is_pro'         => false,
 			'policy'         => $policy,
 			'terms_url'      => 'https://agentic-plugin.com/terms-of-service/',
 			'privacy_url'    => 'https://agentic-plugin.com/privacy-policy/',
@@ -1213,7 +1182,7 @@ class Admin_Menu_Handler {
 			Chat_Assets::maybe_add_chat_theme_overrides();
 			// Footer docs per tab for the React settings shell.
 			$footer_by_tab = array();
-			foreach ( array( 'interface', 'agents', 'providers', 'users', 'security', 'license', 'apis', 'endpoints', 'mcp' ) as $slug ) {
+			foreach ( array( 'interface', 'agents', 'providers', 'users', 'security', 'apis', 'endpoints', 'mcp' ) as $slug ) {
 				$footer_by_tab[ $slug ] = $this->get_admin_footer_data( 'agentic-settings', $slug );
 			}
 			wp_localize_script(
@@ -1255,10 +1224,6 @@ class Admin_Menu_Handler {
 	public function render_train_data_page(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab params.
 		$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'wiki';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$vector_tab = isset( $_GET['vtab'] ) ? sanitize_key( wp_unslash( $_GET['vtab'] ) ) : 'scan';
-
-		$is_pro = class_exists( '\Agentic\License_Client' ) && License_Client::get_instance()->is_pro();
 
 		// Wiki editor assets.
 		if ( 'wiki' === $active_tab || ! in_array( $active_tab, array( 'instructions', 'memory', 'vector' ), true ) ) {
@@ -1268,29 +1233,6 @@ class Admin_Menu_Handler {
 				array( 'jquery' ),
 				AGENT_BUILDER_VERSION,
 				true
-			);
-		}
-
-		// Hosted Vector Store UI script is owned by Pro (filter). Free users
-		// still get the Vector tab with the Pro upgrade card from train-data.php.
-		$agentic_vs_script = apply_filters( 'agentic_vector_store_admin_script', '' );
-		if ( $is_pro && 'vector' === $active_tab && is_string( $agentic_vs_script ) && '' !== $agentic_vs_script ) {
-			wp_enqueue_script(
-				'agentic-train-data',
-				$agentic_vs_script,
-				array( 'jquery', 'agentic-ui' ),
-				defined( 'AGENT_BUILDER_PRO_VERSION' ) ? AGENT_BUILDER_PRO_VERSION : AGENT_BUILDER_VERSION,
-				true
-			);
-			wp_localize_script(
-				'agentic-train-data',
-				'agenticTrainData',
-				array(
-					'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-					'nonce'     => wp_create_nonce( 'agentic_train_data' ),
-					'activeTab' => $vector_tab,
-					'siteUrl'   => site_url(),
-				)
 			);
 		}
 

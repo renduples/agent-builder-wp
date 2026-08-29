@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Generate one or more images from a text prompt and save them to the media library.
- * Powered by Agentic Image Generation (Gemini 3.1 Flash Image). Requires Vector Store Pro.
+ * Powered by Agentic Image Generation (Gemini 3.1 Flash Image). Requires a connected Agentic AI account.
  * Credit costs: imagen-4-fast = 5/image, imagen-4 = 10/image, imagen-4-ultra = 23/image.
  */
 class Generate_Image extends \Agentic\Tool_Base {
@@ -42,7 +42,7 @@ class Generate_Image extends \Agentic\Tool_Base {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return 'Generate one or more images from a text prompt and save them to the WordPress media library. Powered by Agentic Image Generation (Gemini 3.1 Flash Image). Credit costs: 5 credits for imagen-4-fast, 10 for imagen-4 (default), 23 for imagen-4-ultra — per image. Requires an active Vector Store Pro licence.';
+		return 'Generate one or more images from a text prompt and save them to the WordPress media library. Powered by Agentic Image Generation (Gemini 3.1 Flash Image). Credit costs: 5 credits for imagen-4-fast, 10 for imagen-4 (default), 23 for imagen-4-ultra — per image. Requires a connected Agentic AI account.';
 	}
 
 	/**
@@ -198,10 +198,13 @@ class Generate_Image extends \Agentic\Tool_Base {
 		if ( empty( $api_key ) && defined( 'AGENTIC_RAG_API_KEY' ) ) {
 			$api_key = AGENTIC_RAG_API_KEY;
 		}
-		$user_id = (string) get_option( \Agentic\License_Client::OPTION_LICENSE_KEY, '' );
+		if ( empty( $api_key ) ) {
+			$api_key = (string) ( \Agentic\Provider_Registry::get( 'agentic' )['api_key'] ?? '' );
+		}
+		$user_id = $api_key;
 
-		if ( empty( $api_key ) || empty( $user_id ) ) {
-			return array( 'error' => 'Agentic Image Generation requires an active license. Activate your license in Agentic → Settings.' );
+		if ( empty( $api_key ) ) {
+			return array( 'error' => 'Agentic Image Generation requires connecting an Agentic AI account — go to Agent Builder → Settings → Providers and connect Agentic AI.' );
 		}
 
 		return array(

@@ -116,9 +116,6 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 					update_option( 'agentic_chat_vision', '1' );
 					update_option( 'agentic_chat_whitelabel', '1' );
 					update_option( 'agentic_show_whatsapp_cta', '0' );
-					if ( \Agentic\License_Client::get_instance()->is_pro() ) {
-						update_option( 'agentic_chat_costs', '1' );
-					}
 					update_option( 'agentic_response_cache_enabled', true );
 					update_option( 'agentic_response_cache_ttl', 3600 );
 				},
@@ -494,9 +491,6 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 			'chat_vision'     => (string) get_option( 'agentic_chat_vision', '0' ),
 			'chat_whitelabel' => (string) get_option( 'agentic_chat_whitelabel', '1' ),
 		);
-		if ( \Agentic\License_Client::get_instance()->is_pro() ) {
-			$agentic_styles_bef['chat_costs'] = (string) get_option( 'agentic_chat_costs', '0' );
-		}
 
 		$agentic_valid_themes = array( 'dark', 'light', 'midnight', 'ocean' );
 		$agentic_chosen_theme = sanitize_key( wp_unslash( $_POST['agentic_chat_theme'] ?? 'light' ) );
@@ -509,9 +503,6 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 		update_option( 'agentic_chat_vision', isset( $_POST['agentic_chat_vision'] ) ? '1' : '0' );
 		update_option( 'agentic_chat_whitelabel', isset( $_POST['agentic_chat_whitelabel'] ) ? '1' : '0' );
 		update_option( 'agentic_show_whatsapp_cta', isset( $_POST['agentic_show_whatsapp_cta'] ) ? '1' : '0' );
-		if ( \Agentic\License_Client::get_instance()->is_pro() ) {
-			update_option( 'agentic_chat_costs', isset( $_POST['agentic_chat_costs'] ) ? '1' : '0' );
-		}
 
 		// Item 3: Tool reliability for weaker models (global)
 		update_option( 'agentic_enable_weak_model_tool_guidance', isset( $_POST['agentic_enable_weak_model_tool_guidance'] ) ? '1' : '0' );
@@ -524,9 +515,6 @@ if ( isset( $_POST['agentic_save_settings'] ) && check_admin_referer( 'agentic_s
 			'chat_vision'     => (string) get_option( 'agentic_chat_vision', '0' ),
 			'chat_whitelabel' => (string) get_option( 'agentic_chat_whitelabel', '1' ),
 		);
-		if ( \Agentic\License_Client::get_instance()->is_pro() ) {
-			$agentic_styles_aft['chat_costs'] = (string) get_option( 'agentic_chat_costs', '0' );
-		}
 		$agentic_styles_diff = array();
 		foreach ( $agentic_styles_aft as $agentic_sk => $agentic_sv ) {
 			if ( $agentic_styles_bef[ $agentic_sk ] !== $agentic_sv ) {
@@ -632,9 +620,6 @@ $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );
 		'apis'      => __( 'APIs', 'agent-builder' ),
 		'endpoints' => __( 'Endpoints', 'agent-builder' ),
 	);
-	if ( file_exists( AGENT_BUILDER_DIR . 'includes/pro/health/settings-health.php' ) ) {
-		$agentic_tabs['health'] = __( 'Health', 'agent-builder' );
-	}
 
 	// Allow add-ons (for example Pro) to add settings tabs without editing free core files.
 	$agentic_tabs = apply_filters( 'agentic_settings_tabs', $agentic_tabs );
@@ -730,8 +715,6 @@ $agentic_rate_limit_anon = get_option( 'agentic_rate_limit_anonymous', 10 );
 		<?php require_once __DIR__ . '/settings-interface.php'; ?>
 	<?php elseif ( 'apis' === $agentic_active_tab ) : ?>
 		<?php include AGENT_BUILDER_DIR . 'admin/apis.php'; ?>
-	<?php elseif ( 'health' === $agentic_active_tab && file_exists( AGENT_BUILDER_DIR . 'includes/pro/health/settings-health.php' ) ) : ?>
-		<?php require AGENT_BUILDER_DIR . 'includes/pro/health/settings-health.php'; ?>
 	<?php elseif ( 'endpoints' === $agentic_active_tab ) : ?>
 		<?php require_once __DIR__ . '/settings-endpoints.php'; ?>
 	<?php elseif ( 'memory' === $agentic_active_tab ) : ?>

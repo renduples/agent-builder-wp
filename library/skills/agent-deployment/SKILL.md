@@ -1,7 +1,7 @@
 ---
 name: agent-deployment
-description: "Use this skill whenever the user wants to put an agent to work — embed it as a chat widget, make it check something on a schedule, or have it react automatically to something happening on the site. Trigger on requests like 'put this agent on my homepage', 'add a chat widget to my site', 'make an agent check my site every morning', 'reply to new comments automatically', 'add an AI panel to the block editor', or 'let me run WP-CLI commands through chat'. Do NOT trigger for creating or configuring an agent's own behaviour (system prompt, tools, knowledge) — that's agent creation/training, a separate domain."
-allowed-tools: manage_agent_shortcode manage_editor_sidebar_agent manage_frontend_modal_agent manage_gutenberg_block_agent manage_admin_bar_launcher manage_scheduled_task manage_event_listener manage_cli_settings run_wp_cli agents_available
+description: "Use this skill whenever the user wants to put an agent to work — embed it as a chat widget, make it check something on a schedule, or have it react automatically to something happening on the site. Trigger on requests like 'put this agent on my homepage', 'add a chat widget to my site', 'make an agent check my site every morning', 'reply to new comments automatically', or 'add an AI panel to the block editor'. Do NOT trigger for creating or configuring an agent's own behaviour (system prompt, tools, knowledge) — that's agent creation/training, a separate domain."
+allowed-tools: manage_agent_shortcode manage_editor_sidebar_agent manage_frontend_modal_agent manage_gutenberg_block_agent manage_admin_bar_launcher manage_scheduled_task manage_event_listener agents_available
 ---
 
 # Agent Deployment
@@ -19,8 +19,6 @@ Deploying an agent means choosing where and how it runs: embedded in a page, flo
 | `manage_admin_bar_launcher` | Chat access inside wp-admin: a per-agent admin-bar button, or the contextual "Ask AI" launcher on specific screens. |
 | `manage_scheduled_task` | A recurring task an agent runs unattended (hourly/twice-daily/daily/weekly). |
 | `manage_event_listener` | A trigger that runs an agent automatically when a WordPress action hook fires. |
-| `manage_cli_settings` | Manage the WP-CLI command whitelist and which agents may use `run_wp_cli`. |
-| `run_wp_cli` | Actually run a whitelisted WP-CLI command. |
 | `agents_available` | Browse other agents the user could install if none of their active agents fit the request. |
 
 ## Workflows
@@ -63,18 +61,9 @@ Call `manage_gutenberg_block_agent` with `action: enable`. Tell the user to sear
 2. State back the hook and the exact prompt the agent will follow, and get explicit confirmation — this also runs unattended.
 3. Call `manage_event_listener` with `action: create`, `agent_slug`, `hook`, and `prompt`.
 
-### Let an agent run WP-CLI commands
-
-This is advanced and rarely what a non-technical user actually wants — double-check the request is really about running shell/CLI commands, not something better served by another tool above.
-
-1. Call `manage_cli_settings` with `action: get_whitelist` to see what's already allowed.
-2. If the needed command isn't listed, explain exactly what it does, then call `action: add_command` with the `pattern`.
-3. Call `action: set_agent_privileges` with the `agent_slug` and `cli_enabled: true` so that specific agent may use it.
-4. Only then is `run_wp_cli` usable for that agent.
-
 ## Rules
 
-- Always confirm before creating anything that runs unattended — scheduled tasks and event listeners — or that expands CLI privileges. Everything else (widgets, blocks, editor sidebar, launchers) is reversible config, safe to just do and report back.
+- Always confirm before creating anything that runs unattended — scheduled tasks and event listeners. Everything else (widgets, blocks, editor sidebar, launchers) is reversible config, safe to just do and report back.
 - If a deployment already exists for what's being asked, update it instead of creating a duplicate — list first when unsure.
 - After any change, describe the result in plain language ("your Content Writer now appears as a chat bubble on every page"), not the underlying mechanics.
 - If no active agent fits the request, use `agents_available` to suggest one rather than forcing a mismatched agent into the role.

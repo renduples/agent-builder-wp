@@ -3,8 +3,9 @@
  *
  * Intercepts the "Deactivate" link on the Plugins page and replaces it with
  * a two-step modal:
- *   Step 1: Data retention choice (keep / delete) — all builds.
- *   Step 2: Cancellation feedback form — shown when user has opted in and has a license (agenticDeactivate.canSendFeedback).
+ *   Step 1: Data retention choice (keep / delete) — always shown.
+ *   Step 2: Cancellation feedback form — shown only when the site owner has
+ *           opted in to service consent (agenticDeactivate.canSendFeedback).
  *
  * After the user completes the modal the browser follows the original deactivation
  * URL (WordPress handles the actual deactivation).
@@ -18,7 +19,7 @@
 	var overlay    = null;
 	var deactivateUrl = '';
 
-	/* ─── Reasons shown in the Pro feedback step ─── */
+	/* ─── Reasons shown in the cancellation feedback step ─── */
 	var REASONS = [
 		{ value: 'switching_plugin',  label: 'Switching to a different plugin' },
 		{ value: 'missing_feature',   label: 'Missing a feature I need' },
@@ -75,7 +76,7 @@
 				'</div>' +
 			'</div>' +
 
-			/* Step 2 — Pro feedback (hidden in free build) */
+			/* Step 2 — cancellation feedback (only when consent has been given) */
 			( agenticDeactivate.canSendFeedback ?
 			'<div class="adm-step adm-hidden" id="adm-step-2">' +
 				'<p class="adm-lead">Help us improve — why are you deactivating? <em>(Optional)</em></p>' +

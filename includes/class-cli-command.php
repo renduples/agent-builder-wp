@@ -2,14 +2,11 @@
 /**
  * WP-CLI Commands for Agent Builder (Free + basic layer)
  *
- * Provides core CLI access available in Free:
- * - list, info (and future prompt/tools/run-task)
+ * Provides core CLI access: list, info.
  *
  * WP7 AI substrate commands live in dedicated classes under includes/cli/
  * (wp agent wp-ai status, wp agent wp-ai test-execute, wp agent abilities list, etc.)
  * This prevents a god class while giving powerful free CLI surface for the new WP 7 features.
- *
- * Advanced commands (rag, deployments, mcp-connect, license, full RAG training, etc.) remain Pro-only.
  *
  * @package    Agent_Builder
  * @subpackage Includes
@@ -26,10 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	return;
-}
-
-if ( class_exists( __NAMESPACE__ . '\\CLI_Command' ) ) {
-	return; // Another plugin (e.g. Pro) already provided the CLI base; avoid redeclaration in dual-source dev.
 }
 
 /**
@@ -126,7 +119,6 @@ class CLI_Command extends \WP_CLI_Command {
 		\WP_CLI::log( 'WP7 Substrate: ' . ( $matrix ? \Agentic\WP_AI_Detection::get_mode_label() : 'N/A' ) );
 
 		// TODO: Expand with tools, abilities, etc. in follow-up
-		\WP_CLI::log( 'More details available via Pro CLI commands.' );
 	}
 
 	// Note: WP7 AI substrate commands (wp-ai status/abilities/test-execute and abilities list/test)

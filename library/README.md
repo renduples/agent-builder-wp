@@ -1,20 +1,22 @@
-# Agentic Library – 8 Pre-Built Agents
+# Agentic Library – 10 Pre-Built Agents
 
-> Ready-to-use AI agents that ship with the free Agent Builder plugin.
+> Ready-to-use AI agents that ship with the free Agent Builder plugin, and a guide for building your own.
 
 ---
 
 ## What's Inside
 
-**8 production-ready agents** ship with Agent Builder (WordPress.org free edition). Each is fully functional out of the box and can be customised.
+**10 production-ready agents** ship with Agent Builder (WordPress.org free edition). Each is fully functional out of the box and can be customised.
 
 | Slug | Name |
 |------|------|
+| `agent-orchestrator` | Agent Orchestrator |
 | `assistant-trainer` | Assistant Trainer |
 | `content-writer` | Content Writer |
 | `editorial-director` | Editorial Director |
 | `seo-optimizer` | SEO Optimizer |
 | `site-health-sentinel` | Site Health Sentinel |
+| `skills-assistant` | Skills Assistant |
 | `support-triage` | Support Triage |
 | `user-assistant` | User Assistant |
 | `wordpress-assistant` | WordPress Assistant |
@@ -24,6 +26,16 @@ More agents: [Community Agents](https://agentic-plugin.com/community-agents/).
 ---
 
 ## Agents
+
+### Agent Orchestrator (`agent-orchestrator/`)
+Deploys other agents to chat widgets, scheduled tasks, and triggers via natural language instead of the technical Publish screens.
+- Creates shortcodes, frontend modals, and Gutenberg block deployments
+- Sets up scheduled tasks and event listeners
+- Manages admin bar launchers and editor sidebar assignments
+
+**Category:** Developer
+
+---
 
 ### Assistant Trainer (`assistant-trainer/`)
 Meta-agent that trains new AI assistants from natural language descriptions.
@@ -75,6 +87,16 @@ Read-only watchdog for site health, performance, and security signals.
 
 ---
 
+### Skills Assistant (`skills-assistant/`)
+Creates and edits Skills — reusable instruction bundles that teach any agent a new workflow — via chat instead of the raw SKILL.md editor.
+- Writes new Skills from a plain-language description
+- Edits and versions existing Skills
+- Browses and imports community Skills
+
+**Category:** Developer
+
+---
+
 ### Support Triage (`support-triage/`)
 Triages comments and form submissions.
 - Summarises requests
@@ -109,7 +131,7 @@ Your guide to WordPress and Agent Builder for new users.
 
 1. **Activate in WordPress:**
    - Go to **Agent Builder → Agents**
-   - All 8 bundled agents appear automatically
+   - All 10 bundled agents appear automatically
    - Click **Activate** on any agent
 
 2. **Start using:**
@@ -131,7 +153,88 @@ Your guide to WordPress and Agent Builder for new users.
 
 ## Customising Agents
 
-Each agent is open-source and fully customisable. See the [Developer Documentation](https://agentic-plugin.com/documentation/#doc-developers) for a complete guide to building and customising agents.
+Each agent here is plain data (JSON + a text prompt, no PHP) — edit any bundled agent's files directly and Agent Builder picks up the change (a bundled agent's `abilities.json` needs re-signing after an edit; see below). See the [Developer Documentation](https://agentic-plugin.com/documentation/#doc-developers) for the full reference.
+
+---
+
+## Building Your Own Agent
+
+An agent is a folder under `library/agents/{slug}/` with four pieces:
+
+```
+library/agents/my-agent/
+├── agent.json               # Identity, tools list, suggested prompts, welcome message
+├── abilities.json           # The tool allowlist + risk level per tool (security boundary)
+├── templates/
+│   └── system-prompt.txt    # The agent's instructions ({wp_version} etc. are expanded at runtime)
+└── README.md                # Same format as this file's agent entries — required for marketplace listing
+```
+
+### `agent.json`
+
+```json
+{
+  "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+  "slug": "my-agent",
+  "name": "My Agent",
+  "description": "One or two sentences — shown in the Agents list and marketplace card.",
+  "category": "content",
+  "icon": "🤖",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "author_uri": "https://example.com",
+  "capabilities": [ "edit_posts" ],
+  "tools": [ "list_posts", "get_post_content" ],
+  "suggested_prompts": [ "Do X", "Do Y" ],
+  "welcome_message": "Shown when a user first opens the chat with this agent."
+}
+```
+
+`category` must be one of the values `Agent_Manifest_Validator::ALLOWED_CATEGORIES` declares: `content`, `admin`, `ecommerce`, `frontend`, `developer`, `seo`, `security`, `media`, `support`. `tools` must name tools that actually exist under `library/tools/` (or WordPress core abilities) — an agent can only ever call what it lists here.
+
+### `abilities.json` — the security boundary
+
+Every tool the agent can call needs a `risk` level, which controls whether a call runs immediately or pauses in the Approvals Queue for the site owner to review:
+
+| Risk | Behaviour |
+|------|-----------|
+| `none` | Runs immediately — reads and safe queries only |
+| `low` | Runs immediately, logged |
+| `medium` | Runs immediately in autonomous mode, requires approval in supervised mode |
+| `high` | Always requires approval — real trust decisions (privilege grants, deletions) |
+| `extreme` | Hard-blocked, no approval bypass (e.g. arbitrary command execution) |
+
+```json
+{
+  "$schema": "https://agentic-plugin.com/schemas/abilities/v1.json",
+  "version": "2.0",
+  "agent": "my-agent",
+  "description": "Tools required by My Agent",
+  "abilities": {
+    "list_posts": { "risk": "none" },
+    "create_post_content": { "risk": "medium", "reason": "Creates a new post or page with content" }
+  }
+}
+```
+
+Set risk as low as the tool's own intrinsic default allows — a manifest can only ever raise a tool's risk above its registered default, never lower it below it. Always include a short `reason` for anything above `none`; it's shown to the reviewer/approver.
+
+### `templates/system-prompt.txt`
+
+Plain text instructions for the LLM — see any bundled agent's file for the expected shape (role, `== Deployment ==` context handling, `== Workflow ==` steps, tone/constraints). Keep it focused: list what the agent should do, how it should sequence tool calls, and any hard "don't do X" rules.
+
+### Fastest path: let Assistant Trainer or Agent Orchestrator do it
+
+Rather than hand-writing these files, you can describe the agent you want in chat to the bundled **Assistant Trainer** agent (or use its `create_agent_files`/`generate_agent` tools directly) — it scaffolds all four files from a natural-language description, then you refine from there.
+
+## Listing on the Marketplace
+
+The [Community Agents marketplace](https://agentic-plugin.com/community-agents/) is where developers publish agents beyond the 10 bundled here. In the free/WordPress.org plugin, Community Agents is **browse-only** — visitors can preview and download an agent's files, but not one-click remote-install (that requires Agent Builder Pro or a connector).
+
+To list an agent:
+1. Package the four files above exactly as they appear in this directory (a real `agent.json` + `abilities.json` + `templates/system-prompt.txt` + `README.md`, no PHP).
+2. Make sure `abilities.json` only requests tools that already ship with Agent Builder (free or Pro) — a listed agent can't bundle its own custom tool code.
+3. Submit via the marketplace's own submission flow at [agentic-plugin.com/community-agents/](https://agentic-plugin.com/community-agents/).
 
 ---
 
@@ -139,3 +242,4 @@ Each agent is open-source and fully customisable. See the [Developer Documentati
 
 - [Documentation](https://agentic-plugin.com/documentation/)
 - [Support](https://agentic-plugin.com/support/)
+- [Changelog](https://agentic-plugin.com/changelog/)

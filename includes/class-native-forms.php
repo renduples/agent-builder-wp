@@ -369,10 +369,10 @@ class Agentic_Native_Forms {
 			}
 		}
 
-		// Turnstile verification (add-on only).
-		if ( class_exists( '\Agentic\Pro\Turnstile' ) && $spam_config['turnstile'] ) {
-			$turnstile_token  = $request->get_param( 'cf-turnstile-response' ) ?? '';
-			$turnstile_result = \Agentic\Pro\Turnstile::verify( $turnstile_token );
+		// Turnstile verification, when the form has it enabled.
+		if ( $spam_config['turnstile'] ) {
+			$turnstile_token  = (string) ( $request->get_param( 'cf-turnstile-response' ) ?? '' );
+			$turnstile_result = \Agentic\Turnstile::verify( $turnstile_token );
 			if ( null !== $turnstile_result && ! $turnstile_result['pass'] ) {
 				return new WP_Error( 'turnstile_failed', __( 'Security verification failed. Please try again.', 'agent-builder' ), array( 'status' => 403 ) );
 			}
@@ -1226,9 +1226,9 @@ class Agentic_Native_Forms {
 			true
 		);
 
-		// Enqueue Turnstile script if any form on the page uses it (add-on only).
-		if ( class_exists( '\Agentic\Pro\Turnstile' ) && \Agentic\Pro\Turnstile::is_required() ) {
-			\Agentic\Pro\Turnstile::enqueue_script( 'cf-turnstile', false );
+		// Enqueue Turnstile script if any form on the page uses it.
+		if ( \Agentic\Turnstile::is_required() ) {
+			\Agentic\Turnstile::enqueue_script( 'cf-turnstile', false );
 		}
 	}
 }

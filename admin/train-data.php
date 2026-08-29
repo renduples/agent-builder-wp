@@ -21,7 +21,9 @@ if ( ! current_user_can( 'agentic_manage_settings' ) && ! current_user_can( 'man
 	wp_die( esc_html__( 'You do not have permission to access this page.', 'agent-builder' ) );
 }
 
-$agentic_is_pro = class_exists( '\Agentic\License_Client' ) && \Agentic\License_Client::get_instance()->is_pro();
+// Agent Builder Pro (which owns the Vector Store admin UI) can never be
+// installed alongside this standalone free build.
+$agentic_is_pro = false;
 
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab param.
 $agentic_td_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'wiki';

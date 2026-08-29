@@ -272,9 +272,6 @@ if ( ! empty( $agentic_active_agents ) ) :
 			<th class="agentic-col-16 agentic-td-center">Audio In (Enable Microphone)</th>
 			<th class="agentic-col-16 agentic-td-center">Audio Out (Enable Speaker)</th>
 			<th class="agentic-col-16 agentic-td-center">Vision (Enable Uploads)</th>
-			<?php if ( \Agentic\License_Client::get_instance()->is_pro() ) : ?>
-			<th class="agentic-col-16 agentic-td-center">Costs (Display Token Costs)</th>
-			<?php endif; ?>
 			<th class="agentic-col-14 agentic-td-center">Cache (Response Cache)</th>
 		</tr>
 	</thead>
@@ -313,12 +310,6 @@ if ( ! empty( $agentic_active_agents ) ) :
 					'global' => $agentic_global_vision,
 				),
 			);
-			if ( \Agentic\License_Client::get_instance()->is_pro() ) {
-				$agentic_feature_cells['costs'] = array(
-					'value'  => $agentic_cf_costs,
-					'global' => $agentic_global_costs,
-				);
-			}
 			$agentic_feature_cells['cache'] = array(
 				'value'  => $agentic_cf_cache,
 				'global' => $agentic_global_cache,

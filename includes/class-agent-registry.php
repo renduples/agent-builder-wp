@@ -500,10 +500,9 @@ class Agentic_Agent_Registry {
 
 		$agent = $agents[ $slug ];
 
-		// Block premium agents (those with a .requires-license marker) if no premium license.
-		if ( ! empty( $agent['directory'] ) && file_exists( $agent['directory'] . '/.requires-license' )
-			&& ( ! class_exists( '\Agentic\License_Client' ) || ! \Agentic\License_Client::get_instance()->is_pro() )
-		) {
+		// Block premium agents (those with a .requires-license marker) — this build
+		// has no license path at all.
+		if ( ! empty( $agent['directory'] ) && file_exists( $agent['directory'] . '/.requires-license' ) ) {
 			\Agentic\Security_Log::log_system(
 				'agent_activate_failed',
 				'agents',
@@ -824,19 +823,6 @@ class Agentic_Agent_Registry {
 
 		foreach ( $active_slugs as $slug ) {
 			if ( isset( $installed[ $slug ] ) ) {
-				// License check: skip agents that fail license validation.
-				// Bundled agents pass by default except pro-gated ones (e.g. site-auditor).
-				if ( class_exists( '\Agentic\License_Client' ) ) {
-					$license_client = \Agentic\License_Client::get_instance();
-					if ( ! $license_client->can_agent_run( $slug ) ) {
-						if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-							// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging only when WP_DEBUG is enabled.
-							error_log( sprintf( 'Agentic: Skipping agent %s — license invalid.', $slug ) );
-						}
-						continue;
-					}
-				}
-
 				$result = $this->load_agent( $installed[ $slug ] );
 
 				if ( is_wp_error( $result ) ) {

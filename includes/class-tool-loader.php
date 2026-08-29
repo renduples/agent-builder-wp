@@ -122,46 +122,18 @@ class Tool_Loader {
 		$tool_files = $unique_files;
 
 		foreach ( $tool_files as $tool_file ) {
-			$tool_slug = basename( dirname( (string) $tool_file ) );
-			if ( Distribution::is_wporg() && in_array( $tool_slug, Distribution::wporg_excluded_tools(), true ) ) {
-				continue;
-			}
 			// include_once prevents fatal "Cannot redeclare class" if load() is
 			// called more than once in a request (e.g. after sync_to_registry reset).
 			$tool_instance = include_once $tool_file;
 
 			if ( $tool_instance instanceof Tool_Base ) {
-				// Skip Pro-only tools (e.g. git deploy) on free installs.
-				if ( $tool_instance->is_pro_only() && ! License_Client::get_instance()->is_pro() ) {
-					// Site-local tools use is_pro_only + Site_Local_Tools feature flag.
-					if ( ! ( $tool_instance instanceof Site_Local_Tool && Site_Local_Tools::is_feature_available() ) ) {
-						continue;
-					}
+				// Pro-only tools (e.g. a future licensed add-on's own tool files)
+				// never load here — this build has no license path at all.
+				if ( $tool_instance->is_pro_only() ) {
+					continue;
 				}
 				$this->tools[ $tool_instance->get_name() ] = $tool_instance;
 			}
-		}
-
-		// Declarative site-local tools (Pro admin builder) — not filesystem packages.
-		foreach ( (array) apply_filters( 'agentic_runtime_tools', array() ) as $runtime_tool ) {
-			if ( ! $runtime_tool instanceof Tool_Base ) {
-				continue;
-			}
-			$name = $runtime_tool->get_name();
-			if ( '' === $name ) {
-				continue;
-			}
-			if ( $runtime_tool->is_pro_only() && ! Site_Local_Tools::is_feature_available() && ! License_Client::get_instance()->is_pro() ) {
-				continue;
-			}
-			if ( ! $runtime_tool->is_available() ) {
-				continue;
-			}
-			// Site-local may override only if name free or already site-sourced.
-			if ( isset( $this->tools[ $name ] ) && ! ( $runtime_tool instanceof Site_Local_Tool ) ) {
-				continue;
-			}
-			$this->tools[ $name ] = $runtime_tool;
 		}
 
 		$this->loaded = true;

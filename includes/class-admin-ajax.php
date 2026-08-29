@@ -122,33 +122,28 @@ class Admin_Ajax {
 		// Store data-retention preference so uninstall.php can respect it.
 		update_option( 'agentic_deactivate_delete_data', $delete_data ? '1' : '0' );
 
-		// Forward cancellation feedback when user has opted in and holds a license key.
+		// Forward cancellation feedback when the user has opted in (disclosed in
+		// readme.txt's External Services section — a consent-gated survey, not a
+		// license-holder perk).
 		$has_consent = get_option( 'agentic_service_consent' );
-		$has_license = get_option( License_Client::OPTION_LICENSE_KEY );
-		if ( $has_consent && $has_license ) {
+		if ( $has_consent ) {
 			$reason = sanitize_key( wp_unslash( $_POST['reason'] ?? '' ) );
 			$detail = sanitize_textarea_field( wp_unslash( $_POST['detail'] ?? '' ) );
 			if ( ! empty( $reason ) ) {
-				if ( class_exists( '\Agentic\License_Remote' ) ) {
-					\Agentic\License_Remote::get_instance()->send_cancellation_feedback( $reason, $detail );
-				} else {
-					// WP.org build — call directly (user has explicitly consented).
-					$api_base = Service_Registry::url( 'agentic-api' );
-					wp_remote_post(
-						$api_base . '/wp-json/agentic-license/v1/cancellation-feedback',
-						array(
-							'timeout'  => 5,
-							'blocking' => false,
-							'body'     => array(
-								'license_key'    => $has_license,
-								'site_url'       => home_url(),
-								'reason'         => $reason,
-								'detail'         => mb_substr( $detail, 0, 500 ),
-								'plugin_version' => defined( 'AGENT_BUILDER_VERSION' ) ? AGENT_BUILDER_VERSION : '',
-							),
-						)
-					);
-				}
+				$api_base = Service_Registry::url( 'agentic-api' );
+				wp_remote_post(
+					$api_base . '/wp-json/agentic-license/v1/cancellation-feedback',
+					array(
+						'timeout'  => 5,
+						'blocking' => false,
+						'body'     => array(
+							'site_url'       => home_url(),
+							'reason'         => $reason,
+							'detail'         => mb_substr( $detail, 0, 500 ),
+							'plugin_version' => defined( 'AGENT_BUILDER_VERSION' ) ? AGENT_BUILDER_VERSION : '',
+						),
+					)
+				);
 			}
 		}
 
@@ -554,7 +549,9 @@ class Admin_Ajax {
 	}
 
 	/**
-	 * One-click agent update — downloads and installs the new version zip.
+	 * One-click agent package update — not available in this build. This plugin
+	 * never downloads and installs executable agent code from a remote zip
+	 * (WordPress.org Guideline 8); bundled agents update with the plugin itself.
 	 *
 	 * @return void
 	 */
@@ -566,31 +563,7 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Insufficient permissions.', 'agent-builder' ) );
 		}
 
-		$zip_url = isset( $_POST['zip_url'] ) ? esc_url_raw( wp_unslash( $_POST['zip_url'] ) ) : '';
-
-		if ( empty( $slug ) || empty( $zip_url ) ) {
-			wp_send_json_error( __( 'Missing required parameters.', 'agent-builder' ) );
-		}
-
-		if ( ! class_exists( '\Agentic\Agent_Updates' ) ) {
-			wp_send_json_error( __( 'Agent updates require a premium license.', 'agent-builder' ) );
-		}
-
-		$result = Agent_Updates::do_update( $slug, $zip_url );
-
-		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( $result->get_error_message() );
-		}
-
-		wp_send_json_success(
-			array(
-				'message' => sprintf(
-				/* translators: %s: agent slug */
-					__( '%s updated successfully.', 'agent-builder' ),
-					$slug
-				),
-			)
-		);
+		wp_send_json_error( __( 'Agent package updates are not available in this build.', 'agent-builder' ) );
 	}
 
 	/**
@@ -1181,7 +1154,7 @@ class Admin_Ajax {
 					'site_url'       => $site_url,
 					'site_name'      => $site_name,
 					'plugin_version' => $plugin_version,
-					'plugin_tier'    => \Agentic\License_Client::get_instance()->is_pro() ? 'pro' : 'free',
+					'plugin_tier'    => 'free',
 				),
 			)
 		);
@@ -1193,8 +1166,7 @@ class Admin_Ajax {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		// Accept either 'api_key' or 'license_key' from the server response.
-		$api_key     = $body['api_key'] ?? $body['license_key'] ?? '';
-		$license_key = $body['license_key'] ?? '';
+		$api_key = $body['api_key'] ?? $body['license_key'] ?? '';
 
 		if ( empty( $api_key ) ) {
 			$server_msg = $body['message'] ?? __( 'No API key returned. Please try again.', 'agent-builder' );
@@ -1223,24 +1195,6 @@ class Admin_Ajax {
 		update_option( 'agentic_video_model', $video_model );
 		update_option( 'agentic_onboarding_complete', true );
 		update_option( 'agentic_service_consent', true );
-
-		// If the server returned a license key alongside the API key, store it now
-		// so no separate phone-home is needed (add-on build only).
-		if ( ! empty( $license_key ) && class_exists( '\Agentic\License_Client' ) ) {
-			update_option( License_Client::OPTION_LICENSE_KEY, $license_key );
-			update_option(
-				License_Client::OPTION_LICENSE_DATA,
-				array(
-					'status'            => 'active',
-					'type'              => 'free',
-					'expires_at'        => '2099-12-31 23:59:59',
-					'activations_used'  => 1,
-					'activations_limit' => 1,
-					'validated_at'      => gmdate( 'Y-m-d H:i:s' ),
-				)
-			);
-			License_Client::get_instance()->reset_cache();
-		}
 
 		wp_send_json_success(
 			array(

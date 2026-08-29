@@ -17,8 +17,6 @@
     "manage_admin_bar_launcher",
     "manage_scheduled_task",
     "manage_event_listener",
-    "manage_cli_settings",
-    "run_wp_cli",
     "agents_available"
   ],
   "suggested_prompts": [

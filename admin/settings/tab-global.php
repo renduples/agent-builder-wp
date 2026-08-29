@@ -72,18 +72,6 @@ $agentic_ui_whatsapp   = get_option( 'agentic_show_whatsapp_cta', '0' );
 			<p class="description">Allow users to attach images for the agent to analyze.</p>
 		</td>
 	</tr>
-	<?php if ( \Agentic\License_Client::get_instance()->is_pro() ) : ?>
-	<tr>
-		<th scope="row">Costs</th>
-		<td>
-			<label>
-				<input type="checkbox" name="agentic_chat_costs" value="1" <?php checked( $agentic_ui_costs, '1' ); ?> />
-				Show token &amp; cost data in chat footer
-			</label>
-			<p class="description">Display token usage and estimated cost after each message.</p>
-		</td>
-	</tr>
-	<?php endif; ?>
 	<tr>
 		<th scope="row">Response Cache</th>
 		<td>

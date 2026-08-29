@@ -1078,10 +1078,6 @@ function DashboardApp() {
 		return () => clearInterval( t );
 	}, [] );
 
-	const dismissNudge = () => {
-		mutate( { action_name: 'dismiss_pro_nudge' } );
-	};
-
 	const saveQuickActions = ( actions ) =>
 		mutate( { action_name: 'save_quick_actions', actions } );
 
@@ -1304,31 +1300,6 @@ function DashboardApp() {
 							{ __( 'Manage Interface', 'agent-builder' ) }
 						</a>
 					</span>
-				</div>
-			) }
-
-			{ data.show_pro_nudge && (
-				<div className="agentic-pro-nudge" id="agentic-pro-nudge">
-					<span className="agentic-pro-nudge-text">
-						<strong>Unlock Pro:</strong> Connect WhatsApp, Slack
-						&amp; Email channels — download community contributed AI
-						agents — remove all daily usage limits.{ ' ' }
-						<a
-							href={ data.urls?.pricing }
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							See plans →
-						</a>
-					</span>
-					<button
-						type="button"
-						className="agentic-pro-nudge-dismiss"
-						title="Dismiss"
-						onClick={ dismissNudge }
-					>
-						✕
-					</button>
 				</div>
 			) }
 

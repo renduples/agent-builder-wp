@@ -89,9 +89,12 @@ class Get_Image_Pricing extends \Agentic\Tool_Base {
 		if ( empty( $api_key ) && defined( 'AGENTIC_RAG_API_KEY' ) ) {
 			$api_key = AGENTIC_RAG_API_KEY;
 		}
+		if ( empty( $api_key ) ) {
+			$api_key = (string) ( \Agentic\Provider_Registry::get( 'agentic' )['api_key'] ?? '' );
+		}
 
 		if ( empty( $api_key ) ) {
-			return array( 'error' => 'Agentic Image Generation requires an active license. Activate your license in Agentic → Settings.' );
+			return array( 'error' => 'Agentic Image Generation requires connecting an Agentic AI account — go to Agent Builder → Settings → Providers and connect Agentic AI.' );
 		}
 
 		$response = wp_remote_get(

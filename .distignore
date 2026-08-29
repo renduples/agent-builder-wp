@@ -30,25 +30,9 @@ phpcs.xml.dist
 phpunit.xml
 phpunit.xml.dist
 composer.lock
+composer.phar
 package-lock.json
 
 # Unused Chart.js copy (never enqueued).
 assets/js/chart.js
 assets/js/chart.min.js
-
-# WP-CLI execution surface — self-hosted only (Guideline 8 / Plugin FAQ).
-library/tools/run_wp_cli
-library/tools/manage_cli_settings
-admin/deployment/deployment-cli.php
-
-# Self-hosted/Pro-only code. No-op in this free-tier checkout (these paths
-# don't exist here), but this script is also run from the private upstream
-# repo where they do — the exclusion has to live here either way.
-includes/self-hosted
-admin/upgrade-pro.php
-
-# Pro Vector Store / RAG (lives in agent-builder-pro). Explicit paths — never
-# glob *pro* (false positives on provider/proposal/approvals/…).
-admin/partials/vector-store-pro.php
-includes/class-rag-manager.php
-assets/js/train-data.js

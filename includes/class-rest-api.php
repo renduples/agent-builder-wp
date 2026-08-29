@@ -475,10 +475,10 @@ class REST_API {
 		}
 		unset( $msg );
 
-		// Turnstile bot verification — add-on only (before security scan to save CPU).
-		if ( class_exists( '\Agentic\Pro\Turnstile' ) && \Agentic\Pro\Turnstile::is_required() ) {
-			$turnstile_token  = $request->get_param( 'turnstile_token' );
-			$turnstile_result = \Agentic\Pro\Turnstile::verify( $turnstile_token, $user_id );
+		// Turnstile bot verification, when configured and required (before security scan to save CPU).
+		if ( Turnstile::is_required() ) {
+			$turnstile_token  = (string) ( $request->get_param( 'turnstile_token' ) ?? '' );
+			$turnstile_result = Turnstile::verify( $turnstile_token, $user_id );
 
 			if ( null !== $turnstile_result && ! $turnstile_result['pass'] ) {
 				return new \WP_REST_Response(
@@ -2222,11 +2222,11 @@ class REST_API {
 	public function handle_tts( \WP_REST_Request $request ): void {
 		$stored_key = (string) get_option( 'agentic_rag_api_secret', '' );
 		$api_key    = $stored_key ? $stored_key : (string) ( \Agentic\Provider_Registry::get( 'agentic' )['api_key'] ?? '' );
-		$user_id    = (string) get_option( \Agentic\License_Client::OPTION_LICENSE_KEY, '' );
+		$user_id    = $api_key;
 
-		if ( empty( $api_key ) || empty( $user_id ) ) {
+		if ( empty( $api_key ) ) {
 			wp_send_json_error(
-				array( 'error' => 'TTS service requires an active license. Activate your license in Agentic → Settings.' ),
+				array( 'error' => 'TTS requires connecting an Agentic AI account — go to Agent Builder → Settings → Providers and connect Agentic AI.' ),
 				503
 			);
 			return;

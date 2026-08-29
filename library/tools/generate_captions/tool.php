@@ -122,10 +122,13 @@ class Generate_Captions extends \Agentic\Tool_Base {
 		if ( empty( $api_key ) && defined( 'AGENTIC_RAG_API_KEY' ) ) {
 			$api_key = AGENTIC_RAG_API_KEY;
 		}
-		$user_id = (string) get_option( \Agentic\License_Client::OPTION_LICENSE_KEY, '' );
+		if ( empty( $api_key ) ) {
+			$api_key = (string) ( \Agentic\Provider_Registry::get( 'agentic' )['api_key'] ?? '' );
+		}
+		$user_id = $api_key;
 
-		if ( empty( $api_key ) || empty( $user_id ) ) {
-			return array( 'error' => 'Agentic Video requires an active license. Activate in Agentic → Settings.' );
+		if ( empty( $api_key ) ) {
+			return array( 'error' => 'Agentic Video requires connecting an Agentic AI account — go to Agent Builder → Settings → Providers and connect Agentic AI.' );
 		}
 		return array(
 			'api_key' => $api_key,

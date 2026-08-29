@@ -1659,7 +1659,6 @@ final class Activator {
 			'db_update_post'   => 'database',
 			'db_delete_post'   => 'database',
 			'agents_available' => 'agents',
-			'run_wp_cli'       => 'cli',
 		);
 
 		$seeded = Tools_Registry::seed_core_tools( $category_map );
@@ -1668,6 +1667,15 @@ final class Activator {
 
 		// Sync agent-contributed tools.
 		Tool_Loader::get_instance()->sync_to_registry();
+
+		// sync_to_registry() only ever upserts tools still present on disk — it
+		// never removes a row for a tool whose files were deleted. run_wp_cli and
+		// manage_cli_settings no longer ship in this build at all (removed, not
+		// just gated); clean up their now-orphaned rows on every upgrading site
+		// so the Tools page never lists a tool with no backing file. Idempotent —
+		// a no-op once already cleaned.
+		Tools_Registry::unregister( 'run_wp_cli' );
+		Tools_Registry::unregister( 'manage_cli_settings' );
 
 		self::record(
 			'seed_tools',
