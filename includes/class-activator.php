@@ -872,7 +872,20 @@ final class Activator {
 		$table_errors  = array();
 
 		// Helper to run dbDelta and capture any error.
+		//
+		// dbDelta() cannot parse "CREATE TABLE IF NOT EXISTS" — its regex takes
+		// the first word after "CREATE TABLE " as the table name, so it reads
+		// "IF" as the table name and silently operates on a bogus table called
+		// "IF" instead of the real one. Every $sql_* string below is written
+		// with "IF NOT EXISTS" (dbDelta already no-ops safely on a table that
+		// already exists with matching columns, so it was never needed), which
+		// means every schema change to an already-existing table — a widened
+		// column, a new column, a new index — has been silently applying to
+		// nothing on any site that installed before that change shipped. Strip
+		// it here rather than rewrite 10 SQL strings, so this is fixed for
+		// every table at once.
 		$run_delta = function ( string $name, string $sql ) use ( $wpdb, &$table_results, &$table_errors ): void {
+			$sql                    = preg_replace( '/CREATE TABLE IF NOT EXISTS/i', 'CREATE TABLE', $sql, 1 );
 			$wpdb->last_error       = '';
 			$delta                  = dbDelta( $sql );
 			$table_results[ $name ] = $delta;
@@ -948,14 +961,17 @@ final class Activator {
         ) $charset_collate;";
 		$run_delta( 'agentic_providers', $sql_providers );
 
-		// Skills table.
+		// Skills table. agent_slug holds a JSON array of agent slugs (e.g.
+		// '["content-writer","seo-optimizer"]'), or '' to mean every agent —
+		// see Skills_Registry::normalize_agent_slugs()/decode_agent_slugs().
+		// Widened from varchar(128) in 3.3.90 to fit multiple slugs.
 		$sql_skills = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}agentic_skills (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             name varchar(255) NOT NULL,
             slug varchar(255) NOT NULL,
             description text,
             content longtext,
-            agent_slug varchar(128) NOT NULL DEFAULT '',
+            agent_slug varchar(1024) NOT NULL DEFAULT '',
             source varchar(64) NOT NULL DEFAULT 'local',
             source_id varchar(255) NOT NULL DEFAULT '',
             version varchar(32) NOT NULL DEFAULT '1.0.0',
@@ -1081,6 +1097,8 @@ final class Activator {
 		self::migrate_agent_personas();
 		self::migrate_agent_overrides();
 		self::migrate_editor_sidebar_seo_slug();
+		self::migrate_remove_agentic_rag_service();
+		self::migrate_skills_agent_slug_to_array();
 
 		// Schema migrations (proper versioned table changes).
 		self::run_schema_migrations();
@@ -1614,6 +1632,94 @@ final class Activator {
 				'rows_changed'   => $rows_changed,
 			)
 		);
+	}
+
+	/**
+	 * Remove the orphaned 'agentic-rag' service row from wp_agentic_providers.
+	 *
+	 * The RAG/Vector Store feature's own admin UI and calling code
+	 * (class-rag-manager.php) were removed from this free build in an earlier
+	 * release, but Provider_Registry::builtin_providers() kept registering the
+	 * 'agentic-rag' endpoint as a configurable service — Provider_Registry::load()
+	 * only ever adds a missing built-in row, never removes one no longer in the
+	 * PHP definition, so every existing install carries a dead, unused endpoint
+	 * override option in Settings > Endpoints. Provider_Registry::delete() also
+	 * refuses built-ins by design, so this deletes the row directly.
+	 *
+	 * @return void
+	 */
+	private static function migrate_remove_agentic_rag_service(): void {
+		if ( get_option( 'agentic_rag_service_removed_v1' ) ) {
+			self::record( 'migrate_remove_agentic_rag_service', 'skipped', 'already migrated' );
+			return;
+		}
+
+		global $wpdb;
+		$deleted = 0;
+		$table   = $wpdb->prefix . 'agentic_providers';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$deleted = (int) $wpdb->delete( $table, array( 'slug' => 'agentic-rag' ) );
+		}
+
+		if ( class_exists( '\Agentic\Provider_Registry' ) ) {
+			\Agentic\Provider_Registry::invalidate();
+		}
+
+		update_option( 'agentic_rag_service_removed_v1', true );
+
+		self::record( 'migrate_remove_agentic_rag_service', 'ok', array( 'deleted' => $deleted ) );
+	}
+
+	/**
+	 * Wrap existing single-slug wp_agentic_skills.agent_slug values into the
+	 * JSON-array format Skills_Registry now uses, so a skill can be scoped to
+	 * more than one agent. Empty values (meaning "every agent") are untouched.
+	 *
+	 * @return void
+	 */
+	private static function migrate_skills_agent_slug_to_array(): void {
+		if ( get_option( 'agentic_skills_agent_slug_array_v1' ) ) {
+			self::record( 'migrate_skills_agent_slug_to_array', 'skipped', 'already migrated' );
+			return;
+		}
+
+		global $wpdb;
+		$table   = $wpdb->prefix . 'agentic_skills';
+		$updated = 0;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$rows = $wpdb->get_results( "SELECT id, agent_slug FROM {$table} WHERE agent_slug != ''", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+
+			foreach ( (array) $rows as $row ) {
+				$raw = (string) $row['agent_slug'];
+				// Already JSON (e.g. re-run after a partial migration, or a
+				// row created by newer code before this migration ran) — skip.
+				if ( is_array( json_decode( $raw, true ) ) ) {
+					continue;
+				}
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->update(
+					$table,
+					array( 'agent_slug' => wp_json_encode( array( $raw ) ) ),
+					array( 'id' => (int) $row['id'] ),
+					array( '%s' ),
+					array( '%d' )
+				);
+				++$updated;
+			}
+		}
+
+		if ( class_exists( '\Agentic\Skills_Registry' ) ) {
+			\Agentic\Skills_Registry::bust_cache();
+		}
+
+		update_option( 'agentic_skills_agent_slug_array_v1', true );
+
+		self::record( 'migrate_skills_agent_slug_to_array', 'ok', array( 'updated' => $updated ) );
 	}
 
 	/**

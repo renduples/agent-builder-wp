@@ -42,7 +42,7 @@ if ( isset( $_POST['agentic_skill_nonce'] ) && wp_verify_nonce( sanitize_text_fi
 		'name'        => sanitize_text_field( wp_unslash( $_POST['agentic_sk_name'] ?? '' ) ),
 		'description' => sanitize_text_field( wp_unslash( $_POST['agentic_sk_description'] ?? '' ) ),
 		'content'     => wp_kses_post( wp_unslash( $_POST['agentic_sk_content'] ?? '' ) ),
-		'agent_slug'  => sanitize_key( wp_unslash( $_POST['agentic_sk_agent'] ?? '' ) ),
+		'agent_slug'  => isset( $_POST['agentic_sk_agents'] ) ? array_map( 'sanitize_key', wp_unslash( (array) $_POST['agentic_sk_agents'] ) ) : array(),
 		'author'      => sanitize_text_field( wp_unslash( $_POST['agentic_sk_author'] ?? '' ) ),
 		'version'     => sanitize_text_field( wp_unslash( $_POST['agentic_sk_version'] ?? '1.0.0' ) ),
 		'enabled'     => isset( $_POST['agentic_sk_enabled'] ),
@@ -258,7 +258,7 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 	$agentic_sk_name    = $agentic_sk_edit['name'] ?? '';
 	$agentic_sk_desc    = $agentic_sk_edit['description'] ?? '';
 	$agentic_sk_content = $agentic_sk_edit['content'] ?? ( $agentic_sk_from_template['content'] ?? '' );
-	$agentic_sk_agent   = $agentic_sk_edit['agent_slug'] ?? '';
+	$agentic_sk_agents_selected = Skills_Registry::decode_agent_slugs( (string) ( $agentic_sk_edit['agent_slug'] ?? '' ) );
 	$agentic_sk_author  = $agentic_sk_edit['author'] ?? '';
 	$agentic_sk_version = $agentic_sk_edit['version'] ?? '1.0.0';
 	$agentic_sk_enabled = $agentic_sk_edit ? ( '1' === ( $agentic_sk_edit['enabled'] ?? '0' ) ) : true;
@@ -350,21 +350,22 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="agentic_sk_agent"><?php esc_html_e( 'Assign to Agent', 'agent-builder' ); ?></label></th>
+					<th scope="row"><?php esc_html_e( 'Assign to Agents', 'agent-builder' ); ?></th>
 					<td>
-						<select id="agentic_sk_agent" name="agentic_sk_agent">
-							<option value=""><?php esc_html_e( 'All Agents', 'agent-builder' ); ?></option>
+						<fieldset>
+							<legend class="screen-reader-text"><?php esc_html_e( 'Assign to Agents', 'agent-builder' ); ?></legend>
 							<?php foreach ( $agentic_sk_agents as $agentic_sk_slug ) : ?>
 								<?php
 								$agentic_sk_inst  = $agentic_sk_instances[ $agentic_sk_slug ] ?? null;
 								$agentic_sk_label = $agentic_sk_inst ? $agentic_sk_inst->get_name() : ucwords( str_replace( '-', ' ', $agentic_sk_slug ) );
 								?>
-								<option value="<?php echo esc_attr( $agentic_sk_slug ); ?>" <?php selected( $agentic_sk_agent, $agentic_sk_slug ); ?>>
+								<label style="display:block;margin-bottom:4px;">
+									<input type="checkbox" name="agentic_sk_agents[]" value="<?php echo esc_attr( $agentic_sk_slug ); ?>" <?php checked( in_array( $agentic_sk_slug, $agentic_sk_agents_selected, true ) ); ?> />
 									<?php echo esc_html( $agentic_sk_label ); ?>
-								</option>
+								</label>
 							<?php endforeach; ?>
-						</select>
-						<p class="description"><?php esc_html_e( 'Leave as "All Agents" to make this skill available globally, or assign it to a specific agent.', 'agent-builder' ); ?></p>
+						</fieldset>
+						<p class="description"><?php esc_html_e( 'Leave every box unchecked to make this skill available to all agents, or check one or more to limit it.', 'agent-builder' ); ?></p>
 					</td>
 				</tr>
 				<?php if ( $agentic_sk_is_advanced ) : ?>
@@ -910,12 +911,18 @@ $agentic_sk_instances = $agentic_sk_registry->get_all_instances();
 						</td>
 						<td>
 							<?php
-							$agentic_sk_a_slug = $agentic_sk_item['agent_slug'] ?? '';
-							if ( '' === $agentic_sk_a_slug ) {
+							$agentic_sk_a_slugs = Skills_Registry::decode_agent_slugs( (string) ( $agentic_sk_item['agent_slug'] ?? '' ) );
+							if ( empty( $agentic_sk_a_slugs ) ) {
 								echo '<span class="agentic-text-dim">' . esc_html__( 'All', 'agent-builder' ) . '</span>';
 							} else {
-								$agentic_sk_a_inst = $agentic_sk_instances[ $agentic_sk_a_slug ] ?? null;
-								echo esc_html( $agentic_sk_a_inst ? $agentic_sk_a_inst->get_name() : ucwords( str_replace( '-', ' ', $agentic_sk_a_slug ) ) );
+								$agentic_sk_a_names = array_map(
+									static function ( $agentic_sk_a_slug ) use ( $agentic_sk_instances ) {
+										$agentic_sk_a_inst = $agentic_sk_instances[ $agentic_sk_a_slug ] ?? null;
+										return $agentic_sk_a_inst ? $agentic_sk_a_inst->get_name() : ucwords( str_replace( '-', ' ', $agentic_sk_a_slug ) );
+									},
+									$agentic_sk_a_slugs
+								);
+								echo esc_html( implode( ', ', $agentic_sk_a_names ) );
 							}
 							?>
 						</td>

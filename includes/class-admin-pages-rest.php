@@ -786,7 +786,7 @@ class Admin_Pages_REST {
 				'id'        => (string) $id,
 				'title'     => (string) ( $skill['name'] ?? '' ),
 				'subtitle'  => (string) ( $skill['description'] ?? '' ),
-				'agent'     => (string) ( $skill['agent_slug'] ?? '' ),
+				'agent'     => implode( ', ', Skills_Registry::decode_agent_slugs( (string) ( $skill['agent_slug'] ?? '' ) ) ),
 				'enabled'   => ! empty( $skill['enabled'] ),
 				'version'   => (string) ( $skill['version'] ?? '' ),
 				'edit_url'  => admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $id ),

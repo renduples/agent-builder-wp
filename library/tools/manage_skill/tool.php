@@ -95,7 +95,12 @@ class Manage_Skill extends \Agentic\Tool_Base {
 				),
 				'agent_slug'    => array(
 					'type'        => 'string',
-					'description' => 'Scope this skill to one specific agent\'s slug. Leave empty (default) to make it available to every agent.',
+					'description' => 'Scope this skill to one specific agent\'s slug. Leave empty (default) to make it available to every agent. For more than one agent, use agent_slugs instead.',
+				),
+				'agent_slugs'   => array(
+					'type'        => 'array',
+					'items'       => array( 'type' => 'string' ),
+					'description' => 'Scope this skill to two or more specific agents\' slugs. Takes precedence over agent_slug if both are given. Leave empty/omitted to make it available to every agent.',
 				),
 			),
 			'required'   => array( 'action' ),
@@ -149,12 +154,34 @@ class Manage_Skill extends \Agentic\Tool_Base {
 
 		$rows = array();
 		foreach ( Skills_Registry::get_all() as $skill ) {
-			if ( '' !== $agent_filter && '' !== ( $skill['agent_slug'] ?? '' ) && $agent_filter !== $skill['agent_slug'] ) {
+			$scoped_to = Skills_Registry::decode_agent_slugs( (string) ( $skill['agent_slug'] ?? '' ) );
+			if ( '' !== $agent_filter && ! empty( $scoped_to ) && ! in_array( $agent_filter, $scoped_to, true ) ) {
 				continue;
 			}
 			$rows[] = $this->summarize( $skill );
 		}
 		return array( 'skills' => $rows );
+	}
+
+	/**
+	 * Resolve the agent-scope arguments — agent_slugs (array, two or more
+	 * agents) takes precedence over agent_slug (a single agent) when both
+	 * are given.
+	 *
+	 * @param array $args Tool arguments.
+	 * @return array<int, string>|string|null Scope to pass to Skills_Registry,
+	 *                                         or null when neither argument was
+	 *                                         given (do_update uses null to mean
+	 *                                         "leave the current scope alone").
+	 */
+	private function resolve_agent_scope( array $args ) {
+		if ( isset( $args['agent_slugs'] ) && is_array( $args['agent_slugs'] ) ) {
+			return array_map( 'sanitize_key', array_map( 'strval', $args['agent_slugs'] ) );
+		}
+		if ( isset( $args['agent_slug'] ) ) {
+			return sanitize_key( (string) $args['agent_slug'] );
+		}
+		return null;
 	}
 
 	/**
@@ -187,7 +214,7 @@ class Manage_Skill extends \Agentic\Tool_Base {
 		$name          = isset( $args['name'] ) ? sanitize_text_field( (string) $args['name'] ) : '';
 		$description   = isset( $args['description'] ) ? sanitize_text_field( (string) $args['description'] ) : '';
 		$allowed_tools = isset( $args['allowed_tools'] ) ? sanitize_text_field( (string) $args['allowed_tools'] ) : '';
-		$agent_slug    = isset( $args['agent_slug'] ) ? sanitize_key( (string) $args['agent_slug'] ) : '';
+		$agent_slug    = $this->resolve_agent_scope( $args ) ?? '';
 
 		$full_content = $this->build_full_content( $content, $name, $description, $allowed_tools );
 		if ( '' === $full_content ) {
@@ -249,7 +276,7 @@ class Manage_Skill extends \Agentic\Tool_Base {
 		$name          = isset( $args['name'] ) ? sanitize_text_field( (string) $args['name'] ) : null;
 		$description   = isset( $args['description'] ) ? sanitize_text_field( (string) $args['description'] ) : null;
 		$allowed_tools = isset( $args['allowed_tools'] ) ? sanitize_text_field( (string) $args['allowed_tools'] ) : null;
-		$agent_slug    = isset( $args['agent_slug'] ) ? sanitize_key( (string) $args['agent_slug'] ) : null;
+		$agent_slug    = $this->resolve_agent_scope( $args );
 
 		$update_data = array();
 
@@ -288,7 +315,7 @@ class Manage_Skill extends \Agentic\Tool_Base {
 		}
 
 		if ( empty( $update_data ) ) {
-			return array( 'error' => 'Nothing to update — provide at least one of content, name, description, allowed_tools, or agent_slug.' );
+			return array( 'error' => 'Nothing to update — provide at least one of content, name, description, allowed_tools, agent_slug, or agent_slugs.' );
 		}
 
 		Skills_Registry::update( (int) $skill['id'], $update_data );
@@ -483,7 +510,7 @@ class Manage_Skill extends \Agentic\Tool_Base {
 			'slug'          => $skill['slug'],
 			'name'          => $skill['name'],
 			'description'   => $skill['description'],
-			'agent_slug'    => $skill['agent_slug'],
+			'agent_slugs'   => Skills_Registry::decode_agent_slugs( (string) ( $skill['agent_slug'] ?? '' ) ),
 			'source'        => $skill['source'],
 			'enabled'       => (bool) $skill['enabled'],
 			'is_core'       => 'core' === ( $skill['source'] ?? '' ),

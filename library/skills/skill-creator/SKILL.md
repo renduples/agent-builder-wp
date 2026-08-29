@@ -55,7 +55,7 @@ Keep the body under 400 lines. Long skills are harder to follow — move referen
 
 1. Go to **Agent Builder → Skills → Add New Skill**
 2. Paste your SKILL.md content into the content field
-3. Assign it globally (all agents) or to a specific agent
+3. Assign it globally (all agents), or check the box for one or more specific agents
 4. Enable it and start a chat — use one of your trigger phrases
 5. Check whether the agent behaves as intended
 

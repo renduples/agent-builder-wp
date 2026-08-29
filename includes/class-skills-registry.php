@@ -47,6 +47,55 @@ final class Skills_Registry {
 		wp_cache_delete( 'agentic_skills_all', 'agentic' );
 	}
 
+	// ── Agent scoping ────────────────────────────────────────────────────────
+
+	/**
+	 * Decode a stored `agent_slug` value into a list of agent slugs.
+	 *
+	 * A skill scoped to every agent stores '' — callers should check for that
+	 * separately (an empty array here would incorrectly read as "no agents").
+	 * Also tolerates a legacy pre-3.3.90 row that still holds one bare slug
+	 * (not JSON), so an un-migrated or hand-written row degrades gracefully
+	 * instead of matching nothing.
+	 *
+	 * @param string $raw Raw `agent_slug` column value.
+	 * @return string[] Agent slugs this skill is scoped to.
+	 */
+	public static function decode_agent_slugs( string $raw ): array {
+		if ( '' === $raw ) {
+			return array();
+		}
+		$decoded = json_decode( $raw, true );
+		if ( is_array( $decoded ) ) {
+			return array_values( array_filter( array_map( 'strval', $decoded ), fn( $s ) => '' !== $s ) );
+		}
+		return array( $raw );
+	}
+
+	/**
+	 * Normalize a caller-supplied agent scope (array of slugs, a single slug
+	 * string, already-encoded JSON, or empty) into the JSON string stored in
+	 * `agent_slug`. Each slug is sanitized individually — sanitize_key() on
+	 * the whole value would destroy JSON's punctuation.
+	 *
+	 * @param array<int, string>|string|null $raw Caller-supplied scope.
+	 * @return string JSON-encoded slug list, or '' for "every agent".
+	 */
+	private static function normalize_agent_slugs( $raw ): string {
+		if ( is_array( $raw ) ) {
+			$slugs = $raw;
+		} elseif ( is_string( $raw ) && '' !== $raw ) {
+			$decoded = json_decode( $raw, true );
+			$slugs   = is_array( $decoded ) ? $decoded : array( $raw );
+		} else {
+			$slugs = array();
+		}
+
+		$slugs = array_values( array_unique( array_filter( array_map( 'sanitize_key', $slugs ) ) ) );
+
+		return empty( $slugs ) ? '' : (string) wp_json_encode( $slugs );
+	}
+
 	// ── Read ──────────────────────────────────────────────────────────────
 
 	/**
@@ -120,7 +169,8 @@ final class Skills_Registry {
 			array_filter(
 				self::get_all(),
 				static fn( array $s ): bool => '1' === ( $s['enabled'] ?? '0' )
-					&& ( '' === $s['agent_slug'] || $agent_slug === $s['agent_slug'] )
+					&& ( '' === $s['agent_slug']
+						|| in_array( $agent_slug, self::decode_agent_slugs( (string) $s['agent_slug'] ), true ) )
 			)
 		);
 	}
@@ -211,7 +261,7 @@ final class Skills_Registry {
 				'slug'        => $slug,
 				'description' => sanitize_text_field( $data['description'] ?? '' ),
 				'content'     => $data['content'] ?? '',
-				'agent_slug'  => sanitize_key( $data['agent_slug'] ?? '' ),
+				'agent_slug'  => self::normalize_agent_slugs( $data['agent_slug'] ?? '' ),
 				'source'      => sanitize_key( $data['source'] ?? 'local' ),
 				'source_id'   => sanitize_text_field( $data['source_id'] ?? '' ),
 				'version'     => sanitize_text_field( $data['version'] ?? '1.0.0' ),
@@ -264,7 +314,7 @@ final class Skills_Registry {
 				} elseif ( 'enabled' === $key ) {
 					$fields[ $key ] = ! empty( $data[ $key ] ) ? 1 : 0;
 				} elseif ( 'agent_slug' === $key ) {
-					$fields[ $key ] = sanitize_key( $data[ $key ] );
+					$fields[ $key ] = self::normalize_agent_slugs( $data[ $key ] );
 				} else {
 					$fields[ $key ] = sanitize_text_field( $data[ $key ] );
 				}

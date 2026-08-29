@@ -232,7 +232,7 @@ class Provider_Registry {
 	/**
 	 * Return a single service provider by slug, or null when not found or not a service.
 	 *
-	 * @param string $slug Service slug (e.g. 'agentic-rag').
+	 * @param string $slug Service slug (e.g. 'agentic-imagegen').
 	 * @return array<string, mixed>|null
 	 */
 	public static function get_service( string $slug ): ?array {
@@ -246,7 +246,7 @@ class Provider_Registry {
 	/**
 	 * Return the base URL for a service endpoint, optionally appending a path.
 	 *
-	 * @param string $slug Service slug (e.g. 'agentic-rag').
+	 * @param string $slug Service slug (e.g. 'agentic-imagegen').
 	 * @param string $path Optional path to append, with or without leading slash.
 	 * @return string Resolved URL, or empty string when slug is unknown or not a service.
 	 */
@@ -1555,24 +1555,6 @@ class Provider_Registry {
 					'vision_model'  => '',
 					'is_builtin'    => true,
 					'sort_order'    => 11,
-					'provider_type' => 'service',
-				),
-				array(
-					'slug'          => 'agentic-rag',
-					'name'          => 'Agentic RAG',
-					'endpoint'      => 'https://rag.agentic-plugin.com',
-					'default_model' => '',
-					'auth_type'     => 'none',
-					'req_format'    => 'openai',
-					'resp_format'   => 'openai',
-					'requires_key'  => false,
-					'key_url'       => '',
-					'icon'          => 'agentic',
-					'models'        => array(),
-					'model_pricing' => array(),
-					'vision_model'  => '',
-					'is_builtin'    => true,
-					'sort_order'    => 12,
 					'provider_type' => 'service',
 				),
 				array(

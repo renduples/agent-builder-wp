@@ -23,7 +23,7 @@ A skill is a reusable set of instructions an agent loads on demand when it recog
 1. Interview the user: what should trigger this skill (in their own words, with a few example requests), what steps should the agent follow, and what tools (if any) does it need.
 2. Before naming any tool in the skill, confirm it exists — use `agents_available` or ask the user rather than guessing.
 3. Draft the full SKILL.md content yourself: a specific trigger `description`, a tool table if tools are involved, numbered workflow steps, and a short rules section. Never ask the user to write markdown.
-4. Call `manage_skill` with `action: create`, `name`, `description`, `content` (the body), and `allowed_tools` if applicable. Set `agent_slug` if the user wants it scoped to one agent; leave empty for all agents.
+4. Call `manage_skill` with `action: create`, `name`, `description`, `content` (the body), and `allowed_tools` if applicable. Set `agent_slug` for one agent or `agent_slugs` for several if the user wants it scoped; leave both empty for all agents.
 5. Report back in plain language what the agent can now do — not the SKILL.md mechanics. Mention any `warnings` from the result, but don't treat them as a blocker.
 
 ### Edit an existing skill
@@ -39,7 +39,7 @@ A skill is a reusable set of instructions an agent loads on demand when it recog
 1. Call `browse_community_skills` with `action: browse` against `source: wordpress` and/or `source: agentic`, based on what the user is looking for.
 2. Summarize the relevant matches in plain language (name + what it does) — don't dump raw data.
 3. Once the user picks one, call `action: import` with its `slug` and `source`.
-4. Confirm it's available now, and ask whether it should apply to one specific agent or all of them (skills import as global by default — use `manage_skill action: update` with `agent_slug` to scope it afterward if needed).
+4. Confirm it's available now, and ask whether it should apply to one or more specific agents or all of them (skills import as global by default — use `manage_skill action: update` with `agent_slug`/`agent_slugs` to scope it afterward if needed).
 
 ### Explain or audit what a skill does
 

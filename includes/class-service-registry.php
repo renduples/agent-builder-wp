@@ -40,7 +40,6 @@ class Service_Registry {
 	private const DESCRIPTIONS = array(
 		'agentic-api'      => 'Core API for registration, agent updates, and model pricing.',
 		'agentic-chat'     => 'LLM inference gateway. Also used for health checks and model listing.',
-		'agentic-rag'      => 'Vector store and Retrieval-Augmented Generation service.',
 		'agentic-tts'      => 'Text-to-speech synthesis service.',
 		'agentic-imagegen' => 'Image generation, editing, and upscaling service.',
 		'agentic-videogen' => 'Video generation, trimming, stitching, and captioning service.',
@@ -55,7 +54,6 @@ class Service_Registry {
 	private const DEFAULT_URLS = array(
 		'agentic-api'      => 'https://agentic-plugin.com',
 		'agentic-chat'     => 'https://chat.agentic-plugin.com:11435',
-		'agentic-rag'      => 'https://rag.agentic-plugin.com',
 		'agentic-tts'      => 'https://tts.agentic-plugin.com',
 		'agentic-imagegen' => 'https://imagegen.agentic-plugin.com',
 		'agentic-videogen' => 'https://videogen.agentic-plugin.com',
@@ -71,7 +69,7 @@ class Service_Registry {
 	 * table did not seed the service rows). Without this, callers would hand an
 	 * empty string to wp_remote_* and fail with "A valid URL was not provided."
 	 *
-	 * @param string $slug Service slug (e.g. 'agentic-rag').
+	 * @param string $slug Service slug (e.g. 'agentic-imagegen').
 	 * @param string $path Optional path to append, with or without leading slash.
 	 * @return string Resolved URL, or empty string when slug is unknown.
 	 */
