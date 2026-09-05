@@ -1102,3 +1102,37 @@
 		width: 100%;
 	}
 }
+
+.agentic-agent-ready-gauge {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.agentic-agent-ready-gauge__score {
+	font-size: 48px;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.agentic-agent-ready-gauge__grade {
+	font-size: 24px;
+	font-weight: 600;
+	color: #757575;
+}
+
+.agentic-agent-ready-fixlist {
+	list-style: none;
+	margin: 0 0 20px;
+	padding: 0;
+}
+
+.agentic-agent-ready-fixlist li {
+	padding: 12px 0;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.agentic-agent-ready-fixlist li:last-child {
+	border-bottom: none;
+}

@@ -1123,6 +1123,7 @@ final class Activator {
 			'2.10.4' => array( self::class, 'migrate_schema_2_10_4' ),
 			'2.12.1' => array( self::class, 'migrate_schema_2_12_1' ),
 			'2.13.0' => array( self::class, 'migrate_schema_2_13_0' ),
+			'2.13.6' => array( self::class, 'migrate_schema_2_13_6' ),
 			// Add new version => method pairs here when schema changes are needed.
 			// Future changes must go through this system (no more ad-hoc ALTERs in bootstrap/tests).
 		);
@@ -1298,6 +1299,30 @@ final class Activator {
 			'source_hash',
 			"varchar(64) NOT NULL DEFAULT ''"
 		);
+	}
+
+	/**
+	 * Migration to 2.13.6 — seed the Agent-Ready Score / WebMCP Bridge options.
+	 *
+	 * No new tables: agentic_score_latest and agentic_directory_submission are
+	 * single-row JSON options (no queryable/per-row need in free tier — score
+	 * history is Pro-only), and agentic_webmcp_enabled is a plain boolean flag
+	 * read on every front-end request, so it is autoloaded. Idempotent: only
+	 * seeds options that don't already exist, so re-running is always safe.
+	 *
+	 * @return bool
+	 */
+	private static function migrate_schema_2_13_6(): bool {
+		if ( false === get_option( 'agentic_score_latest' ) ) {
+			add_option( 'agentic_score_latest', array(), '', 'no' );
+		}
+		if ( false === get_option( 'agentic_webmcp_enabled' ) ) {
+			add_option( 'agentic_webmcp_enabled', '', '', 'yes' );
+		}
+		if ( false === get_option( 'agentic_directory_submission' ) ) {
+			add_option( 'agentic_directory_submission', array(), '', 'no' );
+		}
+		return true;
 	}
 
 	/**

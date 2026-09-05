@@ -109,6 +109,18 @@ class Admin_Pages_REST {
 			return current_user_can( 'agentic_view_audit_log' );
 		}
 
+		if ( 'agent-ready' === $page || in_array( $action, array( 'apply_free_fix', 'confirm_agent_ready_proposal', 'toggle_webmcp_expose', 'submit_to_directory' ), true ) ) {
+			// submit_to_directory is the one deliberate phone-home this feature
+			// makes — require manage_options explicitly rather than the page's
+			// normal agentic_manage_settings, even though the current_user_can(
+			// 'manage_options' ) short-circuit above already covers the common
+			// case; this keeps the requirement legible if that short-circuit is
+			// ever narrowed.
+			return 'submit_to_directory' === $action
+				? current_user_can( 'manage_options' )
+				: current_user_can( 'agentic_manage_settings' );
+		}
+
 		// set_screen_mode is a personal, per-user preference for one screen —
 		// require whatever capability that screen itself already requires,
 		// so setting it never grants more than reading the screen already
@@ -162,6 +174,8 @@ class Admin_Pages_REST {
 				return new \WP_REST_Response( self::upgrade_payload(), 200 );
 			case 'train-data':
 				return new \WP_REST_Response( self::train_payload( $tab ?: 'wiki' ), 200 );
+			case 'agent-ready':
+				return new \WP_REST_Response( self::agent_ready_payload(), 200 );
 			default:
 				return new \WP_Error( 'unknown_page', __( 'Unknown admin page.', 'agent-builder' ), array( 'status' => 404 ) );
 		}
@@ -308,7 +322,106 @@ class Admin_Pages_REST {
 			return self::test_provider( $request );
 		}
 
+		if ( 'apply_free_fix' === $action ) {
+			return self::apply_free_fix( $request );
+		}
+
+		if ( 'confirm_agent_ready_proposal' === $action ) {
+			$proposal_id = sanitize_text_field( (string) $request->get_param( 'proposal_id' ) );
+			if ( '' === $proposal_id || ! class_exists( Agent_Proposals::class ) ) {
+				return new \WP_Error( 'invalid', __( 'Invalid proposal.', 'agent-builder' ), array( 'status' => 400 ) );
+			}
+			return new \WP_REST_Response( Agent_Proposals::approve( $proposal_id ), 200 );
+		}
+
+		if ( 'toggle_webmcp_expose' === $action ) {
+			return self::toggle_webmcp_expose( $request );
+		}
+
+		if ( 'submit_to_directory' === $action ) {
+			if ( ! class_exists( Directory_Submission::class ) ) {
+				return new \WP_Error( 'unavailable', __( 'Directory submission is unavailable.', 'agent-builder' ), array( 'status' => 500 ) );
+			}
+			return new \WP_REST_Response( Directory_Submission::submit(), 200 );
+		}
+
 		return new \WP_Error( 'unknown_action', __( 'Unknown action.', 'agent-builder' ), array( 'status' => 400 ) );
+	}
+
+	/**
+	 * Run one of the Agent-Ready Score's free fix tools through the same
+	 * risk-gating Tool_Executor uses everywhere else — the pseudo agent_id
+	 * carries no abilities.json, so effective risk resolves purely from the
+	 * fix tool's own get_risk_level() override (always LOW), which the
+	 * autonomous mode ceiling auto-approves in one click.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	private static function apply_free_fix( \WP_REST_Request $request ) {
+		$tool_name = sanitize_key( (string) $request->get_param( 'tool_name' ) );
+		$allowed   = array( 'resign_agent_manifest', 'enable_webmcp_defaults', 'configure_approval_gate', 'enable_agent_readiness' );
+		if ( ! in_array( $tool_name, $allowed, true ) ) {
+			return new \WP_Error( 'invalid', __( 'Unknown fix.', 'agent-builder' ), array( 'status' => 400 ) );
+		}
+
+		$arguments = (array) $request->get_param( 'arguments' );
+		$executor  = new Tool_Executor( Tool_Loader::get_instance(), new Audit_Log() );
+		$result    = $executor->execute( $tool_name, $arguments, 'agent-ready-score', 'autonomous', 'admin_action' );
+
+		return new \WP_REST_Response(
+			array(
+				'result' => $result,
+				'score'  => Agent_Ready_Score::rescan(),
+			),
+			200
+		);
+	}
+
+	/**
+	 * Advanced-mode per-tool webmcp_expose toggle.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	private static function toggle_webmcp_expose( \WP_REST_Request $request ) {
+		$agent_slug = sanitize_key( (string) $request->get_param( 'agent_slug' ) );
+		$tool_name  = sanitize_key( (string) $request->get_param( 'tool_name' ) );
+		$expose     = rest_sanitize_boolean( $request->get_param( 'expose' ) );
+
+		$manifest = Abilities_Manifest::load( $agent_slug );
+		$path     = Abilities_Manifest::resolve_path( $agent_slug );
+		if ( ! $manifest || ! $path || ! isset( $manifest['abilities'][ $tool_name ] ) ) {
+			return new \WP_Error( 'invalid', __( 'Unknown agent or tool.', 'agent-builder' ), array( 'status' => 400 ) );
+		}
+
+		if ( $expose ) {
+			$risk = $manifest['abilities'][ $tool_name ]['risk'] ?? Risk_Level::NONE;
+			if ( Risk_Level::weight( $risk ) > Risk_Level::weight( Risk_Level::MEDIUM ) ) {
+				return new \WP_Error( 'unsafe_risk', __( 'This tool\'s risk is too high to expose to WebMCP.', 'agent-builder' ), array( 'status' => 400 ) );
+			}
+		}
+
+		$manifest['abilities'][ $tool_name ]['webmcp_expose'] = $expose;
+		if ( $expose && empty( $manifest['abilities'][ $tool_name ]['webmcp_context'] ) ) {
+			$manifest['abilities'][ $tool_name ]['webmcp_context'] = 'both';
+		}
+
+		if ( ! wp_is_writable( $path ) ) {
+			return new \WP_Error( 'not_writable', __( 'This agent\'s manifest file is not writable.', 'agent-builder' ), array( 'status' => 500 ) );
+		}
+
+		file_put_contents( $path, wp_json_encode( $manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Editing an agent's own bundled manifest file from a settings action; WP_Filesystem is not bootstrapped on this REST request path.
+		Abilities_Manifest::clear_cache( $agent_slug );
+		Abilities_Manifest::save_integrity_hash( $agent_slug );
+
+		return new \WP_REST_Response(
+			array(
+				'ok'    => true,
+				'score' => Agent_Ready_Score::rescan(),
+			),
+			200
+		);
 	}
 
 	/**
@@ -2050,5 +2163,34 @@ class Admin_Pages_REST {
 			),
 			'manage_url'  => admin_url( 'admin.php?page=agentic-train-data&tab=wiki' ),
 		);
+	}
+
+	/**
+	 * Agent-Ready page payload. Basic mode gets the score plus fix list;
+	 * Advanced mode additionally gets the per-tool webmcp_expose matrix and
+	 * directory submission status.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private static function agent_ready_payload(): array {
+		$is_advanced = class_exists( Admin_Menu_Handler::class )
+			? Admin_Menu_Handler::is_advanced_mode( 'agent-ready' )
+			: ( 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) );
+
+		$payload = array(
+			'page'           => 'agent-ready',
+			'title'          => __( 'Agent-Ready', 'agent-builder' ),
+			'description'    => __( 'How ready is this site for AI agents to discover and safely act on it?', 'agent-builder' ),
+			'is_advanced'    => $is_advanced,
+			'score'          => class_exists( Agent_Ready_Score::class ) ? Agent_Ready_Score::get_latest() : array(),
+			'webmcp_enabled' => class_exists( Webmcp_Bridge::class ) && Webmcp_Bridge::is_enabled(),
+		);
+
+		if ( $is_advanced ) {
+			$payload['webmcp_matrix']    = class_exists( Abilities_Manifest::class ) ? Abilities_Manifest::get_webmcp_exposed() : array();
+			$payload['directory_status'] = get_option( 'agentic_directory_submission', array() );
+		}
+
+		return $payload;
 	}
 }

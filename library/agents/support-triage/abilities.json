@@ -11,7 +11,9 @@
       "risk": "none"
     },
     "search_content": {
-      "risk": "none"
+      "risk": "none",
+      "webmcp_expose": true,
+      "webmcp_context": "frontend"
     },
     "list_native_forms": {
       "risk": "none"

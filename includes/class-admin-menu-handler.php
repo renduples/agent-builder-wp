@@ -208,6 +208,17 @@ class Admin_Menu_Handler {
 
 		// Usage / Costs page is registered by Agent Builder Pro.
 
+		// Agent-Ready — always shown in the menu, same as every other page here;
+		// Basic/Advanced only ever affects this page's own content, never nav.
+		add_submenu_page(
+			'agent-builder',
+			__( 'Agent Builder — Agent-Ready', 'agent-builder' ),
+			__( 'Agent-Ready', 'agent-builder' ),
+			'agentic_manage_settings',
+			'agentic-agent-ready',
+			fn() => $this->render_page( 'agent-ready' )
+		);
+
 		// Activity — always shown in the menu; the friendly/technical split
 		// happens on the page itself via its own Basic/Advanced switch.
 		add_submenu_page(
@@ -980,6 +991,10 @@ class Admin_Menu_Handler {
 			),
 			'upgrade-pro' => array(
 				'page' => 'upgrade-pro',
+				'tab'  => '',
+			),
+			'agent-ready' => array(
+				'page' => 'agent-ready',
 				'tab'  => '',
 			),
 		);
