@@ -2,10 +2,28 @@
 /**
  * Tool: enable_webmcp_defaults
  *
- * Free fix for the Agent-Ready Score's webmcp_tools_registered check:
- * exposes every safe, obviously read-only, already-low-risk tool an active
- * agent already has to the WebMCP frontend surface, without ever touching a
- * tool the site owner has already explicitly opted out (webmcp_expose:false).
+ * Free fix for the Agent-Ready Score's webmcp_tools_registered check.
+ *
+ * Deliberately NOT "expose every readonly, NONE/LOW-risk tool" — that risk
+ * taxonomy was designed for the trusted wp-admin chat context (Risk_Level::LOW
+ * is explicitly documented as "read operations that MAY expose personal
+ * information," which is a completely different threat model than "safe to
+ * hand to any anonymous visitor on the public internet"). An earlier version
+ * of this tool did exactly that and, on a real test site, exposed things like
+ * get_security_overview (failed logins, admin count), list_privileged_users
+ * (admin usernames), get_recent_registrations, check_plugin_updates (version
+ * fingerprinting), and get_form_entries (can contain PII) — to anyone, and
+ * exposed tools belonging to purely admin-facing agents (user-assistant,
+ * wordpress-assistant, assistant-trainer) that have no business being
+ * visitor-facing at all.
+ *
+ * Instead this exposes only from SAFE_FOR_ANONYMOUS, a small, deliberately
+ * curated allowlist of tool names known to be genuinely safe for an
+ * anonymous public visitor — today just search_content, which only ever
+ * returns published content (see its own is_user_logged_in() guard). Site
+ * owners can always expose more via the Advanced tab's per-tool matrix —
+ * that is a deliberate, informed, one-at-a-time choice, unlike this
+ * automatic sweep.
  *
  * @package    Agent_Builder
  * @subpackage Tools
@@ -23,16 +41,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Sets webmcp_expose:true / webmcp_context:'both' on safe abilities.
+ * Sets webmcp_expose:true on a small, curated allowlist of tool names only.
  */
 class Enable_Webmcp_Defaults extends \Agentic\Tool_Base {
+
+	/**
+	 * Tool names safe to auto-expose to an anonymous public visitor.
+	 *
+	 * Keep this list short and reviewed by hand — see the class docblock for
+	 * why risk tier alone is not a safe substitute for this.
+	 */
+	private const SAFE_FOR_ANONYMOUS = array( 'search_content' );
 
 	public function get_name(): string {
 		return 'enable_webmcp_defaults';
 	}
 
 	public function get_description(): string {
-		return "Expose every safe, read-only, low-risk-or-below tool an active agent already has to the WebMCP frontend surface. Never overwrites a tool the site owner already explicitly set webmcp_expose:false on, and never touches anything above LOW risk.";
+		return 'Expose a small, curated set of genuinely public-safe tools (currently just search_content) to the WebMCP frontend surface. Never overwrites a tool the site owner already explicitly opted out (webmcp_expose:false), and never expands this list to arbitrary readonly/low-risk tools.';
 	}
 
 	public function get_category(): string {
@@ -73,6 +99,9 @@ class Enable_Webmcp_Defaults extends \Agentic\Tool_Base {
 
 			$changed = false;
 			foreach ( $manifest['abilities'] as $tool_name => &$entry ) {
+				if ( ! in_array( $tool_name, self::SAFE_FOR_ANONYMOUS, true ) ) {
+					continue;
+				}
 				if ( array_key_exists( 'webmcp_expose', $entry ) ) {
 					continue; // Site owner already made an explicit choice either way.
 				}
@@ -90,7 +119,7 @@ class Enable_Webmcp_Defaults extends \Agentic\Tool_Base {
 				}
 
 				$entry['webmcp_expose']  = true;
-				$entry['webmcp_context'] = 'both';
+				$entry['webmcp_context'] = 'frontend';
 				$changed                 = true;
 				$exposed_tools[]         = "{$slug}:{$tool_name}";
 			}

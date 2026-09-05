@@ -33,7 +33,7 @@ All seven checks run locally, in-process, with zero outbound HTTP requests.
 
 The four checks marked "Yes" above have real one-click fixes available in wp-admin → Agent-Ready, and corresponding tools you may be asked to run directly:
 - `resign_agent_manifest` — re-signs any active agent whose abilities.json signature has gone stale.
-- `enable_webmcp_defaults` — exposes safe, read-only, low-risk-or-below tools to WebMCP.
+- `enable_webmcp_defaults` — exposes only a small, hand-curated allowlist of tools known to be genuinely safe for an anonymous public visitor (currently just `search_content`), never a blanket sweep of readonly/low-risk tools — risk tiers designed for the trusted wp-admin chat context are not a safe proxy for "safe to expose to anyone on the internet."
 - `configure_approval_gate` — turns off WebMCP exposure for anything exposed above a safe risk tier (never lowers a tool's own declared risk).
 - `enable_agent_readiness` — the master WebMCP Bridge switch; also backs `webmcp_tools_registered` and `well_known_manifest`.
 

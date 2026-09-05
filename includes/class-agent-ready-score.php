@@ -197,6 +197,12 @@ class Agent_Ready_Score {
 	/**
 	 * webmcp_tools_registered — Capability exposure, high weight, free-fixable.
 	 *
+	 * Binary, not a "more is better" scale: a genuinely public-safe tool
+	 * catalog is small by design (see enable_webmcp_defaults' own docblock —
+	 * risk tier alone does not make a tool safe for an anonymous visitor,
+	 * so this deliberately doesn't reward exposing many tools over exposing
+	 * the right, hand-curated few).
+	 *
 	 * @return array Check result.
 	 */
 	private static function check_webmcp_tools_registered(): array {
@@ -204,14 +210,8 @@ class Agent_Ready_Score {
 			return self::result( 0, 'Capability exposure', 'high', true, 'The WebMCP Bridge is turned off.' );
 		}
 
-		$exposed = Abilities_Manifest::get_webmcp_exposed( 'frontend' );
-		$count   = count( $exposed );
-
-		$score = match ( true ) {
-			$count >= 3 => 100,
-			$count >= 1 => 50,
-			default     => 0,
-		};
+		$count = count( Abilities_Manifest::get_webmcp_exposed( 'frontend' ) );
+		$score = $count > 0 ? 100 : 0;
 
 		$detail = 0 === $count
 			? 'No tools are exposed to the frontend yet.'

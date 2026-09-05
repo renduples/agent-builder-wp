@@ -72,7 +72,16 @@ class Search_Content extends \Agentic\Tool_Base {
 			return array( 'error' => 'query is required.' );
 		}
 
-		$status = sanitize_key( $arguments['status'] ?? 'publish' );
+		// A logged-out caller (e.g. an anonymous WebMCP visitor — see
+		// class-webmcp-bridge.php) can never request anything but published
+		// content, regardless of what this argument asks for. This tool is
+		// declared 'none' risk on the assumption every caller is already an
+		// authenticated site user (the wp-admin chat context this risk tier
+		// was designed for); WebMCP opens it to anyone, so this is the one
+		// place that assumption must be enforced rather than trusted.
+		$status = is_user_logged_in()
+			? sanitize_key( $arguments['status'] ?? 'publish' )
+			: 'publish';
 		$limit  = min( max( (int) ( $arguments['limit'] ?? 10 ), 1 ), 50 );
 		$offset = max( (int) ( $arguments['offset'] ?? 0 ), 0 );
 
