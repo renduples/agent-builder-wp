@@ -392,10 +392,14 @@ class Agentic_Relay_Connect {
 	 * posture Abilities_Bridge already applies for the native-adapter path.
 	 * Third-party tools have no risk model here and are never passed in.
 	 *
+	 * Promoted to public (was private) so Webmcp_Bridge can share this exact
+	 * exclusion list rather than re-implementing it — see
+	 * Webmcp_Bridge::is_tool_webmcp_safe().
+	 *
 	 * @param string $tool_name Tool name.
 	 * @return bool
 	 */
-	private static function is_tool_mcp_safe( string $tool_name ): bool {
+	public static function is_tool_mcp_safe( string $tool_name ): bool {
 		$always_blocked = array(
 			'run_wp_cli',
 			'install_plugin_from_url',
@@ -423,10 +427,13 @@ class Agentic_Relay_Connect {
 	 * read-only tools only need edit_posts, everything else needs
 	 * manage_options. Mirrors Abilities_Bridge's own read/write split.
 	 *
+	 * Promoted to public (was private) — shared with Webmcp_Bridge's
+	 * logged-in-visitor capability check.
+	 *
 	 * @param string $tool_name Tool name.
 	 * @return string
 	 */
-	private static function required_capability_for_tool( string $tool_name ): string {
+	public static function required_capability_for_tool( string $tool_name ): string {
 		$tool = Tool_Loader::get_instance()->get( $tool_name );
 		$readonly = $tool && ( $tool->get_annotations()['readonly'] ?? false );
 		return $readonly ? 'edit_posts' : 'manage_options';

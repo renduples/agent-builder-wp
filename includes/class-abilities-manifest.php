@@ -391,6 +391,25 @@ class Abilities_Manifest {
 				$result['warnings'][] = "Tool '{$tool_name}' is {$entry['risk']} risk but has no 'reason'.";
 			}
 
+			// webmcp_expose/webmcp_context — the WebMCP Bridge's frontend allowlist.
+			// Fail-closed on the one combination that matters: a HIGH/EXTREME-risk
+			// tool must never be exposed to the current-browser-session surface,
+			// which serves anonymous visitors. This is a hard error, not a warning,
+			// mirroring the "manifests can only escalate, never downgrade" rule
+			// applied to a new axis (exposure) rather than a downgrade.
+			if ( isset( $entry['webmcp_expose'] ) && ! is_bool( $entry['webmcp_expose'] ) ) {
+				$result['valid']    = false;
+				$result['errors'][] = "Tool '{$tool_name}' has a non-boolean 'webmcp_expose'.";
+			}
+			if ( isset( $entry['webmcp_context'] ) && ! in_array( $entry['webmcp_context'], array( 'frontend', 'admin', 'both' ), true ) ) {
+				$result['valid']    = false;
+				$result['errors'][] = "Tool '{$tool_name}' has an invalid 'webmcp_context': '{$entry['webmcp_context']}'.";
+			}
+			if ( ! empty( $entry['webmcp_expose'] ) && Risk_Level::weight( $entry['risk'] ) > Risk_Level::weight( Risk_Level::MEDIUM ) ) {
+				$result['valid']    = false;
+				$result['errors'][] = "Tool '{$tool_name}' is webmcp_expose:true but risk '{$entry['risk']}' is above medium — never allowed.";
+			}
+
 			++$result['risk_summary'][ $entry['risk'] ];
 		}
 
@@ -447,6 +466,54 @@ class Abilities_Manifest {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Every ability, across all active agents, that is exposed to WebMCP.
+	 *
+	 * Scans each active agent's own loaded manifest (not a global registry —
+	 * abilities.json is per-agent) for abilities with webmcp_expose === true,
+	 * optionally filtered to one context ('frontend' or 'admin' also matches
+	 * 'both'). Used by Webmcp_Bridge (building the tool manifest it registers
+	 * per request context) and Agent_Ready_Score (the webmcp_tools_registered
+	 * and approval_gate_configured checks).
+	 *
+	 * @param string $context Optional: 'frontend' or 'admin'. Empty means any context.
+	 * @return array<int, array{agent_slug:string, tool_name:string, webmcp_context:string, risk:string}>
+	 */
+	public static function get_webmcp_exposed( string $context = '' ): array {
+		$exposed = array();
+
+		$slugs = class_exists( '\\Agentic_Agent_Registry' )
+			? array_keys( \Agentic_Agent_Registry::get_instance()->get_all_instances() )
+			: array();
+
+		foreach ( $slugs as $slug ) {
+			$manifest = self::load( $slug );
+			if ( ! $manifest || empty( $manifest['abilities'] ) || ! is_array( $manifest['abilities'] ) ) {
+				continue;
+			}
+
+			foreach ( $manifest['abilities'] as $tool_name => $entry ) {
+				if ( empty( $entry['webmcp_expose'] ) ) {
+					continue;
+				}
+
+				$tool_context = $entry['webmcp_context'] ?? 'both';
+				if ( '' !== $context && 'both' !== $tool_context && $context !== $tool_context ) {
+					continue;
+				}
+
+				$exposed[] = array(
+					'agent_slug'     => $slug,
+					'tool_name'      => (string) $tool_name,
+					'webmcp_context' => $tool_context,
+					'risk'           => $entry['risk'] ?? Risk_Level::NONE,
+				);
+			}
+		}
+
+		return $exposed;
 	}
 
 	/**

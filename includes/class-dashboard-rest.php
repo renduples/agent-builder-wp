@@ -43,6 +43,7 @@ class Dashboard_REST {
 		return array(
 			'status',
 			'safety',
+			'agent-ready',
 			'activity',
 			'providers',
 			'quick-actions',
@@ -315,6 +316,7 @@ class Dashboard_REST {
 					'interface' => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
 					'activity'  => admin_url( 'admin.php?page=agentic-audit-log' ),
 					'approvals' => admin_url( 'admin.php?page=agentic-approvals' ),
+					'agent_ready' => admin_url( 'admin.php?page=agentic-agent-ready' ),
 					'backups'   => admin_url( 'admin.php?page=agentic-approvals&tab=backups' ),
 					'pricing'   => 'https://agentic-plugin.com/pricing/',
 					'community' => class_exists( Agent_Updates::class )
@@ -341,6 +343,7 @@ class Dashboard_REST {
 					'file_backups'        => $file_backups,
 					'table_backups'       => $table_backups,
 				),
+				'agent_ready'             => self::agent_ready_summary(),
 				'agents'                  => $agent_counts,
 				'providers'               => $providers,
 				'default_provider'        => $provider,
@@ -473,6 +476,41 @@ class Dashboard_REST {
 			'label'  => 'GPL-2.0-or-later',
 			'tier'   => 'free',
 			'class'  => '',
+		);
+	}
+
+	/**
+	 * Reduce the Agent-Ready Score to what the dashboard card needs — every
+	 * other card reads from this single bootstrap payload rather than doing
+	 * its own fetch, and this card follows the same pattern.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private static function agent_ready_summary(): array {
+		if ( ! class_exists( Agent_Ready_Score::class ) ) {
+			return array(
+				'overall' => 0,
+				'grade'   => '',
+				'top_fix' => null,
+			);
+		}
+
+		$score   = Agent_Ready_Score::get_latest();
+		$top_fix = null;
+		foreach ( (array) ( $score['categories'] ?? array() ) as $id => $check ) {
+			if ( ! empty( $check['fixable'] ) && (int) ( $check['score'] ?? 100 ) < 90 ) {
+				$top_fix = array(
+					'id'     => $id,
+					'detail' => $check['detail'] ?? '',
+				);
+				break;
+			}
+		}
+
+		return array(
+			'overall' => (int) ( $score['overall'] ?? 0 ),
+			'grade'   => (string) ( $score['grade'] ?? '' ),
+			'top_fix' => $top_fix,
 		);
 	}
 

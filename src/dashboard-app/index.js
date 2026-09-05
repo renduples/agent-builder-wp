@@ -345,6 +345,49 @@ function SafetyCard( { data, dnd } ) {
 	);
 }
 
+function AgentReadyCard( { data, dnd } ) {
+	const ready = data.agent_ready || {};
+	const overall = Number( ready.overall || 0 );
+	const gradeClass =
+		overall >= 75
+			? 'agentic-status-active'
+			: overall >= 40
+			? 'agentic-status-expiring'
+			: 'agentic-status-error';
+
+	return (
+		<Card
+			cardId="agent-ready"
+			{ ...dnd }
+			title={ __( 'Agent-Ready', 'agent-builder' ) }
+			headerLink={
+				<a
+					className="agentic-card-header-link"
+					href={ data.urls?.agent_ready }
+				>
+					{ __( 'View Details →', 'agent-builder' ) }
+				</a>
+			}
+		>
+			<div className="agentic-status-grid">
+				<StatusTile label={ __( 'Score', 'agent-builder' ) }>
+					<span className={ gradeClass }>●</span>{ ' ' }
+					{ overall } ({ ready.grade || '—' })
+				</StatusTile>
+			</div>
+			{ ready.top_fix && (
+				<p className="agentic-text-muted">
+					{ ready.top_fix.detail }
+					{ ' ' }
+					<a href={ data.urls?.agent_ready }>
+						{ __( 'Fix now →', 'agent-builder' ) }
+					</a>
+				</p>
+			) }
+		</Card>
+	);
+}
+
 function ActivityCard( { data, activity, dnd } ) {
 	const a = activity || data.activity || {};
 	const agents = data.agents || {};
@@ -1204,6 +1247,8 @@ function DashboardApp() {
 				return <StatusCard key={ id } data={ data } dnd={ dnd } />;
 			case 'safety':
 				return <SafetyCard key={ id } data={ data } dnd={ dnd } />;
+			case 'agent-ready':
+				return <AgentReadyCard key={ id } data={ data } dnd={ dnd } />;
 			case 'activity':
 				return (
 					<ActivityCard

@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 3.3.89
+Stable tag: 3.3.90
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -266,7 +266,20 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **When used:** Only if you enable a webhook on a form you create, so that form's submissions are also sent to a destination you specify.
 * **Data sent:** Whatever data that form collects, sent only to the URL you configured — never to Agentic or any other third party.
 
+= Site Passport Directory (Optional) =
+* **Endpoint:** `https://sitepassport.org/api/v1/submissions`
+* **When used:** Only when an administrator explicitly clicks "Submit to Directory" on the Agent-Ready page. Never automatic, never triggered by a cron job, and never sent as part of computing your score.
+* **Data sent:** Your site's URL, the URL of this plugin's own `/.well-known/webmcp.json` manifest, and a minimal score summary (overall score, letter grade, and the date it was last checked — not the full per-check breakdown).
+* **Terms of Service:** [https://sitepassport.org/terms](https://sitepassport.org/terms)
+* **Privacy Policy:** [https://sitepassport.org/privacy](https://sitepassport.org/privacy)
+
+= Agent-Ready Score (Local Only) =
+The Agent-Ready Score itself (Agent Builder → Agent-Ready) makes **zero external requests**. All seven checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, and the presence of `llms.txt`, AI-crawler directives in `robots.txt`, and Organization/WebSite schema markup — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
+
 == Changelog ==
+
+= 3.3.90 - 2026-09-04 =
+* Added the Agent-Ready Score (Agent Builder → Agent-Ready): seven local, read-only checks covering MCP reachability, WebMCP tool registration, approval-gate safety, and llms.txt/robots.txt/schema.org discoverability, plus a new WebMCP Bridge (opt-in, off by default) that lets your own site register safe, low-risk tools for AI browser agents to use — search is supported out of the box, with the underlying tool contributed by the existing Support Triage agent. Three checks stay informational-only in this free tier and point to Agent Builder Pro's AI Radar for the matching one-click fix, so this feature never duplicates that existing Pro tooling.
 
 = 3.3.89 - 2026-08-28 =
 * This is now a permanently standalone WordPress.org codebase — removed all remaining dead code for detecting a self-hosted/Pro install (it can never happen here): the License and Distribution-channel systems, the agent-package upload/purchase flow, the no-code Site Tools builder, and the WP-CLI execution tools. Fixed real bugs found along the way: image/video generation and text-to-speech now correctly connect through the same free "Connect to Agentic AI" account as chat instead of a broken license check; a real Cloudflare Turnstile bot-protection implementation replaces a check that always silently no-opped; and the deactivation feedback survey and uninstall deregistration notice, both previously gated on a license that could never exist in this build, now work as designed.

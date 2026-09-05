@@ -18,12 +18,14 @@
     "check_core_web_vitals",
     "get_cron_jobs",
     "get_security_overview",
+    "check_agent_readiness",
     "report_issue"
   ],
   "suggested_prompts": [
     "Run a full health check and tell me the top three things to fix.",
     "Are there any PHP errors or failing cron jobs I should know about?",
-    "Summarise my site's security posture and any plugin updates due."
+    "Summarise my site's security posture and any plugin updates due.",
+    "How agent-ready is my site, and what's the fastest way to improve it?"
   ],
   "welcome_message": "Hi! I'm your Site Health Sentinel. I keep an eye on performance, the database, PHP errors, plugin updates, cron jobs, and security signals — all read-only — and explain what matters most. Ask me to run a health check any time."
 }
