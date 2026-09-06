@@ -474,6 +474,19 @@ class Admin_Settings_REST {
 			)
 		);
 
+		// Agentic_Relay_Connect::CONNECTORS_OPTION only ever grows — nothing
+		// else removes a provider from it once the connector-approval flow
+		// adds it, so "Connected Clients" would otherwise still show a
+		// provider as connected long after its only credential is gone. Since
+		// that option doesn't track which credential belongs to which
+		// provider, there's no way to correctly prune just one entry when
+		// several might be connected — but once every Agent Builder Relay
+		// credential is gone, "nothing is connected" is unambiguous, so
+		// clear it then rather than leave a permanently stale badge.
+		if ( empty( self::data_mcp_credentials() ) ) {
+			update_option( \Agentic_Relay_Connect::CONNECTORS_OPTION, array() );
+		}
+
 		return new \WP_REST_Response( array( 'ok' => true ), 200 );
 	}
 
