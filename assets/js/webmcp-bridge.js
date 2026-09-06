@@ -1,11 +1,14 @@
 /**
  * WebMCP Bridge — registers this site's opt-in tools with the browser's
- * navigator.modelContext, so a WebMCP-aware AI client can search or interact
+ * document.modelContext, so a WebMCP-aware AI client can search or interact
  * with this site the same way a visitor would.
  *
- * Every entry point starts with the modelContext feature check below —
- * WebMCP ships flag-gated/off-by-default in Chrome as of this writing, so
- * this script is a silent no-op everywhere else.
+ * document.modelContext is the current object as of WebMCP's May 2026 spec
+ * revision; navigator.modelContext (the pre-revision name) still works in
+ * Chrome as a deprecated alias, so it's used here only as a fallback for
+ * browser builds that predate the move. Every entry point starts with the
+ * modelContext feature check below — WebMCP ships origin-trial/flag-gated in
+ * Chrome as of this writing, so this script is a silent no-op everywhere else.
  *
  * Two kinds of tools are registered:
  *  1. Server-backed tools (agenticWebmcp.toolManifest) — a REST round-trip
@@ -22,7 +25,10 @@
 ( function () {
 	'use strict';
 
-	if ( ! ( 'modelContext' in navigator ) ) {
+	var MODEL_CONTEXT = ( 'modelContext' in document && document.modelContext )
+		|| ( 'modelContext' in navigator && navigator.modelContext )
+		|| null;
+	if ( ! MODEL_CONTEXT ) {
 		return;
 	}
 
@@ -105,7 +111,7 @@
 	function registerServerTools( manifest ) {
 		( manifest || [] ).forEach( function ( tool ) {
 			try {
-				navigator.modelContext.registerTool( {
+				MODEL_CONTEXT.registerTool( {
 					name: tool.name,
 					description: tool.description,
 					inputSchema: tool.inputSchema,
@@ -203,7 +209,7 @@
 
 	function registerFormTool( name, description, form ) {
 		try {
-			navigator.modelContext.registerTool( {
+			MODEL_CONTEXT.registerTool( {
 				name: name,
 				description: description,
 				inputSchema: schemaFromForm( form ),

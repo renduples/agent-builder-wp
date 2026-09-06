@@ -30,12 +30,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Directory_Submission {
 
 	/**
-	 * Directory API endpoint.
-	 *
-	 * TODO: confirm the real path against sitepassport.org's own API docs
-	 * before this ships — this is a placeholder pending that contract.
+	 * Directory API endpoint — Site Passport's real, deployed submission
+	 * route (verified directly against its source: sitepassport.org's own
+	 * api/submit.php).
 	 */
-	public const SUBMIT_URL = 'https://sitepassport.org/api/v1/submissions';
+	public const SUBMIT_URL = 'https://sitepassport.org/api/submit.php';
 
 	/**
 	 * Option storing the last submission's outcome.
@@ -45,23 +44,18 @@ class Directory_Submission {
 	/**
 	 * Submit this site to the directory.
 	 *
-	 * Deliberately sends only a minimal score summary — overall score, grade,
-	 * and when it was last checked — not the full per-check breakdown.
+	 * Site Passport's whole trust model is that it never accepts a
+	 * self-reported score — submitting one here would be not just the wrong
+	 * shape but pointless, since the endpoint ignores any score field and
+	 * always computes its own by live-checking this site's own public
+	 * llms.txt/robots.txt/schema.org/.well-known/webmcp.json itself. So the
+	 * only thing this ever sends is the URL; the real score comes back in
+	 * the response.
 	 *
-	 * @return array{submitted_at:string,status:string,response_id:?string,error:?string}
+	 * @return array{submitted_at:string,status:string,slug:?string,score:?int,grade:?string,badge_url:?string,directory_url:?string,error:?string}
 	 */
 	public static function submit(): array {
-		$score = class_exists( Agent_Ready_Score::class ) ? Agent_Ready_Score::get_latest() : array();
-
-		$body = array(
-			'site_url'            => home_url( '/' ),
-			'webmcp_manifest_url' => home_url( '/.well-known/webmcp.json' ),
-			'score'               => array(
-				'overall'    => $score['overall'] ?? 0,
-				'grade'      => $score['grade'] ?? '',
-				'checked_at' => $score['checked_at'] ?? '',
-			),
-		);
+		$body = array( 'url' => home_url( '/' ) );
 
 		$response = wp_remote_post(
 			self::SUBMIT_URL,
@@ -73,22 +67,33 @@ class Directory_Submission {
 		);
 
 		$result = array(
-			'submitted_at' => gmdate( 'Y-m-d H:i:s' ),
-			'status'       => 'error',
-			'response_id'  => null,
-			'error'        => null,
+			'submitted_at'  => gmdate( 'Y-m-d H:i:s' ),
+			'status'        => 'error',
+			'slug'          => null,
+			'score'         => null,
+			'grade'         => null,
+			'badge_url'     => null,
+			'directory_url' => null,
+			'error'         => null,
 		);
 
 		if ( is_wp_error( $response ) ) {
 			$result['error'] = $response->get_error_message();
 		} else {
 			$code = wp_remote_retrieve_response_code( $response );
-			if ( $code >= 200 && $code < 300 ) {
-				$data                 = json_decode( wp_remote_retrieve_body( $response ), true );
-				$result['status']     = 'submitted';
-				$result['response_id'] = is_array( $data ) ? ( $data['id'] ?? null ) : null;
+			$data = json_decode( wp_remote_retrieve_body( $response ), true );
+			if ( $code >= 200 && $code < 300 && is_array( $data ) ) {
+				$result['status']        = 'submitted';
+				$result['slug']          = is_string( $data['slug'] ?? null ) ? $data['slug'] : null;
+				$result['score']         = is_int( $data['score'] ?? null ) ? $data['score'] : null;
+				$result['grade']         = is_string( $data['grade'] ?? null ) ? $data['grade'] : null;
+				$result['badge_url']     = is_string( $data['badge_url'] ?? null ) ? $data['badge_url'] : null;
+				$result['directory_url'] = is_string( $data['directory_url'] ?? null ) ? $data['directory_url'] : null;
 			} else {
-				$result['error'] = sprintf( 'Directory responded with HTTP %d.', $code );
+				// The API returns {"error": "..."} on 4xx (bad URL, unreachable, rate-limited) — surface that over a bare status code where available.
+				$result['error'] = is_array( $data ) && is_string( $data['error'] ?? null )
+					? $data['error']
+					: sprintf( 'Directory responded with HTTP %d.', $code );
 			}
 		}
 
