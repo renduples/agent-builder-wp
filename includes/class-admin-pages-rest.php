@@ -396,8 +396,17 @@ class Admin_Pages_REST {
 		}
 
 		if ( $expose ) {
-			$risk = $manifest['abilities'][ $tool_name ]['risk'] ?? Risk_Level::NONE;
-			if ( Risk_Level::weight( $risk ) > Risk_Level::weight( Risk_Level::MEDIUM ) ) {
+			// Effective risk, not the raw manifest field — a manifest can
+			// under-declare a tool's risk (or omit it), but the tool's own
+			// intrinsic floor (Risk_Level::BASELINE_RISKS, e.g.
+			// manage_user_privileges => HIGH) always wins via max(). Trusting
+			// the raw field here would let a mis-declared or missing risk
+			// slip a HIGH/EXTREME-floor tool past this check.
+			$tool_instance = Tool_Loader::get_instance()->get( $tool_name );
+			$risk          = Abilities_Manifest::get_effective_risk( $agent_slug, $tool_name, $tool_instance );
+			if ( Risk_Level::weight( $risk ) > Risk_Level::weight( Risk_Level::MEDIUM )
+				|| ! Webmcp_Bridge::is_tool_webmcp_safe( $tool_name )
+			) {
 				return new \WP_Error( 'unsafe_risk', __( 'This tool\'s risk is too high to expose to WebMCP.', 'agent-builder' ), array( 'status' => 400 ) );
 			}
 		}

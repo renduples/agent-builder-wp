@@ -257,13 +257,8 @@ class Webmcp_Bridge {
 		$tool_name  = (string) $proposal['tool'];
 		$agent_slug = (string) $proposal['agent_id'];
 
-		$exposure = self::find_exposure( $agent_slug, $tool_name );
-		if ( ! self::is_tool_webmcp_safe( $tool_name ) || null === $exposure ) {
+		if ( ! self::is_tool_webmcp_safe( $tool_name ) || null === self::find_exposure( $agent_slug, $tool_name ) ) {
 			return new \WP_Error( 'webmcp_not_exposed', __( 'This tool is no longer exposed for this agent.', 'agent-builder' ), array( 'status' => 403 ) );
-		}
-
-		if ( ! self::context_matches_request( $exposure['webmcp_context'], $request ) ) {
-			return new \WP_Error( 'webmcp_wrong_context', __( 'This tool is not exposed in this context.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
 
 		if ( ! self::is_same_origin( $request ) ) {
