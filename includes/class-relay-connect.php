@@ -997,7 +997,30 @@ h1{font-size:20px;font-weight:700;text-align:center;margin-bottom:8px}
 		<?php esc_html_e( 'An Application Password will be created so the relay can call your Agent Builder tools on behalf of Claude. You can revoke it at any time under Users → Profile → Application Passwords.', 'agent-builder' ); ?>
 	</div>
 
+	<?php
+	// Same disclosure the MCP Settings tab's manual "Create Application
+	// Password" button shows, and for the same reason: this mints the
+	// identical credential, and MCP has no per-call confirmation step the
+	// way chat does — approving this screen is the one confirmation these
+	// actions ever get. "Only your Agent Builder tools are exposed" above
+	// is true but reassuring in a way that undersells this, so the actual
+	// unattended writes are spelled out rather than left implicit.
+	$unattended_writes = class_exists( '\\Agentic\\Admin_Settings_REST' )
+		? \Agentic\Admin_Settings_REST::data_mcp_unattended_writes()
+		: array();
+	if ( ! empty( $unattended_writes ) ) :
+		?>
+	<div class="label"><?php esc_html_e( 'Can be performed without asking you again', 'agent-builder' ); ?></div>
+	<div class="scope">
+		<ul style="margin:0;padding-left:18px">
+			<?php foreach ( $unattended_writes as $w ) : ?>
+			<li><code><?php echo esc_html( $w['tool'] ); ?></code> (<?php echo esc_html( $w['agent'] ); ?>) — <?php echo esc_html( $w['description'] ); ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+	<?php else : ?>
 	<p class="notice"><?php esc_html_e( 'Only your Agent Builder tools are exposed — no other site data.', 'agent-builder' ); ?></p>
+	<?php endif; ?>
 
 	<form method="POST">
 		<?php wp_nonce_field( $nonce_action ); ?>

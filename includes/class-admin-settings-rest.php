@@ -973,9 +973,14 @@ class Admin_Settings_REST {
 	 * they're not the notable case; MEDIUM is the tier that would normally
 	 * pause for an in-chat/in-page confirmation but does not here.
 	 *
+	 * Public (was private) — Agentic_Relay_Connect's own connector-approval
+	 * screen shows the same disclosure before minting the identical
+	 * credential via that flow, so both call sites share one source rather
+	 * than risking two lists drifting apart.
+	 *
 	 * @return array<int, array{agent:string, tool:string, description:string}>
 	 */
-	private static function data_mcp_unattended_writes(): array {
+	public static function data_mcp_unattended_writes(): array {
 		if ( ! class_exists( '\\Agentic_Agent_Registry' ) || ! class_exists( '\\Agentic_Relay_Connect' ) || ! class_exists( Abilities_Manifest::class ) ) {
 			return array();
 		}
