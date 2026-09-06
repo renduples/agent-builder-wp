@@ -2341,11 +2341,11 @@ function MCPTab( { data } ) {
 					<p>
 						{ connectors.map( ( c ) => (
 							<span
-								key={ c }
+								key={ c.slug }
 								className="agentic-react-badge"
 								style={ { marginRight: 6 } }
 							>
-								{ c }
+								{ c.label }
 							</span>
 						) ) }
 					</p>

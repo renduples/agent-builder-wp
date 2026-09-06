@@ -912,6 +912,25 @@ class Agentic_Relay_Connect {
 	// ---------- Templates ----------
 
 	/**
+	 * Human-readable provider name, consistent across every screen in the
+	 * connector flow — the approval screen and the success screen it leads
+	 * to a moment later used to compute this independently and had drifted
+	 * ("Claude (Anthropic)" vs plain "Claude"), which read as if a user had
+	 * approved one thing and connected to another.
+	 *
+	 * Public (was private) — the MCP Settings tab's "Connected Clients"
+	 * list renders this same label instead of the raw provider slug, so a
+	 * connected provider reads identically everywhere in the connector
+	 * flow rather than a third, differently-formatted way.
+	 *
+	 * @param string $provider Connector provider slug.
+	 * @return string
+	 */
+	public static function provider_label( string $provider ): string {
+		return 'anthropic' === $provider ? 'Claude (Anthropic)' : ucfirst( $provider );
+	}
+
+	/**
 	 * Render the connector approval screen.
 	 *
 	 * @param string $raw_state Relay state token.
@@ -922,7 +941,7 @@ class Agentic_Relay_Connect {
 		$nonce_action   = 'agentic_relay_connect_' . substr( $raw_state, 0, 16 );
 		$nonce          = wp_create_nonce( $nonce_action );
 		$current_user   = wp_get_current_user();
-		$provider_label = 'anthropic' === $provider ? 'Claude (Anthropic)' : ucfirst( $provider );
+		$provider_label = self::provider_label( $provider );
 
 		status_header( 200 );
 		nocache_headers();
@@ -1012,6 +1031,15 @@ h1{font-size:20px;font-weight:700;text-align:center;margin-bottom:8px}
 		?>
 	<div class="label"><?php esc_html_e( 'Can be performed without asking you again', 'agent-builder' ); ?></div>
 	<div class="scope">
+		<p style="margin:0 0 8px">
+			<?php
+			printf(
+				/* translators: %s: AI provider name, e.g. "Claude (Anthropic)". */
+				esc_html__( 'Unlike chat, MCP has no per-action confirmation step — once approved, %s can immediately perform the following without asking you first each time:', 'agent-builder' ),
+				esc_html( $provider_label )
+			);
+			?>
+		</p>
 		<ul style="margin:0;padding-left:18px">
 			<?php foreach ( $unattended_writes as $w ) : ?>
 			<li><code><?php echo esc_html( $w['tool'] ); ?></code> (<?php echo esc_html( $w['agent'] ); ?>) — <?php echo esc_html( $w['description'] ); ?></li>
@@ -1045,7 +1073,7 @@ h1{font-size:20px;font-weight:700;text-align:center;margin-bottom:8px}
 	 * @param string $provider Connector provider slug.
 	 */
 	private static function render_success( string $provider ): void {
-		$label = 'anthropic' === $provider ? 'Claude' : ucfirst( $provider );
+		$label = self::provider_label( $provider );
 		status_header( 200 );
 		header( 'Content-Type: text/html; charset=UTF-8' );
 		?>

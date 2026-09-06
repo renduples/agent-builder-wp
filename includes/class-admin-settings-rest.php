@@ -958,6 +958,19 @@ class Admin_Settings_REST {
 		$connectors = get_option( \Agentic_Relay_Connect::CONNECTORS_OPTION, array() );
 		$connectors = is_array( $connectors ) ? array_values( $connectors ) : array();
 
+		// {slug, label} rather than the raw slug — the same human-readable
+		// label the approval and success screens show ("Claude (Anthropic)"),
+		// so a connected provider reads the same way everywhere in the
+		// connector flow instead of a third, differently-formatted display
+		// ("anthropic", unformatted) unique to this one list.
+		$connector_rows = array_map(
+			static fn( $slug ) => array(
+				'slug'  => $slug,
+				'label' => \Agentic_Relay_Connect::provider_label( $slug ),
+			),
+			$connectors
+		);
+
 		return array(
 			'rest_namespace'    => 'agentic/v1',
 			'mcp_available'     => array(
@@ -966,7 +979,7 @@ class Admin_Settings_REST {
 				'can_use'       => true,
 			),
 			'agents'            => $agents,
-			'connectors'        => $connectors,
+			'connectors'        => $connector_rows,
 			'credentials'       => self::data_mcp_credentials(),
 			'unattended_writes' => self::data_mcp_unattended_writes(),
 		);
