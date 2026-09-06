@@ -38,6 +38,22 @@ class Webmcp_Bridge {
 	public const OPTION_ENABLED = 'agentic_webmcp_enabled';
 
 	/**
+	 * Tool names a not-logged-in visitor may ever call, regardless of what
+	 * webmcp_expose a manifest declares for any other tool. This is the
+	 * single source of truth — enable_webmcp_defaults reads it too, rather
+	 * than keeping its own separate list that could drift out of sync.
+	 *
+	 * Keep this list short and reviewed by hand: readonly + NONE/LOW risk is
+	 * not sufficient justification on its own (those tiers were designed for
+	 * the trusted wp-admin chat context, not an anonymous public caller) —
+	 * every entry here must independently guarantee it never discloses
+	 * anything beyond already-public content, regardless of what arguments
+	 * an anonymous caller passes (see search_content's own is_user_logged_in()
+	 * guard on its `status` argument for the pattern to follow).
+	 */
+	public const ANONYMOUS_SAFE_TOOLS = array( 'search_content' );
+
+	/**
 	 * Register all hooks.
 	 *
 	 * @return void
@@ -138,20 +154,29 @@ class Webmcp_Bridge {
 			return new \WP_Error( 'webmcp_cross_origin', __( 'Cross-origin WebMCP calls are not allowed.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
 
-		$tool_instance = Tool_Loader::get_instance()->get( $tool_name );
-		$readonly      = (bool) ( $tool_instance?->get_annotations()['readonly'] ?? false );
-
-		if ( $readonly ) {
+		// Anonymous visitors: 'readonly' is NOT a safe proxy for "safe to
+		// disclose publicly" — plenty of readonly, NONE/LOW-risk tools return
+		// data that requires a WP capability to see anywhere else in this
+		// plugin (admin usernames/emails via list_privileged_users/
+		// get_author_list, failed-login counts via get_security_overview,
+		// draft/private posts via list_posts' own status:'any' default with
+		// zero arguments needed). A site owner can still manually set
+		// webmcp_expose:true on any of those via the Advanced tab — this is
+		// the fail-closed backstop that protects an anonymous caller
+		// regardless of that manifest setting: only a small, explicitly
+		// vetted-for-public-disclosure allowlist is ever reachable without
+		// being logged in, the same way HIGH/EXTREME risk can never be
+		// reached via MCP no matter what a manifest declares.
+		if ( ! is_user_logged_in() ) {
+			if ( ! in_array( $tool_name, self::ANONYMOUS_SAFE_TOOLS, true ) ) {
+				return new \WP_Error( 'webmcp_login_required', __( 'You must be logged in to use this action.', 'agent-builder' ), array( 'status' => 401 ) );
+			}
 			return true;
 		}
 
-		// Non-readonly tools: anonymous visitors are rejected outright, regardless
-		// of declared risk. v1 has no concept of a "visitor-scoped" write
-		// capability (e.g. a guest's own cart) — see SUBMISSION-NOTES.md.
-		if ( ! is_user_logged_in() ) {
-			return new \WP_Error( 'webmcp_login_required', __( 'You must be logged in to use this action.', 'agent-builder' ), array( 'status' => 401 ) );
-		}
-
+		// Logged in: always the tool's own required capability — readonly
+		// no longer bypasses this. A tool's own risk/capability floor is what
+		// governs any authenticated caller, the same as it would via chat.
 		if ( ! current_user_can( \Agentic_Relay_Connect::required_capability_for_tool( $tool_name ) ) ) {
 			return new \WP_Error( 'webmcp_forbidden', __( 'You do not have permission to use this action.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
