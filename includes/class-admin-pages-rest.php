@@ -405,7 +405,7 @@ class Admin_Pages_REST {
 			$tool_instance = Tool_Loader::get_instance()->get( $tool_name );
 			$risk          = Abilities_Manifest::get_effective_risk( $agent_slug, $tool_name, $tool_instance );
 			if ( Risk_Level::weight( $risk ) > Risk_Level::weight( Risk_Level::MEDIUM )
-				|| ! Webmcp_Bridge::is_tool_webmcp_safe( $tool_name )
+				|| ! Webmcp_Bridge::is_tool_webmcp_safe( $tool_name, $agent_slug )
 			) {
 				return new \WP_Error( 'unsafe_risk', __( 'This tool\'s risk is too high to expose to WebMCP.', 'agent-builder' ), array( 'status' => 400 ) );
 			}

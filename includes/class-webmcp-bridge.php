@@ -109,11 +109,17 @@ class Webmcp_Bridge {
 	 * for a live visitor waiting on an in-page confirm, so it is excluded
 	 * upstream of risk enforcement entirely, the same way MCP excludes it.
 	 *
-	 * @param string $tool_name Tool name.
+	 * $agent_slug is required, not optional — the effective risk this
+	 * ultimately checks can be escalated per-agent (manifest) or per-
+	 * agent-and-tool (admin risk override), so "is this tool safe" only
+	 * ever makes sense for a specific agent, never in the abstract.
+	 *
+	 * @param string $tool_name  Tool name.
+	 * @param string $agent_slug Agent slug, for effective-risk resolution.
 	 * @return bool
 	 */
-	public static function is_tool_webmcp_safe( string $tool_name ): bool {
-		return class_exists( '\\Agentic_Relay_Connect' ) && \Agentic_Relay_Connect::is_tool_mcp_safe( $tool_name );
+	public static function is_tool_webmcp_safe( string $tool_name, string $agent_slug ): bool {
+		return class_exists( '\\Agentic_Relay_Connect' ) && \Agentic_Relay_Connect::is_tool_mcp_safe( $tool_name, $agent_slug );
 	}
 
 	/**
@@ -137,7 +143,7 @@ class Webmcp_Bridge {
 			return new \WP_Error( 'unknown_tool', __( 'Unknown or disabled tool.', 'agent-builder' ), array( 'status' => 404 ) );
 		}
 
-		if ( ! self::is_tool_webmcp_safe( $tool_name ) ) {
+		if ( ! self::is_tool_webmcp_safe( $tool_name, $agent_slug ) ) {
 			return new \WP_Error( 'webmcp_unsafe_tool', __( 'This tool cannot be exposed to WebMCP.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
 
@@ -258,7 +264,7 @@ class Webmcp_Bridge {
 		$agent_slug = (string) $proposal['agent_id'];
 
 		$exposure = self::find_exposure( $agent_slug, $tool_name );
-		if ( ! self::is_tool_webmcp_safe( $tool_name ) || null === $exposure ) {
+		if ( ! self::is_tool_webmcp_safe( $tool_name, $agent_slug ) || null === $exposure ) {
 			return new \WP_Error( 'webmcp_not_exposed', __( 'This tool is no longer exposed for this agent.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
 

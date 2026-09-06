@@ -19,6 +19,8 @@ use Agentic\WP_Optional_API;
 use Agentic\Tool_Loader;
 use Agentic\Tools_Registry;
 use Agentic\Risk_Level;
+use Agentic\Abilities_Manifest;
+use Agentic\Tool_Base;
 
 /**
  * Connects this site to the Agentic MCP relay (mcp.agentic-plugin.com).
@@ -219,7 +221,7 @@ class Agentic_Relay_Connect {
 			// alone; this plugin has no risk model for those.
 			$own_tool_name = self::own_ability_to_tool_name( $name );
 			if ( null !== $own_tool_name ) {
-				if ( ! Tools_Registry::is_enabled( $own_tool_name ) || ! self::is_tool_mcp_safe( $own_tool_name ) ) {
+				if ( ! Tools_Registry::is_enabled( $own_tool_name ) || ! self::is_tool_mcp_safe( $own_tool_name, $slug ) ) {
 					continue;
 				}
 			}
@@ -269,7 +271,7 @@ class Agentic_Relay_Connect {
 		$tools = array();
 		foreach ( Tool_Loader::get_instance()->get_all_definitions() as $definition ) {
 			$name = $definition['function']['name'] ?? '';
-			if ( '' === $name || ! Tools_Registry::is_enabled( $name ) || ! self::is_tool_mcp_safe( $name ) ) {
+			if ( '' === $name || ! Tools_Registry::is_enabled( $name ) || ! self::is_tool_mcp_safe( $name, $slug, Tool_Loader::get_instance()->get( $name ) ) ) {
 				continue;
 			}
 			if ( ! self::agent_is_declared( $slug, $name ) ) {
@@ -396,10 +398,24 @@ class Agentic_Relay_Connect {
 	 * exclusion list rather than re-implementing it — see
 	 * Webmcp_Bridge::is_tool_webmcp_safe().
 	 *
-	 * @param string $tool_name Tool name.
+	 * $agent_slug matters: risk here must be the *effective* risk (tool's own
+	 * registry default, floored by Risk_Level::BASELINE_RISKS, escalated by
+	 * this specific agent's abilities.json, escalated again by any admin
+	 * risk override for this agent+tool pair) via Abilities_Manifest::
+	 * get_effective_risk() — not just the tool's generic registry default.
+	 * A manifest or admin override can only ever escalate risk, never lower
+	 * it, so checking the generic default alone can miss a tool that this
+	 * *specific* agent has been escalated to HIGH/EXTREME, silently letting
+	 * it stay listable/callable via MCP for that agent when it must not be.
+	 * Omit $agent_slug only where truly no agent context exists yet — every
+	 * call site that has one must pass it.
+	 *
+	 * @param string        $tool_name  Tool name.
+	 * @param string        $agent_slug Calling agent slug, for effective-risk resolution.
+	 * @param Tool_Base|null $tool      Tool instance, if already loaded (optional).
 	 * @return bool
 	 */
-	public static function is_tool_mcp_safe( string $tool_name ): bool {
+	public static function is_tool_mcp_safe( string $tool_name, string $agent_slug = '', ?Tool_Base $tool = null ): bool {
 		$always_blocked = array(
 			'run_wp_cli',
 			'install_plugin_from_url',
@@ -414,7 +430,9 @@ class Agentic_Relay_Connect {
 			return false;
 		}
 		if ( class_exists( Risk_Level::class ) ) {
-			$risk = Risk_Level::get_tool_default( $tool_name );
+			$risk = ( '' !== $agent_slug && class_exists( Abilities_Manifest::class ) )
+				? Abilities_Manifest::get_effective_risk( $agent_slug, $tool_name, $tool )
+				: Risk_Level::get_tool_default( $tool_name );
 			if ( in_array( $risk, array( Risk_Level::HIGH, Risk_Level::EXTREME ), true ) ) {
 				return false;
 			}
@@ -523,7 +541,7 @@ class Agentic_Relay_Connect {
 		// Same MCP-safety posture as the listing — a tool hidden from
 		// tools/list must not be callable directly by name either.
 		$own_tool_name = self::own_ability_to_tool_name( $ability->get_name() );
-		if ( null !== $own_tool_name && ! self::is_tool_mcp_safe( $own_tool_name ) ) {
+		if ( null !== $own_tool_name && ! self::is_tool_mcp_safe( $own_tool_name, $slug ) ) {
 			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
 		}
 
@@ -578,7 +596,7 @@ class Agentic_Relay_Connect {
 	private static function handle_tool_call_via_registry( mixed $id, string $mcp_name, array $arguments, string $slug ): array {
 		$tool_name = $mcp_name;
 
-		if ( ! Tools_Registry::is_enabled( $tool_name ) || ! self::is_tool_mcp_safe( $tool_name ) ) {
+		if ( ! Tools_Registry::is_enabled( $tool_name ) || ! self::is_tool_mcp_safe( $tool_name, $slug, Tool_Loader::get_instance()->get( $tool_name ) ) ) {
 			return self::mcp_error( $id, -32601, "Unknown tool: $mcp_name" );
 		}
 
