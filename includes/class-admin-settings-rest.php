@@ -946,16 +946,67 @@ class Admin_Settings_REST {
 		$connectors = is_array( $connectors ) ? array_values( $connectors ) : array();
 
 		return array(
-			'rest_namespace' => 'agentic/v1',
-			'mcp_available'  => array(
+			'rest_namespace'    => 'agentic/v1',
+			'mcp_available'     => array(
 				'is_pro'        => false,
 				'has_connector' => ! empty( $connectors ),
 				'can_use'       => true,
 			),
-			'agents'         => $agents,
-			'connectors'     => $connectors,
-			'credentials'    => self::data_mcp_credentials(),
+			'agents'            => $agents,
+			'connectors'        => $connectors,
+			'credentials'       => self::data_mcp_credentials(),
+			'unattended_writes' => self::data_mcp_unattended_writes(),
 		);
+	}
+
+	/**
+	 * Every MEDIUM-risk write action any currently active agent could
+	 * perform via MCP, across every agent — shown before a new Application
+	 * Password is created so that decision is actually informed. MCP has no
+	 * per-call confirmation step the way chat and WebMCP do (see
+	 * SUBMISSION-NOTES.md's MCP section): "per-agent scoping and per-tool
+	 * risk filtering are what actually bound what a given credential can
+	 * list or call" is the complete, deliberate model, not a partial one —
+	 * creating this credential is itself the site owner's one confirmation.
+	 * NONE/LOW-risk writes already execute without confirmation in every
+	 * context (chat included, at the default autonomous-mode ceiling), so
+	 * they're not the notable case; MEDIUM is the tier that would normally
+	 * pause for an in-chat/in-page confirmation but does not here.
+	 *
+	 * @return array<int, array{agent:string, tool:string, description:string}>
+	 */
+	private static function data_mcp_unattended_writes(): array {
+		if ( ! class_exists( '\\Agentic_Agent_Registry' ) || ! class_exists( '\\Agentic_Relay_Connect' ) || ! class_exists( Abilities_Manifest::class ) ) {
+			return array();
+		}
+
+		$rows = array();
+		foreach ( \Agentic_Agent_Registry::get_instance()->get_all_instances() as $slug => $agent ) {
+			$manifest = Abilities_Manifest::load( $slug );
+			if ( ! $manifest || empty( $manifest['abilities'] ) || ! is_array( $manifest['abilities'] ) ) {
+				continue;
+			}
+
+			foreach ( array_keys( $manifest['abilities'] ) as $tool_name ) {
+				$tool = Tool_Loader::get_instance()->get( (string) $tool_name );
+				if ( ! $tool || ! empty( $tool->get_annotations()['readonly'] ) ) {
+					continue;
+				}
+
+				$risk = Abilities_Manifest::get_effective_risk( $slug, (string) $tool_name, $tool );
+				if ( Risk_Level::MEDIUM !== $risk || ! \Agentic_Relay_Connect::is_tool_mcp_safe( (string) $tool_name, $slug, $tool ) ) {
+					continue;
+				}
+
+				$rows[] = array(
+					'agent'       => $agent->get_name(),
+					'tool'        => (string) $tool_name,
+					'description' => $tool->get_description(),
+				);
+			}
+		}
+
+		return $rows;
 	}
 
 	/**

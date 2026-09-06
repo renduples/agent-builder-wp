@@ -2100,6 +2100,7 @@ function EndpointsTab( { data, setData, onSave, saving, error, saved, clearSaved
 function MCPTab( { data } ) {
 	const agents = data.agents || [];
 	const connectors = data.connectors || [];
+	const unattendedWrites = data.unattended_writes || [];
 
 	const [ tests, setTests ] = useState( {} );
 	const [ copied, setCopied ] = useState( {} );
@@ -2455,6 +2456,25 @@ function MCPTab( { data } ) {
 						</tbody>
 					</table>
 				</div>
+				{ unattendedWrites.length > 0 && (
+					<Notice status="warning" isDismissible={ false } style={ { marginBottom: 16 } }>
+						<p>
+							<strong>
+								{ __(
+									'Unlike chat, MCP has no per-action confirmation step — any client using this password can immediately perform the following without asking you first each time:',
+									'agent-builder'
+								) }
+							</strong>
+						</p>
+						<ul style={ { marginTop: 4, marginBottom: 0 } }>
+							{ unattendedWrites.map( ( w ) => (
+								<li key={ `${ w.agent }:${ w.tool }` }>
+									<code>{ w.tool }</code> ({ w.agent }) — { w.description }
+								</li>
+							) ) }
+						</ul>
+					</Notice>
+				) }
 				<p>
 					<Button
 						variant="primary"
