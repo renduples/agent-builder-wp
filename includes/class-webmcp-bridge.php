@@ -2,7 +2,9 @@
 /**
  * WebMCP Bridge — exposes an opt-in subset of this plugin's own tools to
  * whoever is currently in the browser, via the frontend script's
- * navigator.modelContext.registerTool() calls.
+ * document.modelContext.registerTool() calls (assets/js/webmcp-bridge.js
+ * falls back to the deprecated navigator.modelContext alias only on Chrome
+ * builds that predate WebMCP's May 2026 spec revision).
  *
  * This is a different trust boundary than the MCP relay (class-relay-connect.php):
  * the relay authenticates a *remote* agent via an Application Password acting
