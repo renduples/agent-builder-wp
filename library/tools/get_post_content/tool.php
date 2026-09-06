@@ -78,6 +78,15 @@ class Get_Post_Content extends \Agentic\Tool_Base {
 	public function execute( array $arguments ): array {
 		$post_id = (int) ( $arguments['post_id'] ?? 0 );
 
+		// Enforced here unconditionally, not left to the wp-extended/get-post
+		// ability's own permission_callback — that ability (and its identical
+		// check) only exists on WP 6.9+ with the native Abilities API present;
+		// on any older site this method falls straight through to the
+		// fallback branch below with no visibility check at all otherwise.
+		if ( ! $this->get_viewable_post( $post_id ) ) {
+			return array( 'error' => 'Post not found.' );
+		}
+
 		$ability_result = $this->call_ability( 'wp-extended/get-post', array( 'post_id' => $post_id ) );
 
 		if ( $ability_result && ! isset( $ability_result['error'] ) ) {

@@ -74,6 +74,15 @@ class List_Comments extends \Agentic\Tool_Base {
 			$status = 'hold';
 		}
 
+		// Approved comments are already public on the site — no extra
+		// capability needed. Anything else (pending/spam/trash/all) is the
+		// moderation queue, which requires moderate_comments (editor+), not
+		// just the tool-generic edit_posts floor a caller (e.g. a Contributor
+		// over WebMCP) might otherwise only need.
+		if ( 'approve' !== $status && ! current_user_can( 'moderate_comments' ) ) {
+			return array( 'error' => 'You do not have permission to view comments in this status.' );
+		}
+
 		$args = array(
 			'status'  => $status,
 			'number'  => $limit,

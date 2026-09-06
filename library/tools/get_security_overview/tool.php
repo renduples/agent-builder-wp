@@ -63,6 +63,14 @@ class Get_Security_Overview extends \Agentic\Tool_Base {
 	 * @return array
 	 */
 	public function execute( array $arguments ): array {
+		// A full security posture summary (failed logins, admin accounts,
+		// outdated plugins) — the tool-generic edit_posts floor a caller
+		// might otherwise only need (e.g. a Contributor over WebMCP) is
+		// nowhere near enough; this is site-administrator-only information.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return array( 'error' => 'You do not have permission to view the security overview.' );
+		}
+
 		$loader   = \Agentic\Tool_Loader::get_instance();
 		$failed   = $loader->execute(
 			'get_failed_logins',

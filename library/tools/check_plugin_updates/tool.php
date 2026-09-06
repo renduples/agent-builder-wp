@@ -68,6 +68,14 @@ class Check_Plugin_Updates extends \Agentic\Tool_Base {
 	 * @return array
 	 */
 	public function execute( array $arguments ): array {
+		// Discloses every active plugin and its exact version — the first
+		// input to automated vulnerability scanning. The tool-generic
+		// edit_posts floor a caller might otherwise only need (e.g. a
+		// Contributor over WebMCP) is not remotely enough for this.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return array( 'error' => 'You do not have permission to view plugin update status.' );
+		}
+
 		if ( ! function_exists( 'get_plugin_data' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}

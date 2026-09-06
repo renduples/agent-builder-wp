@@ -81,7 +81,7 @@ class Get_Post_Performance extends \Agentic\Tool_Base {
 			return array( 'error' => 'post_id is required.' );
 		}
 		$post_id = (int) $arguments['post_id'];
-		$post    = get_post( $post_id );
+		$post    = $this->get_viewable_post( $post_id );
 		if ( ! $post ) {
 			return array( 'error' => 'Post not found.' );
 		}

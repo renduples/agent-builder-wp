@@ -165,6 +165,34 @@ abstract class Tool_Base {
 	}
 
 	/**
+	 * Fetch a post the current caller is actually allowed to see, or null.
+	 *
+	 * Every tool that takes a post_id argument and returns that post's own
+	 * content/data must use this instead of a bare get_post( $post_id ) —
+	 * a plain get_post() has no concept of caller identity at all, so
+	 * without this a get_post_content-shaped tool would hand back any
+	 * draft, private, or pending post's full content to whichever
+	 * authenticated user happens to guess its ID, regardless of whether
+	 * they wrote it or have any capability over it. current_user_can(
+	 * 'read_post', $id ) is WordPress's own meta-capability for exactly
+	 * this: published/public content is visible to anyone, private
+	 * content requires read_private_posts (editor+) or being the post's
+	 * own author. Returns null for both "no such post" and "not visible
+	 * to you" — deliberately not distinguishing the two in the caller's
+	 * response, so a tool can't be used to probe whether a given ID exists.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return \WP_Post|null
+	 */
+	protected function get_viewable_post( int $post_id ): ?\WP_Post {
+		$post = get_post( $post_id );
+		if ( ! $post || ! current_user_can( 'read_post', $post_id ) ) {
+			return null;
+		}
+		return $post;
+	}
+
+	/**
 	 * Return a standardised error result.
 	 *
 	 * Use inside execute() instead of returning ad-hoc ['error' => '...'] arrays:

@@ -70,6 +70,15 @@ class Get_File_Structure_Summary extends \Agentic\Tool_Base {
 	 * @return array Result data.
 	 */
 	public function execute( array $arguments ): array {
+		// Reveals server file-path layout, recent core-file modifications,
+		// and missing hardening (.htaccess, etc.) — reconnaissance
+		// information for an attacker, not something the tool-generic
+		// edit_posts floor a caller might otherwise only need (e.g. a
+		// Contributor over WebMCP) should ever see.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return array( 'error' => 'You do not have permission to view the file structure summary.' );
+		}
+
 		$dirs = array(
 			'themes'  => WP_CONTENT_DIR . '/themes',
 			'plugins' => WP_CONTENT_DIR . '/plugins',

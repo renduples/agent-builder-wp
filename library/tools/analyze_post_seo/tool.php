@@ -80,7 +80,7 @@ class Analyze_Post_Seo extends \Agentic\Tool_Base {
 	 * @return array Result data.
 	 */
 	public function execute( array $arguments ): array {
-		$post = get_post( (int) ( $arguments['post_id'] ?? 0 ) );
+		$post = $this->get_viewable_post( (int) ( $arguments['post_id'] ?? 0 ) );
 		if ( ! $post ) {
 			return array( 'error' => 'Post not found.' );
 		}

@@ -105,6 +105,17 @@ class Get_Form_Entries extends \Agentic\Tool_Base {
 			return array( 'error' => 'form_id is required and must be a positive integer.' );
 		}
 
+		// Form submissions can contain personal data regardless of status
+		// (this tool's own abilities.json reasoning already says so) — the
+		// tool-generic edit_posts floor a caller might otherwise only need
+		// (e.g. a Contributor over WebMCP) is not enough on its own.
+		// moderate_comments is the closest existing "trusted site staff,
+		// not just a content contributor" WP capability; there's no
+		// dedicated native capability for third-party form entries.
+		if ( ! current_user_can( 'moderate_comments' ) ) {
+			return array( 'error' => 'You do not have permission to view form entries.' );
+		}
+
 		if ( '' === $plugin ) {
 			$plugin = $this->detect_plugin();
 		}

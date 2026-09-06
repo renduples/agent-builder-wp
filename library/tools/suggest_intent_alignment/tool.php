@@ -81,7 +81,7 @@ class Suggest_Intent_Alignment extends \Agentic\Tool_Base {
 	 */
 	public function execute( array $arguments ): array {
 		$post_id = (int) ( $arguments['post_id'] ?? 0 );
-		$post    = get_post( $post_id );
+		$post    = $this->get_viewable_post( $post_id );
 
 		if ( ! $post ) {
 			return array( 'error' => 'Post not found.' );

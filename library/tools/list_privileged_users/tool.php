@@ -68,6 +68,14 @@ class List_Privileged_Users extends \Agentic\Tool_Base {
 	 * @return array
 	 */
 	public function execute( array $arguments ): array {
+		// Discloses other users' usernames and email addresses — the
+		// tool-generic edit_posts floor a caller might otherwise only need
+		// (e.g. a Contributor over WebMCP) is not remotely enough; this
+		// needs the same capability wp-admin's own Users list requires.
+		if ( ! current_user_can( 'list_users' ) ) {
+			return array( 'error' => 'You do not have permission to view user accounts.' );
+		}
+
 		$role_arg = $arguments['role'] ?? 'administrator';
 		$roles    = 'all_elevated' === $role_arg ? array( 'administrator', 'editor' ) : array( $role_arg );
 		$users    = get_users(

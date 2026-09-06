@@ -72,6 +72,13 @@ class Get_Recent_Registrations extends \Agentic\Tool_Base {
 	 * @return array
 	 */
 	public function execute( array $arguments ): array {
+		// Discloses other users' email addresses and roles — see
+		// list_privileged_users' identical guard for why edit_posts alone
+		// is not enough here.
+		if ( ! current_user_can( 'list_users' ) ) {
+			return array( 'error' => 'You do not have permission to view user accounts.' );
+		}
+
 		$days  = max( 1, (int) ( $arguments['days'] ?? 7 ) );
 		$limit = min( max( (int) ( $arguments['limit'] ?? 20 ), 1 ), 50 );
 		$since = gmdate( 'Y-m-d H:i:s', time() - ( $days * DAY_IN_SECONDS ) );

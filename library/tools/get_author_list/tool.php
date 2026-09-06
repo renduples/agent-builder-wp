@@ -94,7 +94,7 @@ class Get_Author_List extends \Agentic\Tool_Base {
 		}
 
 		if ( ! empty( $all_users ) ) {
-			return array( 'authors' => array_values( $all_users ) );
+			return array( 'authors' => $this->strip_usernames_if_unprivileged( array_values( $all_users ) ) );
 		}
 
 		// Fallback: ability unavailable, query directly.
@@ -105,15 +105,37 @@ class Get_Author_List extends \Agentic\Tool_Base {
 				'orderby'  => 'display_name',
 			)
 		);
-		return array(
-			'authors' => array_map(
-				fn( $u ) => array(
-					'id'           => (int) $u->ID,
-					'display_name' => $u->display_name,
-					'user_login'   => $u->user_login,
-				),
-				$users
+		$authors = array_map(
+			fn( $u ) => array(
+				'id'           => (int) $u->ID,
+				'display_name' => $u->display_name,
+				'user_login'   => $u->user_login,
 			),
+			$users
+		);
+		return array( 'authors' => $this->strip_usernames_if_unprivileged( $authors ) );
+	}
+
+	/**
+	 * Display names are effectively already public (post bylines show them),
+	 * but usernames are not — drop them for a caller who couldn't otherwise
+	 * see the Users list (e.g. a Contributor over WebMCP), same threshold
+	 * list_privileged_users/get_recent_registrations already use for the
+	 * rest of a user's account details.
+	 *
+	 * @param array $authors Author rows with id/display_name/user_login.
+	 * @return array
+	 */
+	private function strip_usernames_if_unprivileged( array $authors ): array {
+		if ( current_user_can( 'list_users' ) ) {
+			return $authors;
+		}
+		return array_map(
+			function ( $author ) {
+				unset( $author['user_login'] );
+				return $author;
+			},
+			$authors
 		);
 	}
 

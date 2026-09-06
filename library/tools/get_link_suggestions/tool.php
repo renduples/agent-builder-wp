@@ -82,7 +82,7 @@ class Get_Link_Suggestions extends \Agentic\Tool_Base {
 	public function execute( array $arguments ): array {
 		$post_id = (int) ( $arguments['post_id'] ?? 0 );
 		$limit   = min( max( (int) ( $arguments['limit'] ?? 10 ), 1 ), 20 );
-		$post    = get_post( $post_id );
+		$post    = $this->get_viewable_post( $post_id );
 		if ( ! $post ) {
 			return array( 'error' => 'Post not found.' );
 		}
