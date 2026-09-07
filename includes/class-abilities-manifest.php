@@ -568,6 +568,40 @@ class Abilities_Manifest {
 	}
 
 	/**
+	 * Write an agent's abilities.json and its integrity signature as one
+	 * atomic step.
+	 *
+	 * save_integrity_hash() can only sign a manifest that's already on disk
+	 * (it resolves the path by looking for the file), so any writer that
+	 * calls file_put_contents() and save_integrity_hash() as two separate
+	 * steps is one skipped/forgotten line away from shipping a manifest
+	 * whose signature silently never gets written or goes stale against its
+	 * own content — exactly the class of bug this method closes off by
+	 * construction, for every future caller.
+	 *
+	 * @param string $agent_dir  Directory the agent's files live in (already created).
+	 * @param string $agent_slug Agent identifier.
+	 * @param array  $manifest   Manifest data, already assembled and JSON-encodable.
+	 * @return bool Whether the manifest was written and signed.
+	 */
+	public static function write_manifest( string $agent_dir, string $agent_slug, array $manifest ): bool {
+		$manifest_json = wp_json_encode( $manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+		if ( false === $manifest_json ) {
+			return false;
+		}
+
+		$path = trailingslashit( $agent_dir ) . 'abilities.json';
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		if ( false === file_put_contents( $path, $manifest_json ) ) {
+			return false;
+		}
+
+		self::clear_cache( $agent_slug );
+		return self::save_integrity_hash( $agent_slug );
+	}
+
+	/**
 	 * Verify that abilities.json has not been modified since its signature was recorded.
 	 *
 	 * @param string $agent_slug Agent identifier.

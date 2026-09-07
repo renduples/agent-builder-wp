@@ -303,13 +303,13 @@ class Create_Agent_Files extends Tool_Base {
 			}
 
 			$manifest['abilities'] = (object) $abilities;
-			$manifest_json         = wp_json_encode( $manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
-			file_put_contents( $agent_dir . '/abilities.json', $manifest_json );
-			$files_created['abilities.json'] = strlen( $manifest_json ) . ' bytes';
 
-			// Write the integrity signature so abilities.json passes runtime verification.
-			\Agentic\Abilities_Manifest::clear_cache( $slug );
-			if ( \Agentic\Abilities_Manifest::save_integrity_hash( $slug ) ) {
+			// write_manifest() writes abilities.json and its integrity signature
+			// as one atomic step — see its docblock for why this can't be two
+			// separate calls.
+			if ( \Agentic\Abilities_Manifest::write_manifest( $agent_dir, $slug, $manifest ) ) {
+				$manifest_json                        = wp_json_encode( $manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+				$files_created['abilities.json']      = strlen( (string) $manifest_json ) . ' bytes';
 				$files_created['abilities-signature'] = 'generated';
 			}
 		}
