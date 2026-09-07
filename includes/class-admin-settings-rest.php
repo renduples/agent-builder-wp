@@ -1009,7 +1009,7 @@ class Admin_Settings_REST {
 					'url'            => rest_url( 'agentic/' . $slug . '/mcp' ),
 					'ready'          => $readiness['ready'],
 					'reason'         => $readiness['reason'],
-					'enabled'        => ! \Agentic_Relay_Connect::is_mcp_disabled( $slug ),
+					'enabled'        => \Agentic_Relay_Connect::is_mcp_enabled( $slug ),
 					'last_connected' => $last_connected
 						? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_connected )
 						: '',
