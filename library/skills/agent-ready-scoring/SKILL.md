@@ -1,9 +1,9 @@
 ---
 name: agent-ready-scoring
-description: "Explain and interpret the Agent-Ready Score — a 7-check readiness score covering MCP reachability, WebMCP tool registration, approval-gate safety, and llms.txt/robots.txt/schema.org discoverability. Use when the user asks how agent-ready their site is, what the score means, what a specific check does, or how to raise it. Call check_agent_readiness first, then explain the result using this skill."
+description: "Explain and interpret the Site Passport score — a 7-check readiness score covering MCP reachability, WebMCP tool registration, approval-gate safety, and llms.txt/robots.txt/schema.org discoverability. Use when the user asks how accessible/visible their site is to AI agents, what the score means, what a specific check does, or how to raise it. Call check_agent_readiness first, then explain the result using this skill."
 ---
 
-# Agent-Ready Score
+# Site Passport
 
 ## What it measures
 
@@ -31,7 +31,7 @@ All seven checks run locally, in-process, with zero outbound HTTP requests.
 
 ## What you can fix directly
 
-The four checks marked "Yes" above have real one-click fixes available in wp-admin → Agent-Ready, and corresponding tools you may be asked to run directly:
+The four checks marked "Yes" above have real one-click fixes available in wp-admin → Passport, and corresponding tools you may be asked to run directly:
 - `resign_agent_manifest` — re-signs any active agent whose abilities.json signature has gone stale.
 - `enable_webmcp_defaults` — exposes only a small, hand-curated allowlist of tools known to be genuinely safe for an anonymous public visitor (currently just `search_content`), never a blanket sweep of readonly/low-risk tools — risk tiers designed for the trusted wp-admin chat context are not a safe proxy for "safe to expose to anyone on the internet."
 - `configure_approval_gate` — turns off WebMCP exposure for anything exposed above a safe risk tier (never lowers a tool's own declared risk).
@@ -43,4 +43,4 @@ The four checks marked "Yes" above have real one-click fixes available in wp-adm
 
 ## Explaining the score conversationally
 
-Lead with the overall grade and the single highest-impact fixable issue (usually the highest-weight check that scored 0 or low), not a recitation of all seven rows. Offer to run a free fix directly when one exists and the user confirms; otherwise point to wp-admin → Agent-Ready for the fuller breakdown and Pro upsell CTAs.
+Lead with the overall grade and the single highest-impact fixable issue (usually the highest-weight check that scored 0 or low), not a recitation of all seven rows. Offer to run a free fix directly when one exists and the user confirms; otherwise point to wp-admin → Passport for the fuller breakdown and Pro upsell CTAs.

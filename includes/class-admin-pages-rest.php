@@ -2188,8 +2188,8 @@ class Admin_Pages_REST {
 
 		$payload = array(
 			'page'           => 'agent-ready',
-			'title'          => __( 'Agent-Ready', 'agent-builder' ),
-			'description'    => __( 'How ready is this site for AI agents to discover and safely act on it?', 'agent-builder' ),
+			'title'          => __( 'Site Passport', 'agent-builder' ),
+			'description'    => __( 'Your site\'s passport for AI agents — what they can discover, and what they can access.', 'agent-builder' ),
 			'is_advanced'    => $is_advanced,
 			'score'          => class_exists( Agent_Ready_Score::class ) ? Agent_Ready_Score::get_latest() : array(),
 			'webmcp_enabled' => class_exists( Webmcp_Bridge::class ) && Webmcp_Bridge::is_enabled(),

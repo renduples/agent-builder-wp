@@ -208,12 +208,16 @@ class Admin_Menu_Handler {
 
 		// Usage / Costs page is registered by Agent Builder Pro.
 
-		// Agent-Ready — always shown in the menu, same as every other page here;
-		// Basic/Advanced only ever affects this page's own content, never nav.
+		// Passport (page title "Site Passport") — always shown in the menu,
+		// same as every other page here; Basic/Advanced only ever affects
+		// this page's own content, never nav. Internal slug/render key stay
+		// "agent-ready" — this is the same Agent-Ready Score/WebMCP feature,
+		// just renamed for clarity ("ready" for what? — "Passport" names the
+		// actual concept: what AI agents can discover and access on this site).
 		add_submenu_page(
 			'agent-builder',
-			__( 'Agent Builder — Agent-Ready', 'agent-builder' ),
-			__( 'Agent-Ready', 'agent-builder' ),
+			__( 'Agent Builder — Site Passport', 'agent-builder' ),
+			__( 'Passport', 'agent-builder' ),
 			'agentic_manage_settings',
 			'agentic-agent-ready',
 			fn() => $this->render_page( 'agent-ready' )

@@ -30,7 +30,7 @@ class Check_Agent_Readiness extends \Agentic\Tool_Base {
 	}
 
 	public function get_description(): string {
-		return 'Check this site\'s Agent-Ready Score — a 7-check readiness score covering MCP reachability, WebMCP tool registration, approval-gate safety, and llms.txt/robots.txt/schema.org discoverability. Returns the overall score, letter grade, and a per-check breakdown.';
+		return 'Check this site\'s Site Passport score — a 7-check readiness score covering MCP reachability, WebMCP tool registration, approval-gate safety, and llms.txt/robots.txt/schema.org discoverability. Returns the overall score, letter grade, and a per-check breakdown.';
 	}
 
 	public function get_category(): string {

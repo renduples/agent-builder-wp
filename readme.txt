@@ -273,8 +273,8 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **Terms of Service:** [https://sitepassport.org/terms](https://sitepassport.org/terms)
 * **Privacy Policy:** [https://sitepassport.org/privacy](https://sitepassport.org/privacy)
 
-= Agent-Ready Score (Local Only) =
-The Agent-Ready Score itself (Agent Builder → Agent-Ready) makes **zero external requests**. All seven checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, and the presence of `llms.txt`, AI-crawler directives in `robots.txt`, and Organization/WebSite schema markup — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
+= Site Passport (Local Only) =
+The Site Passport score itself (Agent Builder → Passport) makes **zero external requests**. All seven checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, and the presence of `llms.txt`, AI-crawler directives in `robots.txt`, and Organization/WebSite schema markup — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
 
 == Changelog ==
 

@@ -2138,7 +2138,7 @@ function AgentReadyView( { data, reload } ) {
 
 			<p>
 				<ToggleControl
-					label={ __( 'Make my site agent-ready (turn on the WebMCP Bridge)', 'agent-builder' ) }
+					label={ __( 'Let AI agents access my site (turn on the WebMCP Bridge)', 'agent-builder' ) }
 					checked={ Boolean( data.webmcp_enabled ) }
 					onChange={ toggleWebmcp }
 				/>

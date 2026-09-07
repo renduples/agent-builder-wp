@@ -359,7 +359,7 @@ function AgentReadyCard( { data, dnd } ) {
 		<Card
 			cardId="agent-ready"
 			{ ...dnd }
-			title={ __( 'Agent-Ready', 'agent-builder' ) }
+			title={ __( 'Passport', 'agent-builder' ) }
 			headerLink={
 				<a
 					className="agentic-card-header-link"
