@@ -721,6 +721,25 @@ class Agentic_Agent_Registry {
 		// Pre-check for class name conflicts to prevent fatal errors.
 		$class_name = $this->extract_class_name( $agent['path'] );
 		if ( $class_name && class_exists( $class_name, false ) ) {
+			// This plugin creates several Agent_Registry instances per request
+			// (see load_active_agents() callers in agent-builder.php and
+			// class-chat-assets.php) — a PHP agent's own file being re-"loaded"
+			// from a second instance is expected, not a collision: PHP already
+			// tracks included files by resolved path, so re-including the exact
+			// same file here is always a safe no-op, and this instance's own
+			// load_active_agents() still fires
+			// do_action( 'agentic_register_agents', $this ), which is what
+			// actually registers the (already-declared) class onto THIS
+			// registry instance. Only warn/block when a DIFFERENT file already
+			// declared this class name — a real naming collision between two
+			// agents.
+			$agentic_real_path         = realpath( $agent['path'] );
+			$agentic_already_this_file = $agentic_real_path && in_array( $agentic_real_path, get_included_files(), true );
+
+			if ( $agentic_already_this_file ) {
+				return true;
+			}
+
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging only when WP_DEBUG is enabled.
 				error_log(
