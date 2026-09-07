@@ -371,6 +371,17 @@ if ( 'active' === $agentic_filter ) {
 									<span class="separator">|</span>
 								<?php endif; ?>
 
+								<?php if ( null !== \Agentic\Abilities_Manifest::load( $agentic_slug ) ) : ?>
+									<?php $agentic_sig_ok = \Agentic\Abilities_Manifest::verify_integrity( $agentic_slug ); ?>
+									<span class="agent-signature">
+										<?php esc_html_e( 'Signature:', 'agent-builder' ); ?>
+										<span class="agentic-signature-badge <?php echo $agentic_sig_ok ? 'pass' : 'mismatch'; ?>">
+											<?php echo $agentic_sig_ok ? esc_html__( 'Pass', 'agent-builder' ) : esc_html__( 'Mismatch', 'agent-builder' ); ?>
+										</span>
+									</span>
+									<span class="separator">|</span>
+								<?php endif; ?>
+
 								<?php if ( ! empty( $agentic_agent['category'] ) ) : ?>
 									<span class="agent-category">
 										<?php echo esc_html( $agentic_agent['category'] ); ?>

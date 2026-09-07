@@ -5,7 +5,7 @@
  * Plugin Name:       Agent Builder
  * Plugin URI:        https://agentic-plugin.com
  * Description:       Orchestrate role-based AI agents and teams with simple job descriptions.
- * Version:           3.3.90
+ * Version:           3.3.91
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            Agent Builder Team
@@ -58,7 +58,7 @@ spl_autoload_register(
 // Plugin constants.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 define( 'AGENT_BUILDER_FILE', __FILE__ );
-define( 'AGENT_BUILDER_VERSION', '3.3.90' );
+define( 'AGENT_BUILDER_VERSION', '3.3.91' );
 define( 'AGENT_BUILDER_DB_VERSION', '2.13.6' );
 define( 'AGENT_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AGENT_BUILDER_URL', plugin_dir_url( __FILE__ ) );

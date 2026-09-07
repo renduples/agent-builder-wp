@@ -480,6 +480,21 @@
 	background: #d63638;
 	color: #fff;
 }
+.agentic-signature-badge {
+	display: inline-block;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	padding: 2px 7px;
+	border-radius: 10px;
+	color: #fff;
+}
+.agentic-signature-badge.pass {
+	background: #00a32a;
+}
+.agentic-signature-badge.mismatch {
+	background: #d63638;
+}
 .agentic-emergency-stop-hint {
 	color: #646970;
 	font-size: 12px;
