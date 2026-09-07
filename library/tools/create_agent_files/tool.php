@@ -178,6 +178,15 @@ class Create_Agent_Files extends Tool_Base {
 			$prompts = $this->default_suggested_prompts( $agent_desc );
 		}
 
+		// Custom agents have no shipped publisher the way bundled agents do
+		// ("By Agent Builder", "By Agentic Community") — attribute to whichever
+		// admin created it instead of leaving the Agents list with no author at all.
+		$author = '';
+		$current_user = wp_get_current_user();
+		if ( $current_user && $current_user->exists() ) {
+			$author = $current_user->display_name ?: $current_user->user_login;
+		}
+
 		$manifest = \Agentic\Agent_Manifest_Validator::validate(
 			array(
 				'slug'              => $slug,
@@ -185,6 +194,7 @@ class Create_Agent_Files extends Tool_Base {
 				'description'       => $agent_desc,
 				'category'          => $args['category'] ?? 'admin',
 				'icon'              => $args['icon'] ?? '🤖',
+				'author'            => $author,
 				'capabilities'      => $args['capabilities'] ?? array( 'read' ),
 				'tools'             => $args['tools'] ?? array(),
 				'suggested_prompts' => $prompts,
