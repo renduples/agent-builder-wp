@@ -193,6 +193,15 @@ $agentic_agents   = $agentic_registry->get_installed_agents( true );
 // Fetch cached update data (populated by Agent_Updates::check() on page load).
 $agentic_available_updates = class_exists( '\Agentic\Agent_Updates' ) ? \Agentic\Agent_Updates::get() : array();
 
+// Connector reachability, computed once for the whole list rather than
+// per row — WebMCP exposure in particular scans every active agent's own
+// manifest internally, so calling it once and indexing by slug avoids
+// redoing that scan for every row.
+$agentic_webmcp_enabled       = class_exists( '\Agentic\Webmcp_Bridge' ) && \Agentic\Webmcp_Bridge::is_enabled();
+$agentic_webmcp_exposed_slugs = $agentic_webmcp_enabled && class_exists( '\Agentic\Abilities_Manifest' )
+	? array_unique( array_column( \Agentic\Abilities_Manifest::get_webmcp_exposed(), 'agent_slug' ) )
+	: array();
+
 // Filter by status.
 $agentic_filter = isset( $_GET['agent_status'] ) ? sanitize_text_field( wp_unslash( $_GET['agent_status'] ) ) : 'all';
 
@@ -288,12 +297,21 @@ if ( 'active' === $agentic_filter ) {
 				<th scope="col" class="manage-column column-description">
 					<?php esc_html_e( 'Description', 'agent-builder' ); ?>
 				</th>
+				<th scope="col" class="manage-column column-mcp agentic-connector-col">
+					<?php esc_html_e( 'MCP', 'agent-builder' ); ?>
+				</th>
+				<th scope="col" class="manage-column column-webmcp agentic-connector-col">
+					<?php esc_html_e( 'WebMCP', 'agent-builder' ); ?>
+				</th>
+				<th scope="col" class="manage-column column-whatsapp agentic-connector-col">
+					<?php esc_html_e( 'WhatsApp', 'agent-builder' ); ?>
+				</th>
 			</tr>
 		</thead>
 		<tbody id="the-list">
 			<?php if ( empty( $agentic_agents ) ) : ?>
 				<tr class="no-items">
-					<td class="colspanchange" colspan="3">
+					<td class="colspanchange" colspan="6">
 						<?php esc_html_e( 'No agents installed yet.', 'agent-builder' ); ?>
 					</td>
 				</tr>
@@ -302,6 +320,11 @@ if ( 'active' === $agentic_filter ) {
 					<?php
 					$agentic_row_class = $agentic_agent['active'] ? 'active' : 'inactive';
 					$agentic_nonce     = wp_create_nonce( 'agentic_agent_action' );
+
+					$agentic_mcp        = class_exists( '\Agentic_Relay_Connect' ) ? \Agentic_Relay_Connect::mcp_readiness( $agentic_slug ) : array( 'ready' => false, 'reason' => null );
+					$agentic_mcp_ok     = ! empty( $agentic_mcp['ready'] );
+					$agentic_webmcp_ok  = in_array( $agentic_slug, $agentic_webmcp_exposed_slugs, true );
+					$agentic_whatsapp_ok = '1' === \Agentic\Agent_Settings::get( $agentic_slug, 'whatsapp_enabled' );
 					?>
 					<tr class="<?php echo esc_attr( $agentic_row_class ); ?>" data-slug="<?php echo esc_attr( $agentic_slug ); ?>">
 						<th scope="row" class="check-column">
@@ -401,12 +424,33 @@ if ( 'active' === $agentic_filter ) {
 								<?php endif; ?>
 							</div>
 						</td>
+						<td class="column-mcp agentic-connector-cell">
+							<?php if ( $agentic_mcp_ok ) : ?>
+								<span class="dashicons dashicons-yes-alt agentic-di-green" title="<?php esc_attr_e( 'Reachable via MCP', 'agent-builder' ); ?>"></span>
+							<?php else : ?>
+								<span class="dashicons dashicons-no agentic-di-red" title="<?php echo esc_attr( $agentic_mcp['reason'] ?? __( 'Not reachable via MCP', 'agent-builder' ) ); ?>"></span>
+							<?php endif; ?>
+						</td>
+						<td class="column-webmcp agentic-connector-cell">
+							<?php if ( $agentic_webmcp_ok ) : ?>
+								<span class="dashicons dashicons-yes-alt agentic-di-green" title="<?php esc_attr_e( 'Reachable via WebMCP', 'agent-builder' ); ?>"></span>
+							<?php else : ?>
+								<span class="dashicons dashicons-no agentic-di-red" title="<?php esc_attr_e( 'Not reachable via WebMCP', 'agent-builder' ); ?>"></span>
+							<?php endif; ?>
+						</td>
+						<td class="column-whatsapp agentic-connector-cell">
+							<?php if ( $agentic_whatsapp_ok ) : ?>
+								<span class="dashicons dashicons-yes-alt agentic-di-green" title="<?php esc_attr_e( 'Reachable via WhatsApp', 'agent-builder' ); ?>"></span>
+							<?php else : ?>
+								<span class="dashicons dashicons-no agentic-di-red" title="<?php esc_attr_e( 'Not reachable via WhatsApp', 'agent-builder' ); ?>"></span>
+							<?php endif; ?>
+						</td>
 					</tr>
 
 					<?php if ( isset( $agentic_available_updates[ $agentic_slug ] ) ) : ?>
 						<?php $agentic_upd = $agentic_available_updates[ $agentic_slug ]; ?>
 						<tr class="plugin-update-tr <?php echo esc_attr( $agentic_row_class ); ?>" id="<?php echo esc_attr( $agentic_slug ); ?>-update" data-slug="<?php echo esc_attr( $agentic_slug ); ?>">
-							<td colspan="3" class="plugin-update colspanchange">
+							<td colspan="6" class="plugin-update colspanchange">
 								<div class="update-message notice inline notice-warning notice-alt">
 									<p>
 										<?php if ( ! empty( $agentic_upd['package'] ) ) : ?>
@@ -474,6 +518,15 @@ if ( 'active' === $agentic_filter ) {
 				</th>
 				<th scope="col" class="manage-column column-description">
 					<?php esc_html_e( 'Description', 'agent-builder' ); ?>
+				</th>
+				<th scope="col" class="manage-column column-mcp agentic-connector-col">
+					<?php esc_html_e( 'MCP', 'agent-builder' ); ?>
+				</th>
+				<th scope="col" class="manage-column column-webmcp agentic-connector-col">
+					<?php esc_html_e( 'WebMCP', 'agent-builder' ); ?>
+				</th>
+				<th scope="col" class="manage-column column-whatsapp agentic-connector-col">
+					<?php esc_html_e( 'WhatsApp', 'agent-builder' ); ?>
 				</th>
 			</tr>
 		</tfoot>
@@ -581,7 +634,7 @@ function agentic_confirm_bulk( btn ) {
 				if ( data.success ) {
 					if ( row ) {
 						row.innerHTML =
-							'<td colspan="3"><div class="update-message notice inline notice-success notice-alt">' +
+							'<td colspan="6"><div class="update-message notice inline notice-success notice-alt">' +
 							'<p>' + data.data.message + '</p></div></td>';
 					}
 					// Reload after a short delay so the updated version number shows.
