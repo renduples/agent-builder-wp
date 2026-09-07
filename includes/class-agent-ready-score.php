@@ -159,26 +159,41 @@ class Agent_Ready_Score {
 	 * Reuses Agentic_Relay_Connect::mcp_readiness(), already built for the
 	 * Settings > MCP tab's own "ready/not ready" status per agent.
 	 *
+	 * MCP is opt-in per agent (off by default — see
+	 * Agentic_Relay_Connect::ENABLED_AGENTS_OPTION); an agent nobody has
+	 * turned it on for isn't broken, it's the deliberate secure default, so
+	 * it's excluded from this score entirely rather than counted as a
+	 * failure — otherwise a fresh, correctly-locked-down site would always
+	 * score low here, nudging admins to blanket-enable MCP just to raise a
+	 * number. Only agents someone actually opted in are checked, and only
+	 * a real problem (no manifest, signature mismatch) counts against the
+	 * score.
+	 *
 	 * @return array Check result.
 	 */
 	private static function check_mcp_server_reachable(): array {
-		$slugs = class_exists( '\\Agentic_Agent_Registry' )
+		$all_slugs = class_exists( '\\Agentic_Agent_Registry' )
 			? array_keys( \Agentic_Agent_Registry::get_instance()->get_all_instances() )
 			: array();
 
-		if ( empty( $slugs ) ) {
+		if ( empty( $all_slugs ) ) {
 			return self::result( 0, 'Capability exposure', 'high', true, 'No agents are active yet.' );
+		}
+
+		if ( ! class_exists( '\\Agentic_Relay_Connect' ) ) {
+			return self::result( 0, 'Capability exposure', 'high', true, 'MCP relay unavailable.' );
+		}
+
+		$slugs = array_values( array_filter( $all_slugs, array( '\\Agentic_Relay_Connect', 'is_mcp_enabled' ) ) );
+
+		if ( empty( $slugs ) ) {
+			return self::result( 100, 'Capability exposure', 'high', true, 'MCP is off for every active agent — nothing to fix. Enable it for an agent in Settings > MCP if you want external AI apps like Claude Desktop or Cursor to reach it.' );
 		}
 
 		$ready_count  = 0;
 		$worst_reason = '';
 		foreach ( $slugs as $slug ) {
-			$readiness = class_exists( '\\Agentic_Relay_Connect' )
-				? \Agentic_Relay_Connect::mcp_readiness( $slug )
-				: array(
-					'ready'  => false,
-					'reason' => 'MCP relay unavailable.',
-				);
+			$readiness = \Agentic_Relay_Connect::mcp_readiness( $slug );
 			if ( ! empty( $readiness['ready'] ) ) {
 				++$ready_count;
 			} elseif ( '' === $worst_reason ) {
@@ -188,7 +203,7 @@ class Agent_Ready_Score {
 
 		$score  = (int) round( 100 * $ready_count / count( $slugs ) );
 		$detail = 100 === $score
-			? sprintf( 'All %d active agent(s) expose a working MCP server.', count( $slugs ) )
+			? sprintf( 'All %d agent(s) with MCP enabled expose a working server.', count( $slugs ) )
 			: $worst_reason;
 
 		return self::result( $score, 'Capability exposure', 'high', true, $detail );
