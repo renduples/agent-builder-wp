@@ -370,7 +370,7 @@ function AgentReadyCard( { data, dnd } ) {
 			}
 		>
 			<div className="agentic-status-grid">
-				<StatusTile label={ __( 'Score', 'agent-builder' ) }>
+				<StatusTile label={ __( 'Site Score', 'agent-builder' ) }>
 					<span className={ gradeClass }>●</span>{ ' ' }
 					{ overall } ({ ready.grade || '—' })
 				</StatusTile>
