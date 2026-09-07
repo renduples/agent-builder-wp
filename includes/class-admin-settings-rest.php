@@ -943,14 +943,18 @@ class Admin_Settings_REST {
 		$agents = array();
 		if ( class_exists( '\\Agentic_Agent_Registry' ) && class_exists( '\\Agentic_Relay_Connect' ) ) {
 			foreach ( \Agentic_Agent_Registry::get_instance()->get_all_instances() as $slug => $agent ) {
-				$readiness = \Agentic_Relay_Connect::mcp_readiness( $slug );
-				$agents[]  = array(
-					'slug'   => $slug,
-					'name'   => $agent->get_name(),
-					'icon'   => $agent->get_icon(),
-					'url'    => rest_url( 'agentic/' . $slug . '/mcp' ),
-					'ready'  => $readiness['ready'],
-					'reason' => $readiness['reason'],
+				$readiness      = \Agentic_Relay_Connect::mcp_readiness( $slug );
+				$last_connected = \Agentic_Relay_Connect::get_last_connected( $slug );
+				$agents[]       = array(
+					'slug'           => $slug,
+					'name'           => $agent->get_name(),
+					'icon'           => $agent->get_icon(),
+					'url'            => rest_url( 'agentic/' . $slug . '/mcp' ),
+					'ready'          => $readiness['ready'],
+					'reason'         => $readiness['reason'],
+					'last_connected' => $last_connected
+						? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_connected )
+						: '',
 				);
 			}
 		}

@@ -36,6 +36,14 @@ class Agentic_Relay_Connect {
 	const CONNECTORS_OPTION = 'agentic_active_connectors';
 
 	/**
+	 * Per-agent map of { slug => unix timestamp } for the last time an
+	 * authenticated MCP client successfully reached that agent's endpoint —
+	 * distinct from "ready" (mcp_readiness(), which only means the agent is
+	 * capable of responding, not that anything has ever actually connected).
+	 */
+	const LAST_CONNECTED_OPTION = 'agentic_mcp_last_connected';
+
+	/**
 	 * Register hooks.
 	 */
 	public static function init(): void {
@@ -131,6 +139,11 @@ class Agentic_Relay_Connect {
 		$body   = is_array( $body ) ? $body : array();
 		$method = $body['method'] ?? '';
 		$id     = $body['id'] ?? null;
+
+		// check_mcp_permission() already required a real authenticated user
+		// to reach this point — any recognized method against a real slug is
+		// evidence of an actual connected client, not just a "ready" endpoint.
+		self::record_connection( $slug );
 
 		switch ( $method ) {
 			case 'initialize':
@@ -361,6 +374,48 @@ class Agentic_Relay_Connect {
 			'ready'  => true,
 			'reason' => null,
 		);
+	}
+
+	/**
+	 * Record that an authenticated MCP client successfully reached this
+	 * agent's endpoint, so Settings > MCP can show real connection activity
+	 * per agent rather than just "ready" (capable of responding, whether or
+	 * not anything has ever actually connected). Throttled to at most once a
+	 * minute per agent so an active client polling tools/list doesn't write
+	 * to the options table on every request.
+	 *
+	 * @param string $slug Agent slug.
+	 * @return void
+	 */
+	private static function record_connection( string $slug ): void {
+		if ( '' === $slug ) {
+			return;
+		}
+
+		$last = get_option( self::LAST_CONNECTED_OPTION, array() );
+		$last = is_array( $last ) ? $last : array();
+
+		$now = time();
+		if ( isset( $last[ $slug ] ) && ( $now - (int) $last[ $slug ] ) < MINUTE_IN_SECONDS ) {
+			return;
+		}
+
+		$last[ $slug ] = $now;
+		update_option( self::LAST_CONNECTED_OPTION, $last, false );
+	}
+
+	/**
+	 * Last time an authenticated MCP client reached this agent's endpoint,
+	 * or null if never (or not since this tracking was added).
+	 *
+	 * @param string $slug Agent slug.
+	 * @return int|null Unix timestamp, or null.
+	 */
+	public static function get_last_connected( string $slug ): ?int {
+		$last = get_option( self::LAST_CONNECTED_OPTION, array() );
+		$last = is_array( $last ) ? $last : array();
+
+		return isset( $last[ $slug ] ) ? (int) $last[ $slug ] : null;
 	}
 
 	/**

@@ -2244,6 +2244,7 @@ function MCPTab( { data } ) {
 								<th>{ __( 'Agent', 'agent-builder' ) }</th>
 								<th>{ __( 'MCP URL', 'agent-builder' ) }</th>
 								<th>{ __( 'Status', 'agent-builder' ) }</th>
+								<th>{ __( 'Connected', 'agent-builder' ) }</th>
 								<th />
 							</tr>
 						</thead>
@@ -2287,6 +2288,10 @@ function MCPTab( { data } ) {
 														'agent-builder'
 												  )
 												: a.reason }
+										</td>
+										<td>
+											{ a.last_connected ||
+												__( 'Never connected', 'agent-builder' ) }
 										</td>
 										<td>
 											<Button
