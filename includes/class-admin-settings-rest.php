@@ -104,6 +104,29 @@ class Admin_Settings_REST {
 			)
 		);
 
+		// MCP tab: turn one agent's MCP endpoint on or off, independent of
+		// whether the agent itself is active.
+		register_rest_route(
+			'agentic/v1',
+			'/admin-settings/mcp-toggle-agent',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'mcp_toggle_agent' ),
+				'permission_callback' => array( __CLASS__, 'can_manage' ),
+				'args'                => array(
+					'slug'    => array(
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_key',
+					),
+					'enabled' => array(
+						'type'     => 'boolean',
+						'required' => true,
+					),
+				),
+			)
+		);
+
 		// MCP tab: mint a new "Agent Builder Relay" Application Password for
 		// the current user, for manually configuring a client like Cursor.
 		register_rest_route(
@@ -388,6 +411,40 @@ class Admin_Settings_REST {
 					_n( '%d tool available.', '%d tools available.', $count, 'agent-builder' ),
 					$count
 				),
+			),
+			200
+		);
+	}
+
+	/**
+	 * MCP tab "Connected"/"Enabled" switch: turn one agent's MCP endpoint on
+	 * or off, independent of the agent's own active/inactive state.
+	 * Agentic_Relay_Connect::set_mcp_enabled() logs the change.
+	 *
+	 * @param \WP_REST_Request $request REST request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public static function mcp_toggle_agent( \WP_REST_Request $request ) {
+		$slug    = sanitize_key( (string) $request->get_param( 'slug' ) );
+		$enabled = (bool) $request->get_param( 'enabled' );
+
+		if ( ! class_exists( '\\Agentic_Relay_Connect' ) ) {
+			return new \WP_Error( 'agentic_mcp_unavailable', __( 'MCP is not available on this site.', 'agent-builder' ), array( 'status' => 500 ) );
+		}
+
+		\Agentic_Relay_Connect::set_mcp_enabled( $slug, $enabled );
+
+		// Recomputed fresh, post-toggle — the frontend updates its Status
+		// column from this one response instead of needing a full reload.
+		$readiness = \Agentic_Relay_Connect::mcp_readiness( $slug );
+
+		return new \WP_REST_Response(
+			array(
+				'ok'      => true,
+				'slug'    => $slug,
+				'enabled' => $enabled,
+				'ready'   => $readiness['ready'],
+				'reason'  => $readiness['reason'],
 			),
 			200
 		);
@@ -952,6 +1009,7 @@ class Admin_Settings_REST {
 					'url'            => rest_url( 'agentic/' . $slug . '/mcp' ),
 					'ready'          => $readiness['ready'],
 					'reason'         => $readiness['reason'],
+					'enabled'        => ! \Agentic_Relay_Connect::is_mcp_disabled( $slug ),
 					'last_connected' => $last_connected
 						? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_connected )
 						: '',

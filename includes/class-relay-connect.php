@@ -44,6 +44,13 @@ class Agentic_Relay_Connect {
 	const LAST_CONNECTED_OPTION = 'agentic_mcp_last_connected';
 
 	/**
+	 * Slugs of agents whose MCP endpoint an admin has explicitly turned off,
+	 * independent of the agent's own active/inactive state — an agent can
+	 * stay active for chat while its MCP endpoint is switched off.
+	 */
+	const DISABLED_AGENTS_OPTION = 'agentic_mcp_disabled_agents';
+
+	/**
 	 * Register hooks.
 	 */
 	public static function init(): void {
@@ -370,10 +377,63 @@ class Agentic_Relay_Connect {
 				'reason' => __( 'Manifest signature mismatch — this agent\'s tools are blocked until it is re-signed.', 'agent-builder' ),
 			);
 		}
+		if ( self::is_mcp_disabled( $slug ) ) {
+			return array(
+				'ready'  => false,
+				'reason' => __( 'MCP has been turned off for this agent.', 'agent-builder' ),
+			);
+		}
 		return array(
 			'ready'  => true,
 			'reason' => null,
 		);
+	}
+
+	/**
+	 * Whether an admin has explicitly turned off this agent's MCP endpoint,
+	 * independent of whether the agent itself is active.
+	 *
+	 * @param string $slug Agent slug.
+	 * @return bool
+	 */
+	public static function is_mcp_disabled( string $slug ): bool {
+		$disabled = get_option( self::DISABLED_AGENTS_OPTION, array() );
+		$disabled = is_array( $disabled ) ? $disabled : array();
+
+		return in_array( $slug, $disabled, true );
+	}
+
+	/**
+	 * Turn an agent's MCP endpoint on or off. Logged — this is a real access
+	 * control change, the same class of event as a manifest re-sign or a
+	 * connector approval/revocation.
+	 *
+	 * @param string $slug    Agent slug.
+	 * @param bool   $enabled True to enable, false to disable.
+	 * @return void
+	 */
+	public static function set_mcp_enabled( string $slug, bool $enabled ): void {
+		$disabled = get_option( self::DISABLED_AGENTS_OPTION, array() );
+		$disabled = is_array( $disabled ) ? $disabled : array();
+
+		$was_disabled = in_array( $slug, $disabled, true );
+		$is_a_change  = $enabled === $was_disabled; // enabling a disabled agent, or disabling an enabled one.
+
+		if ( $enabled ) {
+			$disabled = array_values( array_diff( $disabled, array( $slug ) ) );
+		} elseif ( ! $was_disabled ) {
+			$disabled[] = $slug;
+		}
+
+		update_option( self::DISABLED_AGENTS_OPTION, array_values( array_unique( $disabled ) ) );
+
+		if ( $is_a_change && class_exists( '\\Agentic\\Security_Log' ) ) {
+			\Agentic\Security_Log::log_system(
+				$enabled ? 'mcp_agent_enabled' : 'mcp_agent_disabled',
+				$slug,
+				array( 'agent' => $slug )
+			);
+		}
 	}
 
 	/**

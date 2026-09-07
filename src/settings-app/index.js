@@ -2105,6 +2105,8 @@ function MCPTab( { data } ) {
 	const [ tests, setTests ] = useState( {} );
 	const [ copied, setCopied ] = useState( {} );
 	const [ credentials, setCredentials ] = useState( data.credentials || [] );
+	const [ agentOverrides, setAgentOverrides ] = useState( {} );
+	const [ toggling, setToggling ] = useState( {} );
 
 	// data.credentials can still be [] on MCPTab's first render (bootstrap
 	// arrives one render before SettingsApp's tabData sync effect catches
@@ -2148,6 +2150,28 @@ function MCPTab( { data } ) {
 							__( 'Test failed.', 'agent-builder' ),
 					},
 				} ) );
+			} );
+	};
+
+	const toggleAgentMcp = ( slug, enabled ) => {
+		setToggling( ( prev ) => ( { ...prev, [ slug ]: true } ) );
+		apiFetch( {
+			path: REST + '/mcp-toggle-agent',
+			method: 'POST',
+			data: { slug, enabled },
+		} )
+			.then( ( res ) => {
+				setAgentOverrides( ( prev ) => ( {
+					...prev,
+					[ slug ]: {
+						enabled: res.enabled,
+						ready: res.ready,
+						reason: res.reason,
+					},
+				} ) );
+			} )
+			.finally( () => {
+				setToggling( ( prev ) => ( { ...prev, [ slug ]: false } ) );
 			} );
 	};
 
@@ -2243,13 +2267,15 @@ function MCPTab( { data } ) {
 							<tr>
 								<th>{ __( 'Agent', 'agent-builder' ) }</th>
 								<th>{ __( 'MCP URL', 'agent-builder' ) }</th>
+								<th>{ __( 'Enabled', 'agent-builder' ) }</th>
 								<th>{ __( 'Status', 'agent-builder' ) }</th>
 								<th>{ __( 'Connected', 'agent-builder' ) }</th>
 								<th />
 							</tr>
 						</thead>
 						<tbody>
-							{ agents.map( ( a ) => {
+							{ agents.map( ( raw ) => {
+								const a = { ...raw, ...( agentOverrides[ raw.slug ] || {} ) };
 								const t = tests[ a.slug ] || {};
 								return (
 									<tr key={ a.slug }>
@@ -2274,6 +2300,16 @@ function MCPTab( { data } ) {
 															'agent-builder'
 													  ) }
 											</Button>
+										</td>
+										<td>
+											<ToggleControl
+												__nextHasNoMarginBottom
+												checked={ !! a.enabled }
+												disabled={ !! toggling[ a.slug ] }
+												onChange={ ( enabled ) =>
+													toggleAgentMcp( a.slug, enabled )
+												}
+											/>
 										</td>
 										<td>
 											<span
