@@ -420,15 +420,24 @@ class Agent_Ready_Score {
 	}
 
 	/**
-	 * commerce_readiness — Commerce, medium weight, not free-fixable (no
-	 * one-click fix exists yet — see docs/commerce-readiness-brief.md's
-	 * WebMCP Bridge wrapping step, deliberately deferred to a later change).
+	 * commerce_readiness — Commerce, medium weight, not free-fixable (the
+	 * fix — activate Storefront Assistant and turn on the WebMCP Bridge —
+	 * is two existing manual toggles, not yet wired to a one-click apply
+	 * tool the way well_known_manifest's is).
 	 *
 	 * Direct first-party introspection, no REST round-trip: unlike
 	 * sitepassport.org's external scanner (which has to guess at compound
-	 * signals through an auth wall — see the brief's "two real gotchas"),
-	 * this class runs inside WordPress and can call wp_get_abilities() and
-	 * WC()->payment_gateways() directly.
+	 * signals through an auth wall — see docs/commerce-readiness-brief.md's
+	 * "two real gotchas"), this class runs inside WordPress and can call
+	 * wp_get_abilities() and WC()->payment_gateways() directly.
+	 *
+	 * The top score tier requires a live, WebMCP-exposed, write-capable
+	 * commerce tool (find_webmcp_commerce_tool(), below) — WooCommerce's own
+	 * native Abilities API presence alone (checked second, as a secondary
+	 * informational signal) is NOT enough. That API is ungated framework
+	 * plumbing; only this plugin's own WebMCP Bridge is what this check's
+	 * own promise — "an agent can call this safely through Agent Builder's
+	 * own risk gate" — actually depends on.
 	 *
 	 * A site with no commerce platform scores 100 ("not applicable" rather
 	 * than "failing") — matching sitepassport.org's index-level "always
@@ -457,6 +466,19 @@ class Agent_Ready_Score {
 			);
 		}
 
+		// The real bar this check's own docblock names — "an agent can call
+		// safely through Agent Builder's own risk gate" — is whether a
+		// commerce tool is actually WebMCP-exposed right now (see
+		// Storefront Assistant), not just whether WooCommerce's native
+		// Abilities API happens to be present. Checked first and wins
+		// outright: this plugin's own gated pathway doesn't depend on
+		// WooCommerce's Abilities API existing at all.
+		$live_tool = self::find_webmcp_commerce_tool();
+
+		// WooCommerce's own native abilities — a separate, informational
+		// signal. Presence here means the framework-level plumbing exists,
+		// not that anything is safely gated for an agent to call; an
+		// external scanner (sitepassport.org) can only ever see this one.
 		$commerce_abilities = array();
 		if ( function_exists( 'wp_get_abilities' ) ) {
 			foreach ( wp_get_abilities() as $ability ) {
@@ -467,16 +489,73 @@ class Agent_Ready_Score {
 			}
 		}
 
+		if ( $live_tool ) {
+			return self::result(
+				100,
+				'Commerce',
+				'medium',
+				false,
+				sprintf(
+					'%d payment gateway(s) configured (%s). An agent can safely transact right now via "%s" (%s agent), gated through Agent Builder\'s own approval pipeline.',
+					count( $gateways ),
+					implode( ', ', $gateways ),
+					$live_tool['tool_name'],
+					$live_tool['agent_slug']
+				)
+			);
+		}
+
 		$detail = sprintf(
-			'%d payment gateway(s) configured (%s).%s',
+			'%d payment gateway(s) configured (%s), but no commerce tool is exposed to agents through Agent Builder\'s own WebMCP Bridge yet — activate Storefront Assistant and turn on the WebMCP Bridge to close this.%s',
 			count( $gateways ),
 			implode( ', ', $gateways ),
 			empty( $commerce_abilities )
-				? ' No commerce-scoped WordPress Ability registered yet — nothing for an agent to call safely through Agent Builder\'s own risk gate.'
-				: sprintf( ' %d commerce-scoped WordPress Ability/Abilities registered.', count( $commerce_abilities ) )
+				? ' WooCommerce has not registered any commerce-scoped WordPress Ability either.'
+				: sprintf( ' WooCommerce has registered %d commerce-scoped WordPress Ability/Abilities, but that\'s a separate, ungated framework signal — not something Agent Builder itself confirms before use.', count( $commerce_abilities ) )
 		);
 
-		return self::result( empty( $commerce_abilities ) ? 50 : 100, 'Commerce', 'medium', false, $detail );
+		return self::result( empty( $commerce_abilities ) ? 50 : 65, 'Commerce', 'medium', false, $detail );
+	}
+
+	/**
+	 * Find any tool that is both webmcp_expose:true for some agent and
+	 * actually reachable (the WebMCP Bridge master switch is on), and whose
+	 * own category is 'ecommerce' — the live signal that an agent can
+	 * safely transact right now, not just that a tool file exists somewhere.
+	 * Deliberately not hardcoded to Storefront Assistant's slug: any agent a
+	 * site owner has wired up this way counts.
+	 *
+	 * @return array{agent_slug:string,tool_name:string,webmcp_context:string,risk:string}|null
+	 */
+	private static function find_webmcp_commerce_tool(): ?array {
+		// Webmcp_Bridge, Abilities_Manifest, and Tool_Loader are this
+		// plugin's own classes — already loaded in the same request as this
+		// one, same as check_well_known_manifest()'s direct call just above.
+		// A class_exists() string guard here would be a real bug, not
+		// defensiveness: 'Webmcp_Bridge' is a bare, unqualified name and
+		// class_exists() never resolves it against the current namespace
+		// (Agentic) the way a bare code reference does — it would always
+		// check the global namespace and always return false.
+		if ( ! Webmcp_Bridge::is_enabled() ) {
+			return null;
+		}
+
+		// Specifically a write-capable ecommerce tool (e.g. wc_add_to_cart) —
+		// a merely readonly one (wc_browse_products, wc_view_cart) lets an
+		// agent look but not act, which doesn't satisfy "can safely
+		// transact." Storefront Assistant exposes both kinds together; this
+		// only credits the site once the write half is actually reachable.
+		foreach ( Abilities_Manifest::get_webmcp_exposed() as $exposure ) {
+			$tool = Tool_Loader::get_instance()->get( $exposure['tool_name'] );
+			if ( ! $tool || 'ecommerce' !== $tool->get_category() ) {
+				continue;
+			}
+			if ( empty( $tool->get_annotations()['readonly'] ) ) {
+				return $exposure;
+			}
+		}
+
+		return null;
 	}
 
 	/**

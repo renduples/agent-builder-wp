@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 3.3.94
+Stable tag: 3.3.95
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -278,6 +278,9 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 The Site Passport score itself (Agent Builder → Passport) makes **zero external requests**. All eight checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, the presence of `llms.txt`, AI-crawler directives in `robots.txt`, Organization/WebSite schema markup, and commerce readiness (whether an active WooCommerce store has a payment gateway configured and a commerce ability registered for agents) — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
 
 == Changelog ==
+
+= 3.3.95 - 2026-09-08 =
+* Fix: the Agent-Ready Score's Commerce readiness check now actually looks for a live, WebMCP-exposed, write-capable commerce tool (Storefront Assistant, active, with the WebMCP Bridge turned on) before scoring 100 — previously it only checked WooCommerce's own native Abilities API, which is a separate, ungated framework signal that has nothing to do with whether this plugin itself gates a transaction. Activating or deactivating Storefront Assistant now actually moves the score.
 
 = 3.3.94 - 2026-09-08 =
 * New bundled agent, Storefront Assistant, for sites running WooCommerce: browse the published catalog and build a cart, both in wp-admin chat and — the actual point — directly in the browser via the WebMCP Bridge, so a visitor's own AI agent can shop on their behalf. Four new tools (wc_browse_products, wc_view_cart, wc_add_to_cart, wc_update_cart_item), all scoped to the calling visitor's own session — no other visitor's data is ever touched. Deliberately does not place orders or take payment: checkout stays on the store's own checkout page. Fixed a real bug in passing — a logged-in customer with no elevated WordPress capability could not use these tools via WebMCP even though an anonymous guest could, because the anonymous-safe allowlist wasn't consulted for logged-in callers; now anyone gets the same shopping capability regardless of login state.
