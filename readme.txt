@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 3.3.90
+Stable tag: 3.3.93
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -274,9 +274,12 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **Privacy Policy:** [https://sitepassport.org/privacy](https://sitepassport.org/privacy)
 
 = Site Passport (Local Only) =
-The Site Passport score itself (Agent Builder → Passport) makes **zero external requests**. All seven checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, and the presence of `llms.txt`, AI-crawler directives in `robots.txt`, and Organization/WebSite schema markup — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
+The Site Passport score itself (Agent Builder → Passport) makes **zero external requests**. All eight checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, the presence of `llms.txt`, AI-crawler directives in `robots.txt`, Organization/WebSite schema markup, and commerce readiness (whether an active WooCommerce store has a payment gateway configured and a commerce ability registered for agents) — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
 
 == Changelog ==
+
+= 3.3.93 - 2026-09-08 =
+* Agent-Ready Score adds an eighth check, Commerce readiness: on a site with WooCommerce active, scores whether a payment gateway is actually configured and whether a commerce-scoped WordPress Ability is registered for agents to call through Agent Builder's own approval gate. Sites with no commerce platform score as not applicable, never as failing. No one-click fix yet — that's a separate, larger change (wrapping WooCommerce's abilities as risk-tiered tools) still to come.
 
 = 3.3.90 - 2026-09-04 =
 * Added the Agent-Ready Score (Agent Builder → Agent-Ready): seven local, read-only checks covering MCP reachability, WebMCP tool registration, approval-gate safety, and llms.txt/robots.txt/schema.org discoverability, plus a new WebMCP Bridge (opt-in, off by default) that lets your own site register safe, low-risk tools for AI browser agents to use — search is supported out of the box, with the underlying tool contributed by the existing Support Triage agent. Three checks stay informational-only in this free tier and point to Agent Builder Pro's AI Radar for the matching one-click fix, so this feature never duplicates that existing Pro tooling.

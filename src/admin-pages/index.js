@@ -2006,7 +2006,14 @@ const AGENT_READY_CHECK_LABELS = {
 	robots_ai_directives: __( 'AI crawler directives in robots.txt', 'agent-builder' ),
 	schema_org_present: __( 'Organization/WebSite schema', 'agent-builder' ),
 	well_known_manifest: __( 'WebMCP discovery manifest', 'agent-builder' ),
+	commerce_readiness: __( 'Commerce readiness', 'agent-builder' ),
 };
+
+// Checks whose only fix path today is Pro's AI Radar agent — everything else
+// non-fixable (currently just commerce_readiness) has no fix UI at all yet,
+// so it must not show the AI Radar upsell, which can't fix it either. See
+// class-agent-ready-score.php's check_commerce_readiness() docblock.
+const PRO_FIXABLE_CHECKS = [ 'llms_txt_present', 'robots_ai_directives', 'schema_org_present' ];
 
 function AgentReadyFixList( { categories, onApplyFix, applying } ) {
 	const entries = Object.entries( categories || {} )
@@ -2037,10 +2044,14 @@ function AgentReadyFixList( { categories, onApplyFix, applying } ) {
 						>
 							{ __( 'Fix now', 'agent-builder' ) }
 						</Button>
-					) : (
+					) : PRO_FIXABLE_CHECKS.includes( id ) ? (
 						<Button variant="link" href="https://agentic-plugin.com/pricing/" target="_blank">
 							{ __( 'Fix this with AI Radar (Pro) →', 'agent-builder' ) }
 						</Button>
+					) : (
+						<span className="agentic-react-muted">
+							{ __( 'No one-click fix yet.', 'agent-builder' ) }
+						</span>
 					) }
 				</li>
 			) ) }

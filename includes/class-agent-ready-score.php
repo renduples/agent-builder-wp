@@ -4,7 +4,7 @@
  * for AI agents to discover and safely act on it.
  *
  * Every check in this class runs entirely in-process against this site's own
- * files, database, and active-plugin state. None of the seven checks makes an
+ * files, database, and active-plugin state. None of the eight checks makes an
  * outbound HTTP request — see readme.txt's "Agent-Ready Score (Local Only)"
  * External Services entry, which depends on that being true. Three checks
  * (llms_txt_present, robots_ai_directives, schema_org_present) deliberately
@@ -13,6 +13,15 @@
  * proxy signal (active-plugin detection) rather than real HTML/JSON-LD
  * parsing, because real parsing would require fetching the rendered page
  * over HTTP, which this class must never do.
+ *
+ * commerce_readiness (see docs/commerce-readiness-brief.md) is scored, not
+ * informational — a deliberate departure from sitepassport.org's own
+ * necessarily-informational Commerce category. sitepassport.org is an
+ * external scanner guessing at compound signals through an auth wall; this
+ * class runs inside WordPress with direct wp_get_abilities()/
+ * WC()->payment_gateways() access, so there's no ambiguity left to hedge —
+ * the same reasoning that already makes capability_exposure/safety_trust
+ * scorable only from in here, not from outside.
  *
  * @package    Agent_Builder
  * @subpackage Includes
@@ -93,7 +102,7 @@ class Agent_Ready_Score {
 	}
 
 	/**
-	 * Run all seven checks, compute the weighted overall score, and persist it.
+	 * Run all eight checks, compute the weighted overall score, and persist it.
 	 *
 	 * @return array Score payload: {overall, grade, categories, checked_at}.
 	 */
@@ -106,6 +115,7 @@ class Agent_Ready_Score {
 			'robots_ai_directives'     => self::check_robots_ai_directives(),
 			'schema_org_present'       => self::check_schema_org_present(),
 			'well_known_manifest'      => self::check_well_known_manifest(),
+			'commerce_readiness'       => self::check_commerce_readiness(),
 		);
 
 		$data = array(
@@ -407,6 +417,66 @@ class Agent_Ready_Score {
 		return Webmcp_Bridge::is_enabled()
 			? self::result( 100, 'Discoverability', 'low', true, '/.well-known/webmcp.json is being served.' )
 			: self::result( 0, 'Discoverability', 'low', true, 'The WebMCP Bridge is off, so no manifest is served.' );
+	}
+
+	/**
+	 * commerce_readiness — Commerce, medium weight, not free-fixable (no
+	 * one-click fix exists yet — see docs/commerce-readiness-brief.md's
+	 * WebMCP Bridge wrapping step, deliberately deferred to a later change).
+	 *
+	 * Direct first-party introspection, no REST round-trip: unlike
+	 * sitepassport.org's external scanner (which has to guess at compound
+	 * signals through an auth wall — see the brief's "two real gotchas"),
+	 * this class runs inside WordPress and can call wp_get_abilities() and
+	 * WC()->payment_gateways() directly.
+	 *
+	 * A site with no commerce platform scores 100 ("not applicable" rather
+	 * than "failing") — matching sitepassport.org's index-level "always
+	 * present, informational" choice would penalize the majority of sites
+	 * this check doesn't apply to at all.
+	 *
+	 * @return array Check result.
+	 */
+	private static function check_commerce_readiness(): array {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return self::result( 100, 'Commerce', 'medium', false, 'No commerce platform detected on this site.' );
+		}
+
+		$gateways = array();
+		if ( function_exists( 'WC' ) && WC()->payment_gateways() ) {
+			$gateways = array_keys( WC()->payment_gateways()->get_available_payment_gateways() );
+		}
+
+		if ( empty( $gateways ) ) {
+			return self::result(
+				30,
+				'Commerce',
+				'medium',
+				false,
+				'WooCommerce is active but no payment gateway is configured yet — nothing for an agent to safely transact with.'
+			);
+		}
+
+		$commerce_abilities = array();
+		if ( function_exists( 'wp_get_abilities' ) ) {
+			foreach ( wp_get_abilities() as $ability ) {
+				$name = method_exists( $ability, 'get_name' ) ? $ability->get_name() : '';
+				if ( false !== stripos( $name, 'woocommerce' ) || false !== stripos( $name, 'commerce' ) ) {
+					$commerce_abilities[] = $name;
+				}
+			}
+		}
+
+		$detail = sprintf(
+			'%d payment gateway(s) configured (%s).%s',
+			count( $gateways ),
+			implode( ', ', $gateways ),
+			empty( $commerce_abilities )
+				? ' No commerce-scoped WordPress Ability registered yet — nothing for an agent to call safely through Agent Builder\'s own risk gate.'
+				: sprintf( ' %d commerce-scoped WordPress Ability/Abilities registered.', count( $commerce_abilities ) )
+		);
+
+		return self::result( empty( $commerce_abilities ) ? 50 : 100, 'Commerce', 'medium', false, $detail );
 	}
 
 	/**
