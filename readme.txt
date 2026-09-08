@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 3.3.95
+Stable tag: 3.3.96
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -278,6 +278,9 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 The Site Passport score itself (Agent Builder → Passport) makes **zero external requests**. All eight checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, the presence of `llms.txt`, AI-crawler directives in `robots.txt`, Organization/WebSite schema markup, and commerce readiness (whether an active WooCommerce store has a payment gateway configured and a commerce ability registered for agents) — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
 
 == Changelog ==
+
+= 3.3.96 - 2026-09-08 =
+* Hash-chained the Activity/audit log (Agent Builder → Activity) so an edited or deleted entry becomes detectable after the fact, the same tamper-evidence principle already used for signed agent manifests — nothing prevents direct database access, but tampering no longer goes unnoticed. Every log entry now also snapshots which developer/vendor built the acting agent and at what version, at the moment the action happened, so that record can't silently repoint if the agent is later updated or reassigned. Added a new admin-authenticated `agentic/v1/inventory` endpoint listing every active agent, its declared tools, and each tool's currently-effective risk tier in one machine-readable document — previously that picture only existed scattered across N separate per-agent MCP endpoints. Fixed a real bug found while building this: the daily audit-log retention cleanup was silently ignoring the retention period configured in Settings → Security, always falling back to its own 30-day default instead — a site owner who set a longer retention window was not actually getting one.
 
 = 3.3.95 - 2026-09-08 =
 * Fix: the Agent-Ready Score's Commerce readiness check now actually looks for a live, WebMCP-exposed, write-capable commerce tool (Storefront Assistant, active, with the WebMCP Bridge turned on) before scoring 100 — previously it only checked WooCommerce's own native Abilities API, which is a separate, ungated framework signal that has nothing to do with whether this plugin itself gates a transaction. Activating or deactivating Storefront Assistant now actually moves the score.

@@ -75,30 +75,77 @@ class Audit_Log {
 	): int|false {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table insert.
-		$result = $wpdb->insert(
-			$wpdb->prefix . 'agentic_audit_log',
-			array(
-				'agent_id'    => $agent_id,
-				'action'      => $action,
-				'target_type' => $target_type,
-				'target_id'   => is_array( $details ) && isset( $details['id'] ) ? (string) $details['id'] : '',
-				'details'     => wp_json_encode( $details ),
-				'reasoning'   => $reasoning,
-				'mode'        => self::$mode_context,
-				'provider'    => $provider,
-				'tokens_used' => $tokens,
-				'cost'        => $cost,
-				'user_id'     => get_current_user_id(),
-				'created_at'  => gmdate( 'Y-m-d H:i:s' ),
-			)
+		$identity = self::resolve_agent_identity( $agent_id );
+
+		$data = array(
+			'agent_id'      => $agent_id,
+			'action'        => $action,
+			'target_type'   => $target_type,
+			'target_id'     => is_array( $details ) && isset( $details['id'] ) ? (string) $details['id'] : '',
+			'details'       => wp_json_encode( $details ),
+			'reasoning'     => $reasoning,
+			'mode'          => self::$mode_context,
+			'provider'      => $provider,
+			'tokens_used'   => $tokens,
+			'cost'          => $cost,
+			'user_id'       => get_current_user_id(),
+			'created_at'    => gmdate( 'Y-m-d H:i:s' ),
+			'agent_author'  => $identity['author'],
+			'agent_version' => $identity['version'],
 		);
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table insert.
+		$result = $wpdb->insert( $wpdb->prefix . 'agentic_audit_log', $data );
+
 		if ( $result ) {
+			$insert_id = $wpdb->insert_id;
+			// Snapshot the chain hash in the same request as the insert, using
+			// the exact $data just written — see Audit_Log_Integrity for why
+			// this can't be deferred to a later read of the row.
+			Audit_Log_Integrity::record( $insert_id, $data );
 			self::bust_query_cache();
+			return $insert_id;
 		}
 
-		return $result ? $wpdb->insert_id : false;
+		return false;
+	}
+
+	/**
+	 * Resolve the developer/vendor identity to snapshot into a log row at
+	 * write time, so "who was responsible for this action" is answerable
+	 * from the row alone even if the agent is later updated, reassigned, or
+	 * removed — reading it back out of the current agent.json would give the
+	 * agent's *current* attribution, not what was true when the action ran.
+	 *
+	 * 'human', 'system', and 'unknown' aren't real agents (see human_agent()'s
+	 * own special-casing of the same three slugs) — they intentionally get no
+	 * author/version rather than a misleading lookup miss.
+	 *
+	 * @param string $agent_id Agent identifier as passed to log().
+	 * @return array{author: string, version: string}
+	 */
+	private static function resolve_agent_identity( string $agent_id ): array {
+		if ( in_array( $agent_id, array( 'human', 'system', 'unknown', '' ), true ) ) {
+			return array(
+				'author'  => '',
+				'version' => '',
+			);
+		}
+
+		if ( ! class_exists( '\\Agentic_Agent_Registry' ) ) {
+			return array(
+				'author'  => '',
+				'version' => '',
+			);
+		}
+
+		$agents = \Agentic_Agent_Registry::get_instance()->get_installed_agents();
+		$agent  = $agents[ $agent_id ] ?? null;
+
+		return array(
+			'author'  => is_array( $agent ) ? (string) ( $agent['author'] ?? '' ) : '',
+			'version' => is_array( $agent ) ? (string) ( $agent['version'] ?? '' ) : '',
+		);
 	}
 
 	/**
@@ -289,21 +336,27 @@ class Audit_Log {
 	/**
 	 * Run the scheduled retention cleanup.
 	 *
-	 * Retention period defaults to 90 days and can be adjusted via the
-	 * 'agentic_audit_retention_days' filter.
+	 * Reads the same 'agentic_retention_audit_log' option the Settings →
+	 * Security tab writes (Admin_Settings_REST::update_tab()) and GDPR::
+	 * run_cleanup() already reads for its own, separate audit/security-log
+	 * sweep. Previously this method read an unrelated
+	 * 'agentic_audit_retention_days' *filter* that nothing in the codebase
+	 * ever hooked — so a site owner's configured retention was silently
+	 * ignored by this cron path, which always fell back to its own 30-day
+	 * default regardless of what Settings showed. That meant the daily
+	 * 'agentic_cleanup_audit_log' cron (this method) and GDPR::run_cleanup()'s
+	 * daily sweep could disagree about how long to keep the exact same rows.
+	 * Reading the real option makes both paths agree, and honors "0 = keep
+	 * indefinitely" the same way GDPR::run_cleanup() already does.
 	 *
 	 * @return int Number of deleted entries.
 	 */
 	public function cleanup_expired(): int {
-		/**
-		 * Filter the number of days to retain audit log entries.
-		 *
-		 * @param int $days Default 30.
-		 */
-		$days = (int) apply_filters( 'agentic_audit_retention_days', 30 );
+		$days = (int) get_option( 'agentic_retention_audit_log', 30 );
 
 		if ( $days < 1 ) {
-			$days = 90;
+			// 0 (or an invalid negative value) means keep indefinitely.
+			return 0;
 		}
 
 		return $this->cleanup( $days );

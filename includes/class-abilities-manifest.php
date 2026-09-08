@@ -517,6 +517,19 @@ class Abilities_Manifest {
 	}
 
 	/**
+	 * The site-specific secret used for every HMAC-based integrity check this
+	 * plugin performs — manifest signing here, and the audit-log hash chain
+	 * in Audit_Log_Integrity. One key source, so there's only one place that
+	 * ever has to reason about where it comes from or how it degrades when
+	 * AUTH_SALT isn't defined (e.g. a very old wp-config.php).
+	 *
+	 * @return string
+	 */
+	public static function get_integrity_key(): string {
+		return defined( 'AUTH_SALT' ) ? AUTH_SALT : 'agentic-fallback-salt';
+	}
+
+	/**
 	 * Generate an HMAC-SHA256 signature for an agent's abilities.json.
 	 *
 	 * Uses the site's AUTH_SALT as the secret key so signatures are
@@ -537,8 +550,7 @@ class Abilities_Manifest {
 			return null;
 		}
 
-		$key = defined( 'AUTH_SALT' ) ? AUTH_SALT : 'agentic-fallback-salt';
-		return hash_hmac( 'sha256', $contents, $key );
+		return hash_hmac( 'sha256', $contents, self::get_integrity_key() );
 	}
 
 	/**
