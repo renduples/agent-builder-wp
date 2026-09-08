@@ -4,12 +4,12 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 3.3.93
+Stable tag: 3.3.94
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create, train, and orchestrate autonomous AI agents, chatbots, and scheduled automations. 10 free agents, multi-LLM support, and MCP ready.
+Create, train, and orchestrate autonomous AI agents, chatbots, and scheduled automations. 11 free agents, multi-LLM support, and MCP ready.
 
 == Description ==
 
@@ -21,7 +21,7 @@ Equipped with a **Basic / Advanced interface switch**, Agent Builder is designed
 
 ### 🚀 Zero-Code Simplicity for Site Owners
 
-* **10 Free Built-In Agents:**
+* **11 Free Built-In Agents:**
   * ✍️ **Content Writer:** Researches, writes, edits, and formats blog posts and pages.
   * 🔍 **SEO Optimizer:** Audits on-page content and proposes keyword and meta improvements.
   * 🛡️ **Site Health Sentinel:** Continuously checks performance, database health, and security alerts.
@@ -32,6 +32,7 @@ Equipped with a **Basic / Advanced interface switch**, Agent Builder is designed
   * 📰 **Editorial Director:** Plans editorial calendars and coordinates publishing workflows.
   * 👤 **User Assistant:** Manages member outreach, onboarding, and role-based permissions.
   * 🧩 **Skills Assistant:** Discovers and imports community skills to teach agents new capabilities.
+  * 🛍️ **Storefront Assistant:** Helps visitors browse your WooCommerce catalog and build a cart — including directly in the browser via WebMCP.
 * **Human-in-the-Loop Safety:** Sensitive actions (publishing content, updating settings, deleting data) pause in an **Approvals Queue** for one-click review before anything touches your live site.
 * **Embed Everywhere:** Drop responsive chat widgets on any page using native **Gutenberg blocks**, shortcodes, or wp-admin launchers.
 * **100% Free Core Knowledge Wiki:** Train agents on your company guidelines, docs, or site content using the local Open Knowledge Framework (OKF) wiki.
@@ -89,10 +90,10 @@ Agent Builder allows you to create, train, and orchestrate autonomous AI agents 
 Standard chatbot plugins simply stream text from an API endpoint. Agent Builder gives agents permission-controlled tools to interact directly with your site—such as querying posts, drafting content, and checking performance—backed by an audit log and supervised approval queue.
 
 = Do I need coding skills to use Agent Builder? =
-No. The plugin includes a Basic interface mode and 10 pre-configured agents. You can assign tasks, adjust settings, and train custom assistants using natural language.
+No. The plugin includes a Basic interface mode and 11 pre-configured agents. You can assign tasks, adjust settings, and train custom assistants using natural language.
 
 = Is Agent Builder free? =
-Yes. The free core plugin includes all 10 bundled agents, the complete tools/skills hub, the Approvals queue, the local OKF Knowledge wiki, and multi-provider BYOK support. Advanced hosted vector embeddings and cloud media generation are available via optional Agent Builder Pro add-ons.
+Yes. The free core plugin includes all 11 bundled agents, the complete tools/skills hub, the Approvals queue, the local OKF Knowledge wiki, and multi-provider BYOK support. Advanced hosted vector embeddings and cloud media generation are available via optional Agent Builder Pro add-ons.
 
 = Where is my data sent? =
 When using cloud LLM providers, conversation context and tool parameters are sent directly to your chosen provider via their official API (see External Services below). If you use Ollama or a local endpoint, 100% of your data stays on your local server.
@@ -277,6 +278,9 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 The Site Passport score itself (Agent Builder → Passport) makes **zero external requests**. All eight checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, the presence of `llms.txt`, AI-crawler directives in `robots.txt`, Organization/WebSite schema markup, and commerce readiness (whether an active WooCommerce store has a payment gateway configured and a commerce ability registered for agents) — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
 
 == Changelog ==
+
+= 3.3.94 - 2026-09-08 =
+* New bundled agent, Storefront Assistant, for sites running WooCommerce: browse the published catalog and build a cart, both in wp-admin chat and — the actual point — directly in the browser via the WebMCP Bridge, so a visitor's own AI agent can shop on their behalf. Four new tools (wc_browse_products, wc_view_cart, wc_add_to_cart, wc_update_cart_item), all scoped to the calling visitor's own session — no other visitor's data is ever touched. Deliberately does not place orders or take payment: checkout stays on the store's own checkout page. Fixed a real bug in passing — a logged-in customer with no elevated WordPress capability could not use these tools via WebMCP even though an anonymous guest could, because the anonymous-safe allowlist wasn't consulted for logged-in callers; now anyone gets the same shopping capability regardless of login state.
 
 = 3.3.93 - 2026-09-08 =
 * Agent-Ready Score adds an eighth check, Commerce readiness: on a site with WooCommerce active, scores whether a payment gateway is actually configured and whether a commerce-scoped WordPress Ability is registered for agents to call through Agent Builder's own approval gate. Sites with no commerce platform score as not applicable, never as failing. No one-click fix yet — that's a separate, larger change (wrapping WooCommerce's abilities as risk-tiered tools) still to come.

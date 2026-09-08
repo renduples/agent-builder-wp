@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agentic-plugin.com/schemas/agent/v1.json",
+  "slug": "storefront-assistant",
+  "name": "Storefront Assistant",
+  "description": "Helps visitors browse your WooCommerce catalog and build a cart — in wp-admin chat, or directly in the browser via WebMCP for AI agents visiting your store. Never places an order or takes payment; the shopper always completes checkout themselves.",
+  "category": "ecommerce",
+  "icon": "🛍️",
+  "version": "1.0.0",
+  "author": "Agent Builder",
+  "author_uri": "https://agentic-plugin.com",
+  "capabilities": [ "read" ],
+  "tools": [
+    "wc_browse_products",
+    "wc_view_cart",
+    "wc_add_to_cart",
+    "wc_update_cart_item"
+  ],
+  "suggested_prompts": [
+    "What products do you have under $50?",
+    "Add the blue medium t-shirt to my cart.",
+    "What's in my cart right now?",
+    "Remove the candle from my cart."
+  ],
+  "welcome_message": "Hi! I'm the Storefront Assistant. I can help you find products and build your cart — just tell me what you're looking for. When you're ready, you'll complete checkout yourself on our regular checkout page."
+}

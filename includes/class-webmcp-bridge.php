@@ -52,8 +52,27 @@ class Webmcp_Bridge {
 	 * anything beyond already-public content, regardless of what arguments
 	 * an anonymous caller passes (see search_content's own is_user_logged_in()
 	 * guard on its `status` argument for the pattern to follow).
+	 *
+	 * Two safety classes live here, not one:
+	 *  - Readonly disclosure-safe (search_content, wc_browse_products,
+	 *    wc_view_cart): never returns anything beyond what's already public,
+	 *    or beyond the caller's own already-visible session data.
+	 *  - Session-scoped mutation-safe (wc_add_to_cart, wc_update_cart_item):
+	 *    not readonly, but every write is confined to the calling browser's
+	 *    own ephemeral WooCommerce cart — no other visitor's data is ever
+	 *    touched, no money moves, and the change is fully reversible. Being
+	 *    logged in only adds trust, never removes it, so permission_execute()
+	 *    below treats this whole list as safe for any caller, not just an
+	 *    anonymous one — a guest and a logged-in customer get the same
+	 *    shopping capability.
 	 */
-	public const ANONYMOUS_SAFE_TOOLS = array( 'search_content' );
+	public const ANONYMOUS_SAFE_TOOLS = array(
+		'search_content',
+		'wc_browse_products',
+		'wc_view_cart',
+		'wc_add_to_cart',
+		'wc_update_cart_item',
+	);
 
 	/**
 	 * Register all hooks.
@@ -162,24 +181,35 @@ class Webmcp_Bridge {
 			return new \WP_Error( 'webmcp_cross_origin', __( 'Cross-origin WebMCP calls are not allowed.', 'agent-builder' ), array( 'status' => 403 ) );
 		}
 
-		// Anonymous visitors: 'readonly' is NOT a safe proxy for "safe to
-		// disclose publicly" — plenty of readonly, NONE/LOW-risk tools return
-		// data that requires a WP capability to see anywhere else in this
-		// plugin (admin usernames/emails via list_privileged_users/
-		// get_author_list, failed-login counts via get_security_overview,
-		// draft/private posts via list_posts' own status:'any' default with
-		// zero arguments needed). A site owner can still manually set
-		// webmcp_expose:true on any of those via the Advanced tab — this is
-		// the fail-closed backstop that protects an anonymous caller
-		// regardless of that manifest setting: only a small, explicitly
-		// vetted-for-public-disclosure allowlist is ever reachable without
+		// ANONYMOUS_SAFE_TOOLS is vetted safe for literally anyone — logged in
+		// or not — so it's checked before branching on login state at all.
+		// Being logged in only adds trust, never removes it: a tool that's
+		// safe for a total stranger cannot become unsafe for a signed-in
+		// customer. Without this, a logged-in shopper with no elevated WP
+		// capability (the normal case — a WooCommerce customer account has
+		// none) would fail the generic capability check below for any
+		// non-readonly tool on this list (wc_add_to_cart, wc_update_cart_item),
+		// while an anonymous guest calling the exact same tool would succeed
+		// — logging in would make shopping less possible, which is backwards.
+		if ( in_array( $tool_name, self::ANONYMOUS_SAFE_TOOLS, true ) ) {
+			return true;
+		}
+
+		// Anonymous visitors, everything else: 'readonly' is NOT a safe proxy
+		// for "safe to disclose publicly" — plenty of readonly, NONE/LOW-risk
+		// tools return data that requires a WP capability to see anywhere
+		// else in this plugin (admin usernames/emails via
+		// list_privileged_users/get_author_list, failed-login counts via
+		// get_security_overview, draft/private posts via list_posts' own
+		// status:'any' default with zero arguments needed). A site owner can
+		// still manually set webmcp_expose:true on any of those via the
+		// Advanced tab — this is the fail-closed backstop that protects an
+		// anonymous caller regardless of that manifest setting: only the
+		// small, explicitly vetted allowlist above is ever reachable without
 		// being logged in, the same way HIGH/EXTREME risk can never be
 		// reached via MCP no matter what a manifest declares.
 		if ( ! is_user_logged_in() ) {
-			if ( ! in_array( $tool_name, self::ANONYMOUS_SAFE_TOOLS, true ) ) {
-				return new \WP_Error( 'webmcp_login_required', __( 'You must be logged in to use this action.', 'agent-builder' ), array( 'status' => 401 ) );
-			}
-			return true;
+			return new \WP_Error( 'webmcp_login_required', __( 'You must be logged in to use this action.', 'agent-builder' ), array( 'status' => 401 ) );
 		}
 
 		// Logged in: always the tool's own required capability — readonly

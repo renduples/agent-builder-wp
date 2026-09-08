@@ -267,6 +267,13 @@ class Risk_Level {
 		// Moves money.
 		'wc_create_refund'                     => self::HIGH,
 
+		// Mutates the visitor's own session cart. No money moves and no other
+		// visitor's data is touched, but a write should never silently
+		// resolve to risk 'none' by omission — same principle as the Agent
+		// Orchestrator deploy-surface floors below.
+		'wc_add_to_cart'                       => self::LOW,
+		'wc_update_cart_item'                  => self::LOW,
+
 		// Irreversibly destroys user data.
 		'delete_form'                          => self::HIGH,
 

@@ -50,7 +50,7 @@ class Enable_Webmcp_Defaults extends \Agentic\Tool_Base {
 	}
 
 	public function get_description(): string {
-		return 'Expose a small, curated set of genuinely public-safe tools (currently just search_content) to the WebMCP frontend surface. Never overwrites a tool the site owner already explicitly opted out (webmcp_expose:false), and never expands this list to arbitrary readonly/low-risk tools.';
+		return 'Expose a small, curated set of genuinely public-safe, readonly tools (search_content, and the WooCommerce browsing/cart-reading tools where WooCommerce is active) to the WebMCP frontend surface. Never overwrites a tool the site owner already explicitly opted out (webmcp_expose:false), and never expands this list to arbitrary readonly/low-risk tools.';
 	}
 
 	public function get_category(): string {
