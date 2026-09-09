@@ -1460,6 +1460,14 @@ class Admin_Pages_REST {
 		);
 		$limit         = $period_limits[ $period ] ?? 500;
 
+		$integrity = null;
+		if ( 'audit' === $tab && class_exists( Audit_Log_Integrity::class ) ) {
+			// Only computed for the tab that actually shows this table — walks
+			// every row with no chunking, so it's deliberately not run on every
+			// Activity page load regardless of which tab is open.
+			$integrity = Audit_Log_Integrity::verify_chain();
+		}
+
 		if ( 'audit' === $tab && class_exists( Audit_Log::class ) ) {
 			$log = new Audit_Log();
 			// Hide noisy chat_start/complete by default (same as classic audit page).
@@ -1636,6 +1644,7 @@ class Admin_Pages_REST {
 				),
 			),
 			'is_advanced'    => $is_advanced,
+			'integrity'      => $integrity,
 			'interface_url'  => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
 			// Built by hand (not wp_nonce_url()): that helper HTML-entity-escapes
 			// the "&" separators for embedding in server-rendered HTML, but this

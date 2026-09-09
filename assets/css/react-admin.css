@@ -173,6 +173,13 @@
 	color: #9a4a1f;
 }
 
+/* Generic danger variant — e.g. Activity's audit-log integrity badge when
+   the hash chain is broken. Must come after the base rule to win. */
+.agentic-react-badge--danger {
+	background: #d63638;
+	color: #fff;
+}
+
 .agentic-react-muted {
 	color: #646970;
 	font-size: 12px;

@@ -4,7 +4,7 @@ Tags: ai, chatbot, automation, llm, mcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 3.3.96
+Stable tag: 3.3.97
 Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -278,6 +278,9 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 The Site Passport score itself (Agent Builder → Passport) makes **zero external requests**. All eight checks — MCP reachability, WebMCP tool registration, approval-gate configuration, the `/.well-known/webmcp.json` manifest, the presence of `llms.txt`, AI-crawler directives in `robots.txt`, Organization/WebSite schema markup, and commerce readiness (whether an active WooCommerce store has a payment gateway configured and a commerce ability registered for agents) — are computed entirely from this site's own local files, database, and active-plugin state. Nothing is sent anywhere unless you separately choose "Submit to Directory" above.
 
 == Changelog ==
+
+= 3.3.97 - 2026-09-09 =
+* Follow-up to 3.3.94/3.3.96: Storefront Assistant's four tools no longer ship with WebMCP exposure pre-enabled — the two read-only tools are still one click away via the existing "Turn on WebMCP defaults" fix, and the two cart-mutating tools now require the same deliberate per-tool toggle every other write-capable tool already needs, instead of riding along the moment the WebMCP Bridge master switch is on for an unrelated reason. Also added a visible "Log integrity: Verified / Tampering detected" indicator to Activity → Timeline for 3.3.96's hash-chained audit log, which previously had no UI at all — only a REST endpoint.
 
 = 3.3.96 - 2026-09-08 =
 * Hash-chained the Activity/audit log (Agent Builder → Activity) so an edited or deleted entry becomes detectable after the fact, the same tamper-evidence principle already used for signed agent manifests — nothing prevents direct database access, but tampering no longer goes unnoticed. Every log entry now also snapshots which developer/vendor built the acting agent and at what version, at the moment the action happened, so that record can't silently repoint if the agent is later updated or reassigned. Added a new admin-authenticated `agentic/v1/inventory` endpoint listing every active agent, its declared tools, and each tool's currently-effective risk tier in one machine-readable document — previously that picture only existed scattered across N separate per-agent MCP endpoints. Fixed a real bug found while building this: the daily audit-log retention cleanup was silently ignoring the retention period configured in Settings → Security, always falling back to its own 30-day default instead — a site owner who set a longer retention window was not actually getting one.

@@ -1691,6 +1691,35 @@ function LogsView( { data, reload } ) {
 				) }
 			</p>
 
+			{ data.tab === 'audit' && data.integrity && (
+				<p className="agentic-react-muted">
+					{ __( 'Log integrity:', 'agent-builder' ) }{ ' ' }
+					<span
+						className={
+							'agentic-react-badge' +
+							( data.integrity.valid ? '' : ' agentic-react-badge--danger' )
+						}
+						title={
+							data.integrity.valid
+								? sprintf(
+										/* translators: %d: number of log entries checked */
+										__( '%d entries checked, chain intact.', 'agent-builder' ),
+										data.integrity.checked || 0
+								  )
+								: sprintf(
+										/* translators: %d: id of the first entry where the hash chain broke */
+										__( 'Chain broken at entry #%d — an entry was edited or deleted after the fact.', 'agent-builder' ),
+										data.integrity.broken_at_id || 0
+								  )
+						}
+					>
+						{ data.integrity.valid
+							? __( 'Verified', 'agent-builder' )
+							: __( 'Tampering detected', 'agent-builder' ) }
+					</span>
+				</p>
+			) }
+
 			{ /* Summary metrics */ }
 			<div className="agentic-react-activity-stats">
 				<div className="agentic-react-activity-stat">
