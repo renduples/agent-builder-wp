@@ -6,26 +6,18 @@
   "abilities": {
     "wc_browse_products": {
       "risk": "none",
-      "webmcp_expose": true,
-      "webmcp_context": "frontend",
       "reason": "Read-only search of the store's own published catalog — the same content any visitor already sees on the shop page. Never returns a draft/pending/private product regardless of arguments passed."
     },
     "wc_view_cart": {
       "risk": "none",
-      "webmcp_expose": true,
-      "webmcp_context": "frontend",
       "reason": "Reads only the calling browser's own session cart — the same data the store's own cart page already shows that visitor."
     },
     "wc_add_to_cart": {
       "risk": "low",
-      "webmcp_expose": true,
-      "webmcp_context": "frontend",
       "reason": "Mutates only the calling visitor's own session cart — no money moves, no other visitor is affected, and the change is fully reversible via wc_update_cart_item."
     },
     "wc_update_cart_item": {
       "risk": "low",
-      "webmcp_expose": true,
-      "webmcp_context": "frontend",
       "reason": "Changes or removes a line in the calling visitor's own session cart — same safety class as wc_add_to_cart."
     }
   }
