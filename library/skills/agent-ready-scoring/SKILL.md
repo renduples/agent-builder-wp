@@ -1,13 +1,13 @@
 ---
 name: agent-ready-scoring
-description: "Explain and interpret the Site Passport score — a 7-check readiness score covering MCP reachability, WebMCP tool registration, approval-gate safety, and llms.txt/robots.txt/schema.org discoverability. Use when the user asks how accessible/visible their site is to AI agents, what the score means, what a specific check does, or how to raise it. Call check_agent_readiness first, then explain the result using this skill."
+description: "Explain and interpret the Site Passport score — an 8-check readiness score covering MCP reachability, WebMCP tool registration, approval-gate safety, llms.txt/robots.txt/schema.org discoverability, and commerce readiness. Use when the user asks how accessible/visible their site is to AI agents, what the score means, what a specific check does, or how to raise it. Call check_agent_readiness first, then explain the result using this skill."
 ---
 
 # Site Passport
 
 ## What it measures
 
-Seven checks, each weighted high/medium/low, combined into an overall score (0-100) and a letter grade (A-F):
+Eight checks, each weighted high/medium/low, combined into an overall score (0-100) and a letter grade (A-F):
 
 | Check | Category | Weight | Free fix available? |
 |---|---|---|---|
@@ -18,8 +18,9 @@ Seven checks, each weighted high/medium/low, combined into an overall score (0-1
 | `robots_ai_directives` | Bot access control | medium | No — Agent Builder Pro (AI Radar) |
 | `schema_org_present` | Content | medium | No — Agent Builder Pro (AI Radar) |
 | `well_known_manifest` | Discoverability | low | Yes |
+| `commerce_readiness` | Commerce | medium | No one-click fix yet |
 
-All seven checks run locally, in-process, with zero outbound HTTP requests.
+All eight checks run locally, in-process, with zero outbound HTTP requests. `commerce_readiness` only applies to sites with an active commerce platform (currently WooCommerce) — a site with none scores 100/not-applicable, never a failure. On a WooCommerce site it checks for a configured payment gateway and, at the top tier, a live WebMCP-exposed commerce tool (the bundled Storefront Assistant agent) an AI agent can actually transact through via this plugin's own risk gate — WooCommerce's own native Abilities API presence alone is a secondary, informational signal only.
 
 ## How to read a result
 
@@ -33,7 +34,7 @@ All seven checks run locally, in-process, with zero outbound HTTP requests.
 
 The four checks marked "Yes" above have real one-click fixes available in wp-admin → Passport, and corresponding tools you may be asked to run directly:
 - `resign_agent_manifest` — re-signs any active agent whose abilities.json signature has gone stale.
-- `enable_webmcp_defaults` — exposes only a small, hand-curated allowlist of tools known to be genuinely safe for an anonymous public visitor (currently just `search_content`), never a blanket sweep of readonly/low-risk tools — risk tiers designed for the trusted wp-admin chat context are not a safe proxy for "safe to expose to anyone on the internet."
+- `enable_webmcp_defaults` — exposes only a small, hand-curated allowlist of tools known to be genuinely safe for an anonymous public visitor (`search_content`, plus the read-only WooCommerce browsing tools where WooCommerce is active — the write-capable cart tools ship exposed directly on Storefront Assistant's own manifest instead, not through this tool), never a blanket sweep of readonly/low-risk tools — risk tiers designed for the trusted wp-admin chat context are not a safe proxy for "safe to expose to anyone on the internet."
 - `configure_approval_gate` — turns off WebMCP exposure for anything exposed above a safe risk tier (never lowers a tool's own declared risk).
 - `enable_agent_readiness` — the master WebMCP Bridge switch; also backs `webmcp_tools_registered` and `well_known_manifest`.
 
@@ -43,4 +44,4 @@ The four checks marked "Yes" above have real one-click fixes available in wp-adm
 
 ## Explaining the score conversationally
 
-Lead with the overall grade and the single highest-impact fixable issue (usually the highest-weight check that scored 0 or low), not a recitation of all seven rows. Offer to run a free fix directly when one exists and the user confirms; otherwise point to wp-admin → Passport for the fuller breakdown and Pro upsell CTAs.
+Lead with the overall grade and the single highest-impact fixable issue (usually the highest-weight check that scored 0 or low), not a recitation of all eight rows. Offer to run a free fix directly when one exists and the user confirms; otherwise point to wp-admin → Passport for the fuller breakdown and Pro upsell CTAs.
