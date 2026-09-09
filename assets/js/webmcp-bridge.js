@@ -18,7 +18,13 @@
  *     submit the visitor's own native DOM form directly. These never touch
  *     the REST API or Tool_Executor: submitting a form the same way the
  *     visitor could themselves is not a new risk surface, and inventing a
- *     generic "send arbitrary email via WP" server tool would be.
+ *     generic "send arbitrary email via WP" server tool would be. Detected
+ *     forms also get WebMCP's declarative attributes (toolname/
+ *     tooldescription/toolparamdescription/toolautosubmit) set directly on
+ *     the markup, forward-compatible with the spec's separate declarative
+ *     registration surface — see addDeclarativeToolAttributes() below for
+ *     why this runs alongside the imperative registerTool() call, not
+ *     instead of it.
  *
  * @package Agent_Builder
  */
@@ -207,7 +213,59 @@
 		} );
 	}
 
+	/**
+	 * Mark up a form with WebMCP's declarative tool attributes (toolname /
+	 * tooldescription / toolautosubmit on the form, toolparamdescription on
+	 * each field) alongside the imperative registerTool() call below.
+	 *
+	 * This is forward-compatible markup, not an active mechanism yet: the
+	 * declarative synthesis algorithm is still a TODO in the core WebMCP spec
+	 * text (webmachinelearning/webmcp's index.bs) — only its separate
+	 * declarative-api-explainer.md proposal defines these attribute names,
+	 * and no shipping browser (including Chrome's origin trial, which only
+	 * implements the imperative document.modelContext.registerTool() API)
+	 * reads them yet. Setting them is harmless either way — an
+	 * unsupported/not-yet-supporting browser just sees inert HTML attributes
+	 * — so this runs unconditionally alongside the imperative registration
+	 * rather than instead of it. If a future browser starts synthesizing
+	 * tools from these attributes on its own, a form carrying both could
+	 * register twice; revisit once any real client actually implements this
+	 * side of the spec, not before.
+	 *
+	 * toolautosubmit is set to match this bridge's own existing behavior
+	 * (fillAndSubmitForm() already submits without a visitor confirmation
+	 * step) — it doesn't grant the declarative path any capability the
+	 * imperative one doesn't already have.
+	 */
+	function addDeclarativeToolAttributes( form, name, description ) {
+		if ( ! form.hasAttribute( 'toolname' ) ) {
+			form.setAttribute( 'toolname', name );
+		}
+		if ( description && ! form.hasAttribute( 'tooldescription' ) ) {
+			form.setAttribute( 'tooldescription', description );
+		}
+		if ( ! form.hasAttribute( 'toolautosubmit' ) ) {
+			form.setAttribute( 'toolautosubmit', '' );
+		}
+
+		form.querySelectorAll( 'input[name], textarea[name], select[name]' ).forEach( function ( field ) {
+			var type = ( field.getAttribute( 'type' ) || 'text' ).toLowerCase();
+			if ( 'hidden' === type || 'file' === type || 'submit' === type || 'button' === type ) {
+				return;
+			}
+			if ( field.hasAttribute( 'toolparamdescription' ) ) {
+				return;
+			}
+			var desc = field.getAttribute( 'aria-label' ) || field.getAttribute( 'placeholder' ) || field.getAttribute( 'name' );
+			if ( desc ) {
+				field.setAttribute( 'toolparamdescription', desc );
+			}
+		} );
+	}
+
 	function registerFormTool( name, description, form ) {
+		addDeclarativeToolAttributes( form, name, description );
+
 		try {
 			MODEL_CONTEXT.registerTool( {
 				name: name,
