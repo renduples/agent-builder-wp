@@ -206,7 +206,10 @@ class Admin_Menu_Handler {
 			fn() => $this->render_page( 'approvals' )
 		);
 
-		// Usage / Costs page is registered by Agent Builder Pro.
+		// Usage / Costs is a Pro screen. Free registers a locked Advanced-only
+		// nav entry (not Basic — upsell is a power-user concern). Skip when Pro
+		// already owns the real page (same slug agentic-costs).
+		$this->register_locked_usage_costs();
 
 		// Passport (page title "Site Passport") — always shown in the menu,
 		// same as every other page here; Basic/Advanced only ever affects
@@ -434,6 +437,45 @@ class Admin_Menu_Handler {
 		 * @param array $catalog Catalog keyed by action slug.
 		 */
 		return apply_filters( 'agentic_dashboard_quick_actions_catalog', $catalog );
+	}
+
+	/**
+	 * Locked "Usage & Costs" nav entry for the free plugin.
+	 *
+	 * Visible only in Advanced mode, with a small Pro badge. The page is an
+	 * honest explanation plus the same pricing link used in page footers —
+	 * not a fake costs UI. Hidden (empty parent) in Basic so a bookmark still
+	 * resolves. No-op when Pro already registered `agentic-costs`.
+	 *
+	 * @return void
+	 */
+	private function register_locked_usage_costs(): void {
+		global $submenu;
+
+		if ( isset( $submenu['agent-builder'] ) && is_array( $submenu['agent-builder'] ) ) {
+			foreach ( $submenu['agent-builder'] as $item ) {
+				if ( isset( $item[2] ) && 'agentic-costs' === $item[2] ) {
+					return;
+				}
+			}
+		}
+
+		$parent = self::is_advanced_mode() ? 'agent-builder' : '';
+		$title  = sprintf(
+			/* translators: 1: page name, 2: "Pro" badge */
+			'%1$s <span class="agentic-badge-pill-grey">%2$s</span>',
+			esc_html__( 'Usage & Costs', 'agent-builder' ),
+			esc_html__( 'Pro', 'agent-builder' )
+		);
+
+		add_submenu_page(
+			$parent,
+			__( 'Agent Builder — Usage & Costs', 'agent-builder' ),
+			$title,
+			'agentic_view_dashboard',
+			'agentic-costs',
+			fn() => $this->render_page( 'costs-locked' )
+		);
 	}
 
 	/**
@@ -870,6 +912,8 @@ class Admin_Menu_Handler {
 			$policy = __( 'Approvals keep high-risk tool calls under human control before they change your site.', 'agent-builder' );
 		} elseif ( 'agentic-audit-log' === $page || 'agentic-logs' === $page ) {
 			$policy = __( 'Activity helps you understand what agents did. Logs are local; retention follows your Security settings.', 'agent-builder' );
+		} elseif ( 'agentic-costs' === $page ) {
+			$policy = __( 'Usage & Costs is part of Agent Builder Pro. The free plugin does not meter spend.', 'agent-builder' );
 		} elseif ( 'agentic-settings' === $page ) {
 			$policy = match ( $tab ) {
 				'interface' => __( 'Interface settings change how chat looks and how agents address people. Theme applies to admin and frontend chat.', 'agent-builder' ),
