@@ -660,43 +660,6 @@ class Admin_Menu_Handler {
 	}
 
 	/**
-	 * Handle the Basic/Advanced UI mode toggle (admin-post).
-	 *
-	 * @return void
-	 */
-	public function handle_set_ui_mode(): void {
-		if ( ! current_user_can( 'agentic_manage_settings' ) && ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to change the interface mode.', 'agent-builder' ) );
-		}
-		check_admin_referer( 'agentic_set_ui_mode' );
-
-		$mode = isset( $_POST['agentic_ui_mode'] ) ? sanitize_key( wp_unslash( $_POST['agentic_ui_mode'] ) ) : 'basic';
-		if ( ! in_array( $mode, array( 'basic', 'advanced' ), true ) ) {
-			$mode = 'basic';
-		}
-		$prev = (string) get_option( 'agentic_ui_mode', 'basic' );
-		update_option( 'agentic_ui_mode', $mode, false );
-		if ( $prev !== $mode && class_exists( Audit_Log::class ) ) {
-			Audit_Log::log_admin(
-				'ui_mode_changed',
-				'settings',
-				array(
-					'id'   => $mode,
-					'from' => $prev,
-					'to'   => $mode,
-				)
-			);
-		}
-
-		$redirect = wp_get_referer();
-		if ( ! $redirect ) {
-			$redirect = admin_url( 'admin.php?page=agent-builder' );
-		}
-		wp_safe_redirect( $redirect );
-		exit;
-	}
-
-	/**
 	 * Handle the Automatic Agent Updates opt-in/opt-out toggle (admin-post).
 	 *
 	 * @return void

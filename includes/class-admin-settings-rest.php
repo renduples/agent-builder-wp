@@ -1140,8 +1140,48 @@ class Admin_Settings_REST {
 	// ── Savers ────────────────────────────────────────────────────────────
 
 	/**
-	 * @param array<string,mixed> $data Data.
+	 * Persist the site-wide Basic/Advanced default.
+	 *
+	 * Single writer for the `agentic_ui_mode` option. Dashboard REST
+	 * (`set_ui_mode` action), Settings → Interface (`save_interface()`),
+	 * and the classic-PHP fallback (`UI_Settings_REST`) all call through
+	 * here so there is exactly one `update_option( 'agentic_ui_mode', ... )`
+	 * in the codebase. Option name and values (`basic` / `advanced`) are
+	 * part of the Agent Builder Pro contract and must not change.
+	 *
+	 * Invalid values are rejected (no write), matching `save_interface()`
+	 * and `/ui-settings`. Callers that historically coerced invalid input
+	 * to `'basic'` (Dashboard) must do that before calling this method.
+	 *
+	 * @param string $mode 'basic' or 'advanced'.
+	 * @param string $via  Optional audit-log source tag. Empty keeps the
+	 *                     historical payload (Dashboard / Settings app);
+	 *                     `'ui_settings_rest'` preserves the classic
+	 *                     fallback's extra `via` field.
+	 * @return bool True if the value was accepted and written.
 	 */
+	public static function set_ui_mode( string $mode, string $via = '' ): bool {
+		if ( ! in_array( $mode, array( 'basic', 'advanced' ), true ) ) {
+			return false;
+		}
+
+		$prev = (string) get_option( 'agentic_ui_mode', 'basic' );
+		update_option( 'agentic_ui_mode', $mode, false );
+		if ( $prev !== $mode && class_exists( Audit_Log::class ) ) {
+			$details = array(
+				'id'   => $mode,
+				'from' => $prev,
+				'to'   => $mode,
+			);
+			if ( '' !== $via ) {
+				$details['via'] = $via;
+			}
+			Audit_Log::log_admin( 'ui_mode_changed', 'settings', $details );
+		}
+
+		return true;
+	}
+
 	/**
 	 * @param array<string,mixed> $data Data.
 	 */
@@ -1156,21 +1196,8 @@ class Admin_Settings_REST {
 			$address_changed = true;
 		}
 
-		if ( isset( $data['ui_mode'] ) && in_array( $data['ui_mode'], array( 'basic', 'advanced' ), true ) ) {
-			$prev = (string) get_option( 'agentic_ui_mode', 'basic' );
-			$mode = (string) $data['ui_mode'];
-			update_option( 'agentic_ui_mode', $mode, false );
-			if ( $prev !== $mode && class_exists( Audit_Log::class ) ) {
-				Audit_Log::log_admin(
-					'ui_mode_changed',
-					'settings',
-					array(
-						'id'   => $mode,
-						'from' => $prev,
-						'to'   => $mode,
-					)
-				);
-			}
+		if ( isset( $data['ui_mode'] ) ) {
+			self::set_ui_mode( (string) $data['ui_mode'] );
 		}
 		if ( array_key_exists( 'show_onboarding', $data ) ) {
 			update_option( 'agentic_show_onboarding', ! empty( $data['show_onboarding'] ) ? '1' : '0', false );
