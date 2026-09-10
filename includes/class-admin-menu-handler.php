@@ -206,6 +206,21 @@ class Admin_Menu_Handler {
 			fn() => $this->render_page( 'approvals' )
 		);
 
+		// Safety Center — owner-facing overview of existing safety controls.
+		// Always in the nav (Basic/Advanced only changes page content, never
+		// whether the page exists). Placed after Approvals and before Passport
+		// per reports/m2-safety-center-design.md §4. Intentionally not added
+		// to the M1 Phase 8a secondary-nav rail (that list is the eight M1
+		// target sections).
+		add_submenu_page(
+			'agent-builder',
+			__( 'Agent Builder — Safety Center', 'agent-builder' ),
+			__( 'Safety Center', 'agent-builder' ),
+			'agentic_manage_settings',
+			'agentic-safety-center',
+			fn() => $this->render_page( 'safety-center' )
+		);
+
 		// Usage / Costs is a Pro screen. Free registers a locked Advanced-only
 		// nav entry (not Basic — upsell is a power-user concern). Skip when Pro
 		// already owns the real page (same slug agentic-costs).
@@ -1262,6 +1277,8 @@ class Admin_Menu_Handler {
 			}
 		} elseif ( 'agentic-approvals' === $page ) {
 			$policy = __( 'Approvals keep high-risk tool calls under human control before they change your site.', 'agent-builder' );
+		} elseif ( 'agentic-safety-center' === $page ) {
+			$policy = __( 'Safety Center summarizes existing operator controls. It does not change how tools, approvals, or Emergency Stop work.', 'agent-builder' );
 		} elseif ( 'agentic-audit-log' === $page || 'agentic-logs' === $page ) {
 			$policy = __( 'Activity helps you understand what agents did. Logs are local; retention follows your Security settings.', 'agent-builder' );
 		} elseif ( 'agentic-costs' === $page ) {
@@ -1356,8 +1373,12 @@ class Admin_Menu_Handler {
 				'page' => 'upgrade-pro',
 				'tab'  => '',
 			),
-			'agent-ready' => array(
+			'agent-ready'   => array(
 				'page' => 'agent-ready',
+				'tab'  => '',
+			),
+			'safety-center' => array(
+				'page' => 'safety-center',
 				'tab'  => '',
 			),
 		);
@@ -1406,13 +1427,14 @@ class Admin_Menu_Handler {
 			}
 			// Map react file keys to real menu page slugs for doc lookup.
 			$menu_page = match ( $file ) {
-				'tools'      => 'agentic-tools',
-				'skills'     => 'agentic-skills',
-				'approvals'  => 'agentic-approvals',
-				'logs'       => 'agentic-audit-log',
-				'upgrade'    => 'agentic-upgrade-pro',
-				'train-data' => 'agentic-train-data',
-				default      => 'agentic-' . $file,
+				'tools'          => 'agentic-tools',
+				'skills'         => 'agentic-skills',
+				'approvals'      => 'agentic-approvals',
+				'logs'           => 'agentic-audit-log',
+				'upgrade'        => 'agentic-upgrade-pro',
+				'train-data'     => 'agentic-train-data',
+				'safety-center'  => 'agentic-safety-center',
+				default          => 'agentic-' . $file,
 			};
 			wp_localize_script(
 				'agentic-admin-pages',
