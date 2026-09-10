@@ -2548,6 +2548,157 @@ function SafetyAgentScopes( { agents, urls } ) {
 	);
 }
 
+function SafetyAuditIntegrity( { integrity, urls, valid } ) {
+	const brokenAt = integrity.broken_at_id;
+	const chainStart = integrity.chain_start_id;
+
+	return (
+		<section
+			className="agentic-safety-integrity"
+			id="agentic-safety-integrity"
+			aria-labelledby="agentic-safety-integrity-heading"
+		>
+			<h2
+				id="agentic-safety-integrity-heading"
+				className="agentic-safety-section__title"
+			>
+				{ __( 'Audit-log integrity', 'agent-builder' ) }
+			</h2>
+
+			{ ! valid ? (
+				<article
+					className="agentic-safety-incident"
+					role="alert"
+				>
+					<h3 className="agentic-safety-incident__title">
+						{ __(
+							'Audit log may have been altered after the fact',
+							'agent-builder'
+						) }
+					</h3>
+					<p className="agentic-safety-incident__lead">
+						{ brokenAt
+							? sprintf(
+									/* translators: %d: audit log row id where the hash chain broke */
+									__(
+										'The verification check failed at entry #%d.',
+										'agent-builder'
+									),
+									brokenAt
+							  )
+							: __(
+									'The verification check failed. An entry was edited or deleted after the fact.',
+									'agent-builder'
+							  ) }
+					</p>
+					<p className="agentic-safety-incident__label">
+						{ __( 'Recommended next steps', 'agent-builder' ) }
+					</p>
+					<ul className="agentic-safety-incident__steps">
+						<li>
+							<a href="#agentic-safety-emergency">
+								{ __( 'Pause agents', 'agent-builder' ) }
+							</a>
+							{ ' — ' }
+							{ __(
+								'use Emergency Stop on this page until you understand the break.',
+								'agent-builder'
+							) }
+						</li>
+						<li>
+							{ urls.export ? (
+								<a href={ urls.export }>
+									{ __( 'Export logs', 'agent-builder' ) }
+								</a>
+							) : (
+								__( 'Export logs', 'agent-builder' )
+							) }
+							{ ' — ' }
+							{ __(
+								'download a copy of the current history before anything else changes.',
+								'agent-builder'
+							) }
+						</li>
+						<li>
+							{ __(
+								'Review hosting and database access for unexpected changes.',
+								'agent-builder'
+							) }
+						</li>
+					</ul>
+				</article>
+			) : null }
+
+			<article className="agentic-safety-card agentic-safety-integrity__status">
+				<h3 className="agentic-safety-card__title">
+					{ __( 'Last verification', 'agent-builder' ) }
+				</h3>
+				<p className="agentic-safety-card__stat">
+					<span
+						className={
+							'agentic-safety-pill' +
+							( valid ? ' is-ok' : ' is-attention' )
+						}
+					>
+						{ valid
+							? __( 'Verified', 'agent-builder' )
+							: __( 'Needs attention', 'agent-builder' ) }
+					</span>
+				</p>
+				<p className="agentic-safety-card__meta">
+					{ sprintf(
+						/* translators: %d: number of chained audit rows checked */
+						__( '%d rows checked', 'agent-builder' ),
+						integrity.checked ?? 0
+					) }
+				</p>
+				{ ! valid && brokenAt ? (
+					<p className="agentic-safety-card__meta">
+						{ sprintf(
+							/* translators: %d: audit log row id */
+							__( 'Broken at entry #%d', 'agent-builder' ),
+							brokenAt
+						) }
+					</p>
+				) : null }
+				<p className="agentic-safety-card__hint">
+					{ __(
+						'This activity log is tamper-evident. Each entry is linked to the one before it, so if someone edits or deletes a later entry after the fact, the verification check fails.',
+						'agent-builder'
+					) }
+				</p>
+				<p className="agentic-safety-card__hint">
+					{ __(
+						'This does not stop database access by itself. It gives you evidence if the history can no longer be trusted.',
+						'agent-builder'
+					) }
+				</p>
+				<p className="agentic-safety-card__hint">
+					{ chainStart
+						? sprintf(
+								/* translators: %d: first chained audit log row id */
+								__(
+									'Entries written before this feature shipped may predate the chain and therefore define the chain start. The chain starts at entry #%d.',
+									'agent-builder'
+								),
+								chainStart
+						  )
+						: __(
+								'Entries written before this feature shipped may predate the chain and therefore define the chain start. No chained entries have been recorded yet.',
+								'agent-builder'
+						  ) }
+				</p>
+				<a className="button" href={ urls.activity || '#' }>
+					{ __(
+						'View raw Activity / Audit log',
+						'agent-builder'
+					) }
+				</a>
+			</article>
+		</section>
+	);
+}
+
 function SafetyCenterView( { data, reload } ) {
 	const [ busy, setBusy ] = useState( false );
 	const [ err, setErr ] = useState( '' );
@@ -2687,9 +2838,14 @@ function SafetyCenterView( { data, reload } ) {
 					</a>
 				</article>
 
-				<article className="agentic-safety-card">
+				<article
+					className={
+						'agentic-safety-card' +
+						( integrityValid ? '' : ' is-emergency' )
+					}
+				>
 					<h3 className="agentic-safety-card__title">
-						{ __( 'Audit log integrity', 'agent-builder' ) }
+						{ __( 'Last verification', 'agent-builder' ) }
 					</h3>
 					<p className="agentic-safety-card__stat">
 						<span
@@ -2717,31 +2873,20 @@ function SafetyCenterView( { data, reload } ) {
 							{ sprintf(
 								/* translators: %d: audit log row id */
 								__(
-									'First broken row: #%d',
+									'Broken at entry #%d',
 									'agent-builder'
 								),
 								integrity.broken_at_id
 							) }
 						</p>
 					) : null }
-					<p className="agentic-safety-card__hint">
-						{ __(
-							'This activity log is tamper-evident. Each entry is linked to the one before it, so if someone edits or deletes a later entry after the fact, the verification check fails.',
-							'agent-builder'
-						) }
-					</p>
-					<p className="agentic-safety-card__hint">
-						{ __(
-							'This does not stop database access by itself. It gives you evidence if the history can no longer be trusted.',
-							'agent-builder'
-						) }
-					</p>
-					<a className="button" href={ urls.activity || '#' }>
-						{ __( 'Open Activity', 'agent-builder' ) }
+					<a className="button" href="#agentic-safety-integrity">
+						{ __( 'View integrity details', 'agent-builder' ) }
 					</a>
 				</article>
 
 				<article
+					id="agentic-safety-emergency"
 					className={
 						'agentic-safety-card' +
 						( emergency.active ? ' is-emergency' : '' )
@@ -2818,6 +2963,12 @@ function SafetyCenterView( { data, reload } ) {
 			<SafetyRiskInventory
 				inventory={ data.risk_inventory || {} }
 				urls={ urls }
+			/>
+
+			<SafetyAuditIntegrity
+				integrity={ integrity }
+				urls={ urls }
+				valid={ integrityValid }
 			/>
 
 			<SafetyAgentScopes
