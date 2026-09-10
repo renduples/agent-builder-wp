@@ -121,6 +121,13 @@ class Admin_Pages_REST {
 				: current_user_can( 'agentic_manage_settings' );
 		}
 
+		// Site-wide Basic/Advanced default — same cap as the Dashboard
+		// Interface Settings card / Settings → Interface (the other
+		// callers of Admin_Settings_REST::set_ui_mode()).
+		if ( 'set_ui_mode' === $action ) {
+			return current_user_can( 'agentic_manage_settings' );
+		}
+
 		// set_screen_mode is a personal, per-user preference for one screen —
 		// require whatever capability that screen itself already requires,
 		// so setting it never grants more than reading the screen already
@@ -291,6 +298,21 @@ class Admin_Pages_REST {
 				array(
 					'ok' => true,
 					'id' => $id,
+				),
+				200
+			);
+		}
+
+		if ( 'set_ui_mode' === $action ) {
+			$mode = sanitize_key( (string) $request->get_param( 'mode' ) );
+			if ( ! in_array( $mode, array( 'basic', 'advanced' ), true ) ) {
+				return new \WP_Error( 'invalid', __( 'Invalid mode.', 'agent-builder' ), array( 'status' => 400 ) );
+			}
+			Admin_Settings_REST::set_ui_mode( $mode, 'global_header' );
+			return new \WP_REST_Response(
+				array(
+					'ok'   => true,
+					'mode' => $mode,
 				),
 				200
 			);

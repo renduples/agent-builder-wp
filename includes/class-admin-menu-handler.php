@@ -1054,12 +1054,119 @@ class Admin_Menu_Handler {
 	}
 
 	/**
-	 * Inject the Advanced-mode secondary nav rail (top of .wrap) and footer
-	 * legal links (end of .wrap) on all Agentic admin pages via JavaScript.
+	 * Site-wide Basic/Advanced switch. Echoed from admin_footer (same hook
+	 * as the secondary nav and page footer) and moved to the top of `.wrap`
+	 * by a small inline script — shared chrome, not a per-template include.
+	 *
+	 * Reflects the site-wide `agentic_ui_mode` default (`is_advanced_mode()`
+	 * with no $screen), not a per-screen override. Writes through
+	 * Admin_Settings_REST::set_ui_mode() via the admin-page REST action.
+	 *
+	 * @param string $page Current ?page= slug.
+	 * @return void
+	 */
+	private function render_global_mode_switch( string $page ): void {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'agentic_manage_settings' ) ) {
+			return;
+		}
+
+		// Full-page onboarding overlays — no in-page chrome.
+		if ( in_array( $page, array( 'agentic-setup', 'agentic-signup' ), true ) ) {
+			return;
+		}
+
+		$is_advanced = self::is_advanced_mode();
+		?>
+		<div id="agentic-global-mode-switch" class="agentic-global-mode" role="group" aria-label="<?php esc_attr_e( 'Site-wide interface mode', 'agent-builder' ); ?>">
+			<span class="agentic-global-mode__label"><?php esc_html_e( 'Site-wide', 'agent-builder' ); ?></span>
+			<span class="agentic-screen-mode-toggle">
+				<button type="button" class="button button-small<?php echo $is_advanced ? '' : ' button-primary'; ?>" data-mode="basic">
+					<?php esc_html_e( 'Basic', 'agent-builder' ); ?>
+				</button>
+				<button type="button" class="button button-small<?php echo $is_advanced ? ' button-primary' : ''; ?>" data-mode="advanced">
+					<?php esc_html_e( 'Advanced', 'agent-builder' ); ?>
+				</button>
+			</span>
+		</div>
+		<script>
+		(function() {
+			function agenticPlaceGlobalModeSwitch() {
+				var el = document.getElementById( 'agentic-global-mode-switch' );
+				if ( ! el || el.classList.contains( 'is-placed' ) ) {
+					return true;
+				}
+				var wrap = document.querySelector( '#wpbody-content .wrap' );
+				if ( ! wrap ) {
+					var root = document.getElementById( 'agentic-dashboard-app-root' );
+					if ( ! root || ! root.parentNode ) {
+						return false;
+					}
+					wrap = document.createElement( 'div' );
+					wrap.className = 'wrap agentic-admin';
+					root.parentNode.insertBefore( wrap, root );
+					wrap.appendChild( root );
+				}
+				wrap.insertBefore( el, wrap.firstChild );
+				wrap.classList.add( 'agentic-has-global-mode' );
+				el.classList.add( 'is-placed' );
+				return true;
+			}
+			if ( ! agenticPlaceGlobalModeSwitch() ) {
+				document.addEventListener( 'DOMContentLoaded', agenticPlaceGlobalModeSwitch );
+				window.setTimeout( agenticPlaceGlobalModeSwitch, 0 );
+				window.setTimeout( agenticPlaceGlobalModeSwitch, 400 );
+			}
+
+			var toggle = document.getElementById( 'agentic-global-mode-switch' );
+			if ( ! toggle ) {
+				return;
+			}
+			Array.prototype.forEach.call( toggle.querySelectorAll( 'button[data-mode]' ), function ( btn ) {
+				btn.addEventListener( 'click', function () {
+					if ( btn.disabled || btn.classList.contains( 'button-primary' ) ) {
+						return;
+					}
+					Array.prototype.forEach.call( toggle.querySelectorAll( 'button[data-mode]' ), function ( b ) {
+						b.disabled = true;
+					} );
+					fetch( <?php echo wp_json_encode( esc_url_raw( rest_url( 'agentic/v1/admin-page' ) ) ); ?>, {
+						method: 'POST',
+						credentials: 'same-origin',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-WP-Nonce': <?php echo wp_json_encode( wp_create_nonce( 'wp_rest' ) ); ?>
+						},
+						body: JSON.stringify( {
+							action_name: 'set_ui_mode',
+							mode: btn.getAttribute( 'data-mode' )
+						} )
+					} ).then( function ( res ) {
+						if ( ! res.ok ) {
+							Array.prototype.forEach.call( toggle.querySelectorAll( 'button[data-mode]' ), function ( b ) {
+								b.disabled = false;
+							} );
+							return;
+						}
+						window.location.reload();
+					} ).catch( function () {
+						Array.prototype.forEach.call( toggle.querySelectorAll( 'button[data-mode]' ), function ( b ) {
+							b.disabled = false;
+						} );
+					} );
+				} );
+			} );
+		})();
+		</script>
+		<?php
+	}
+
+	/**
+	 * Inject the site-wide mode switch (top of .wrap), Advanced-mode
+	 * secondary nav rail, and footer legal links on all Agentic admin
+	 * pages via JavaScript.
 	 *
 	 * Runs on admin_footer so the full page DOM is already in place. Same
-	 * shared-chrome hook for both pieces — the rail is not a per-template
-	 * include.
+	 * shared-chrome hook for every piece — not a per-template include.
 	 *
 	 * @return void
 	 */
@@ -1086,6 +1193,8 @@ class Admin_Menu_Handler {
 		}
 
 		$this->render_secondary_nav( $page, $tab );
+		// After the rail so this insertBefore(firstChild) lands above it.
+		$this->render_global_mode_switch( $page );
 
 		// Footer markup (promo URL is channel-aware: external on WPorg free).
 		$footer_html = $this->build_admin_footer_html( $page, $tab );

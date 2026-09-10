@@ -4507,6 +4507,62 @@ font-size: 12px; font-weight: 600;
 	.agentic-kn-hero-aside { align-items: flex-start; }
 }
 
+/* ── Site-wide Basic/Advanced switch (M1 Phase 8b) ─────────────────
+   Shared chrome at the top of .wrap on every Agentic screen. Reuses
+   .agentic-screen-mode-toggle (same two-button control as per-screen
+   toggles). Distinct from the Advanced rail: this is the master
+   site-wide default, always present (Basic and Advanced). */
+#agentic-global-mode-switch:not(.is-placed) {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+.agentic-global-mode {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 8px;
+}
+.agentic-global-mode__label {
+	font-size: 12px;
+	color: #646970;
+}
+.agentic-screen-mode-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	vertical-align: middle;
+}
+.agentic-screen-mode-toggle .button-small {
+	min-height: 24px;
+	padding: 0 8px;
+	line-height: 22px;
+}
+/* Sit on the same row as the Advanced rail, right-aligned, so the two
+   pieces of shared chrome do not stack into two competing bars. */
+.agentic-has-secondary-nav .agentic-global-mode {
+	position: absolute;
+	top: 8px;
+	right: 0;
+	margin: 0;
+	z-index: 2;
+}
+.agentic-has-secondary-nav .agentic-secondary-nav {
+	padding-right: 12.5rem;
+}
+@media screen and (max-width: 782px) {
+	.agentic-has-secondary-nav .agentic-global-mode {
+		position: static;
+		margin: 0 0 8px;
+	}
+	.agentic-has-secondary-nav .agentic-secondary-nav {
+		padding-right: 0;
+	}
+}
+
 /* ── Advanced-mode secondary nav (M1 Phase 8a) ─────────────────────
    Top tab-strip inside .wrap. Tokens match .agentic-settings-nav-item
    and .agentic-vector-subnav (radius 6px, #2271b1 current, #f0f6fc
@@ -4518,6 +4574,9 @@ font-size: 12px; font-weight: 600;
 	width: 1px;
 	height: 1px;
 	overflow: hidden;
+}
+.wrap.agentic-has-secondary-nav {
+	position: relative;
 }
 .agentic-secondary-nav {
 	margin: 0 0 16px;

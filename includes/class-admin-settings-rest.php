@@ -1167,7 +1167,8 @@ class Admin_Settings_REST {
 	 *
 	 * Single writer for the `agentic_ui_mode` option. Dashboard REST
 	 * (`set_ui_mode` action), Settings → Interface (`save_interface()`),
-	 * and the classic-PHP fallback (`UI_Settings_REST`) all call through
+	 * the classic-PHP fallback (`UI_Settings_REST`), and the global header
+	 * switch (`Admin_Pages_REST` `set_ui_mode` action) all call through
 	 * here so there is exactly one `update_option( 'agentic_ui_mode', ... )`
 	 * in the codebase. Option name and values (`basic` / `advanced`) are
 	 * part of the Agent Builder Pro contract and must not change.
@@ -1180,7 +1181,8 @@ class Admin_Settings_REST {
 	 * @param string $via  Optional audit-log source tag. Empty keeps the
 	 *                     historical payload (Dashboard / Settings app);
 	 *                     `'ui_settings_rest'` preserves the classic
-	 *                     fallback's extra `via` field.
+	 *                     fallback's extra `via` field; `'global_header'`
+	 *                     marks the shared-chrome switch.
 	 * @return bool True if the value was accepted and written.
 	 */
 	public static function set_ui_mode( string $mode, string $via = '' ): bool {
