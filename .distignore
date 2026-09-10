@@ -21,6 +21,7 @@ bin
 node_modules
 vendor
 tests
+screenshots
 CLAUDE.md
 Claude.md
 SUBMISSION-NOTES.md
