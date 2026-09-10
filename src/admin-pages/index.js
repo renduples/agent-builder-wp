@@ -12,6 +12,7 @@ import {
 	ToggleControl,
 	SearchControl,
 	ExternalLink,
+	Modal,
 } from '@wordpress/components';
 import { AdminPage, Panel, InfoTip, ScreenModeToggle } from '../shared/components';
 import { ChatEmbed } from '../shared/chat-embed';
@@ -25,6 +26,118 @@ const RISK_EXPLANATIONS = {
 	high: __( 'A significant or bulk change — waits in the Approvals queue for you to allow it.', 'agent-builder' ),
 	extreme: __( 'Too risky to allow at all — hidden from agents entirely, cannot be enabled.', 'agent-builder' ),
 };
+
+// Per-tool HIGH reasons from reports/m2-safety-center-design.md §3.5.
+// Everything else falls back to the HIGH tier sentence in RISK_EXPLANATIONS
+// rather than inventing copy for every HIGH tool.
+const HIGH_RISK_REASONS = {
+	install_plugin_from_url: __( 'installs code on your site', 'agent-builder' ),
+	force_password_reset: __( 'can affect account access', 'agent-builder' ),
+	wc_create_refund: __( 'moves money', 'agent-builder' ),
+	delete_form: __( 'can permanently remove data', 'agent-builder' ),
+	git_push: __( 'changes the deployed codebase', 'agent-builder' ),
+	git_pull: __( 'changes the deployed codebase', 'agent-builder' ),
+	git_commit: __( 'changes the deployed codebase', 'agent-builder' ),
+};
+
+function highRiskReason( toolId ) {
+	return HIGH_RISK_REASONS[ toolId ] || RISK_EXPLANATIONS.high;
+}
+
+// Off→on gate for HIGH/EXTREME. Returns null when the toggle should proceed
+// immediately (turning off, or low/medium/none). Consult before the optimistic
+// toggle+fetch so the switch never flashes on.
+function toolEnableGate( row, enabling ) {
+	if ( ! enabling ) {
+		return null;
+	}
+	const risk = ( row.risk_level || 'none' ).toLowerCase();
+	if ( risk !== 'high' && risk !== 'extreme' ) {
+		return null;
+	}
+	return {
+		name: row.id,
+		title: row.title || row.id,
+		risk,
+	};
+}
+
+function ToolRiskEnableModal( { gate, onCancel, onEnable } ) {
+	if ( ! gate ) {
+		return null;
+	}
+	const name = gate.title || gate.name;
+	const isExtreme = gate.risk === 'extreme';
+
+	return (
+		<Modal
+			title={
+				isExtreme
+					? __( 'This tool cannot be enabled', 'agent-builder' )
+					: __( 'Enable high-risk tool?', 'agent-builder' )
+			}
+			onRequestClose={ onCancel }
+			className="agentic-tool-risk-modal"
+		>
+			{ isExtreme ? (
+				<>
+					<p>
+						<strong>{ name }</strong>{ ' ' }
+						{ __( 'is marked Extreme Risk.', 'agent-builder' ) }
+					</p>
+					<p>
+						{ __(
+							'Extreme-risk tools are hidden from agents entirely and blocked from running, because they are too risky for normal use.',
+							'agent-builder'
+						) }
+					</p>
+					<div className="agentic-tool-risk-modal__actions">
+						<Button variant="primary" onClick={ onCancel }>
+							{ __( 'Close', 'agent-builder' ) }
+						</Button>
+					</div>
+				</>
+			) : (
+				<>
+					<p>
+						<strong>{ name }</strong>{ ' ' }
+						{ __(
+							'can make a significant change to your site.',
+							'agent-builder'
+						) }
+					</p>
+					<p>
+						{ sprintf(
+							/* translators: %s: plain-language reason this tool is high-risk */
+							__( 'Why this is high-risk: %s', 'agent-builder' ),
+							highRiskReason( gate.name )
+						) }
+					</p>
+					<p>
+						{ __(
+							'If an agent uses this tool later, the action will still wait for human review in the Approvals queue before it runs.',
+							'agent-builder'
+						) }
+					</p>
+					<p className="agentic-react-muted">
+						{ __(
+							'Enabling this tool makes it available to eligible agents. It does not run the tool immediately.',
+							'agent-builder'
+						) }
+					</p>
+					<div className="agentic-tool-risk-modal__actions">
+						<Button variant="secondary" onClick={ onCancel }>
+							{ __( 'Cancel', 'agent-builder' ) }
+						</Button>
+						<Button variant="primary" onClick={ onEnable }>
+							{ __( 'Enable tool', 'agent-builder' ) }
+						</Button>
+					</div>
+				</>
+			) }
+		</Modal>
+	);
+}
 
 const APPROVAL_ACTION_HINT = __(
 	'An agent tried to run this specific action and paused here first. Nothing happens until you decide — approve to let it run once, or reject to cancel it.',
@@ -382,6 +495,7 @@ function ToolsView( { data, reload, patchData } ) {
 	const [ riskFilter, setRiskFilter ] = useState( 'all' );
 	const [ busy, setBusy ] = useState( '' );
 	const [ err, setErr ] = useState( '' );
+	const [ gate, setGate ] = useState( null );
 	const activeTab = data.tab || 'all';
 	const isAdvanced = !! data.is_advanced;
 	const categoryHref = ( slug ) => {
@@ -457,13 +571,6 @@ function ToolsView( { data, reload, patchData } ) {
 		);
 	}, [ data.rows, q, riskFilter ] );
 
-	// Basic Interface mode: simple ability profiles only (not the tool table).
-	if ( ! isAdvanced ) {
-		return (
-			<ToolsBasicProfiles data={ data } reload={ reload } />
-		);
-	}
-
 	const setRowEnabled = ( name, enabled ) => {
 		if ( typeof patchData === 'function' ) {
 			patchData( ( d ) => ( {
@@ -503,6 +610,39 @@ function ToolsView( { data, reload, patchData } ) {
 			} )
 			.finally( () => setBusy( '' ) );
 	};
+
+	const requestToggle = ( row, enabled ) => {
+		const pending = toolEnableGate( row, enabled );
+		if ( pending ) {
+			setGate( pending );
+			return;
+		}
+		toggle( row.id, enabled );
+	};
+
+	const riskModal = (
+		<ToolRiskEnableModal
+			gate={ gate }
+			onCancel={ () => setGate( null ) }
+			onEnable={ () => {
+				const pending = gate;
+				setGate( null );
+				if ( pending && pending.risk !== 'extreme' ) {
+					toggle( pending.name, true );
+				}
+			} }
+		/>
+	);
+
+	// Basic Interface mode: simple ability profiles only (not the tool table).
+	if ( ! isAdvanced ) {
+		return (
+			<>
+				<ToolsBasicProfiles data={ data } reload={ reload } />
+				{ riskModal }
+			</>
+		);
+	}
 
 	return (
 		<>
@@ -624,7 +764,7 @@ function ToolsView( { data, reload, patchData } ) {
 													checked={ !! r.enabled }
 													disabled={ busy === r.id }
 													onChange={ ( v ) =>
-														toggle( r.id, v )
+														requestToggle( r, v )
 													}
 													__nextHasNoMarginBottom
 												/>
@@ -687,6 +827,7 @@ function ToolsView( { data, reload, patchData } ) {
 						</div>
 					) }
 				</>
+			{ riskModal }
 			</>
 		);
 	}

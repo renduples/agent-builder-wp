@@ -221,6 +221,16 @@ class Admin_Ajax {
 			wp_send_json_error( __( 'Missing tool name.', 'agent-builder' ) );
 		}
 
+		if ( $enabled && class_exists( Risk_Level::class ) ) {
+			$risk = Risk_Level::max(
+				Tools_Registry::get_risk_level( $tool_name ),
+				Risk_Level::get_tool_default( $tool_name )
+			);
+			if ( Risk_Level::EXTREME === $risk ) {
+				wp_send_json_error( __( 'This tool cannot be enabled', 'agent-builder' ) );
+			}
+		}
+
 		Tools_Registry::set_enabled( $tool_name, $enabled );
 
 		// Log the change.
