@@ -332,3 +332,161 @@ independent of each other and of the nav shell (8) — the mode split on any
 one screen doesn't require the Console rail to exist first. Phase 8 (nav
 shell) and 9 (Playground) are the largest single changes and should each get
 their own design review before implementation, given their size.
+
+---
+
+## Review notes (second worker)
+
+Base checked: `release/3.4-wporg` at the commit that merged PR #7
+(`95c4532`), same base the doc declares in its header.
+
+### Citations verified
+
+Spot-checked 20+ citations against the actual code; all of the following are
+byte-exact (function/const start line matches, or the cited line is the
+literal line producing the described behavior):
+
+- `is_advanced_mode()` at `class-admin-menu-handler.php:297-306`, `SCREEN_MODE_META` at `:276`, `set_screen_mode()` at `:315-327`, `reset_screen_modes()` at `:335-337`.
+- `handle_set_ui_mode()` at `:667-697`, wired at `agent-builder.php:244` (`add_action( 'admin_post_agentic_set_ui_mode', ... )`).
+- `render_admin_page_links()` at `:820-877`, `render_page()` at `:976-1077`, `render_chat_page()` at `:1084-1152`, `render_train_data_page()` at `:1243-1269`.
+- `admin/deployment.php:26` — exact line of the `is_advanced_mode( 'deployment' )` call.
+- `class-admin-pages-rest.php` mode checks at `:758` (tools), `:891` (skills), `:1004` (approvals), `:1454` (logs), `:2195` (passport) — all confirmed one line before/at the cited `is_advanced_mode()` call.
+- `class-admin-pages-rest.php:124-139` (per-screen capability authorization for `set_screen_mode`/`reset_screen_modes`) and `:299-318` (execution) — both match exactly.
+- `class-admin-settings-rest.php:900` (Users-tab mode gate), `admin/skills.php:195`, `class-admin-menu-handler.php:1021-1023` (Skills chat-embed CSS comment), `bin/screenshot-admin.js:23-43` (`SCREENS` array, all 19 slugs match), `src/shared/components.js:151-200` (`ScreenModeToggle`), `admin/signup.php:93-100` (Security Mode select), `class-admin-menu-handler.php:549` (`handle_provider_actions()`), `class-admin-menu-handler.php:131-158` (three hidden wizard pages) — all confirmed accurate.
+- Quick Actions `advanced` flags cited as `class-admin-menu-handler.php:394-428` for `quick_actions_catalog()` (function itself starts at `:349`) — the individual `'advanced' => true` entries fall at lines 400/407/414/421/428, inside the cited range; accurate.
+
+No incorrect citations found among those checked.
+
+### Citation/factual gap found: the write-path count in §1 and §7 is wrong
+
+§1 says there are "two independent write paths" to `agentic_ui_mode`
+(Dashboard card → `class-dashboard-rest.php`'s `set_ui_mode` action, and
+Settings → Interface → `class-ui-settings-rest.php:90-91`'s `/ui-settings`
+route), plus a third, dead `admin-post` handler. This undercounts and
+mischaracterizes one path:
+
+- The React Settings app (`src/settings-app/index.js`, `REST =
+  'agentic/v1/admin-settings'`) is what actually renders Settings →
+  Interface whenever the `settings-app` build exists (confirmed present at
+  `build/settings-app.js`) and no `edit_provider`/`add_provider` query arg
+  is set — i.e. the normal path (`render_settings_page()`,
+  `class-admin-menu-handler.php:1159-1219`, specifically the
+  `React_Admin::enqueue( 'settings-app' )` branch at `:1161`). Its Interface
+  tab saves via `saveTab('interface', data)` → POST `/admin-settings` →
+  `update_tab()` → **`save_interface()`**
+  (`class-admin-settings-rest.php:1148-1170`, the actual
+  `update_option( 'agentic_ui_mode', ... )` write is at **:1160-1162**) —
+  a fourth write path the doc never mentions.
+- `class-ui-settings-rest.php`'s `/ui-settings` route (cited by the doc as
+  *the* Settings → Interface path) is instead consumed by
+  `src/interface-settings/index.js`, mounted only by
+  `admin/settings-interface.php`, which is only `require_once`'d from the
+  **classic PHP fallback** `admin/settings.php` (used when the settings-app
+  build is missing, or when `edit_provider`/`add_provider` forces the
+  classic shell regardless of tab). Under normal operation this is dead UI,
+  not the primary Settings → Interface path.
+
+Net effect: there are **four** write paths, not two-plus-a-dead-one, and
+Phase 1's recommendation ("recommend the `agentic/v1/ui-settings` REST
+route, since it's the newest and purpose-built") is picking the route behind
+the rarely-reached fallback UI, not the one behind the React settings app
+users actually see today. Phase 1 should instead audit all four
+(`class-dashboard-rest.php`'s `set_ui_mode`,
+`class-admin-settings-rest.php::save_interface()`,
+`class-ui-settings-rest.php::update_settings()`, and the dead
+`handle_set_ui_mode()` admin-post handler) and pick the consolidation target
+with that corrected picture — plausibly `admin-settings-rest.php` given it
+backs the actually-used Settings UI, but that's a call for whoever
+implements Phase 1, not something this review should decide.
+
+### Per-screen audit table
+
+Cross-checked against `bin/screenshot-admin.js`'s `SCREENS` array (19
+entries) and every `add_menu_page()`/`add_submenu_page()` call in
+`class-admin-menu-handler.php`. All 19 `SCREENS` slugs resolve to a page
+registered somewhere in this repo except `agentic-costs` (correctly noted
+as Pro-only) and `settings-providers` (correctly noted as the same
+`agentic-settings` page with `tab=providers`, not a separate registration).
+The doc's table collapses the three hidden wizard pages
+(`agent-wizard`/`knowledge-wizard`/`deploy-wizard`) into one row, which
+still accounts for all 19 screens (17 rows − 1 merged row + 3 collapsed
+screens = 19). No screen is missing and no screen's Basic/Advanced behavior
+looks mischaracterized in the spot checks above.
+
+### IA proposal
+
+The 1:1 mapping of secondary-nav entries onto existing
+`add_submenu_page()` slugs is sound: `add_submenu_page()` capability checks
+are enforced by WordPress independently of how a nav is drawn inside
+`.wrap`, so a nav rendered by shared chrome doesn't bypass or duplicate
+those checks, and deep links (`admin.php?page=agentic-agents`) keep working
+unchanged since no URL scheme changes. `React_Admin::mount()`
+(`includes/class-react-admin.php:90`) confirms the "one mount point per
+app" pattern the doc leans on for sharing the nav across
+`dashboard-app`/`admin-pages`/`settings-app` is real. No hidden problem
+found here.
+
+### Pro-compatibility claim
+
+No contradicting evidence found in this repo (no Pro source is present to
+check directly, so this is necessarily a one-sided check). The `is_advanced_mode()`
+docblock itself explicitly documents Pro's dependency ("existing callers,
+including Agent Builder Pro, which reads this same option, are
+unaffected" — `class-admin-menu-handler.php:283-284`), which supports
+rather than contradicts the doc's claim, and the comment at
+`class-admin-menu-handler.php:209` ("Usage / Costs page is registered by
+Agent Builder Pro") is consistent with the doc's treatment of
+`usage-costs` as Pro-only. The one caveat is the write-path finding above:
+whichever path Phase 1 consolidates onto must keep writing the literal
+`agentic_ui_mode` option, which the doc does already require — that
+constraint is unaffected by the miscount.
+
+### Phased plan sequencing
+
+Phases 4-7 (Agents, Knowledge, Providers, remaining Settings tabs) are
+genuinely independent of each other and of Phase 8 (nav shell) — each is a
+per-screen content change gated by `is_advanced_mode()`/`ScreenModeToggle`,
+neither of which needs the secondary nav to exist. Phase 9 (Playground)
+correctly depends only on Chat's existing endpoints, not on the nav shell,
+though the doc doesn't explicitly say Phase 9 doesn't need Phase 8 — it's
+implied but worth stating explicitly since Playground is described as an
+Advanced-mode-only view (§4) and the nav shell is what makes Advanced mode
+navigable in the target IA. No sequencing errors found; Phase 1 (write-path
+consolidation) should factor in the fourth path identified above before
+"pick one of the three existing writers" is finalized.
+
+### Gaps in the doc's own stated scope
+
+- §1 write-path count (above) is the main correction needed.
+- The doc doesn't say what happens to `src/interface-settings/index.js` /
+  `admin/settings-interface.php` / `class-ui-settings-rest.php` once Phase 1
+  consolidates — since they turn out to back a real (if rarely-hit) UI
+  fallback rather than being dead code themselves, Phase 1 should say
+  explicitly whether that fallback keeps working, is repointed at the
+  consolidated writer, or is retired alongside `handle_set_ui_mode()`.
+- Otherwise the doc addresses all 8 sections implied by issue #3 (current-state
+  audit, gap analysis, IA, Playground, Basic-mode plan, onboarding,
+  migration/compatibility, phased plan) with no missing section.
+
+### Verdict
+
+**APPROVED WITH CHANGES**
+
+1. Correct §1 and §7 to describe four write paths, not two-plus-a-dead-one:
+   add `class-admin-settings-rest.php::save_interface()`
+   (`:1148-1170`, write at `:1160-1162`) as the path actually behind the
+   default-rendered Settings → Interface tab, and reclassify
+   `class-ui-settings-rest.php`'s `/ui-settings` route as backing the
+   classic-PHP-fallback widget (`admin/settings-interface.php` /
+   `src/interface-settings/index.js`), not the primary Settings → Interface
+   UI.
+2. Revisit Phase 1's recommended consolidation target in light of #1 — the
+   doc can still recommend a target, but "newest and purpose-built" is not
+   accurate reasoning once `/ui-settings` is understood to be the fallback
+   path rather than the one users normally hit.
+3. Add one sentence to Phase 1 (or §7) stating what happens to the
+   `interface-settings` fallback app/route after consolidation.
+
+No other changes needed; everything else checked — citations, per-screen
+audit completeness, IA/capability compatibility, and phase sequencing —
+holds up.
