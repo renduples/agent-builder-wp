@@ -1204,27 +1204,31 @@ class Admin_Menu_Handler {
 	 * @return void
 	 */
 	public function render_train_data_page(): void {
+		// Classic PHP page — reuse react-admin.css for the shared
+		// .agentic-screen-mode-toggle styling, same pattern as admin/agents.php.
+		// wp-components stays on the dependency list so Advanced
+		// Instructions/Memory (settings-app) keep their previous enqueue.
+		wp_enqueue_style(
+			'agentic-react-admin',
+			AGENT_BUILDER_URL . 'assets/css/react-admin.css',
+			array( 'wp-components' ),
+			AGENT_BUILDER_VERSION
+		);
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab params.
 		$active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'wiki';
 
-		// Wiki editor assets.
-		if ( 'wiki' === $active_tab || ! in_array( $active_tab, array( 'instructions', 'memory', 'vector' ), true ) ) {
+		// Wiki editor assets are Advanced-only (M1 Phase 5). Basic mode is
+		// a landing into knowledge-wizard and does not load the editor JS.
+		if ( self::is_advanced_mode( 'knowledge' )
+			&& ( 'wiki' === $active_tab || ! in_array( $active_tab, array( 'instructions', 'memory', 'vector' ), true ) )
+		) {
 			wp_enqueue_script(
 				'agentic-okf-knowledge',
 				AGENT_BUILDER_URL . 'assets/js/okf-knowledge.js',
 				array( 'jquery' ),
 				AGENT_BUILDER_VERSION,
 				true
-			);
-		}
-
-		// Instructions + Memory panels use settings-app (localized in train-data.php).
-		if ( in_array( $active_tab, array( 'instructions', 'memory' ), true ) ) {
-			wp_enqueue_style(
-				'agentic-react-admin',
-				AGENT_BUILDER_URL . 'assets/css/react-admin.css',
-				array( 'wp-components' ),
-				AGENT_BUILDER_VERSION
 			);
 		}
 
