@@ -2263,6 +2263,312 @@ function AgentReadyView( { data, reload } ) {
 	);
 }
 
+function SafetyCenterView( { data, reload } ) {
+	const [ busy, setBusy ] = useState( false );
+	const [ err, setErr ] = useState( '' );
+	const tools = data.tools || {};
+	const approvals = data.approvals || {};
+	const integrity = data.integrity || {};
+	const emergency = data.emergency_stop || {};
+	const agents = data.agents || {};
+	const urls = data.urls || {};
+	const integrityValid = !! integrity.valid;
+
+	const setEmergency = ( enable ) => {
+		const msg = enable
+			? __(
+					'EMERGENCY STOP: deactivate and log agent states, cancel all jobs, and disconnect providers. Continue?',
+					'agent-builder'
+			  )
+			: __( 'Turn off emergency stop?', 'agent-builder' );
+		if ( ! window.confirm( msg ) ) {
+			return;
+		}
+		setBusy( true );
+		setErr( '' );
+		apiFetch( {
+			path: 'agentic/v1/admin-page',
+			method: 'POST',
+			data: { action_name: 'set_emergency_stop', enable },
+		} )
+			.then( ( res ) => {
+				const warnings = Array.isArray( res?.warnings )
+					? res.warnings
+					: [];
+				if ( warnings.length ) {
+					window.alert(
+						__(
+							'Emergency stop restore finished with warnings:',
+							'agent-builder'
+						) +
+							'\n\n' +
+							warnings.join( '\n' )
+					);
+				}
+				reload( { silent: true } );
+			} )
+			.catch( ( e ) =>
+				setErr(
+					e.message ||
+						__(
+							'Could not change Emergency Stop.',
+							'agent-builder'
+						)
+				)
+			)
+			.finally( () => setBusy( false ) );
+	};
+
+	return (
+		<>
+			{ err && (
+				<Notice
+					status="error"
+					isDismissible
+					onRemove={ () => setErr( '' ) }
+				>
+					{ err }
+				</Notice>
+			) }
+
+			<p className="agentic-react-lead">{ data.description }</p>
+
+			<div className="agentic-safety-overview">
+				<article className="agentic-safety-card">
+					<h3 className="agentic-safety-card__title">
+						{ __( 'Tool risk inventory', 'agent-builder' ) }
+					</h3>
+					<p className="agentic-safety-card__stat">
+						{ sprintf(
+							/* translators: 1: enabled tools, 2: disabled tools */
+							__( '%1$d enabled · %2$d disabled', 'agent-builder' ),
+							tools.enabled_count ?? 0,
+							tools.disabled_count ?? 0
+						) }
+					</p>
+					<p className="agentic-safety-card__meta">
+						{ __( 'Highest enabled risk', 'agent-builder' ) }{ ' ' }
+						<span
+							className={
+								'agentic-react-risk agentic-react-risk--' +
+								( tools.enabled_max_risk || 'none' )
+							}
+						>
+							{ tools.max_risk_label ||
+								tools.enabled_max_risk ||
+								'none' }
+						</span>
+					</p>
+					<p className="agentic-safety-card__hint">
+						{ __(
+							'High-risk tools require extra care when you enable them. Review them in Tools.',
+							'agent-builder'
+						) }
+					</p>
+					<a className="button" href={ urls.tools || '#' }>
+						{ __( 'Review tools', 'agent-builder' ) }
+					</a>
+				</article>
+
+				<article className="agentic-safety-card">
+					<h3 className="agentic-safety-card__title">
+						{ __( 'Approvals status', 'agent-builder' ) }
+					</h3>
+					<p className="agentic-safety-card__stat">
+						{ sprintf(
+							/* translators: %d: pending approvals */
+							__( '%d waiting for your OK', 'agent-builder' ),
+							approvals.pending_count ?? 0
+						) }
+					</p>
+					<p className="agentic-safety-card__meta">
+						{ sprintf(
+							/* translators: 1: operating mode, 2: comfort profile */
+							__( 'Mode: %1$s · Comfort: %2$s', 'agent-builder' ),
+							approvals.agent_mode_label ||
+								approvals.agent_mode ||
+								'',
+							approvals.comfort_label || approvals.comfort || ''
+						) }
+					</p>
+					<p className="agentic-safety-card__hint">
+						{ __(
+							'When an agent wants to make an important change, it stops here first. Nothing runs until you approve it.',
+							'agent-builder'
+						) }
+					</p>
+					<a className="button" href={ urls.approvals || '#' }>
+						{ __( 'Open approvals', 'agent-builder' ) }
+					</a>
+				</article>
+
+				<article className="agentic-safety-card">
+					<h3 className="agentic-safety-card__title">
+						{ __( 'Audit log integrity', 'agent-builder' ) }
+					</h3>
+					<p className="agentic-safety-card__stat">
+						<span
+							className={
+								'agentic-safety-pill' +
+								( integrityValid
+									? ' is-ok'
+									: ' is-attention' )
+							}
+						>
+							{ integrityValid
+								? __( 'Verified', 'agent-builder' )
+								: __( 'Needs attention', 'agent-builder' ) }
+						</span>
+					</p>
+					<p className="agentic-safety-card__meta">
+						{ sprintf(
+							/* translators: %d: number of chained audit rows checked */
+							__( '%d rows checked', 'agent-builder' ),
+							integrity.checked ?? 0
+						) }
+					</p>
+					{ ! integrityValid && integrity.broken_at_id ? (
+						<p className="agentic-safety-card__meta">
+							{ sprintf(
+								/* translators: %d: audit log row id */
+								__(
+									'First broken row: #%d',
+									'agent-builder'
+								),
+								integrity.broken_at_id
+							) }
+						</p>
+					) : null }
+					<p className="agentic-safety-card__hint">
+						{ __(
+							'This activity log is tamper-evident. Each entry is linked to the one before it, so if someone edits or deletes a later entry after the fact, the verification check fails.',
+							'agent-builder'
+						) }
+					</p>
+					<p className="agentic-safety-card__hint">
+						{ __(
+							'This does not stop database access by itself. It gives you evidence if the history can no longer be trusted.',
+							'agent-builder'
+						) }
+					</p>
+					<a className="button" href={ urls.activity || '#' }>
+						{ __( 'Open Activity', 'agent-builder' ) }
+					</a>
+				</article>
+
+				<article
+					className={
+						'agentic-safety-card' +
+						( emergency.active ? ' is-emergency' : '' )
+					}
+				>
+					<h3 className="agentic-safety-card__title">
+						{ __( 'Emergency Stop', 'agent-builder' ) }
+					</h3>
+					<p className="agentic-safety-card__stat">
+						<span
+							className={
+								'agentic-safety-pill' +
+								( emergency.active
+									? ' is-attention'
+									: ' is-ok' )
+							}
+						>
+							{ emergency.active
+								? __( 'On', 'agent-builder' )
+								: __( 'Off', 'agent-builder' ) }
+						</span>
+					</p>
+					<p className="agentic-safety-card__hint">
+						{ __(
+							'Emergency Stop turns off every active agent, cancels pending and in-progress jobs, disconnects AI providers, and blocks new agent activity until an administrator restores service.',
+							'agent-builder'
+						) }
+					</p>
+					<Button
+						variant={
+							emergency.active ? 'primary' : 'secondary'
+						}
+						isDestructive={ ! emergency.active }
+						isBusy={ busy }
+						disabled={ busy }
+						onClick={ () =>
+							setEmergency( ! emergency.active )
+						}
+					>
+						{ emergency.active
+							? __( 'Restore agent system', 'agent-builder' )
+							: __( 'Disable All Agents', 'agent-builder' ) }
+					</Button>
+				</article>
+
+				<article className="agentic-safety-card">
+					<h3 className="agentic-safety-card__title">
+						{ __( 'Active agents', 'agent-builder' ) }
+					</h3>
+					<p className="agentic-safety-card__stat">
+						{ sprintf(
+							/* translators: %d: active agent count */
+							__( '%d active', 'agent-builder' ),
+							agents.active_count ?? 0
+						) }
+					</p>
+					<p className="agentic-safety-card__meta">
+						{ sprintf(
+							/* translators: 1: agents with a high-risk tool, 2: agents with MCP enabled */
+							__(
+								'%1$d with a high-risk tool · %2$d with MCP on',
+								'agent-builder'
+							),
+							agents.high_risk_count ?? 0,
+							agents.mcp_count ?? 0
+						) }
+					</p>
+					<a className="button" href={ urls.agents || '#' }>
+						{ __( 'View agent scopes', 'agent-builder' ) }
+					</a>
+				</article>
+			</div>
+
+			<aside className="agentic-safety-passport">
+				<h3 className="agentic-safety-card__title">
+					{ __(
+						'Looking for AI discoverability and access, not safety controls?',
+						'agent-builder'
+					) }
+				</h3>
+				<p className="agentic-safety-card__hint">
+					{ __(
+						'Visit Site Passport to see what outside AI systems can discover and reach on this site.',
+						'agent-builder'
+					) }
+				</p>
+				<a className="button" href={ urls.passport || '#' }>
+					{ __( 'Open Site Passport', 'agent-builder' ) }
+				</a>
+			</aside>
+
+			<nav
+				className="agentic-safety-crosslinks"
+				aria-label={ __( 'Related screens', 'agent-builder' ) }
+			>
+				<a href={ urls.tools || '#' }>
+					{ __( 'Tools', 'agent-builder' ) }
+				</a>
+				<a href={ urls.approvals || '#' }>
+					{ __( 'Approvals', 'agent-builder' ) }
+				</a>
+				<a href={ urls.activity || '#' }>
+					{ __( 'Activity', 'agent-builder' ) }
+				</a>
+				<a href={ urls.passport || '#' }>
+					{ __( 'Passport', 'agent-builder' ) }
+				</a>
+			</nav>
+		</>
+	);
+}
+
 function AdminPagesApp() {
 	const cfg = bootConfig();
 	const page = cfg.page || 'tools';
@@ -2344,6 +2650,11 @@ function AdminPagesApp() {
 		case 'agent-ready':
 			body = <AgentReadyView data={ data } reload={ reload } />;
 			break;
+		case 'safety-center':
+			body = (
+				<SafetyCenterView data={ data } reload={ reload } />
+			);
+			break;
 		default:
 			body = (
 				<p>{ __( 'Unknown page.', 'agent-builder' ) }</p>
@@ -2356,7 +2667,9 @@ function AdminPagesApp() {
 	// The Skills chat embed already brings its own bordered container/header
 	// (assets/css/chat.css) — wrapping it in the plain white Panel card too
 	// would double-box it, so it renders directly instead.
-	const skipPanel = 'skills' === data.page && ! data.is_advanced;
+	const skipPanel =
+		( 'skills' === data.page && ! data.is_advanced ) ||
+		'safety-center' === data.page;
 
 	// Every screen with a Basic/Advanced content split gets the same switch
 	// in the same top-right spot, so the control's location stays familiar
@@ -2376,7 +2689,7 @@ function AdminPagesApp() {
 				title={ data.title }
 				description={ data.description }
 				actions={ headerActions }
-				wide
+				wide={ 'safety-center' !== data.page }
 			>
 				{ skipPanel ? (
 					body

@@ -1,7 +1,8 @@
 <?php
 /**
  * Admin pages REST — bootstrap + actions for React admin surfaces
- * (tools, skills list, approvals, activity logs, deployment, upgrade).
+ * (tools, skills list, approvals, activity logs, deployment, upgrade,
+ * safety center).
  *
  * Agents list intentionally stays PHP (WordPress plugins-style UI later).
  *
@@ -147,8 +148,8 @@ class Admin_Pages_REST {
 			return current_user_can( 'agentic_manage_settings' );
 		}
 
-		// train-data, upgrade-pro, and anything unmapped stay behind the
-		// broadest admin-settings privilege as a safe default.
+		// train-data, upgrade-pro, safety-center, and anything unmapped stay
+		// behind the broadest admin-settings privilege as a safe default.
 		return current_user_can( 'agentic_manage_settings' );
 	}
 
@@ -183,6 +184,8 @@ class Admin_Pages_REST {
 				return new \WP_REST_Response( self::train_payload( $tab ?: 'wiki' ), 200 );
 			case 'agent-ready':
 				return new \WP_REST_Response( self::agent_ready_payload(), 200 );
+			case 'safety-center':
+				return new \WP_REST_Response( self::safety_center_payload(), 200 );
 			default:
 				return new \WP_Error( 'unknown_page', __( 'Unknown admin page.', 'agent-builder' ), array( 'status' => 404 ) );
 		}
@@ -365,6 +368,10 @@ class Admin_Pages_REST {
 				return new \WP_Error( 'unavailable', __( 'Directory submission is unavailable.', 'agent-builder' ), array( 'status' => 500 ) );
 			}
 			return new \WP_REST_Response( Directory_Submission::submit(), 200 );
+		}
+
+		if ( 'set_emergency_stop' === $action ) {
+			return self::set_emergency_stop( $request );
 		}
 
 		return new \WP_Error( 'unknown_action', __( 'Unknown action.', 'agent-builder' ), array( 'status' => 400 ) );
@@ -2232,5 +2239,181 @@ class Admin_Pages_REST {
 		}
 
 		return $payload;
+	}
+
+	/**
+	 * Safety Center overview payload (M2 Phase 1).
+	 *
+	 * Assembles the five Basic-mode summary cards from existing sources.
+	 * No new storage. Per-tier tool strips, per-agent tables, and the
+	 * audit-integrity incident card are later phases.
+	 *
+	 * Overview cards always render in Phase 1 regardless of Basic/Advanced:
+	 * there is no per-screen Advanced drill-down yet (Phase 5).
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function safety_center_payload(): array {
+		$enabled_count  = 0;
+		$disabled_count = 0;
+		$max_risk       = 'none';
+		if ( class_exists( Tools_Registry::class ) ) {
+			foreach ( Tools_Registry::get_all() as $tool ) {
+				if ( ! empty( $tool['enabled'] ) ) {
+					++$enabled_count;
+				} else {
+					++$disabled_count;
+				}
+			}
+			$max_risk = Tools_Registry::enabled_max_risk_level();
+		}
+
+		$pending_count = 0;
+		if ( class_exists( Approval_Queue::class ) ) {
+			$pending_count = ( new Approval_Queue() )->get_pending_count();
+		}
+		$agent_mode = (string) get_option( 'agentic_agent_mode', 'supervised' );
+		if ( ! in_array( $agent_mode, array( 'disabled', 'supervised', 'autonomous' ), true ) ) {
+			$agent_mode = 'supervised';
+		}
+		$comfort = sanitize_key( (string) get_option( 'agentic_approval_comfort', 'careful' ) );
+
+		$integrity = array(
+			'valid'          => true,
+			'checked'        => 0,
+			'broken_at_id'   => null,
+			'chain_start_id' => null,
+		);
+		if ( class_exists( Audit_Log_Integrity::class ) ) {
+			$integrity = Audit_Log_Integrity::verify_chain();
+		}
+
+		$emergency_active = class_exists( Emergency_Stop::class ) && Emergency_Stop::is_active();
+
+		$active_agents    = 0;
+		$high_risk_agents = 0;
+		$mcp_agents       = 0;
+		if ( class_exists( Inventory_REST::class ) ) {
+			$inventory = Inventory_REST::get_inventory()->get_data();
+			$agents    = is_array( $inventory['agents'] ?? null ) ? $inventory['agents'] : array();
+			$high_w    = class_exists( Risk_Level::class ) ? Risk_Level::weight( Risk_Level::HIGH ) : 3;
+			foreach ( $agents as $agent ) {
+				++$active_agents;
+				if ( ! empty( $agent['mcp_enabled'] ) ) {
+					++$mcp_agents;
+				}
+				$has_high = false;
+				foreach ( (array) ( $agent['tools'] ?? array() ) as $tool ) {
+					$risk = (string) ( $tool['risk'] ?? 'none' );
+					$w    = class_exists( Risk_Level::class ) ? Risk_Level::weight( $risk ) : 0;
+					if ( $w >= $high_w ) {
+						$has_high = true;
+						break;
+					}
+				}
+				if ( $has_high ) {
+					++$high_risk_agents;
+				}
+			}
+		}
+
+		$risk_labels = array(
+			'none'    => __( 'No Risk', 'agent-builder' ),
+			'low'     => __( 'Low Risk', 'agent-builder' ),
+			'medium'  => __( 'Medium Risk', 'agent-builder' ),
+			'high'    => __( 'High Risk', 'agent-builder' ),
+			'extreme' => __( 'Extreme Risk', 'agent-builder' ),
+		);
+
+		$mode_labels = array(
+			'disabled'   => __( 'Disabled', 'agent-builder' ),
+			'supervised' => __( 'Supervised', 'agent-builder' ),
+			'autonomous' => __( 'Autonomous', 'agent-builder' ),
+		);
+
+		$comfort_labels = array(
+			'careful'   => __( 'Always ask me', 'agent-builder' ),
+			'balanced'  => __( 'Auto-approve low risk', 'agent-builder' ),
+			'hands_off' => __( 'Trust more', 'agent-builder' ),
+		);
+
+		return array(
+			'page'           => 'safety-center',
+			'title'          => __( 'Safety Center', 'agent-builder' ),
+			'panel_title'    => __( 'Safety overview', 'agent-builder' ),
+			'description'    => __( 'Is this site set up safely for AI agents right now? These cards summarize the controls you already have — they do not change how those controls work.', 'agent-builder' ),
+			'is_advanced'    => class_exists( Admin_Menu_Handler::class )
+				? Admin_Menu_Handler::is_advanced_mode( 'safety-center' )
+				: ( 'advanced' === get_option( 'agentic_ui_mode', 'basic' ) ),
+			'tools'          => array(
+				'enabled_count'    => $enabled_count,
+				'disabled_count'   => $disabled_count,
+				'enabled_max_risk' => $max_risk,
+				'max_risk_label'   => $risk_labels[ $max_risk ] ?? $max_risk,
+			),
+			'approvals'      => array(
+				'pending_count'    => $pending_count,
+				'agent_mode'       => $agent_mode,
+				'agent_mode_label' => $mode_labels[ $agent_mode ] ?? $agent_mode,
+				'comfort'          => $comfort,
+				'comfort_label'    => $comfort_labels[ $comfort ] ?? $comfort_labels['careful'],
+			),
+			'integrity'      => array(
+				'valid'          => ! empty( $integrity['valid'] ),
+				'checked'        => (int) ( $integrity['checked'] ?? 0 ),
+				'broken_at_id'   => $integrity['broken_at_id'] ?? null,
+				'chain_start_id' => $integrity['chain_start_id'] ?? null,
+			),
+			'emergency_stop' => array(
+				'active' => $emergency_active,
+			),
+			'agents'         => array(
+				'active_count'    => $active_agents,
+				'high_risk_count' => $high_risk_agents,
+				'mcp_count'       => $mcp_agents,
+			),
+			'urls'           => array(
+				'tools'     => admin_url( 'admin.php?page=agentic-tools' ),
+				'approvals' => admin_url( 'admin.php?page=agentic-approvals' ),
+				'activity'  => admin_url( 'admin.php?page=agentic-audit-log' ),
+				'passport'  => admin_url( 'admin.php?page=agentic-agent-ready' ),
+				'agents'    => admin_url( 'admin.php?page=agentic-agents' ),
+			),
+			'docs_url'       => 'https://agentic-plugin.com/permissions-and-safety/',
+			'footer_policy'  => __(
+				'Safety Center summarizes existing operator controls. It does not change how tools, approvals, or Emergency Stop work.',
+				'agent-builder'
+			),
+		);
+	}
+
+	/**
+	 * Wire Emergency Stop through the same enable/disable methods the
+	 * Dashboard and Settings screens already use. No new storage.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	private static function set_emergency_stop( \WP_REST_Request $request ) {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'agentic_manage_settings' ) ) {
+			return new \WP_Error( 'forbidden', __( 'Permission denied.', 'agent-builder' ), array( 'status' => 403 ) );
+		}
+
+		$enable   = rest_sanitize_boolean( $request->get_param( 'enable' ) );
+		$warnings = array();
+		if ( $enable && ! Emergency_Stop::is_active() ) {
+			Emergency_Stop::enable();
+		} elseif ( ! $enable && Emergency_Stop::is_active() ) {
+			$warnings = Emergency_Stop::disable()['warnings'] ?? array();
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'ok'       => true,
+				'active'   => Emergency_Stop::is_active(),
+				'warnings' => $warnings,
+			),
+			200
+		);
 	}
 }

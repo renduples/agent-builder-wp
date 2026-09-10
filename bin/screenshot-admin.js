@@ -33,6 +33,7 @@ const SCREENS = [
 	{ slug: 'tools', page: 'agentic-tools' },
 	{ slug: 'skills', page: 'agentic-skills' },
 	{ slug: 'approvals', page: 'agentic-approvals' },
+	{ slug: 'safety-center', page: 'agentic-safety-center' },
 	{ slug: 'passport', page: 'agentic-agent-ready' },
 	{ slug: 'logs', page: 'agentic-audit-log' },
 	{ slug: 'settings', page: 'agentic-settings' },
