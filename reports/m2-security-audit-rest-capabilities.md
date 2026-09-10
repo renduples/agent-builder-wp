@@ -2,6 +2,16 @@
 
 Audited all `register_rest_route()` calls under `includes/`, plus mutating `admin_post_*` and `wp_ajax_*` handlers under `includes/`.
 
+## Status (supervisor, 2026-09-10, same day as the audit)
+
+Both the Critical and High findings were confirmed live-exploitable on **lffci.org** (this plugin's live established test deployment) and fixed the same day, deployed there immediately, and verified live:
+
+- **Finding #1 (Critical, jobs API)** — **fixed** (`c3cf860`). `check_permission()` now requires `manage_options`; `create_job()` ignores caller-supplied `user_id`; `Job_Manager::process_job()` now requires the processor class to implement `Job_Processor_Interface` before instantiating it. Verified live: a real subscriber-role account on lffci.org now gets `check_permission() === false` (previously `true`); a non-`Job_Processor_Interface` class (`WP_Query`) now fails with "Invalid or missing job processor" instead of being instantiated.
+- **Finding #2 (High, anonymous session enumeration)** — **partially fixed** (`aa6e77d`). `GET /sessions` now requires a real logged-in user (`check_real_user()`), closing the practical enumeration path — no client code anywhere in this repo (`src/`, `templates/`, `build/`) calls this endpoint, so this has no UX impact. `session_id` is a real UUIDv4 (`wp_generate_uuid4()`), not enumerable, so with `/sessions` closed the realistic attack path is gone. **Not yet fixed**: `/history/{session_id}` and the feedback endpoint still accept any `session_id` from an anonymous caller with no per-visitor ownership binding — this needs a real per-visitor token design (e.g. a signed cookie), which is legitimate follow-up work, not a same-day hotfix. Tracked as a separate fleet task.
+- **Finding #3 (Medium, native forms)**, **#4 and #5 (Low)** — not yet addressed; not confirmed live-exploited, dispatched as regular (non-emergency) fleet follow-up work.
+
+See `STATE.md` and `fleet:alert` issue on the private `fleet` repo for the incident record.
+
 ## Executive summary
 
 - Audited 47 REST route registrations across 13 files.
