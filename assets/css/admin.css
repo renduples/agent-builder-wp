@@ -4506,3 +4506,85 @@ font-size: 12px; font-weight: 600;
 	.agentic-kn-hero { flex-direction: column; }
 	.agentic-kn-hero-aside { align-items: flex-start; }
 }
+
+/* ── Advanced-mode secondary nav (M1 Phase 8a) ─────────────────────
+   Top tab-strip inside .wrap. Tokens match .agentic-settings-nav-item
+   and .agentic-vector-subnav (radius 6px, #2271b1 current, #f0f6fc
+   active fill). Horizontal rather than a left rail so Settings' own
+   vertical tab nav is not forced into a third column. */
+#agentic-secondary-nav:not(.is-placed) {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+.agentic-secondary-nav {
+	margin: 0 0 16px;
+	padding: 4px 0 12px;
+	border-bottom: 1px solid #dcdcde;
+}
+.agentic-secondary-nav__list {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 4px 2px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.agentic-secondary-nav__entry {
+	margin: 0;
+}
+.agentic-secondary-nav__item {
+	display: inline-block;
+	padding: 8px 12px;
+	border-radius: 6px;
+	color: #1d2327;
+	text-decoration: none;
+	font-size: 13px;
+	line-height: 1.4;
+	border-bottom: 2px solid transparent;
+}
+.agentic-secondary-nav__item:hover {
+	background: #f0f0f1;
+	color: #135e96;
+}
+.agentic-secondary-nav__item.is-active {
+	background: #f0f6fc;
+	color: #0a4b78;
+	font-weight: 600;
+	border-bottom-color: #2271b1;
+}
+.agentic-secondary-nav__item:focus {
+	box-shadow: 0 0 0 2px #2271b1;
+	outline: none;
+}
+.agentic-secondary-nav__item .agentic-badge-pill-grey {
+	margin-left: 6px;
+	vertical-align: middle;
+}
+.agentic-secondary-nav__group {
+	display: flex;
+	flex-direction: column;
+	padding: 0 4px;
+}
+.agentic-secondary-nav__group-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: .04em;
+	color: #646970;
+	margin: 0 0 2px 8px;
+}
+.agentic-secondary-nav__group-items {
+	display: flex;
+	gap: 2px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.agentic-secondary-nav__group-items li {
+	margin: 0;
+}
