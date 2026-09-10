@@ -84,6 +84,7 @@
 	grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 	gap: 20px;
 	margin-top: 20px;
+	align-items: start;
 }
 
 /* Drag-and-drop rearrange — handle bottom-right of each card */
@@ -443,6 +444,20 @@
 	font-size: 11px;
 	padding: 5px 8px;
 	min-height: 26px;
+}
+
+/* Larger tap targets for Quick Actions on touch/mobile widths */
+@media screen and (max-width: 782px) {
+	.agentic-quick-actions .button {
+		min-height: 40px;
+		padding: 8px 10px;
+		font-size: 12px;
+	}
+	.agentic-quick-actions-secondary .button {
+		min-height: 38px;
+		padding: 7px 10px;
+		font-size: 12px;
+	}
 }
 
 /* Emergency stop toggle, pinned below Quick Actions — always shown, not part of the removable action list */
@@ -2814,7 +2829,12 @@ button.agentic-card-header-link:focus {
 	text-decoration: underline;
 	background: none;
 	box-shadow: none;
-	outline: none;
+}
+.agentic-card-header-link:focus-visible,
+a.agentic-card-header-link:focus-visible,
+button.agentic-card-header-link:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 1px;
 }
 .agentic-section-heading   { margin-top: 2em; }
 .agentic-nowrap            { white-space: nowrap; }
