@@ -545,6 +545,7 @@ data-ability="<?php echo esc_attr( $agentic_ab_orig ); ?>"
 		enable: <?php echo wp_json_encode( __( 'Enable tool', 'agent-builder' ) ); ?>,
 		close: <?php echo wp_json_encode( __( 'Close', 'agent-builder' ) ); ?>,
 		highLead: <?php echo wp_json_encode( __( 'can make a significant change to your site.', 'agent-builder' ) ); ?>,
+		<?php /* translators: %s: plain-language reason this tool is high-risk, filled in client-side. */ ?>
 		highWhy: <?php echo wp_json_encode( __( 'Why this is high-risk: %s', 'agent-builder' ) ); ?>,
 		highGuard: <?php echo wp_json_encode( __( 'If an agent uses this tool later, the action will still wait for human review in the Approvals queue before it runs.', 'agent-builder' ) ); ?>,
 		highNote: <?php echo wp_json_encode( __( 'Enabling this tool makes it available to eligible agents. It does not run the tool immediately.', 'agent-builder' ) ); ?>,
