@@ -1928,6 +1928,10 @@
 	color: #1e1e1e;
 	border-color: #8c8f94;
 }
+.agentic-reset-btn:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 1px;
+}
 .agentic-signup-field input[type="text"],
 .agentic-signup-field input[type="email"],
 .agentic-signup-field input[type="url"] {
@@ -1964,6 +1968,14 @@
 	font-size: 11.5px;
 	color: #646970;
 	margin-top: 2px;
+}
+.agentic-signup-field.agentic-field-error input {
+	border-color: #d63638;
+}
+.agentic-inline-error {
+	color: #d63638;
+	font-size: 11.5px;
+	margin: 4px 0 0;
 }
 .agentic-signup-consent {
 	margin: 20px 0 24px;
@@ -2069,6 +2081,19 @@
 }
 .agentic-config-setting {
 	border-right: 1px solid #dcdcde;
+}
+@media (max-width: 782px) {
+	.agentic-config-grid {
+		grid-template-columns: 1fr;
+	}
+	.agentic-config-col-head {
+		display: none;
+	}
+	.agentic-config-setting {
+		border-right: none;
+		border-bottom: none;
+		padding-bottom: 4px;
+	}
 }
 .agentic-config-setting label {
 	display: block;
