@@ -22,20 +22,40 @@ The mode primitive is `Admin_Menu_Handler::is_advanced_mode( string $screen = ''
 2. Otherwise (or with no override for that screen) fall back to the site-wide
    `agentic_ui_mode` option, default `'basic'` (`:305`).
 
-There are **two independent write paths** to the same `agentic_ui_mode`
-option today: the Dashboard's "Interface Settings" card posts
-`{action_name:'set_ui_mode'}` to the admin-page REST action
-(`src/dashboard-app/index.js:834-839`, handled in `class-dashboard-rest.php`),
-and Settings → Interface posts to the separate `agentic/v1/ui-settings` REST
-route (`includes/class-ui-settings-rest.php:90-91`). Both write the same
-option and the classic `admin-post` handler `handle_set_ui_mode()`
-(`class-admin-menu-handler.php:667-697`, wired at `agent-builder.php:244`) is
-a third, apparently-unused path (no form in the current templates posts to
-`admin_post_agentic_set_ui_mode`; it appears to predate the two REST paths).
+There are **four independent write paths** to the same `agentic_ui_mode`
+option today (corrected from an initial pass of two-plus-a-dead-one — see
+Review notes below for how this was found):
+
+1. The Dashboard's "Interface Settings" card posts `{action_name:'set_ui_mode'}`
+   to the admin-page REST action (`src/dashboard-app/index.js:834-839`,
+   handled in `class-dashboard-rest.php`).
+2. Settings → Interface, as actually rendered in normal operation (the React
+   settings app, `src/settings-app/index.js`, mounted whenever
+   `build/settings-app.js` exists and no `edit_provider`/`add_provider` query
+   arg forces the classic shell — `render_settings_page()`,
+   `class-admin-menu-handler.php:1159-1219`, the `React_Admin::enqueue(
+   'settings-app' )` branch at `:1161`) — its Interface tab saves via
+   `saveTab('interface', data)` → `class-admin-settings-rest.php::save_interface()`
+   (`:1148-1170`, the `update_option( 'agentic_ui_mode', ... )` write at
+   `:1160-1162`). This is the path a user normally hits.
+3. `includes/class-ui-settings-rest.php`'s `/ui-settings` route
+   (`:90-91`) — consumed by `src/interface-settings/index.js`, mounted only
+   by `admin/settings-interface.php`, itself only reachable through the
+   **classic PHP fallback** `admin/settings.php` (used when the settings-app
+   build is missing, or `edit_provider`/`add_provider` forces the classic
+   shell). Under normal operation this is a rarely-hit fallback, not the
+   primary Settings → Interface path — an earlier draft of this doc
+   mischaracterized it as *the* Settings → Interface writer.
+4. The classic `admin-post` handler `handle_set_ui_mode()`
+   (`class-admin-menu-handler.php:667-697`, wired at `agent-builder.php:244`)
+   — apparently unused (no form in the current templates posts to
+   `admin_post_agentic_set_ui_mode`; it appears to predate the other three).
+
 Confirmed by screenshot: `screenshots/baseline/dashboard.png` shows the
 "Interface Settings" card's Basic/Advanced buttons, and
 `screenshots/baseline/settings.png` shows the same choice as radio buttons on
-Settings → Interface — two UIs for one setting.
+Settings → Interface — at least two UIs a real user can reach for one
+setting, plus the rarely-hit fallback and the dead handler above.
 
 There is **no persistent global header switch**. "Switchable at any time
 from the header" does not exist yet in any form; today mode is set from (a)
@@ -268,13 +288,18 @@ existing storage:
   default. **Agent Builder Pro reads this same option** (per the issue) and
   must keep working unchanged — nothing here renames or moves it. The one
   cleanup this design recommends (not required for compatibility, but worth
-  doing while touching this code) is collapsing the three current write
-  paths (`class-dashboard-rest.php`'s `set_ui_mode` action, `class-ui-
-  settings-rest.php`'s `/ui-settings` route, and the seemingly-dead
-  `admin-post` handler `handle_set_ui_mode()`) down to one, and having the
-  new header switch call that same single path. Any consolidation must keep
-  writing the literal `agentic_ui_mode` option (not a renamed/namespaced
-  option) so Pro's read continues to work.
+  doing while touching this code) is collapsing the four current write
+  paths (`class-dashboard-rest.php`'s `set_ui_mode` action,
+  `class-admin-settings-rest.php::save_interface()` — the one actually
+  behind the normal Settings → Interface UI, `class-ui-settings-rest.php`'s
+  `/ui-settings` route — the classic-PHP-fallback path, and the seemingly-
+  dead `admin-post` handler `handle_set_ui_mode()`) down to one, and having
+  the new header switch call that same single path. Any consolidation must
+  keep writing the literal `agentic_ui_mode` option (not a renamed/
+  namespaced option) so Pro's read continues to work. Phase 1 (§8) should
+  also decide explicitly what happens to the `interface-settings` fallback
+  app/route once consolidated — keep it working unchanged, repoint it at
+  the consolidated writer, or retire it alongside the dead handler.
 - The secondary Advanced-mode nav (§3) is purely a rendering layer over
   existing `add_submenu_page()` routes — it introduces no new capability
   checks and no new page slugs, so Pro's own registered pages (e.g.
@@ -294,10 +319,19 @@ existing storage:
 Ordered so each PR is independently reviewable and the product is never left
 in a broken state between phases.
 
-1. **Consolidate the site-wide mode write path** (S) — pick one of the three
-   existing writers (recommend the `agentic/v1/ui-settings` REST route,
-   since it's the newest and purpose-built) and have the Dashboard card call
-   it too; delete the dead `admin-post` handler and its registration
+1. **Consolidate the site-wide mode write path** (S) — audit all four
+   existing writers (`class-dashboard-rest.php`'s `set_ui_mode` action,
+   `class-admin-settings-rest.php::save_interface()`, `class-ui-settings-
+   rest.php`'s `/ui-settings` route, and the dead `handle_set_ui_mode()`
+   admin-post handler) and pick the consolidation target with the corrected
+   picture from the design-review pass below — plausibly
+   `class-admin-settings-rest.php::save_interface()`, since it's the one
+   actually behind the Settings UI users normally reach (not `/ui-settings`,
+   which backs the classic-PHP fallback), but that's a call for whoever
+   implements this phase. Have the Dashboard card call the chosen path too;
+   explicitly decide and document what happens to the `interface-settings`
+   fallback app/route (keep working unchanged / repoint / retire); delete
+   the dead `admin-post` handler and its registration
    (`agent-builder.php:244`, `class-admin-menu-handler.php:667-697`) if
    confirmed unused. No visible behavior change.
 2. **Global header mode switch** (M) — add the persistent header control
