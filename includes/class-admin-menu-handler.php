@@ -815,10 +815,251 @@ class Admin_Menu_Handler {
 	}
 
 	/**
-	 * Inject contextual help bar (after h1) and footer legal links (end of .wrap)
-	 * on all Agentic admin pages via JavaScript.
+	 * Catalog for the Advanced-mode secondary nav rail (M1 Phase 8a).
 	 *
-	 * Runs on admin_footer so the full page DOM is already in place.
+	 * Eight target sections from reports/m1-modes-design.md §3. Each entry
+	 * maps 1:1 onto an existing add_submenu_page() slug — no new URLs.
+	 * Tools and Skills are one grouped entry with two child links, the same
+	 * grouped-nav pattern Settings already uses (label + rows), not a merge
+	 * of the underlying pages.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function get_secondary_nav_items(): array {
+		return array(
+			array(
+				'id'    => 'dashboard',
+				'label' => __( 'Dashboard', 'agent-builder' ),
+				'url'   => admin_url( 'admin.php?page=agent-builder' ),
+				'pages' => array( 'agent-builder' ),
+				'cap'   => 'agentic_view_dashboard',
+			),
+			array(
+				'id'    => 'agents',
+				'label' => __( 'Agents', 'agent-builder' ),
+				'url'   => admin_url( 'admin.php?page=agentic-agents' ),
+				'pages' => array( 'agentic-agents' ),
+				'cap'   => 'agentic_manage_agents',
+			),
+			array(
+				'id'       => 'tools-skills',
+				'label'    => __( 'Tools & Skills', 'agent-builder' ),
+				'url'      => admin_url( 'admin.php?page=agentic-tools' ),
+				'pages'    => array( 'agentic-tools', 'agentic-skills' ),
+				'cap'      => 'agentic_manage_tools',
+				'children' => array(
+					array(
+						'id'    => 'tools',
+						'label' => __( 'Tools', 'agent-builder' ),
+						'url'   => admin_url( 'admin.php?page=agentic-tools' ),
+						'pages' => array( 'agentic-tools' ),
+					),
+					array(
+						'id'    => 'skills',
+						'label' => __( 'Skills', 'agent-builder' ),
+						'url'   => admin_url( 'admin.php?page=agentic-skills' ),
+						'pages' => array( 'agentic-skills' ),
+					),
+				),
+			),
+			array(
+				'id'    => 'knowledge',
+				'label' => __( 'Knowledge', 'agent-builder' ),
+				'url'   => admin_url( 'admin.php?page=agentic-train-data' ),
+				'pages' => array( 'agentic-train-data' ),
+				'cap'   => 'agentic_manage_settings',
+			),
+			array(
+				'id'    => 'logs',
+				'label' => __( 'Logs', 'agent-builder' ),
+				'url'   => admin_url( 'admin.php?page=agentic-audit-log' ),
+				'pages' => array( 'agentic-audit-log' ),
+				'cap'   => 'agentic_view_audit_log',
+			),
+			array(
+				'id'    => 'usage-costs',
+				'label' => __( 'Usage & Costs', 'agent-builder' ),
+				'url'   => admin_url( 'admin.php?page=agentic-costs' ),
+				'pages' => array( 'agentic-costs' ),
+				'cap'   => 'agentic_view_dashboard',
+				'pro'   => true,
+			),
+			array(
+				'id'    => 'providers',
+				'label' => __( 'Providers & Keys', 'agent-builder' ),
+				'url'   => admin_url( 'admin.php?page=agentic-settings&tab=providers' ),
+				'pages' => array( 'agentic-settings' ),
+				'tabs'  => array( 'providers' ),
+				'cap'   => 'agentic_manage_settings',
+			),
+			array(
+				'id'           => 'settings',
+				'label'        => __( 'Settings', 'agent-builder' ),
+				'url'          => admin_url( 'admin.php?page=agentic-settings' ),
+				'pages'        => array( 'agentic-settings' ),
+				'exclude_tabs' => array( 'providers' ),
+				'cap'          => 'agentic_manage_settings',
+			),
+		);
+	}
+
+	/**
+	 * Whether a secondary-nav item (or child) matches the current admin page.
+	 *
+	 * @param array<string, mixed> $item Item from get_secondary_nav_items().
+	 * @param string               $page Current ?page= slug.
+	 * @param string               $tab  Current ?tab= / ?section= value.
+	 * @return bool
+	 */
+	private function is_secondary_nav_item_current( array $item, string $page, string $tab ): bool {
+		$pages = $item['pages'] ?? array();
+		if ( ! in_array( $page, $pages, true ) ) {
+			return false;
+		}
+		if ( ! empty( $item['tabs'] ) ) {
+			return in_array( $tab, $item['tabs'], true );
+		}
+		if ( ! empty( $item['exclude_tabs'] ) ) {
+			return ! in_array( $tab, $item['exclude_tabs'], true );
+		}
+		return true;
+	}
+
+	/**
+	 * Print one secondary-nav link (label, optional Pro badge, current state).
+	 *
+	 * @param array<string, mixed> $item Item or child item.
+	 * @param string               $page Current ?page= slug.
+	 * @param string               $tab  Current ?tab= / ?section= value.
+	 * @return void
+	 */
+	private function render_secondary_nav_link( array $item, string $page, string $tab ): void {
+		$is_current = $this->is_secondary_nav_item_current( $item, $page, $tab );
+		$classes    = 'agentic-secondary-nav__item';
+		if ( $is_current ) {
+			$classes .= ' is-active';
+		}
+		?>
+		<a href="<?php echo esc_url( (string) ( $item['url'] ?? '#' ) ); ?>"
+			class="<?php echo esc_attr( $classes ); ?>"
+			data-section="<?php echo esc_attr( (string) ( $item['id'] ?? '' ) ); ?>"
+			<?php echo $is_current ? 'aria-current="page"' : ''; ?>>
+			<?php echo esc_html( (string) ( $item['label'] ?? '' ) ); ?>
+			<?php if ( ! empty( $item['pro'] ) ) : ?>
+				<span class="agentic-badge-pill-grey"><?php esc_html_e( 'Pro', 'agent-builder' ); ?></span>
+			<?php endif; ?>
+		</a>
+		<?php
+	}
+
+	/**
+	 * Advanced-mode secondary nav rail. Echoed from admin_footer (same hook
+	 * as the shared page footer) and moved to the top of `.wrap` by a small
+	 * inline script — the existing shared-chrome pattern, not a new one.
+	 *
+	 * Gated on the site-wide default (`is_advanced_mode()` with no $screen).
+	 * The rail spans every Agentic screen, so a per-screen content override
+	 * must not hide or show it.
+	 *
+	 * @param string $page Current ?page= slug.
+	 * @param string $tab  Current ?tab= / ?section= value.
+	 * @return void
+	 */
+	private function render_secondary_nav( string $page, string $tab ): void {
+		if ( ! self::is_advanced_mode() ) {
+			return;
+		}
+
+		// Full-page onboarding overlays — no in-page chrome.
+		if ( in_array( $page, array( 'agentic-setup', 'agentic-signup' ), true ) ) {
+			return;
+		}
+
+		$items = array_values(
+			array_filter(
+				$this->get_secondary_nav_items(),
+				static function ( array $item ): bool {
+					$cap = (string) ( $item['cap'] ?? '' );
+					return '' === $cap || current_user_can( $cap );
+				}
+			)
+		);
+		if ( empty( $items ) ) {
+			return;
+		}
+		?>
+		<nav id="agentic-secondary-nav" class="agentic-secondary-nav" aria-label="<?php esc_attr_e( 'Agent Builder sections', 'agent-builder' ); ?>">
+			<ul class="agentic-secondary-nav__list">
+				<?php foreach ( $items as $item ) : ?>
+					<?php
+					$children = $item['children'] ?? array();
+					$group_on = false;
+					if ( ! empty( $children ) ) {
+						foreach ( $children as $child ) {
+							if ( $this->is_secondary_nav_item_current( $child, $page, $tab ) ) {
+								$group_on = true;
+								break;
+							}
+						}
+					}
+					?>
+					<li class="agentic-secondary-nav__entry<?php echo $group_on ? ' is-current' : ''; ?>">
+						<?php if ( ! empty( $children ) ) : ?>
+							<div class="agentic-secondary-nav__group">
+								<span class="agentic-secondary-nav__group-label"><?php echo esc_html( (string) $item['label'] ); ?></span>
+								<ul class="agentic-secondary-nav__group-items">
+									<?php foreach ( $children as $child ) : ?>
+										<li><?php $this->render_secondary_nav_link( $child, $page, $tab ); ?></li>
+									<?php endforeach; ?>
+								</ul>
+							</div>
+						<?php else : ?>
+							<?php $this->render_secondary_nav_link( $item, $page, $tab ); ?>
+						<?php endif; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</nav>
+		<script>
+		(function() {
+			function agenticPlaceSecondaryNav() {
+				var nav = document.getElementById( 'agentic-secondary-nav' );
+				if ( ! nav || nav.classList.contains( 'is-placed' ) ) {
+					return true;
+				}
+				var wrap = document.querySelector( '#wpbody-content .wrap' );
+				if ( ! wrap ) {
+					var root = document.getElementById( 'agentic-dashboard-app-root' );
+					if ( ! root || ! root.parentNode ) {
+						return false;
+					}
+					wrap = document.createElement( 'div' );
+					wrap.className = 'wrap agentic-admin';
+					root.parentNode.insertBefore( wrap, root );
+					wrap.appendChild( root );
+				}
+				wrap.insertBefore( nav, wrap.firstChild );
+				wrap.classList.add( 'agentic-has-secondary-nav' );
+				nav.classList.add( 'is-placed' );
+				return true;
+			}
+			if ( ! agenticPlaceSecondaryNav() ) {
+				document.addEventListener( 'DOMContentLoaded', agenticPlaceSecondaryNav );
+				window.setTimeout( agenticPlaceSecondaryNav, 0 );
+				window.setTimeout( agenticPlaceSecondaryNav, 400 );
+			}
+		})();
+		</script>
+		<?php
+	}
+
+	/**
+	 * Inject the Advanced-mode secondary nav rail (top of .wrap) and footer
+	 * legal links (end of .wrap) on all Agentic admin pages via JavaScript.
+	 *
+	 * Runs on admin_footer so the full page DOM is already in place. Same
+	 * shared-chrome hook for both pieces — the rail is not a per-template
+	 * include.
 	 *
 	 * @return void
 	 */
@@ -843,6 +1084,8 @@ class Admin_Menu_Handler {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only.
 			$tab = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
 		}
+
+		$this->render_secondary_nav( $page, $tab );
 
 		// Footer markup (promo URL is channel-aware: external on WPorg free).
 		$footer_html = $this->build_admin_footer_html( $page, $tab );
