@@ -1263,3 +1263,149 @@
 .agentic-safety-crosslinks a:hover {
 	text-decoration: underline;
 }
+
+/* Safety Center — Phase 2 risk inventory + per-agent scopes */
+.agentic-safety-section__title {
+	margin: 8px 0 12px;
+	font-size: 16px;
+	font-weight: 650;
+	color: #1d2327;
+}
+.agentic-safety-inventory,
+.agentic-safety-scopes {
+	margin: 0 0 24px;
+}
+.agentic-safety-strip {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	gap: 12px;
+	margin: 0 0 16px;
+}
+.agentic-safety-tile {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	padding: 14px 14px 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	border-top: 3px solid #dcdcde;
+}
+.agentic-safety-tile--none {
+	border-top-color: #c3c4c7;
+}
+.agentic-safety-tile--low {
+	border-top-color: #00a32a;
+}
+.agentic-safety-tile--medium {
+	border-top-color: #dba617;
+}
+.agentic-safety-tile--high {
+	border-top-color: #d63638;
+}
+.agentic-safety-tile--extreme {
+	border-top-color: #6b1b7a;
+}
+.agentic-safety-tile__title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 650;
+}
+.agentic-safety-tile__stat {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+}
+.agentic-safety-tile__hint {
+	margin: 0;
+	font-size: 12px;
+	line-height: 1.45;
+	color: #646970;
+	flex: 1;
+}
+.agentic-safety-tile__examples {
+	margin: 4px 0 0;
+	padding: 0;
+	list-style: none;
+	font-size: 12px;
+	color: #50575e;
+}
+.agentic-safety-tile__examples li {
+	margin: 0 0 2px;
+}
+.agentic-safety-tile__examples code {
+	font-size: 11px;
+}
+.agentic-safety-highest {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	padding: 16px 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.agentic-safety-highest__actions,
+.agentic-safety-scope__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 4px;
+}
+.agentic-safety-tool-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.agentic-safety-tool-list li {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 8px;
+	font-size: 13px;
+}
+.agentic-safety-tool-list--high li {
+	font-weight: 600;
+}
+.agentic-safety-tool-list__desc {
+	flex: 1 1 100%;
+	color: #646970;
+	font-size: 12px;
+	font-weight: 400;
+}
+.agentic-safety-scope-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 16px;
+}
+.agentic-safety-scope {
+	align-items: stretch;
+}
+.agentic-safety-scope__rest {
+	font-size: 13px;
+	color: #50575e;
+}
+.agentic-safety-scope__rest summary {
+	cursor: pointer;
+	font-weight: 600;
+}
+.agentic-safety-scope__rest .agentic-safety-tool-list {
+	margin-top: 8px;
+}
+.agentic-safety-scope__integrity {
+	margin: 0;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #646970;
+	font-style: italic;
+}
+@media (max-width: 782px) {
+	.agentic-safety-strip,
+	.agentic-safety-scope-grid {
+		grid-template-columns: 1fr;
+	}
+}

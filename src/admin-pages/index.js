@@ -2263,6 +2263,291 @@ function AgentReadyView( { data, reload } ) {
 	);
 }
 
+function SafetyRiskInventory( { inventory, urls } ) {
+	const tiers = inventory.tiers || [];
+	const highest = inventory.highest_enabled || [];
+
+	return (
+		<section
+			className="agentic-safety-inventory"
+			id="agentic-safety-inventory"
+			aria-labelledby="agentic-safety-inventory-heading"
+		>
+			<h2
+				id="agentic-safety-inventory-heading"
+				className="agentic-safety-section__title"
+			>
+				{ __( 'Risk inventory', 'agent-builder' ) }
+			</h2>
+			<div className="agentic-safety-strip">
+				{ tiers.map( ( tier ) => (
+					<article
+						key={ tier.id }
+						className={
+							'agentic-safety-tile agentic-safety-tile--' +
+							( tier.id || 'none' )
+						}
+					>
+						<h3 className="agentic-safety-tile__title">
+							{ tier.short_label || tier.label || tier.id }
+						</h3>
+						<p className="agentic-safety-tile__stat">
+							{ sprintf(
+								/* translators: 1: enabled tools, 2: disabled tools */
+								__(
+									'%1$d enabled · %2$d disabled',
+									'agent-builder'
+								),
+								tier.enabled ?? 0,
+								tier.disabled ?? 0
+							) }
+						</p>
+						<p className="agentic-safety-tile__hint">
+							{ tier.explanation }
+						</p>
+						{ ( tier.examples || [] ).length ? (
+							<ul className="agentic-safety-tile__examples">
+								{ tier.examples.map( ( ex ) => (
+									<li key={ ex.name }>
+										<code>{ ex.label || ex.name }</code>
+									</li>
+								) ) }
+							</ul>
+						) : null }
+					</article>
+				) ) }
+			</div>
+
+			<div className="agentic-safety-highest">
+				<h3 className="agentic-safety-card__title">
+					{ __(
+						'Highest-risk tools currently enabled',
+						'agent-builder'
+					) }
+				</h3>
+				{ highest.length ? (
+					<ul className="agentic-safety-tool-list">
+						{ highest.map( ( tool ) => (
+							<li key={ tool.name }>
+								<code>{ tool.label || tool.name }</code>
+								<span
+									className={
+										'agentic-react-risk agentic-react-risk--' +
+										( tool.risk || 'high' )
+									}
+								>
+									{ tool.risk_label || tool.risk }
+								</span>
+								{ tool.description ? (
+									<span className="agentic-safety-tool-list__desc">
+										{ tool.description }
+									</span>
+								) : null }
+							</li>
+						) ) }
+					</ul>
+				) : (
+					<p className="agentic-safety-card__hint">
+						{ __(
+							'No high-risk or extreme-risk tools are enabled on this site right now.',
+							'agent-builder'
+						) }
+					</p>
+				) }
+				<div className="agentic-safety-highest__actions">
+					<a className="button" href={ urls.tools || '#' }>
+						{ __( 'Manage tools', 'agent-builder' ) }
+					</a>
+					<a className="button" href={ urls.approvals || '#' }>
+						{ __( 'Open approval settings', 'agent-builder' ) }
+					</a>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+function SafetyAgentScopes( { agents, urls } ) {
+	const items = agents.items || [];
+	const integrityNote =
+		agents.integrity_note ||
+		__(
+			'Tool list blocked if manifest signature fails.',
+			'agent-builder'
+		);
+
+	return (
+		<section
+			className="agentic-safety-scopes"
+			id="agentic-safety-scopes"
+			aria-labelledby="agentic-safety-scopes-heading"
+		>
+			<h2
+				id="agentic-safety-scopes-heading"
+				className="agentic-safety-section__title"
+			>
+				{ __( 'Per-agent tool scopes', 'agent-builder' ) }
+			</h2>
+			{ items.length ? (
+				<div className="agentic-safety-scope-grid">
+					{ items.map( ( agent ) => {
+						const counts = agent.risk_counts || {};
+						return (
+							<article
+								key={ agent.slug }
+								className="agentic-safety-card agentic-safety-scope"
+							>
+								<h3 className="agentic-safety-card__title">
+									{ agent.name || agent.slug }
+								</h3>
+								<p className="agentic-safety-card__meta">
+									{ sprintf(
+										/* translators: 1: version, 2: author */
+										__(
+											'Version %1$s · %2$s',
+											'agent-builder'
+										),
+										agent.version || '—',
+										agent.author || '—'
+									) }
+								</p>
+								<p className="agentic-safety-card__meta">
+									{ sprintf(
+										/* translators: %s: yes or no */
+										__( 'MCP enabled: %s', 'agent-builder' ),
+										agent.mcp_enabled
+											? __( 'Yes', 'agent-builder' )
+											: __( 'No', 'agent-builder' )
+									) }
+									{ ' · ' }
+									{ __( 'Highest risk', 'agent-builder' ) }{ ' ' }
+									<span
+										className={
+											'agentic-react-risk agentic-react-risk--' +
+											( agent.highest_risk || 'none' )
+										}
+									>
+										{ agent.highest_risk_label ||
+											agent.highest_risk ||
+											'none' }
+									</span>
+								</p>
+								<p className="agentic-safety-card__meta">
+									{ sprintf(
+										/* translators: 1: none 2: low 3: medium 4: high 5: extreme */
+										__(
+											'None %1$d · Low %2$d · Medium %3$d · High %4$d · Extreme %5$d',
+											'agent-builder'
+										),
+										counts.none ?? 0,
+										counts.low ?? 0,
+										counts.medium ?? 0,
+										counts.high ?? 0,
+										counts.extreme ?? 0
+									) }
+								</p>
+								{ ( agent.high_tools || [] ).length ? (
+									<ul className="agentic-safety-tool-list agentic-safety-tool-list--high">
+										{ agent.high_tools.map( ( tool ) => (
+											<li key={ tool.name }>
+												<code>
+													{ tool.label || tool.name }
+												</code>
+												<span
+													className={
+														'agentic-react-risk agentic-react-risk--' +
+														( tool.risk || 'high' )
+													}
+												>
+													{ tool.risk_label ||
+														tool.risk }
+												</span>
+											</li>
+										) ) }
+									</ul>
+								) : (
+									<p className="agentic-safety-card__hint">
+										{ __(
+											'No high-risk or extreme-risk tools declared.',
+											'agent-builder'
+										) }
+									</p>
+								) }
+								{ ( agent.other_tools || [] ).length ? (
+									<details className="agentic-safety-scope__rest">
+										<summary>
+											{ sprintf(
+												/* translators: %d: remaining tool count */
+												__(
+													'%d more tools',
+													'agent-builder'
+												),
+												agent.other_tools.length
+											) }
+										</summary>
+										<ul className="agentic-safety-tool-list">
+											{ agent.other_tools.map(
+												( tool ) => (
+													<li key={ tool.name }>
+														<code>
+															{ tool.label ||
+																tool.name }
+														</code>
+														<span
+															className={
+																'agentic-react-risk agentic-react-risk--' +
+																( tool.risk ||
+																	'none' )
+															}
+														>
+															{ tool.risk_label ||
+																tool.risk }
+														</span>
+													</li>
+												)
+											) }
+										</ul>
+									</details>
+								) : null }
+								<p className="agentic-safety-scope__integrity">
+									{ integrityNote }
+								</p>
+								<div className="agentic-safety-scope__actions">
+									<a
+										className="button"
+										href={ urls.agents || '#' }
+									>
+										{ __(
+											'Manage this agent',
+											'agent-builder'
+										) }
+									</a>
+									<a
+										className="button"
+										href={ urls.tools || '#' }
+									>
+										{ __(
+											'Manage tools',
+											'agent-builder'
+										) }
+									</a>
+								</div>
+							</article>
+						);
+					} ) }
+				</div>
+			) : (
+				<p className="agentic-safety-card__hint">
+					{ __(
+						'No active agents on this site right now.',
+						'agent-builder'
+					) }
+				</p>
+			) }
+		</section>
+	);
+}
+
 function SafetyCenterView( { data, reload } ) {
 	const [ busy, setBusy ] = useState( false );
 	const [ err, setErr ] = useState( '' );
@@ -2524,11 +2809,21 @@ function SafetyCenterView( { data, reload } ) {
 							agents.mcp_count ?? 0
 						) }
 					</p>
-					<a className="button" href={ urls.agents || '#' }>
+					<a className="button" href="#agentic-safety-scopes">
 						{ __( 'View agent scopes', 'agent-builder' ) }
 					</a>
 				</article>
 			</div>
+
+			<SafetyRiskInventory
+				inventory={ data.risk_inventory || {} }
+				urls={ urls }
+			/>
+
+			<SafetyAgentScopes
+				agents={ agents }
+				urls={ urls }
+			/>
 
 			<aside className="agentic-safety-passport">
 				<h3 className="agentic-safety-card__title">
