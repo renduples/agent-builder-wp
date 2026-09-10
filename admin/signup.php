@@ -61,10 +61,11 @@ $agentic_signup_tts_voices     = array(
 			<!-- ── Registration ─────────────────────────────── -->
 			<h3 class="agentic-signup-section-heading"><?php esc_html_e( 'Registration', 'agent-builder' ); ?></h3>
 
-			<div class="agentic-signup-field">
+			<div class="agentic-signup-field" id="agentic-signup-email-field">
 				<label for="agentic-signup-email"><?php esc_html_e( 'Email Address', 'agent-builder' ); ?></label>
 				<input type="email" id="agentic-signup-email" name="email" value="<?php echo esc_attr( $agentic_signup_email ); ?>">
 				<p class="agentic-field-note"><?php esc_html_e( 'Free daily credits and API key will be sent to this email address.', 'agent-builder' ); ?></p>
+				<p class="agentic-inline-error" id="agentic-email-error" hidden></p>
 			</div>
 
 			<div class="agentic-signup-field">
@@ -158,7 +159,7 @@ $agentic_signup_tts_voices     = array(
 			</div>
 
 			<!-- ── Consent ──────────────────────────────────── -->
-			<div class="agentic-signup-consent">
+			<div class="agentic-signup-consent" id="agentic-signup-consent">
 				<label>
 					<input type="checkbox" id="agentic-agree-terms" name="agree_terms" value="1">
 					<?php
@@ -181,11 +182,12 @@ $agentic_signup_tts_voices     = array(
 					);
 					?>
 				</label>
+				<p class="agentic-inline-error" id="agentic-consent-error" hidden></p>
 			</div>
 
 			<div class="agentic-signup-actions">
 				<button type="submit" id="agentic-signup-btn" class="button button-primary">
-					<?php esc_html_e( 'Register', 'agent-builder' ); ?>
+					<?php esc_html_e( 'Get Free API Key', 'agent-builder' ); ?>
 				</button>
 			</div>
 
@@ -220,6 +222,10 @@ $agentic_signup_tts_voices     = array(
 	var modeSelect   = document.getElementById( 'agentic-signup-agent-mode' );
 	var uiModeSelect = document.getElementById( 'agentic-signup-ui-mode' );
 	var loadingBadge = document.getElementById( 'agentic-models-loading' );
+	var emailField   = document.getElementById( 'agentic-signup-email-field' );
+	var emailInput   = document.getElementById( 'agentic-signup-email' );
+	var emailError   = document.getElementById( 'agentic-email-error' );
+	var consentError = document.getElementById( 'agentic-consent-error' );
 	var pricingUrl   = <?php echo wp_json_encode( $agentic_pricing_url ); ?>;
 
 	// ── Explanation metadata ──────────────────────────────────────────────────
@@ -386,6 +392,20 @@ $agentic_signup_tts_voices     = array(
 	document.getElementById( 'agentic-signup-tts-voice'   ).addEventListener( 'change', updateTtsExpl   );
 	document.getElementById( 'agentic-signup-video-model' ).addEventListener( 'change', updateVideoExpl );
 
+	function clearConsentError() {
+		if ( terms.checked && privacy.checked ) {
+			consentError.hidden = true;
+		}
+	}
+	terms.addEventListener( 'change', clearConsentError );
+	privacy.addEventListener( 'change', clearConsentError );
+	emailInput.addEventListener( 'input', function () {
+		if ( emailInput.value.trim() ) {
+			emailField.classList.remove( 'agentic-field-error' );
+			emailError.hidden = true;
+		}
+	} );
+
 	// ── Reset to optimised defaults ───────────────────────────────────────────
 
 	var performanceDefaults = {
@@ -489,17 +509,21 @@ $agentic_signup_tts_voices     = array(
 		e.preventDefault();
 		msgEl.textContent = '';
 		msgEl.className   = 'agentic-signup-msg';
+		emailField.classList.remove( 'agentic-field-error' );
+		emailError.hidden   = true;
+		consentError.hidden = true;
 
 		if ( ! terms.checked || ! privacy.checked ) {
-			msgEl.textContent = <?php echo wp_json_encode( __( 'Please agree to the Terms & Conditions and Privacy Policy.', 'agent-builder' ) ); ?>;
-			msgEl.className   = 'agentic-signup-msg error';
+			consentError.textContent = <?php echo wp_json_encode( __( 'Please agree to the Terms & Conditions and Privacy Policy.', 'agent-builder' ) ); ?>;
+			consentError.hidden      = false;
 			return;
 		}
 
-		var email = document.getElementById( 'agentic-signup-email' ).value.trim();
+		var email = emailInput.value.trim();
 		if ( ! email ) {
-			msgEl.textContent = <?php echo wp_json_encode( __( 'Please enter your email address.', 'agent-builder' ) ); ?>;
-			msgEl.className   = 'agentic-signup-msg error';
+			emailError.textContent = <?php echo wp_json_encode( __( 'Please enter your email address.', 'agent-builder' ) ); ?>;
+			emailError.hidden      = false;
+			emailField.classList.add( 'agentic-field-error' );
 			return;
 		}
 
