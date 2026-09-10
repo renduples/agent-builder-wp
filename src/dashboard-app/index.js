@@ -341,6 +341,11 @@ function SafetyCard( { data, dnd } ) {
 					) }
 				</p>
 			) }
+			<p className="agentic-text-muted">
+				<a href={ data.urls?.safety_center || '#' }>
+					{ __( 'Open Safety Center →', 'agent-builder' ) }
+				</a>
+			</p>
 		</Card>
 	);
 }

@@ -416,6 +416,12 @@ class Admin_Menu_Handler {
 				'group'    => 'secondary',
 				'advanced' => true,
 			),
+			'safety-center' => array(
+				'label'   => __( 'Safety Center', 'agent-builder' ),
+				'url'     => admin_url( 'admin.php?page=agentic-safety-center' ),
+				'default' => true,
+				'group'   => 'secondary',
+			),
 			'tools'     => array(
 				'label'    => __( 'Tools', 'agent-builder' ),
 				'url'      => admin_url( 'admin.php?page=agentic-tools' ),
