@@ -375,19 +375,7 @@ class Dashboard_REST {
 				if ( ! in_array( $mode, array( 'basic', 'advanced' ), true ) ) {
 					$mode = 'basic';
 				}
-				$prev = (string) get_option( 'agentic_ui_mode', 'basic' );
-				update_option( 'agentic_ui_mode', $mode, false );
-				if ( class_exists( Audit_Log::class ) && $prev !== $mode ) {
-					Audit_Log::log_admin(
-						'ui_mode_changed',
-						'settings',
-						array(
-							'id'   => $mode,
-							'from' => $prev,
-							'to'   => $mode,
-						)
-					);
-				}
+				Admin_Settings_REST::set_ui_mode( $mode );
 				break;
 
 			case 'set_emergency_stop':

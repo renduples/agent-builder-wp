@@ -241,7 +241,6 @@ final class Plugin {
 		add_action( 'admin_menu', array( $menu, 'register' ) );
 		add_action( 'admin_page_access_denied', array( $menu, 'maybe_show_access_notice' ) );
 		add_action( 'admin_footer', array( $menu, 'render_admin_page_links' ) );
-		add_action( 'admin_post_agentic_set_ui_mode', array( $menu, 'handle_set_ui_mode' ) );
 		add_action( 'admin_post_agentic_set_agent_updates', array( $menu, 'handle_set_agent_updates' ) );
 		add_action( 'admin_post_agentic_save_quick_actions', array( $menu, 'handle_save_quick_actions' ) );
 		add_action( 'admin_post_agentic_set_emergency_stop', array( $menu, 'handle_set_emergency_stop' ) );
