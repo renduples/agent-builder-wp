@@ -2242,14 +2242,16 @@ class Admin_Pages_REST {
 	}
 
 	/**
-	 * Safety Center payload (M2 Phase 1 overview + Phase 2 inventory/scopes).
+	 * Safety Center payload (M2 Phase 1 overview + Phase 2 inventory/scopes
+	 * + Phase 3 audit-integrity incident messaging).
 	 *
 	 * Assembles the five summary cards plus the risk-tier strip, highest-risk
-	 * enabled list, and per-agent scope cards from existing sources. No new
-	 * storage. The audit-integrity incident card (Phase 3) and HIGH-risk
-	 * confirmation modal (Phase 4) stay out of this payload.
+	 * enabled list, per-agent scope cards, and the audit-log integrity
+	 * section from existing sources. No new storage. verify_chain() is called
+	 * once here and reused by the overview card and the integrity section.
+	 * The HIGH-risk confirmation modal (Phase 4) stays out of this payload.
 	 *
-	 * Overview cards and Phase 2 sections always render regardless of
+	 * Overview cards and Phase 2–3 sections always render regardless of
 	 * Basic/Advanced: there is no per-screen Advanced drill-down yet (Phase 5).
 	 *
 	 * @return array<string, mixed>
@@ -2378,6 +2380,13 @@ class Admin_Pages_REST {
 				'activity'  => admin_url( 'admin.php?page=agentic-audit-log' ),
 				'passport'  => admin_url( 'admin.php?page=agentic-agent-ready' ),
 				'agents'    => admin_url( 'admin.php?page=agentic-agents' ),
+				// Same construction as logs_payload(): wp_nonce_url() would
+				// entity-escape "&" and break the React href.
+				'export'    => admin_url(
+					'admin-post.php?action=agentic_export_logs&tab=audit'
+					. '&period=week'
+					. '&_wpnonce=' . wp_create_nonce( 'agentic_export_logs' )
+				),
 			),
 			'docs_url'       => 'https://agentic-plugin.com/permissions-and-safety/',
 			'footer_policy'  => __(
