@@ -35,6 +35,16 @@ More on [Community Agents](https://agentic-plugin.com/community-agents/).
    Pre-built assets already ship in `build/`.
 4. Activate **Agent Builder** in WordPress.
 
+## Baseline admin screenshots
+
+Full-page (1440px) captures of every Agent Builder wp-admin screen, written to `screenshots/baseline/`:
+
+```
+WP_ADMIN_USER=... WP_ADMIN_PASS=... npm run screenshot:baseline
+```
+
+Uses system Google Chrome when Playwright’s bundled Chromium is unavailable (override with `PLAYWRIGHT_CHROME_PATH`). Safe to re-run; existing PNGs are overwritten.
+
 ## Releases
 
 GitHub tags match plugin versions (`v3.3.0`, etc.). Downloadable ZIPs for production installs are published from the product site and WordPress.org once listed.
