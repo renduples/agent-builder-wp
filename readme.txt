@@ -268,7 +268,7 @@ This plugin connects to external AI APIs to process prompts and tool executions 
 * **Data sent:** Whatever data that form collects, sent only to the URL you configured — never to Agentic or any other third party.
 
 = Site Passport Directory (Optional) =
-* **Endpoint:** `https://sitepassport.org/api/v1/submissions`
+* **Endpoint:** `https://sitepassport.org/api/submit.php`
 * **When used:** Only when an administrator explicitly clicks "Submit to Directory" on the Agent-Ready page. Never automatic, never triggered by a cron job, and never sent as part of computing your score.
 * **Data sent:** Your site's URL, the URL of this plugin's own `/.well-known/webmcp.json` manifest, and a minimal score summary (overall score, letter grade, and the date it was last checked — not the full per-check breakdown).
 * **Terms of Service:** [https://sitepassport.org/terms](https://sitepassport.org/terms)
