@@ -215,11 +215,82 @@ if ( 'active' === $agentic_filter ) {
 	$agentic_agents = array_filter( $agentic_agents, fn( $a ) => ! $a['active'] );
 }
 
+// Basic/Advanced split (M1 Phase 4). Basic replaces the plugins-style table
+// with a card per agent (name, one-line description, Chat). Advanced keeps
+// today's dense table unchanged. Toggle reuses set_screen_mode, screen key
+// 'agents' -- same pattern as admin/providers.php (Phase 6).
+$agentic_agents_advanced = \Agentic\Admin_Menu_Handler::is_advanced_mode( 'agents' );
+
+// Classic PHP page — reuse react-admin.css purely for the shared
+// .agentic-screen-mode-toggle styling, same pattern as admin/providers.php.
+wp_enqueue_style( 'agentic-react-admin', AGENT_BUILDER_URL . 'assets/css/react-admin.css', array(), AGENT_BUILDER_VERSION );
+
 ?>
 
 <div class="wrap agentic-agents-page">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'Agents', 'agent-builder' ); ?></h1>
+	<div class="agentic-react-admin__page-head">
+		<div>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Agents', 'agent-builder' ); ?></h1>
+			<?php if ( ! $agentic_agents_advanced ) : ?>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agent-wizard' ) ); ?>" class="page-title-action">
+				<?php esc_html_e( 'Add an agent', 'agent-builder' ); ?>
+			</a>
+			<?php endif; ?>
+		</div>
+		<span class="agentic-screen-mode-toggle" id="agentic-agents-mode-toggle">
+			<button type="button" class="button button-small<?php echo ! $agentic_agents_advanced ? ' button-primary' : ''; ?>" data-mode="basic">
+				<?php esc_html_e( 'Basic', 'agent-builder' ); ?>
+			</button>
+			<button type="button" class="button button-small<?php echo $agentic_agents_advanced ? ' button-primary' : ''; ?>" data-mode="advanced">
+				<?php esc_html_e( 'Advanced', 'agent-builder' ); ?>
+			</button>
+		</span>
+	</div>
 	<hr class="wp-header-end">
+
+<?php if ( ! $agentic_agents_advanced ) : ?>
+
+	<?php if ( $agentic_message ) : ?>
+		<div class="notice notice-success is-dismissible">
+			<p><?php echo wp_kses( $agentic_message, array( 'a' => array( 'href' => array() ) ) ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( $agentic_agent_error ) : ?>
+		<div class="notice notice-error is-dismissible">
+			<p><?php echo esc_html( $agentic_agent_error ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( empty( $agentic_agents ) ) : ?>
+		<p><?php esc_html_e( 'No agents installed yet.', 'agent-builder' ); ?></p>
+	<?php else : ?>
+		<div class="agentic-agents-basic">
+			<?php foreach ( $agentic_agents as $agentic_slug => $agentic_agent ) : ?>
+				<?php
+				$agentic_page_slug = 'assistant-trainer' === $agentic_slug ? 'agent-builder' : 'agentic-chat';
+				$agentic_chat_url  = admin_url( 'admin.php?page=' . $agentic_page_slug . '&agent=' . $agentic_slug );
+				$agentic_desc      = trim( wp_strip_all_tags( (string) ( $agentic_agent['description'] ?? '' ) ) );
+				if ( '' === $agentic_desc ) {
+					// Bundled agents always ship a description in agent.json;
+					// this fallback is for a custom/user agent with none set.
+					$agentic_desc = __( 'An AI agent for this site.', 'agent-builder' );
+				}
+				?>
+				<div class="agentic-agents-basic__card">
+					<h2 class="agentic-agents-basic__name"><?php echo esc_html( $agentic_agent['name'] ); ?></h2>
+					<p class="agentic-agents-basic__desc"><?php echo esc_html( $agentic_desc ); ?></p>
+					<p class="agentic-agents-basic__actions">
+						<a href="<?php echo esc_url( $agentic_chat_url ); ?>" class="button button-primary">
+							<?php esc_html_e( 'Chat', 'agent-builder' ); ?>
+						</a>
+					</p>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+
+<?php else : ?>
 
 	<div class="agentic-card agentic-card-wide">
 
@@ -549,8 +620,46 @@ if ( 'active' === $agentic_filter ) {
 	</div>
 
 	</form><!-- end bulk-action-form -->
+
+<?php endif; ?>
 </div>
 
+<script>
+( function () {
+	'use strict';
+	var toggle = document.getElementById( 'agentic-agents-mode-toggle' );
+	if ( ! toggle ) {
+		return;
+	}
+	Array.prototype.forEach.call( toggle.querySelectorAll( 'button' ), function ( btn ) {
+		btn.addEventListener( 'click', function () {
+			if ( btn.disabled ) {
+				return;
+			}
+			Array.prototype.forEach.call( toggle.querySelectorAll( 'button' ), function ( b ) {
+				b.disabled = true;
+			} );
+			fetch( <?php echo wp_json_encode( esc_url_raw( rest_url( 'agentic/v1/admin-page' ) ) ); ?>, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': <?php echo wp_json_encode( wp_create_nonce( 'wp_rest' ) ); ?>
+				},
+				body: JSON.stringify( {
+					action_name: 'set_screen_mode',
+					screen: 'agents',
+					mode: btn.getAttribute( 'data-mode' )
+				} )
+			} ).then( function () {
+				window.location.reload();
+			} );
+		} );
+	} );
+} )();
+</script>
+
+<?php if ( $agentic_agents_advanced ) : ?>
 <script>
 (function () {
 	// Keep top/bottom bulk selects in sync.
@@ -655,3 +764,4 @@ function agentic_confirm_bulk( btn ) {
 }());
 <?php endif; ?>
 </script>
+<?php endif; ?>

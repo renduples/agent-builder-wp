@@ -131,7 +131,7 @@ class Admin_Pages_REST {
 			if ( in_array( $screen, array( 'tools', 'skills' ), true ) ) {
 				return current_user_can( 'agentic_manage_tools' );
 			}
-			if ( in_array( $screen, array( 'approvals', 'deployment' ), true ) ) {
+			if ( in_array( $screen, array( 'approvals', 'deployment', 'agents' ), true ) ) {
 				return current_user_can( 'agentic_manage_agents' );
 			}
 			if ( 'logs' === $screen ) {
