@@ -99,6 +99,16 @@ $agentic_signup_tts_voices     = array(
 				</div>
 				<div class="agentic-config-cell agentic-config-explanation" id="agentic-explain-mode"></div>
 
+				<!-- Interface Mode -->
+				<div class="agentic-config-cell agentic-config-setting">
+					<label for="agentic-signup-ui-mode"><?php esc_html_e( 'How would you like Agent Builder to work?', 'agent-builder' ); ?></label>
+					<select id="agentic-signup-ui-mode" name="ui_mode">
+						<option value="basic" selected><?php esc_html_e( 'Basic', 'agent-builder' ); ?></option>
+						<option value="advanced"><?php esc_html_e( 'Advanced', 'agent-builder' ); ?></option>
+					</select>
+				</div>
+				<div class="agentic-config-cell agentic-config-explanation" id="agentic-explain-ui-mode"></div>
+
 				<!-- Chat Model -->
 				<div class="agentic-config-cell agentic-config-setting">
 					<label for="agentic-signup-model">
@@ -208,6 +218,7 @@ $agentic_signup_tts_voices     = array(
 	var terms        = document.getElementById( 'agentic-agree-terms' );
 	var privacy      = document.getElementById( 'agentic-agree-privacy' );
 	var modeSelect   = document.getElementById( 'agentic-signup-agent-mode' );
+	var uiModeSelect = document.getElementById( 'agentic-signup-ui-mode' );
 	var loadingBadge = document.getElementById( 'agentic-models-loading' );
 	var pricingUrl   = <?php echo wp_json_encode( $agentic_pricing_url ); ?>;
 
@@ -225,6 +236,17 @@ $agentic_signup_tts_voices     = array(
 		disabled: {
 			title: <?php echo wp_json_encode( __( 'Disabled', 'agent-builder' ) ); ?>,
 			body : <?php echo wp_json_encode( __( 'Chat only — all tools and site actions are disabled. Agents cannot modify content or call external services.', 'agent-builder' ) ); ?>
+		}
+	};
+
+	var uiModeExplanations = {
+		basic: {
+			title: <?php echo wp_json_encode( __( 'Basic', 'agent-builder' ) ); ?>,
+			body : <?php echo wp_json_encode( __( 'Guided, plain language, best for getting started', 'agent-builder' ) ); ?>
+		},
+		advanced: {
+			title: <?php echo wp_json_encode( __( 'Advanced', 'agent-builder' ) ); ?>,
+			body : <?php echo wp_json_encode( __( 'Full console, best if you\'ve used developer tools like this before', 'agent-builder' ) ); ?>
 		}
 	};
 
@@ -292,6 +314,11 @@ $agentic_signup_tts_voices     = array(
 		if ( exp ) renderExpl( 'agentic-explain-mode', exp.title, exp.body, null, null );
 	}
 
+	function updateUiModeExpl() {
+		var exp = uiModeExplanations[ uiModeSelect.value ];
+		if ( exp ) renderExpl( 'agentic-explain-ui-mode', exp.title, exp.body, null, null );
+	}
+
 	function updateChatExpl( selId, explId ) {
 		var val  = document.getElementById( selId ).value;
 		var name = llmShortLabels[ val ]   || val;
@@ -340,6 +367,7 @@ $agentic_signup_tts_voices     = array(
 
 	// Render immediately with fallback data (no quota/cost lines yet).
 	updateModeExpl();
+	updateUiModeExpl();
 	updateChatExpl( 'agentic-signup-model',        'agentic-explain-chat'   );
 	updateChatExpl( 'agentic-signup-vision-model',  'agentic-explain-vision' );
 	updateTtsExpl();
@@ -348,6 +376,7 @@ $agentic_signup_tts_voices     = array(
 	// ── Change events ─────────────────────────────────────────────────────────
 
 	modeSelect.addEventListener( 'change', updateModeExpl );
+	uiModeSelect.addEventListener( 'change', updateUiModeExpl );
 	document.getElementById( 'agentic-signup-model' ).addEventListener( 'change', function () {
 		updateChatExpl( 'agentic-signup-model', 'agentic-explain-chat' );
 	} );
@@ -361,6 +390,7 @@ $agentic_signup_tts_voices     = array(
 
 	var performanceDefaults = {
 		'agentic-signup-agent-mode'  : 'supervised',
+		'agentic-signup-ui-mode'     : 'basic',
 		'agentic-signup-model'       : 'gemini-2.5-flash',
 		'agentic-signup-vision-model': 'gemini-2.5-flash',
 		'agentic-signup-tts-voice'   : 'journey-f',
@@ -373,6 +403,7 @@ $agentic_signup_tts_voices     = array(
 			if ( el ) el.value = performanceDefaults[ id ];
 		} );
 		updateModeExpl();
+		updateUiModeExpl();
 		updateChatExpl( 'agentic-signup-model',        'agentic-explain-chat'   );
 		updateChatExpl( 'agentic-signup-vision-model',  'agentic-explain-vision' );
 		updateTtsExpl();
@@ -486,6 +517,7 @@ $agentic_signup_tts_voices     = array(
 				site_url      : document.getElementById( 'agentic-signup-siteurl' ).value.trim(),
 				plugin_version: form.querySelector( '[name="plugin_version"]' ).value,
 				agent_mode    : modeSelect.value,
+				ui_mode       : uiModeSelect.value,
 				chat_model    : document.getElementById( 'agentic-signup-model' ).value,
 				vision_model  : document.getElementById( 'agentic-signup-vision-model' ).value,
 				tts_voice     : document.getElementById( 'agentic-signup-tts-voice' ).value,
