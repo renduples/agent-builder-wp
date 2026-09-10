@@ -1390,6 +1390,40 @@
 	font-size: 13px;
 	color: #50575e;
 }
+.agentic-safety-scope__rest-title {
+	margin: 4px 0 0;
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+}
+.agentic-safety-tool-list__label {
+	color: #50575e;
+	font-size: 12px;
+	font-weight: 400;
+}
+.agentic-safety-raw {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 10px 16px;
+	margin: 4px 0 8px;
+	width: 100%;
+}
+.agentic-safety-raw div {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.agentic-safety-raw dt {
+	margin: 0;
+	font-size: 11px;
+	color: #646970;
+}
+.agentic-safety-raw dd {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 650;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
 .agentic-safety-scope__rest summary {
 	cursor: pointer;
 	font-weight: 600;

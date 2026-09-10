@@ -2256,7 +2256,7 @@ class Admin_Pages_REST {
 
 	/**
 	 * Safety Center payload (M2 Phase 1 overview + Phase 2 inventory/scopes
-	 * + Phase 3 audit-integrity incident messaging).
+	 * + Phase 3 audit-integrity incident messaging + Phase 5 Advanced polish).
 	 *
 	 * Assembles the five summary cards plus the risk-tier strip, highest-risk
 	 * enabled list, per-agent scope cards, and the audit-log integrity
@@ -2264,8 +2264,9 @@ class Admin_Pages_REST {
 	 * once here and reused by the overview card and the integrity section.
 	 * The HIGH-risk confirmation modal (Phase 4) stays out of this payload.
 	 *
-	 * Overview cards and Phase 2–3 sections always render regardless of
-	 * Basic/Advanced: there is no per-screen Advanced drill-down yet (Phase 5).
+	 * Overview cards and Phase 2–4 sections always render in both modes.
+	 * Phase 5 uses is_advanced so Advanced can expand the full per-agent
+	 * tool list and show the raw verify_chain() fields already in this payload.
 	 *
 	 * @return array<string, mixed>
 	 */

@@ -315,8 +315,9 @@ class Dashboard_REST {
 					'providers' => admin_url( 'admin.php?page=agentic-settings&tab=providers' ),
 					'interface' => admin_url( 'admin.php?page=agentic-settings&tab=interface' ),
 					'activity'  => admin_url( 'admin.php?page=agentic-audit-log' ),
-					'approvals' => admin_url( 'admin.php?page=agentic-approvals' ),
-					'agent_ready' => admin_url( 'admin.php?page=agentic-agent-ready' ),
+					'approvals'      => admin_url( 'admin.php?page=agentic-approvals' ),
+					'safety_center'  => admin_url( 'admin.php?page=agentic-safety-center' ),
+					'agent_ready'    => admin_url( 'admin.php?page=agentic-agent-ready' ),
 					'backups'   => admin_url( 'admin.php?page=agentic-approvals&tab=backups' ),
 					'pricing'   => 'https://agentic-plugin.com/pricing/',
 					'community' => class_exists( Agent_Updates::class )

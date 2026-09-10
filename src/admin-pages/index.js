@@ -151,7 +151,14 @@ function bootConfig() {
 // Screens with a Basic/Advanced content split, and thus a ScreenModeToggle
 // in AdminPage's top-right actions slot. Must match the screens the
 // set_screen_mode REST action recognizes (class-admin-pages-rest.php).
-const SCREENS_WITH_MODE = [ 'tools', 'skills', 'approvals', 'logs', 'agent-ready' ];
+const SCREENS_WITH_MODE = [
+	'tools',
+	'skills',
+	'approvals',
+	'logs',
+	'agent-ready',
+	'safety-center',
+];
 
 /**
  * Standard admin footer: policy blurb + support/docs + legal links.
@@ -2508,7 +2515,69 @@ function SafetyRiskInventory( { inventory, urls } ) {
 	);
 }
 
-function SafetyAgentScopes( { agents, urls } ) {
+function SafetyScopeToolList( { tools, isAdvanced, high } ) {
+	return (
+		<ul
+			className={
+				'agentic-safety-tool-list' +
+				( high ? ' agentic-safety-tool-list--high' : '' )
+			}
+		>
+			{ tools.map( ( tool ) => (
+				<li key={ tool.name }>
+					<code>
+						{ isAdvanced ? tool.name : tool.label || tool.name }
+					</code>
+					{ isAdvanced && tool.label ? (
+						<span className="agentic-safety-tool-list__label">
+							{ tool.label }
+						</span>
+					) : null }
+					<span
+						className={
+							'agentic-react-risk agentic-react-risk--' +
+							( tool.risk || ( high ? 'high' : 'none' ) )
+						}
+					>
+						{ tool.risk_label || tool.risk }
+					</span>
+				</li>
+			) ) }
+		</ul>
+	);
+}
+
+function SafetyScopeRestTools( { tools, isAdvanced } ) {
+	if ( ! tools.length ) {
+		return null;
+	}
+	const heading = sprintf(
+		/* translators: %d: remaining tool count */
+		__( '%d more tools', 'agent-builder' ),
+		tools.length
+	);
+	const list = (
+		<SafetyScopeToolList tools={ tools } isAdvanced={ !! isAdvanced } />
+	);
+	if ( isAdvanced ) {
+		return (
+			<>
+				<h4 className="agentic-safety-scope__rest-title">
+					{ heading }
+				</h4>
+				{ list }
+			</>
+		);
+	}
+	return (
+		<details className="agentic-safety-scope__rest">
+			<summary>{ heading }</summary>
+			{ list }
+		</details>
+	);
+}
+
+function SafetyAgentScopes( { agents, urls, isAdvanced } ) {
 	const items = agents.items || [];
 	const integrityNote =
 		agents.integrity_note ||
@@ -2533,6 +2602,7 @@ function SafetyAgentScopes( { agents, urls } ) {
 				<div className="agentic-safety-scope-grid">
 					{ items.map( ( agent ) => {
 						const counts = agent.risk_counts || {};
+						const otherTools = agent.other_tools || [];
 						return (
 							<article
 								key={ agent.slug }
@@ -2541,6 +2611,11 @@ function SafetyAgentScopes( { agents, urls } ) {
 								<h3 className="agentic-safety-card__title">
 									{ agent.name || agent.slug }
 								</h3>
+								{ isAdvanced && agent.slug ? (
+									<p className="agentic-safety-card__meta">
+										<code>{ agent.slug }</code>
+									</p>
+								) : null }
 								<p className="agentic-safety-card__meta">
 									{ sprintf(
 										/* translators: 1: version, 2: author */
@@ -2588,24 +2663,11 @@ function SafetyAgentScopes( { agents, urls } ) {
 									) }
 								</p>
 								{ ( agent.high_tools || [] ).length ? (
-									<ul className="agentic-safety-tool-list agentic-safety-tool-list--high">
-										{ agent.high_tools.map( ( tool ) => (
-											<li key={ tool.name }>
-												<code>
-													{ tool.label || tool.name }
-												</code>
-												<span
-													className={
-														'agentic-react-risk agentic-react-risk--' +
-														( tool.risk || 'high' )
-													}
-												>
-													{ tool.risk_label ||
-														tool.risk }
-												</span>
-											</li>
-										) ) }
-									</ul>
+									<SafetyScopeToolList
+										tools={ agent.high_tools }
+										isAdvanced={ isAdvanced }
+										high
+									/>
 								) : (
 									<p className="agentic-safety-card__hint">
 										{ __(
@@ -2614,42 +2676,10 @@ function SafetyAgentScopes( { agents, urls } ) {
 										) }
 									</p>
 								) }
-								{ ( agent.other_tools || [] ).length ? (
-									<details className="agentic-safety-scope__rest">
-										<summary>
-											{ sprintf(
-												/* translators: %d: remaining tool count */
-												__(
-													'%d more tools',
-													'agent-builder'
-												),
-												agent.other_tools.length
-											) }
-										</summary>
-										<ul className="agentic-safety-tool-list">
-											{ agent.other_tools.map(
-												( tool ) => (
-													<li key={ tool.name }>
-														<code>
-															{ tool.label ||
-																tool.name }
-														</code>
-														<span
-															className={
-																'agentic-react-risk agentic-react-risk--' +
-																( tool.risk ||
-																	'none' )
-															}
-														>
-															{ tool.risk_label ||
-																tool.risk }
-														</span>
-													</li>
-												)
-											) }
-										</ul>
-									</details>
-								) : null }
+								<SafetyScopeRestTools
+									tools={ otherTools }
+									isAdvanced={ isAdvanced }
+								/>
 								<p className="agentic-safety-scope__integrity">
 									{ integrityNote }
 								</p>
@@ -2689,9 +2719,11 @@ function SafetyAgentScopes( { agents, urls } ) {
 	);
 }
 
-function SafetyAuditIntegrity( { integrity, urls, valid } ) {
+function SafetyAuditIntegrity( { integrity, urls, valid, isAdvanced } ) {
 	const brokenAt = integrity.broken_at_id;
 	const chainStart = integrity.chain_start_id;
+	const rawValue = ( value ) =>
+		Number.isInteger( value ) ? String( value ) : 'null';
 
 	return (
 		<section
@@ -2802,6 +2834,34 @@ function SafetyAuditIntegrity( { integrity, urls, valid } ) {
 						) }
 					</p>
 				) : null }
+				{ isAdvanced ? (
+					<dl className="agentic-safety-raw">
+						<div>
+							<dt>
+								<code>valid</code>
+							</dt>
+							<dd>{ valid ? 'true' : 'false' }</dd>
+						</div>
+						<div>
+							<dt>
+								<code>checked</code>
+							</dt>
+							<dd>{ String( integrity.checked ?? 0 ) }</dd>
+						</div>
+						<div>
+							<dt>
+								<code>chain_start_id</code>
+							</dt>
+							<dd>{ rawValue( chainStart ) }</dd>
+						</div>
+						<div>
+							<dt>
+								<code>broken_at_id</code>
+							</dt>
+							<dd>{ rawValue( brokenAt ) }</dd>
+						</div>
+					</dl>
+				) : null }
 				<p className="agentic-safety-card__hint">
 					{ __(
 						'This activity log is tamper-evident. Each entry is linked to the one before it, so if someone edits or deletes a later entry after the fact, the verification check fails.',
@@ -2909,6 +2969,14 @@ function SafetyCenterView( { data, reload } ) {
 			) }
 
 			<p className="agentic-react-lead">{ data.description }</p>
+			{ data.is_advanced ? (
+				<p className="agentic-react-muted">
+					{ __(
+						"Advanced view expands every agent's tool list and shows the raw verify_chain() fields for the audit log.",
+						'agent-builder'
+					) }
+				</p>
+			) : null }
 
 			<div className="agentic-safety-overview">
 				<article className="agentic-safety-card">
@@ -3110,11 +3178,13 @@ function SafetyCenterView( { data, reload } ) {
 				integrity={ integrity }
 				urls={ urls }
 				valid={ integrityValid }
+				isAdvanced={ !! data.is_advanced }
 			/>
 
 			<SafetyAgentScopes
 				agents={ agents }
 				urls={ urls }
+				isAdvanced={ !! data.is_advanced }
 			/>
 
 			<aside className="agentic-safety-passport">
