@@ -206,6 +206,19 @@ class Admin_Pages_REST {
 			if ( '' === $name || ! class_exists( Tools_Registry::class ) ) {
 				return new \WP_Error( 'invalid', __( 'Invalid tool.', 'agent-builder' ), array( 'status' => 400 ) );
 			}
+			if ( $enabled && class_exists( Risk_Level::class ) ) {
+				$risk = Risk_Level::max(
+					Tools_Registry::get_risk_level( $name ),
+					Risk_Level::get_tool_default( $name )
+				);
+				if ( Risk_Level::EXTREME === $risk ) {
+					return new \WP_Error(
+						'extreme_blocked',
+						__( 'This tool cannot be enabled', 'agent-builder' ),
+						array( 'status' => 403 )
+					);
+				}
+			}
 			$ok = Tools_Registry::set_enabled( $name, $enabled );
 			// Manual toggle leaves basic profile as custom.
 			update_option( 'agentic_tools_ability_profile', 'custom', false );

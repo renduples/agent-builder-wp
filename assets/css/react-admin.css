@@ -1456,3 +1456,18 @@
 		grid-template-columns: 1fr;
 	}
 }
+
+.agentic-tool-risk-modal .components-modal__content p {
+	margin: 0 0 1em;
+	font-size: 13px;
+	line-height: 1.55;
+}
+.agentic-tool-risk-modal .components-modal__content p:last-of-type {
+	margin-bottom: 0;
+}
+.agentic-tool-risk-modal__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 16px;
+}
