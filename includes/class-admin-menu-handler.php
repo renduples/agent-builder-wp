@@ -1503,11 +1503,91 @@ class Admin_Menu_Handler {
 			)
 		);
 
+		// Playground is Chat-only Advanced chrome. Gated on is_advanced_mode('chat')
+		// so it follows the site-wide default (Phase 8b header switch) and would
+		// honour a Chat per-screen override if one is ever set. No toggle is
+		// added on this page — Basic mode stays pixel-identical, including
+		// Skills/Publish embeds of chat-interface.php, which never reach here.
+		$agentic_playground = self::is_advanced_mode( 'chat' );
+		if ( $agentic_playground ) {
+			wp_enqueue_script(
+				'agentic-chat-playground',
+				AGENT_BUILDER_URL . 'assets/js/chat-playground.js',
+				array( 'agentic-chat' ),
+				AGENT_BUILDER_VERSION,
+				true
+			);
+		}
+
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Agent Chat', 'agent-builder' ) . ' <span class="agentic-status" style="font-size: 14px; font-weight: normal; vertical-align: middle;"><span class="agentic-status-dot"></span>' . esc_html__( 'Online', 'agent-builder' ) . '</span></h1>';
+		if ( $agentic_playground ) {
+			echo '<div class="agentic-playground">';
+			echo '<div class="agentic-playground__thread">';
+		}
 		include AGENT_BUILDER_DIR . 'templates/chat-interface.php';
+		if ( $agentic_playground ) {
+			echo '</div>';
+			$this->render_chat_playground_panel(
+				isset( $agentic_current_agent_id ) ? (string) $agentic_current_agent_id : '',
+				( isset( $agentic_current_agent ) && $agentic_current_agent instanceof Agent_Base ) ? $agentic_current_agent : null
+			);
+			echo '</div>';
+		}
 		echo '<p style="margin-top:12px;"><a href="' . esc_url( admin_url( 'admin.php?page=agentic-deployment' ) ) . '">' . esc_html__( 'Manage Agent Deployments', 'agent-builder' ) . '</a></p>';
 		echo '</div>';
+	}
+
+	/**
+	 * Advanced-mode Playground side panel for Agent Chat.
+	 *
+	 * Read-only: handle_chat() does not accept per-request model/temperature
+	 * overrides (temperature is hardcoded in Llm_Client for OpenAI-compatible
+	 * providers). Agent-level override_provider/override_model are persisted
+	 * settings, not playground controls — shown as the effective model, not
+	 * as interactive widgets.
+	 *
+	 * @param string          $agent_id Current agent slug.
+	 * @param Agent_Base|null $agent    Current agent instance, if resolved.
+	 * @return void
+	 */
+	private function render_chat_playground_panel( string $agent_id, ?Agent_Base $agent ): void {
+		$effective        = function_exists( 'agentic_get_effective_provider_model' )
+			? agentic_get_effective_provider_model( $agent_id )
+			: array(
+				'provider'       => '',
+				'model'          => '',
+				'vision_model'   => '',
+				'provider_label' => '',
+			);
+		$ov_provider      = Agent_Settings::get( $agent_id, 'override_provider' );
+		$ov_model         = Agent_Settings::get( $agent_id, 'override_model' );
+		$model_source     = ( ! empty( $ov_provider ) || ! empty( $ov_model ) )
+			? __( 'Per-agent override (Settings → Agents)', 'agent-builder' )
+			: __( 'Site default (Settings → Providers)', 'agent-builder' );
+		$system_prompt    = ( $agent instanceof Agent_Base ) ? $agent->get_system_prompt() : '';
+		$persona_notes    = Agent_Settings::get( $agent_id, 'persona_notes' );
+		$style            = Agent_Settings::get( $agent_id, 'persona_response_style' );
+		$tools            = class_exists( Inventory_REST::class )
+			? Inventory_REST::get_agent_tools( $agent_id )
+			: array();
+		$instructions_url = admin_url( 'admin.php?page=agentic-train-data&tab=instructions' );
+		if ( $agent_id ) {
+			$instructions_url = add_query_arg( 'edit_persona', $agent_id, $instructions_url );
+		}
+
+		$agentic_pg = array(
+			'agent_id'         => $agent_id,
+			'agent_name'       => ( $agent instanceof Agent_Base ) ? $agent->get_name() : '',
+			'effective'        => $effective,
+			'model_source'     => $model_source,
+			'system_prompt'    => $system_prompt,
+			'persona_notes'    => $persona_notes,
+			'response_style'   => $style,
+			'tools'            => $tools,
+			'instructions_url' => $instructions_url,
+		);
+		include AGENT_BUILDER_DIR . 'admin/partials/chat-playground-panel.php';
 	}
 
 	/**
