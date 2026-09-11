@@ -144,7 +144,7 @@ On WordPress 6.9+, Agent Builder provides bidirectional integration: (1) **Outbo
 **Tools:** Single, permission-controlled actions an agent can execute (e.g., `create_draft_post`, `get_site_health`). **Skills:** Pre-packaged instruction sets and tool workflows following the open `agentskills.io` standard that teach agents multi-step capabilities without writing code.
 
 = What happens to my data if I delete the plugin? =
-Uninstall keeps your data unless you check “Delete data” on the deactivation dialog. If you do choose to delete, conversation history, options, and most custom tables are removed. Custom agents you created and skills you imported are kept so a reinstall can find them.
+Uninstall keeps your data unless you check “Delete all plugin data” on the deactivation dialog. If you do choose to delete, conversation history, options, custom tables, and the agents and skills you created or imported are all removed.
 
 = Where is the React admin source? =
 React admin sources live in `src/`; production bundles are in `build/`. Rebuild with `npm run build` (`@wordpress/scripts`).
