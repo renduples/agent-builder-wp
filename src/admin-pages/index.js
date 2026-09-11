@@ -2329,13 +2329,13 @@ function AgentReadyView( { data, reload } ) {
 
 			<AgentReadyFixList categories={ categories } onApplyFix={ applyFix } applying={ applying } />
 
-			<p>
+			<div className="agentic-agent-ready-webmcp-toggle">
 				<ToggleControl
 					label={ __( 'Let AI agents access my site (turn on the WebMCP Bridge)', 'agent-builder' ) }
 					checked={ Boolean( data.webmcp_enabled ) }
 					onChange={ toggleWebmcp }
 				/>
-			</p>
+			</div>
 
 			<p>
 				<Button variant="secondary" isBusy={ submitting } disabled={ submitting } onClick={ submitToDirectory }>
@@ -2370,6 +2370,11 @@ function AgentReadyView( { data, reload } ) {
 					</div>
 
 					<h3>{ __( 'WebMCP tool exposure', 'agent-builder' ) }</h3>
+					{ 0 === ( data.webmcp_matrix || [] ).length ? (
+						<p className="agentic-react-muted">
+							{ __( 'No tools are currently exposed to agents via WebMCP.', 'agent-builder' ) }
+						</p>
+					) : (
 					<div className="agentic-react-table-wrap">
 						<table className="agentic-react-table">
 							<thead>
@@ -2382,7 +2387,7 @@ function AgentReadyView( { data, reload } ) {
 								</tr>
 							</thead>
 							<tbody>
-								{ ( data.webmcp_matrix || [] ).map( ( row ) => (
+								{ data.webmcp_matrix.map( ( row ) => (
 									<tr key={ `${ row.agent_slug }:${ row.tool_name }` }>
 										<td>{ row.agent_slug }</td>
 										<td><code>{ row.tool_name }</code></td>
@@ -2399,6 +2404,7 @@ function AgentReadyView( { data, reload } ) {
 							</tbody>
 						</table>
 					</div>
+					) }
 
 					{ data.directory_status && data.directory_status.submitted_at && (
 						<p className="agentic-react-muted">

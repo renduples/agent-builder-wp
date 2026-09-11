@@ -1182,6 +1182,10 @@
 	border-bottom: none;
 }
 
+.agentic-agent-ready-webmcp-toggle {
+	margin: 0 0 16px;
+}
+
 /* Safety Center — Basic overview cards (M2 Phase 1) */
 .agentic-safety-overview {
 	display: grid;
