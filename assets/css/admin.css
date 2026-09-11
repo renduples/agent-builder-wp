@@ -2980,6 +2980,8 @@ button.agentic-card-header-link:focus-visible {
 
 /* ── Action row (buttons/status below forms or tables) ─────────── */
 .agentic-action-row { margin-top: 16px; display: flex; gap: 8px; align-items: center; }
+/* WP core `.button { display: inline-block }` beats the UA [hidden] rule. */
+.agentic-action-row .button[hidden] { display: none !important; }
 
 /* ── Row states ─────────────────────────────────────────────────── */
 .agentic-row-inactive { opacity: 0.5; }
@@ -3250,9 +3252,9 @@ button.agentic-card-header-link:focus-visible {
 .agentic-notice-error-compact p + p { margin: 8px 0 0; color: #646970; }
 
 /* ── Select min-width utilities ─────────────────────────────────── */
-.agentic-select-260 { min-width: 260px; }
-.agentic-select-280 { min-width: 280px; }
-.agentic-select-320 { min-width: 320px; }
+.agentic-select-260 { min-width: 260px; max-width: 100%; }
+.agentic-select-280 { min-width: 280px; max-width: 100%; }
+.agentic-select-320 { min-width: 320px; max-width: 100%; }
 
 /* ── Admin filter form flex row ─────────────────────────────────── */
 .agentic-filter-form { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -4172,8 +4174,21 @@ font-size: 12px; font-weight: 600;
 }
 
 @media screen and (max-width: 782px) {
-.agentic-settings-shell { flex-direction: column; }
+.agentic-settings-shell { flex-direction: column; align-items: stretch; }
 .agentic-settings-sidebar { position: static; flex-basis: auto; width: 100%; }
+.agentic-settings-body { width: 100%; max-width: 100%; min-width: 0; }
+.agentic-settings-panel,
+.agentic-settings-panel__body { max-width: 100%; min-width: 0; }
+.agentic-table-scroll { max-width: 100%; }
+.wrap.agentic-has-global-mode,
+.agentic-settings-shell { overflow-x: hidden; }
+.agentic-select-260,
+.agentic-select-280,
+.agentic-select-320 {
+	min-width: 0;
+	width: 100%;
+	max-width: 100%;
+}
 .agentic-settings-panel .form-table th {
 	width: auto;
 	display: block;
@@ -4235,9 +4250,18 @@ font-size: 12px; font-weight: 600;
 #agentic-agent-overrides-table th:nth-child(7), #agentic-agent-overrides-table td:nth-child(7) { width: 7%;  text-align: center; }
 #agentic-agent-overrides-table th:nth-child(8), #agentic-agent-overrides-table td:nth-child(8) { width: 6%;  text-align: center; }
 
-/* Wide tables scroll horizontally instead of clipping their last column. */
-.agentic-table-scroll { overflow-x: auto; width: 100%; }
+/* Wide tables scroll horizontally instead of clipping their last column.
+   min-width:0 lets the wrap shrink inside the settings panel so the table's
+   min-width cannot inflate the page (the wrap scrolls instead). */
+.agentic-table-scroll { overflow-x: auto; width: 100%; max-width: 100%; min-width: 0; }
 .agentic-table-scroll > table { margin-top: 0; }
+
+/* Keep full-width <select> columns from shrinking to unreadable widths inside
+   .agentic-table-scroll on narrow viewports — the table scrolls instead. */
+.agentic-table-min-560 { min-width: 560px; }
+.agentic-table-min-700 { min-width: 700px; }
+.agentic-table-min-720 { min-width: 720px; }
+.agentic-table-min-900 { min-width: 900px; }
 
 /* ── Knowledge Wiki (OKF) ─────────────────────────────────────────────────── */
 .agentic-knowledge .agentic-kn-hero {
