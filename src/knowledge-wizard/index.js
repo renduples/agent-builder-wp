@@ -51,6 +51,7 @@ function Stepper( { current } ) {
 						( index === current ? ' is-active' : '' ) +
 						( index < current ? ' is-done' : '' )
 					}
+					aria-current={ index === current ? 'step' : undefined }
 				>
 					<span className="agentic-wizard-step__num">
 						{ index + 1 }
@@ -268,7 +269,7 @@ function App() {
 						<p className="agentic-wizard-sublabel">
 							{ __( 'Where is this knowledge coming from?', 'agent-builder' ) }
 						</p>
-						<Flex gap={ 2 } wrap className="agentic-mb-12">
+						<Flex gap={ 2 } wrap justify="flex-start" className="agentic-mb-12">
 							{ SOURCES.map( ( s ) => (
 								<FlexItem key={ s.key }>
 									<Button

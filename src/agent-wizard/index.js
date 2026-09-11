@@ -50,6 +50,11 @@ function format( template, value ) {
 	return template.replace( '%s', value );
 }
 
+function capitalize( value ) {
+	const text = String( value );
+	return text.charAt( 0 ).toUpperCase() + text.slice( 1 );
+}
+
 function Stepper( { current } ) {
 	return (
 		<ol className="agentic-wizard-steps">
@@ -61,6 +66,7 @@ function Stepper( { current } ) {
 						( index === current ? ' is-active' : '' ) +
 						( index < current ? ' is-done' : '' )
 					}
+					aria-current={ index === current ? 'step' : undefined }
 				>
 					<span className="agentic-wizard-step__num">
 						{ index + 1 }
@@ -435,7 +441,11 @@ function App() {
 							value={ form.description }
 							onChange={ ( v ) => set( 'description', v ) }
 						/>
-						<Flex gap={ 4 } align="flex-start">
+						<Flex
+							gap={ 4 }
+							align="flex-start"
+							className="agentic-wizard-inline-fields"
+						>
 							<FlexItem isBlock>
 								<SelectControl
 									label={ __( 'Category', 'agent-builder' ) }
@@ -660,7 +670,11 @@ function App() {
 					<Fragment>
 						{ ! RAG.hasLicense ? (
 							<Notice status="info" isDismissible={ false }>
-								{ __( 'Knowledge (RAG) uses the Agentic AI service. Connect your license to train agents on your content — you can also add knowledge later from the Knowledge page.', 'agent-builder' ) }
+								{ __( 'Knowledge (RAG) uses the Agentic AI service. Connect your license to train agents on your content.', 'agent-builder' ) }
+								{ ' ' }
+								<a href={ RAG.knowledgeUrl }>
+									{ __( 'Add knowledge later from the Knowledge page.', 'agent-builder' ) }
+								</a>
 							</Notice>
 						) : (
 							<Fragment>
@@ -720,7 +734,7 @@ function App() {
 						/>
 						<ReviewRow
 							label={ __( 'Category', 'agent-builder' ) }
-							value={ form.category }
+							value={ capitalize( form.category ) }
 						/>
 						<ReviewRow
 							label={ __( 'Instructions', 'agent-builder' ) }
@@ -731,13 +745,15 @@ function App() {
 						/>
 						<ReviewRow
 							label={ __( 'Provider / Model', 'agent-builder' ) }
-							value={ `${ form.provider || '—' } / ${
-								form.model || '—'
-							}` }
+							value={ `${
+								( selectedProvider && selectedProvider.name ) ||
+								form.provider ||
+								'—'
+							} / ${ form.model || '—' }` }
 						/>
 						<ReviewRow
 							label={ __( 'Autonomy', 'agent-builder' ) }
-							value={ form.mode }
+							value={ capitalize( form.mode ) }
 						/>
 						<ReviewRow
 							label={ __( 'Tools', 'agent-builder' ) }

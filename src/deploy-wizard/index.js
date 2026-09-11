@@ -66,6 +66,7 @@ function Stepper( { current } ) {
 						( index === current ? ' is-active' : '' ) +
 						( index < current ? ' is-done' : '' )
 					}
+					aria-current={ index === current ? 'step' : undefined }
 				>
 					<span className="agentic-wizard-step__num">
 						{ index + 1 }
