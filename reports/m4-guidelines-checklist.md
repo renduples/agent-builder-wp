@@ -62,14 +62,14 @@
 - `admin/skills.php:39-47,78-83,98-101` — nonce verification and sanitized input for save/delete/reset actions.
 
 ## 8) Uninstall cleanup completeness
-**Verdict: NEEDS-REVIEW**
+**Verdict: PASS**
 
 **Evidence**
 - Uninstall honors data-retention choice and exits early unless delete-data is enabled (`uninstall.php:66-69`).
-- When delete-data is enabled, uninstall intentionally preserves `agentic_agent_library` and `agentic_skills` (`uninstall.php:94-99`) even though activator creates those tables (`includes/class-activator.php:971-992,1024-1047`).
-- It does clean options/transients/usermeta/cron and drops other `agentic_*` tables (`uninstall.php:100-163`).
+- `agentic_agent_library` and `agentic_skills` hold mixed bundled + user content (custom/imported skills via `Skills_Registry::create()` / `import_from_hub()`, customized core skills via `source_hash`, user-created and purchased library agents with `source` = `user`/`purchased`). When delete-data is enabled they are dropped with every other `agentic_*` table; there is no preserve list. Bundled rows are re-seeded on next activation (`Activator::seed_skills()`, `seed_bundled_agents()`).
+- It also cleans options/transients/usermeta/cron (`uninstall.php` remaining sections).
 
-**Suggested next step:** Confirm with WP.org reviewer whether preserving user-created/purchased content tables on uninstall is acceptable for this listing.
+Resolved: preserving these tables on opted-in full deletion was incorrect — they are not bundled-only seed stores.
 
 ## 9) `Tested up to` currency
 **Verdict: PASS**
@@ -98,6 +98,6 @@
 ---
 
 ## Summary
-- **PASS:** 8
+- **PASS:** 9
 - **FAIL:** 1
-- **NEEDS-REVIEW:** 2
+- **NEEDS-REVIEW:** 1
