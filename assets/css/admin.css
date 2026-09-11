@@ -3882,8 +3882,8 @@ margin-bottom: 2px;
 }
 .agentic-settings-tab-group .nav-tab-wrapper { margin: 0; padding-bottom: 0; border-bottom: 1px solid #c3c4c7; }
 
-/* Agent Creation Wizard ("Train an Agent"). */
-.agentic-agent-wizard-wrap .agentic-wizard-intro { max-width: 640px; color: #50575e; }
+/* Guided wizards (Train an Agent / Add Knowledge / Publish Your Agent). */
+#wpbody-content .agentic-wizard-intro { max-width: 640px; color: #50575e; }
 .agentic-wizard-card { max-width: 720px; margin-top: 16px; }
 .agentic-wizard-loading { display: flex; align-items: center; gap: 8px; padding: 24px 0; }
 .agentic-wizard-steps { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
@@ -3896,13 +3896,25 @@ font-size: 12px; font-weight: 600;
 .agentic-wizard-step.is-active { color: #1d2327; font-weight: 600; }
 .agentic-wizard-step.is-active .agentic-wizard-step__num { background: #2271b1; color: #fff; }
 .agentic-wizard-step.is-done .agentic-wizard-step__num { background: #00a32a; color: #fff; }
-.agentic-wizard-sublabel { font-weight: 600; margin: 14px 0 4px; }
+.agentic-wizard-sublabel { display: block; font-weight: 600; margin: 14px 0 4px; }
 .agentic-wizard-tools { max-height: 220px; overflow-y: auto; border: 1px solid #dcdcde; border-radius: 4px; padding: 10px 12px; }
 .agentic-wizard-success { margin-top: 0; }
 .agentic-wizard-review__row { display: flex; gap: 12px; padding: 6px 0; border-bottom: 1px solid #f0f0f1; }
 .agentic-wizard-review__label { flex: 0 0 150px; font-weight: 600; color: #50575e; }
 .agentic-wizard-review__value { flex: 1; white-space: pre-wrap; }
 .agentic-wizard-hint { color: #646970; font-size: 12px; margin: 0 0 8px; }
+.agentic-wizard-inline-fields {
+	display: flex;
+	gap: 16px;
+	align-items: flex-start;
+}
+.agentic-wizard-inline-fields__grow { flex: 1 1 auto; min-width: 0; }
+.agentic-wizard-inline-fields__icon { flex: 0 0 auto; }
+@media screen and (max-width: 600px) {
+	.agentic-wizard-inline-fields { flex-direction: column; align-items: stretch; }
+	.agentic-wizard-inline-fields__grow,
+	.agentic-wizard-inline-fields__icon { width: 100%; flex: 1 1 auto; }
+}
 
 /* ── Settings: vertical two-pane shell + card panels (Interface-style) ─ */
 .agentic-settings-wrap { max-width: 1200px; }
