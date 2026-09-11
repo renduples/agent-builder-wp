@@ -47,6 +47,14 @@ Optional `SCREEN=slug,slug` captures a subset. Safety Center is stored as `safet
 
 Uses system Google Chrome when Playwright’s bundled Chromium is unavailable (override with `PLAYWRIGHT_CHROME_PATH`). Safe to re-run; existing PNGs are overwritten.
 
+WordPress.org listing shots (`.wordpress-org/screenshot-N.png`, readme.txt order) are recaptured the same way:
+
+```
+WP_ADMIN_USER=... WP_ADMIN_PASS=... npm run screenshot:wporg
+```
+
+Safety Center and the Advanced Tools list are viewport-height (1440×900) so they stay reviewable; other screens are full-page. Optional `SCREEN=2,9` recaptures a subset.
+
 ## Releases
 
 GitHub tags match plugin versions (`v3.3.0`, etc.). Downloadable ZIPs for production installs are published from the product site and WordPress.org once listed.
