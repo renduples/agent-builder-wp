@@ -745,6 +745,26 @@
 	margin-right: 10px;
 }
 
+/* Extra breathing room below the site-wide mode switch (injected above
+ * .agentic-react-admin__page-head by class-admin-menu-handler.php) so it
+ * doesn't read as one control with this screen's own Basic/Advanced toggle
+ * right underneath it. */
+.agentic-agents-page #agentic-global-mode-switch {
+	margin-bottom: 16px;
+}
+
+/* This screen's own Basic/Advanced toggle, labelled to distinguish it from
+ * the "Site-wide" switch above it. */
+.agentic-page-mode-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+.agentic-page-mode-toggle__label {
+	font-size: 12px;
+	color: #646970;
+}
+
 /* Basic-mode card grid (admin/agents.php) */
 .agentic-agents-basic {
 	display: grid;

@@ -128,7 +128,7 @@ if ( $agentic_agent_action && $agentic_slug && isset( $_GET['_wpnonce'] ) && wp_
 		case 'deactivate':
 			$agentic_result = $agentic_registry->deactivate_agent( $agentic_slug );
 			if ( is_wp_error( $agentic_result ) ) {
-				$agentic_agent_error = $result->get_error_message();
+				$agentic_agent_error = $agentic_result->get_error_message();
 			} else {
 				$agentic_message = __( 'Agent deactivated.', 'agent-builder' );
 			}
@@ -231,19 +231,20 @@ wp_enqueue_style( 'agentic-react-admin', AGENT_BUILDER_URL . 'assets/css/react-a
 	<div class="agentic-react-admin__page-head">
 		<div>
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Agents', 'agent-builder' ); ?></h1>
-			<?php if ( ! $agentic_agents_advanced ) : ?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=agentic-agent-wizard' ) ); ?>" class="page-title-action">
 				<?php esc_html_e( 'Add an agent', 'agent-builder' ); ?>
 			</a>
-			<?php endif; ?>
 		</div>
-		<span class="agentic-screen-mode-toggle" id="agentic-agents-mode-toggle">
-			<button type="button" class="button button-small<?php echo ! $agentic_agents_advanced ? ' button-primary' : ''; ?>" data-mode="basic">
-				<?php esc_html_e( 'Basic', 'agent-builder' ); ?>
-			</button>
-			<button type="button" class="button button-small<?php echo $agentic_agents_advanced ? ' button-primary' : ''; ?>" data-mode="advanced">
-				<?php esc_html_e( 'Advanced', 'agent-builder' ); ?>
-			</button>
+		<span class="agentic-page-mode-toggle" role="group" aria-label="<?php esc_attr_e( 'Interface mode for the Agents screen only', 'agent-builder' ); ?>">
+			<span class="agentic-page-mode-toggle__label"><?php esc_html_e( 'This screen', 'agent-builder' ); ?></span>
+			<span class="agentic-screen-mode-toggle" id="agentic-agents-mode-toggle">
+				<button type="button" class="button button-small<?php echo ! $agentic_agents_advanced ? ' button-primary' : ''; ?>" data-mode="basic">
+					<?php esc_html_e( 'Basic', 'agent-builder' ); ?>
+				</button>
+				<button type="button" class="button button-small<?php echo $agentic_agents_advanced ? ' button-primary' : ''; ?>" data-mode="advanced">
+					<?php esc_html_e( 'Advanced', 'agent-builder' ); ?>
+				</button>
+			</span>
 		</span>
 	</div>
 	<hr class="wp-header-end">
@@ -495,25 +496,32 @@ wp_enqueue_style( 'agentic-react-admin', AGENT_BUILDER_URL . 'assets/css/react-a
 								<?php endif; ?>
 							</div>
 						</td>
-						<td class="column-mcp agentic-connector-cell">
+						<td class="column-mcp agentic-connector-cell" data-colname="<?php esc_attr_e( 'MCP', 'agent-builder' ); ?>">
 							<?php if ( $agentic_mcp_ok ) : ?>
-								<span class="dashicons dashicons-yes-alt agentic-di-green" title="<?php esc_attr_e( 'Reachable via MCP', 'agent-builder' ); ?>"></span>
+								<span class="dashicons dashicons-yes-alt agentic-di-green" aria-hidden="true" title="<?php esc_attr_e( 'Reachable via MCP', 'agent-builder' ); ?>"></span>
+								<span class="screen-reader-text"><?php esc_html_e( 'Reachable via MCP', 'agent-builder' ); ?></span>
 							<?php else : ?>
-								<span class="dashicons dashicons-no agentic-di-red" title="<?php echo esc_attr( $agentic_mcp['reason'] ?? __( 'Not reachable via MCP', 'agent-builder' ) ); ?>"></span>
+								<?php $agentic_mcp_reason = $agentic_mcp['reason'] ?? __( 'Not reachable via MCP', 'agent-builder' ); ?>
+								<span class="dashicons dashicons-no agentic-di-red" aria-hidden="true" title="<?php echo esc_attr( $agentic_mcp_reason ); ?>"></span>
+								<span class="screen-reader-text"><?php echo esc_html( $agentic_mcp_reason ); ?></span>
 							<?php endif; ?>
 						</td>
-						<td class="column-webmcp agentic-connector-cell">
+						<td class="column-webmcp agentic-connector-cell" data-colname="<?php esc_attr_e( 'WebMCP', 'agent-builder' ); ?>">
 							<?php if ( $agentic_webmcp_ok ) : ?>
-								<span class="dashicons dashicons-yes-alt agentic-di-green" title="<?php esc_attr_e( 'Reachable via WebMCP', 'agent-builder' ); ?>"></span>
+								<span class="dashicons dashicons-yes-alt agentic-di-green" aria-hidden="true" title="<?php esc_attr_e( 'Reachable via WebMCP', 'agent-builder' ); ?>"></span>
+								<span class="screen-reader-text"><?php esc_html_e( 'Reachable via WebMCP', 'agent-builder' ); ?></span>
 							<?php else : ?>
-								<span class="dashicons dashicons-no agentic-di-red" title="<?php esc_attr_e( 'Not reachable via WebMCP', 'agent-builder' ); ?>"></span>
+								<span class="dashicons dashicons-no agentic-di-red" aria-hidden="true" title="<?php esc_attr_e( 'Not reachable via WebMCP', 'agent-builder' ); ?>"></span>
+								<span class="screen-reader-text"><?php esc_html_e( 'Not reachable via WebMCP', 'agent-builder' ); ?></span>
 							<?php endif; ?>
 						</td>
-						<td class="column-whatsapp agentic-connector-cell">
+						<td class="column-whatsapp agentic-connector-cell" data-colname="<?php esc_attr_e( 'WhatsApp', 'agent-builder' ); ?>">
 							<?php if ( $agentic_whatsapp_ok ) : ?>
-								<span class="dashicons dashicons-yes-alt agentic-di-green" title="<?php esc_attr_e( 'Reachable via WhatsApp', 'agent-builder' ); ?>"></span>
+								<span class="dashicons dashicons-yes-alt agentic-di-green" aria-hidden="true" title="<?php esc_attr_e( 'Reachable via WhatsApp', 'agent-builder' ); ?>"></span>
+								<span class="screen-reader-text"><?php esc_html_e( 'Reachable via WhatsApp', 'agent-builder' ); ?></span>
 							<?php else : ?>
-								<span class="dashicons dashicons-no agentic-di-red" title="<?php esc_attr_e( 'Not reachable via WhatsApp', 'agent-builder' ); ?>"></span>
+								<span class="dashicons dashicons-no agentic-di-red" aria-hidden="true" title="<?php esc_attr_e( 'Not reachable via WhatsApp', 'agent-builder' ); ?>"></span>
+								<span class="screen-reader-text"><?php esc_html_e( 'Not reachable via WhatsApp', 'agent-builder' ); ?></span>
 							<?php endif; ?>
 						</td>
 					</tr>
