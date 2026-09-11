@@ -4621,14 +4621,15 @@ font-size: 12px; font-weight: 600;
 	gap: 4px;
 	vertical-align: middle;
 }
-/* In Basic site-wide mode, Activity's and Knowledge's own per-screen toggles
-   (top-right of their headers) sit directly under the site-wide switch with
-   only the default 8px gap, reading as one glued four-button control.
+/* In Basic site-wide mode, a screen's own per-screen toggle (top-right of
+   the React admin-pages header) sits directly under the site-wide switch
+   with only the default 8px gap, reading as one glued four-button control.
    Advanced mode is unaffected — the secondary nav rail already repositions
    the site-wide switch onto its own row there. Scoped via WordPress' own
    page-slug body class (see class-admin-notice-manager.php) so it only
-   affects these screens. */
+   affects the screens where this collision was found. */
 body.agent-builder_page_agentic-audit-log #agentic-global-mode-switch,
+body.agent-builder_page_agentic-tools #agentic-global-mode-switch,
 body.agent-builder_page_agentic-train-data #agentic-global-mode-switch {
 	margin-bottom: 16px;
 }

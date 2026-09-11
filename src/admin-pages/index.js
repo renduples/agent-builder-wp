@@ -397,9 +397,9 @@ function ToolsBasicProfiles( { data, reload } ) {
 
 	return (
 		<div className="agentic-react-tools-basic">
-			<p className="agentic-react-lead">
-				{ data.description }
-			</p>
+			{ /* data.description already renders once under the page <h1>
+			   (AdminPage in shared/components.js) — repeating it here duplicated
+			   the same sentence twice in a row for every Basic-mode visitor. */ }
 			<p className="agentic-react-muted">
 				{ __(
 					'These profiles control which tools every agent may use. Approvals still apply for riskier actions.',
@@ -768,6 +768,18 @@ function ToolsView( { data, reload, patchData } ) {
 										>
 											<td style={ { width: 90 } }>
 												<ToggleControl
+													label={
+														<span className="screen-reader-text">
+															{ sprintf(
+																/* translators: %s: tool name */
+																__(
+																	'Enabled: %s',
+																	'agent-builder'
+																),
+																r.title || r.id
+															) }
+														</span>
+													}
 													checked={ !! r.enabled }
 													disabled={ busy === r.id }
 													onChange={ ( v ) =>
