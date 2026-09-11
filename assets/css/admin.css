@@ -759,6 +759,12 @@
 	margin-bottom: 16px;
 }
 
+/* Same collision, same fix, for the React-rendered Site Passport screen
+ * (internal render key "agent-ready" — see class-admin-menu-handler.php). */
+.agentic-admin-page-agent-ready #agentic-global-mode-switch {
+	margin-bottom: 16px;
+}
+
 /* This screen's own Basic/Advanced toggle, labelled to distinguish it from
  * the "Site-wide" switch above it. */
 .agentic-page-mode-toggle {

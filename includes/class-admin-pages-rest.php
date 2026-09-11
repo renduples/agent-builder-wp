@@ -2240,6 +2240,7 @@ class Admin_Pages_REST {
 		$payload = array(
 			'page'           => 'agent-ready',
 			'title'          => __( 'Site Passport', 'agent-builder' ),
+			'panel_title'    => __( 'Score & fixes', 'agent-builder' ),
 			'description'    => __( 'Your site\'s passport for AI agents — what they can discover, and what they can access.', 'agent-builder' ),
 			'is_advanced'    => $is_advanced,
 			'score'          => class_exists( Agent_Ready_Score::class ) ? Agent_Ready_Score::get_latest() : array(),
