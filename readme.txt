@@ -161,7 +161,7 @@ React admin sources live in `src/`; production bundles are in `build/`. Rebuild 
 8. Activity Log — Full audit trail showing what agents did, when, and whether they succeeded.
 9. Safety Center — Risk inventory, kill switch, per-agent tool scopes, and audit-log integrity check.
 10. Quick Start Wizard — Connect your LLM provider and choose Basic or Advanced mode in under two minutes.
-11. Settings & Providers — Manage LLM providers, UI modes, and security policies.
+11. Settings & Providers — Connect and manage LLM providers. Interface (UI modes) and Security are in the same Settings nav.
 
 == External Services ==
 
