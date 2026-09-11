@@ -4478,11 +4478,15 @@ font-size: 12px; font-weight: 600;
 	cursor: help;
 	opacity: 0.85;
 }
-.agentic-kn-help:hover,
+.agentic-kn-help:hover {
+	color: #2271b1;
+	opacity: 1;
+}
 .agentic-kn-help:focus {
 	color: #2271b1;
 	opacity: 1;
-	outline: none;
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
 }
 .agentic-kn-field input,
 .agentic-kn-field select,
@@ -4500,6 +4504,10 @@ font-size: 12px; font-weight: 600;
 	display: block;
 }
 .agentic-kn-field-full { grid-column: 1 / -1; }
+.agentic-kn-field-invalid {
+	border-color: #d63638 !important;
+	box-shadow: 0 0 0 1px #d63638;
+}
 .agentic-kn-status {
 	margin: 12px 0 0;
 	font-size: 13px;
@@ -4621,7 +4629,8 @@ font-size: 12px; font-weight: 600;
    page-slug body class (see class-admin-notice-manager.php) so it only
    affects the screens where this collision was found. */
 body.agent-builder_page_agentic-audit-log #agentic-global-mode-switch,
-body.agent-builder_page_agentic-tools #agentic-global-mode-switch {
+body.agent-builder_page_agentic-tools #agentic-global-mode-switch,
+body.agent-builder_page_agentic-train-data #agentic-global-mode-switch {
 	margin-bottom: 16px;
 }
 .agentic-screen-mode-toggle .button-small {

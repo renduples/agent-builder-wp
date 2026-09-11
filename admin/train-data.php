@@ -217,6 +217,9 @@ if ( $agentic_knowledge_advanced ) {
 				<p class="agentic-kn-empty" id="agentic-okf-empty" hidden>
 					<?php esc_html_e( 'No concepts yet. Create a FAQ, policy, or product fact to get started.', 'agent-builder' ); ?>
 				</p>
+				<p class="agentic-kn-empty" id="agentic-okf-empty-filtered" hidden>
+					<?php esc_html_e( 'No concepts match your search. Try a different keyword or clear the search.', 'agent-builder' ); ?>
+				</p>
 			</aside>
 
 			<section class="agentic-kn-editor-panel" id="agentic-okf-editor" hidden>
