@@ -927,9 +927,38 @@ function SkillsView( { data, reload } ) {
 						</tr>
 					</thead>
 					<tbody>
-						{ rows.map( ( r ) => (
+						{ rows.length === 0 ? (
+							<tr>
+								<td
+									colSpan={ isAdvanced ? 5 : 3 }
+									className="agentic-react-muted"
+								>
+									{ q.trim()
+										? __(
+												'No skills match your search. Try a different keyword or clear the search.',
+												'agent-builder'
+										  )
+										: __(
+												'No skills installed yet. Import a recommended skill, create your own, or browse the community above.',
+												'agent-builder'
+										  ) }
+								</td>
+							</tr>
+						) : (
+						rows.map( ( r ) => (
 							<tr key={ r.id }>
 								<td>
+									<span
+										className={
+											'agentic-react-led' +
+											( r.enabled ? ' is-on' : '' )
+										}
+										title={
+											r.enabled
+												? __( 'Active', 'agent-builder' )
+												: __( 'Disabled', 'agent-builder' )
+										}
+									/>{ ' ' }
 									<strong>{ r.title }</strong>
 									{ r.subtitle && (
 										<div className="agentic-react-muted">
@@ -938,7 +967,13 @@ function SkillsView( { data, reload } ) {
 									) }
 								</td>
 								<td>
-									<code>{ r.agent || '—' }</code>
+									{ r.agent ? (
+										<code>{ r.agent }</code>
+									) : (
+										<span className="agentic-react-muted">
+											{ __( 'All agents', 'agent-builder' ) }
+										</span>
+									) }
 								</td>
 								{ isAdvanced && (
 									<>
@@ -986,7 +1021,8 @@ function SkillsView( { data, reload } ) {
 									</button>
 								</td>
 							</tr>
-						) ) }
+						) )
+						) }
 					</tbody>
 				</table>
 			</div>
