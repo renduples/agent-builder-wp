@@ -18,11 +18,14 @@ bin
 .DS_Store
 ._*
 .phpunit.result.cache
+.fleet-task
+.env.local
 node_modules
 vendor
 tests
 screenshots
 .wordpress-org
+reports
 CLAUDE.md
 Claude.md
 SUBMISSION-NOTES.md

@@ -544,9 +544,9 @@ Risk floors, MCP blocklists, and some UI copy still mention `run_wp_cli`, `manag
 
 ### 8.7 Packaging notes that affect what the reviewer actually unzips
 
-- `bin/export-wporg-tree.sh` rebuilds production `vendor/` without mPDF/pdfparser.
-- `.distignore` drops `languages/*.po|mo|json`, `tests/`, `screenshots/`, `.wordpress-org/`, `node_modules/`, the checkout `vendor/`, and a **root** `SUBMISSION-NOTES.md`.
-- `reports/` is **not** in `.distignore`. This file and the other reports will be in the rsync tree unless packaging is changed. Harmless for guidelines; noisy for zip size.
+- `bin/export-wporg-tree.sh` rebuilds production `vendor/` without mPDF/pdfparser, then writes a sibling `*.zip` (gitignored build artifact).
+- `.distignore` drops `languages/*.po|mo|json`, `tests/`, `screenshots/`, `.wordpress-org/`, `node_modules/`, the checkout `vendor/`, `reports/`, `.fleet-task`, `.env.local`, and a **root** `SUBMISSION-NOTES.md`.
+- `reports/` is distignored so this file and the other internal reports do not ship in the plugin zip (they stay in git on `release/3.4-wporg`).
 - m4 noted `.wordpress-org/` as missing; it now exists (commits `#100` / `#102`) and is distignored because WP.org reads those assets from SVN `assets/`, not from the plugin zip.
 
 ### 8.8 Guideline-check items already called in older notes (status)
