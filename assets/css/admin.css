@@ -753,6 +753,12 @@
 	margin-bottom: 16px;
 }
 
+/* Same collision, same fix, for the React-rendered Approvals screen (its
+ * own Basic/Advanced toggle sits in .agentic-react-admin__page-head). */
+.agentic-admin-page-approvals #agentic-global-mode-switch {
+	margin-bottom: 16px;
+}
+
 /* This screen's own Basic/Advanced toggle, labelled to distinguish it from
  * the "Site-wide" switch above it. */
 .agentic-page-mode-toggle {

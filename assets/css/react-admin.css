@@ -770,6 +770,12 @@
 	align-items: flex-start;
 	gap: 6px;
 }
+.agentic-react-approval-card__title-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
 .agentic-react-approval-card__summary {
 	margin: 4px 0 0;
 	font-size: 13px;
