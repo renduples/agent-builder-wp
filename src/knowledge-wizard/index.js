@@ -42,7 +42,10 @@ const STEPS = [
 
 function Stepper( { current } ) {
 	return (
-		<ol className="agentic-wizard-steps">
+		<ol
+			className="agentic-wizard-steps"
+			aria-label={ __( 'Wizard steps', 'agent-builder' ) }
+		>
 			{ STEPS.map( ( stepItem, index ) => (
 				<li
 					key={ stepItem.key }
@@ -301,10 +304,14 @@ function App() {
 
 						{ source === 'upload' && (
 							<Fragment>
-								<p className="agentic-wizard-sublabel">
+								<label
+									className="agentic-wizard-sublabel"
+									htmlFor="agentic-knowledge-wizard-file"
+								>
 									{ __( 'Upload a text or Markdown file', 'agent-builder' ) }
-								</p>
+								</label>
 								<input
+									id="agentic-knowledge-wizard-file"
 									type="file"
 									accept=".txt,.md,.markdown,text/plain,text/markdown"
 									onChange={ ( e ) =>
@@ -327,6 +334,7 @@ function App() {
 								) }
 								{ text && (
 									<TextareaControl
+										label={ __( 'File contents', 'agent-builder' ) }
 										value={ text }
 										onChange={ setText }
 										rows={ 8 }

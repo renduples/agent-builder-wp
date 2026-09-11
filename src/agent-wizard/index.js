@@ -57,7 +57,10 @@ function capitalize( value ) {
 
 function Stepper( { current } ) {
 	return (
-		<ol className="agentic-wizard-steps">
+		<ol
+			className="agentic-wizard-steps"
+			aria-label={ __( 'Wizard steps', 'agent-builder' ) }
+		>
 			{ STEPS.map( ( stepItem, index ) => (
 				<li
 					key={ stepItem.key }
@@ -441,12 +444,8 @@ function App() {
 							value={ form.description }
 							onChange={ ( v ) => set( 'description', v ) }
 						/>
-						<Flex
-							gap={ 4 }
-							align="flex-start"
-							className="agentic-wizard-inline-fields"
-						>
-							<FlexItem isBlock>
+						<div className="agentic-wizard-inline-fields">
+							<div className="agentic-wizard-inline-fields__grow">
 								<SelectControl
 									label={ __( 'Category', 'agent-builder' ) }
 									value={ form.category }
@@ -461,16 +460,16 @@ function App() {
 									onChange={ ( v ) => set( 'category', v ) }
 									__next40pxDefaultSize
 								/>
-							</FlexItem>
-							<FlexItem>
+							</div>
+							<div className="agentic-wizard-inline-fields__icon">
 								<TextControl
 									label={ __( 'Icon', 'agent-builder' ) }
 									value={ form.icon }
 									onChange={ ( v ) => set( 'icon', v ) }
 									__next40pxDefaultSize
 								/>
-							</FlexItem>
-						</Flex>
+							</div>
+						</div>
 					</Fragment>
 				) }
 
@@ -511,6 +510,11 @@ function App() {
 						{ form.prompts.map( ( prompt, index ) => (
 							<TextControl
 								key={ index }
+								label={ format(
+									__( 'Suggested prompt %s', 'agent-builder' ),
+									String( index + 1 )
+								) }
+								hideLabelFromVision
 								value={ prompt }
 								placeholder={ __(
 									'e.g. Summarize my latest posts',
@@ -670,7 +674,7 @@ function App() {
 					<Fragment>
 						{ ! RAG.hasLicense ? (
 							<Notice status="info" isDismissible={ false }>
-								{ __( 'Knowledge (RAG) uses the Agentic AI service. Connect your license to train agents on your content.', 'agent-builder' ) }
+								{ __( 'Knowledge uses the Agentic AI service. Connect your license to train agents on your content.', 'agent-builder' ) }
 								{ ' ' }
 								<a href={ RAG.knowledgeUrl }>
 									{ __( 'Add knowledge later from the Knowledge page.', 'agent-builder' ) }
@@ -681,8 +685,11 @@ function App() {
 								<p className="agentic-wizard-hint">
 									{ __( 'Optionally give your agents knowledge to draw on. Selected pages, posts and files are embedded into your shared Vector Store after the agent is created — training runs in the background.', 'agent-builder' ) }
 								</p>
-								<p className="agentic-wizard-sublabel">{ __( 'Upload files (PDF or text)', 'agent-builder' ) }</p>
+								<label className="agentic-wizard-sublabel" htmlFor="agentic-wizard-kb-files">
+									{ __( 'Upload files (PDF or text)', 'agent-builder' ) }
+								</label>
 								<input
+									id="agentic-wizard-kb-files"
 									type="file"
 									multiple
 									accept=".pdf,.txt,.md,application/pdf,text/plain"

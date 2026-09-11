@@ -57,7 +57,10 @@ const STEPS = [
 
 function Stepper( { current } ) {
 	return (
-		<ol className="agentic-wizard-steps">
+		<ol
+			className="agentic-wizard-steps"
+			aria-label={ __( 'Wizard steps', 'agent-builder' ) }
+		>
 			{ STEPS.map( ( stepItem, index ) => (
 				<li
 					key={ stepItem.key }
