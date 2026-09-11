@@ -3,7 +3,7 @@
  */
 import { createRoot, useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
 	Button,
 	TextControl,
@@ -661,18 +661,13 @@ function ProvidersTab( { data } ) {
 											'agentic-react-led' +
 											( row.connected ? ' is-on' : '' )
 										}
-										title={
-											row.connected
-												? __(
-														'Connected',
-														'agent-builder'
-												  )
-												: __(
-														'Not connected',
-														'agent-builder'
-												  )
-										}
-									/>
+									/>{ ' ' }
+									{ row.connected
+										? __( 'Connected', 'agent-builder' )
+										: __(
+												'Not connected',
+												'agent-builder'
+										  ) }
 								</td>
 								<td>
 									<strong>{ row.name }</strong>
@@ -2439,6 +2434,18 @@ function MCPTab( { data } ) {
 										<td>
 											<ToggleControl
 												__nextHasNoMarginBottom
+												label={
+													<span className="screen-reader-text">
+														{ sprintf(
+															/* translators: %s: agent name */
+															__(
+																'Enable MCP: %s',
+																'agent-builder'
+															),
+															a.name
+														) }
+													</span>
+												}
 												checked={ !! a.enabled }
 												disabled={ !! toggling[ a.slug ] }
 												onChange={ ( enabled ) =>
