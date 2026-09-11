@@ -4478,11 +4478,15 @@ font-size: 12px; font-weight: 600;
 	cursor: help;
 	opacity: 0.85;
 }
-.agentic-kn-help:hover,
+.agentic-kn-help:hover {
+	color: #2271b1;
+	opacity: 1;
+}
 .agentic-kn-help:focus {
 	color: #2271b1;
 	opacity: 1;
-	outline: none;
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
 }
 .agentic-kn-field input,
 .agentic-kn-field select,
@@ -4500,6 +4504,10 @@ font-size: 12px; font-weight: 600;
 	display: block;
 }
 .agentic-kn-field-full { grid-column: 1 / -1; }
+.agentic-kn-field-invalid {
+	border-color: #d63638 !important;
+	box-shadow: 0 0 0 1px #d63638;
+}
 .agentic-kn-status {
 	margin: 12px 0 0;
 	font-size: 13px;
@@ -4613,14 +4621,15 @@ font-size: 12px; font-weight: 600;
 	gap: 4px;
 	vertical-align: middle;
 }
-/* In Basic site-wide mode, Activity's own per-screen toggle (top-right of
-   the React admin-pages header) sits directly under the site-wide switch
-   with only the default 8px gap, reading as one glued four-button control.
+/* In Basic site-wide mode, Activity's and Knowledge's own per-screen toggles
+   (top-right of their headers) sit directly under the site-wide switch with
+   only the default 8px gap, reading as one glued four-button control.
    Advanced mode is unaffected — the secondary nav rail already repositions
    the site-wide switch onto its own row there. Scoped via WordPress' own
    page-slug body class (see class-admin-notice-manager.php) so it only
-   affects this screen. */
-body.agent-builder_page_agentic-audit-log #agentic-global-mode-switch {
+   affects these screens. */
+body.agent-builder_page_agentic-audit-log #agentic-global-mode-switch,
+body.agent-builder_page_agentic-train-data #agentic-global-mode-switch {
 	margin-bottom: 16px;
 }
 .agentic-screen-mode-toggle .button-small {
