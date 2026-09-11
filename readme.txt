@@ -1,6 +1,6 @@
 === Agent Builder ===
 Contributors: agenticplugin
-Tags: ai, chatbot, automation, llm, mcp, webmcp, safety, agents
+Tags: ai, chatbot, agents, safety, webmcp
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -9,7 +9,7 @@ Donate link: https://agentic-plugin.com/donate/
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create, train, and orchestrate autonomous AI agents with built-in safety controls. 11 free agents, approval gates, risk audits, tamper-proof logs, and WebMCP integration.
+Create, train, and orchestrate AI agents with built-in safety. 11 free agents, approval gates, risk audits, tamper-proof logs, and WebMCP.
 
 == Description ==
 
