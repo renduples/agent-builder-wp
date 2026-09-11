@@ -2968,7 +2968,6 @@ function SafetyCenterView( { data, reload } ) {
 				</Notice>
 			) }
 
-			<p className="agentic-react-lead">{ data.description }</p>
 			{ data.is_advanced ? (
 				<p className="agentic-react-muted">
 					{ __(
