@@ -941,16 +941,31 @@ class Admin_Pages_REST {
 			'anthropic' => __( 'Anthropic', 'agent-builder' ),
 		);
 
+		// Map agent slugs to their display names for the Agent column, same
+		// as the classic admin/skills.php list did, so an assigned skill
+		// shows "Content Writer" rather than the raw "content-writer" slug.
+		$agent_instances = class_exists( '\Agentic_Agent_Registry' )
+			? \Agentic_Agent_Registry::get_instance()->get_all_instances()
+			: array();
+
 		$skills = class_exists( Skills_Registry::class ) ? Skills_Registry::get_all() : array();
 		$rows   = array();
 		foreach ( $skills as $skill ) {
-			$id     = (int) ( $skill['id'] ?? 0 );
-			$source = (string) ( $skill['source'] ?? 'local' );
-			$row    = array(
+			$id          = (int) ( $skill['id'] ?? 0 );
+			$source      = (string) ( $skill['source'] ?? 'local' );
+			$agent_slugs = Skills_Registry::decode_agent_slugs( (string) ( $skill['agent_slug'] ?? '' ) );
+			$agent_names = array_map(
+				static function ( $slug ) use ( $agent_instances ) {
+					$agent = $agent_instances[ $slug ] ?? null;
+					return $agent ? $agent->get_name() : ucwords( str_replace( '-', ' ', $slug ) );
+				},
+				$agent_slugs
+			);
+			$row         = array(
 				'id'        => (string) $id,
 				'title'     => (string) ( $skill['name'] ?? '' ),
 				'subtitle'  => (string) ( $skill['description'] ?? '' ),
-				'agent'     => implode( ', ', Skills_Registry::decode_agent_slugs( (string) ( $skill['agent_slug'] ?? '' ) ) ),
+				'agent'     => implode( ', ', $agent_names ),
 				'enabled'   => ! empty( $skill['enabled'] ),
 				'version'   => (string) ( $skill['version'] ?? '' ),
 				'edit_url'  => admin_url( 'admin.php?page=agentic-skills&skill_view=edit&skill_id=' . $id ),
