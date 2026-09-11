@@ -1,5 +1,6 @@
 // WP_ADMIN_USER=... WP_ADMIN_PASS=... node bin/screenshot-admin.js
 // Required: WP_ADMIN_USER, WP_ADMIN_PASS. Optional: WP_BASE_URL (default https://experiment.test).
+// Optional: SCREEN=slug,slug to capture a subset (e.g. SCREEN=safety-center,approvals-risk-gate).
 
 'use strict';
 
@@ -9,7 +10,7 @@ const { chromium } = require( 'playwright' );
 
 const USAGE =
 	'Usage: WP_ADMIN_USER=... WP_ADMIN_PASS=... node bin/screenshot-admin.js\n' +
-	'Required env vars: WP_ADMIN_USER, WP_ADMIN_PASS. Optional: WP_BASE_URL.';
+	'Required env vars: WP_ADMIN_USER, WP_ADMIN_PASS. Optional: WP_BASE_URL, SCREEN=slug,slug.';
 
 const BASE_URL = ( process.env.WP_BASE_URL || 'https://experiment.test' ).replace( /\/+$/, '' );
 const USER = process.env.WP_ADMIN_USER || '';
@@ -33,7 +34,18 @@ const SCREENS = [
 	{ slug: 'tools', page: 'agentic-tools' },
 	{ slug: 'skills', page: 'agentic-skills' },
 	{ slug: 'approvals', page: 'agentic-approvals' },
-	{ slug: 'safety-center', page: 'agentic-safety-center' },
+	{
+		slug: 'approvals-risk-gate',
+		page: 'agentic-approvals',
+		clip: '.agentic-react-approvals-prefs',
+		wait: '.agentic-react-approvals-prefs',
+	},
+	{
+		slug: 'safety-center',
+		page: 'agentic-safety-center',
+		modes: [ 'basic', 'advanced' ],
+		wait: '.agentic-safety-overview',
+	},
 	{ slug: 'passport', page: 'agentic-agent-ready' },
 	{ slug: 'logs', page: 'agentic-audit-log' },
 	{ slug: 'settings', page: 'agentic-settings' },
@@ -114,20 +126,117 @@ async function login( page ) {
 	}
 }
 
+function destPath( slug, mode ) {
+	const name = ! mode || mode === 'basic' ? `${ slug }.png` : `${ slug }-${ mode }.png`;
+	return path.join( OUT_DIR, name );
+}
+
+async function capture( page, screen, dest ) {
+	if ( screen.clip ) {
+		const loc = page.locator( screen.clip ).first();
+		await loc.waitFor( { timeout: 20000 } );
+		await loc.screenshot( { path: dest } );
+		return;
+	}
+	await page.screenshot( { path: dest, fullPage: true } );
+}
+
+async function setScreenMode( page, mode ) {
+	const label = mode === 'advanced' ? 'Advanced' : 'Basic';
+	// Scope to the in-page toggle. A site-wide switch (#agentic-global-mode-switch)
+	// reuses the same button classes and would steal the click.
+	const toggle = page.locator(
+		'.agentic-react-admin__actions .agentic-screen-mode-toggle'
+	);
+	if ( ( await toggle.count() ) === 0 ) {
+		return false;
+	}
+	const btn = toggle.locator( 'button', {
+		hasText: new RegExp( `^${ label }$` ),
+	} );
+	const already = await btn.evaluate( ( el ) =>
+		el.classList.contains( 'button-primary' )
+	);
+	if ( already ) {
+		return true;
+	}
+	await btn.click();
+	await page.waitForFunction(
+		( wanted ) => {
+			const buttons = Array.from(
+				document.querySelectorAll(
+					'.agentic-react-admin__actions .agentic-screen-mode-toggle button'
+				)
+			);
+			const match = buttons.find(
+				( b ) => ( b.textContent || '' ).trim() === wanted
+			);
+			return match && match.classList.contains( 'button-primary' );
+		},
+		label,
+		{ timeout: 15000 }
+	);
+	await waitForScreen( page );
+	if ( mode === 'advanced' ) {
+		await page
+			.getByText( "Advanced view expands every agent's tool list" )
+			.waitFor( { timeout: 15000 } );
+	} else {
+		await page.waitForFunction(
+			() =>
+				! document.body.innerText.includes(
+					"Advanced view expands every agent's tool list"
+				),
+			null,
+			{ timeout: 15000 }
+		);
+	}
+	return true;
+}
+
 async function screenshotScreen( page, screen ) {
-	const dest = path.join( OUT_DIR, `${ screen.slug }.png` );
+	const modes = Array.isArray( screen.modes ) && screen.modes.length
+		? screen.modes
+		: [ null ];
 	try {
-		await page.goto( adminUrl( screen ), { waitUntil: 'domcontentloaded', timeout: 45000 } );
+		await page.goto( adminUrl( screen ), {
+			waitUntil: 'domcontentloaded',
+			timeout: 45000,
+		} );
 		await waitForScreen( page );
-		await page.screenshot( { path: dest, fullPage: true } );
-		console.log( `ok  ${ screen.slug }  →  ${ path.relative( process.cwd(), dest ) }` );
+		if ( screen.wait ) {
+			await page.waitForSelector( screen.wait, { timeout: 20000 } );
+		}
+		for ( const mode of modes ) {
+			const dest = destPath( screen.slug, mode );
+			if ( mode ) {
+				const switched = await setScreenMode( page, mode );
+				if ( ! switched ) {
+					console.log(
+						`warn  ${ screen.slug }  (no ${ mode } toggle) — capturing current view`
+					);
+				}
+			}
+			await capture( page, screen, dest );
+			console.log(
+				`ok  ${ path.basename( dest, '.png' ) }  →  ${ path.relative( process.cwd(), dest ) }`
+			);
+		}
+		if ( modes.includes( 'basic' ) ) {
+			await setScreenMode( page, 'basic' );
+		}
 	} catch ( err ) {
-		// Idempotent: a missing/empty/error screen still gets a capture if possible.
+		// Don't overwrite a mode that already saved successfully.
+		const dest = destPath( screen.slug, modes[ modes.length - 1 ] );
 		try {
 			await page.screenshot( { path: dest, fullPage: true } );
-			console.log( `warn  ${ screen.slug }  (${ err.message }) — saved whatever rendered` );
+			console.log(
+				`warn  ${ screen.slug }  (${ err.message }) — saved full page as ${ path.basename( dest ) }`
+			);
 		} catch ( shotErr ) {
-			console.log( `skip  ${ screen.slug }  (${ err.message }; screenshot: ${ shotErr.message })` );
+			console.log(
+				`skip  ${ screen.slug }  (${ err.message }; screenshot: ${ shotErr.message })`
+			);
 		}
 	}
 }
@@ -160,9 +269,22 @@ async function main() {
 	} );
 	const page = await context.newPage();
 
+	const only = ( process.env.SCREEN || '' )
+		.split( ',' )
+		.map( ( s ) => s.trim() )
+		.filter( Boolean );
+	const screens = only.length
+		? SCREENS.filter( ( s ) => only.includes( s.slug ) )
+		: SCREENS;
+	if ( only.length && screens.length !== only.length ) {
+		const known = new Set( SCREENS.map( ( s ) => s.slug ) );
+		const missing = only.filter( ( s ) => ! known.has( s ) );
+		throw new Error( `Unknown SCREEN slug(s): ${ missing.join( ', ' ) }` );
+	}
+
 	try {
 		await login( page );
-		for ( const screen of SCREENS ) {
+		for ( const screen of screens ) {
 			await screenshotScreen( page, screen );
 		}
 	} finally {
