@@ -156,7 +156,7 @@ React admin sources live in `src/`; production bundles are in `build/`. Rebuild 
 3. Agents Hub — Activate/deactivate bundled agents, see their tools, and assign MCP exposure.
 4. Approvals Queue — Review, approve, or reject sensitive actions before agents execute them.
 5. Tools Hub — See every tool an agent can use, its risk level, and enable/disable by category.
-6. Approvals & Risk Gate — Configure which risk levels need approval, confirmation, or immediate blocking.
+6. Approvals Preferences — Configure which risk levels need approval, confirmation, or immediate blocking.
 7. Site Passport / Agent-Ready Score — Verify your site is discoverable by AI agents and your commerce stack is ready.
 8. Activity Log — Full audit trail showing what agents did, when, and whether they succeeded.
 9. Safety Center — Risk inventory, kill switch, per-agent tool scopes, and audit-log integrity check.
