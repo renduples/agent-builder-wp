@@ -1836,7 +1836,10 @@ function LogsView( { data, reload } ) {
 
 	return (
 		<>
-			<p className="agentic-react-lead">{ data.description }</p>
+			{ /* data.description already renders once under the page <h1>
+			 * (see AdminPage in shared/components.js) — repeating it here
+			 * as a lead paragraph duplicated the same sentence twice in a
+			 * row on this screen. */ }
 			<p className="agentic-react-muted" style={ { marginTop: 0 } }>
 				{ __(
 					'This is a friendly activity feed. Technical names stay in Advanced detail when useful.',
