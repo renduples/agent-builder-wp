@@ -166,4 +166,4 @@ A: No. Bundled library agents are refused with "Bundled library agents cannot be
 
 **Q: Who can open this page?**
 
-A: Users with `agentic_manage_agents` or `manage_options`. Everyone else gets "You do not have permission to access this page."
+A: Administrators, and anyone granted the agent-management permission. Everyone else gets "You do not have permission to access this page."

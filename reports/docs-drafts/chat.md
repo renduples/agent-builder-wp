@@ -259,4 +259,4 @@ A: Use **Manage Agent Deployments** under the thread, or open **Publish**. That'
 
 **Q: Who can open Agent Chat?**
 
-A: The Chat admin page requires the `agentic_chat_admin_bar` capability. The empty state still depends on there being at least one agent you can access.
+A: Administrators, and anyone granted permission to chat from the admin bar. The empty state still depends on there being at least one agent you can access.
