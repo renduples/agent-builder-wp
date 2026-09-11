@@ -1454,7 +1454,9 @@ class Admin_Menu_Handler {
 				)
 			);
 			// Outer .wrap so admin_footer can attach the policy/docs bar.
-			echo '<div class="wrap agentic-admin">';
+			// The per-page class lets CSS target one React admin screen
+			// without affecting the others that share this same markup.
+			printf( '<div class="wrap agentic-admin agentic-admin-page-%s">', esc_attr( $file ) );
 			React_Admin::mount( 'agentic-admin-pages-root' );
 			echo '</div>';
 			return;

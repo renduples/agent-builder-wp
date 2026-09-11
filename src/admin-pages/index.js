@@ -1366,7 +1366,10 @@ function ApprovalsView( { data, reload } ) {
 
 	return (
 		<>
-			<p className="agentic-react-lead">{ data.description }</p>
+			{ /* data.description already renders once under the page <h1>
+			 * (see AdminPage in shared/components.js) — repeating it here
+			 * as a lead paragraph duplicated the same sentence twice in a
+			 * row on this screen. */ }
 			<p className="agentic-react-muted" style={ { marginTop: 0 } }>
 				{ data.is_advanced
 					? __(
@@ -1694,28 +1697,30 @@ function ApprovalsView( { data, reload } ) {
 										className="agentic-react-approval-card"
 									>
 										<div className="agentic-react-approval-card__main">
-											<strong>{ r.title }</strong>
-											{ data.is_advanced && r.action && (
-												<code className="agentic-react-activity-item__raw">
-													{ r.action }
-												</code>
-											) }
-											<InfoTip text={ APPROVAL_ACTION_HINT } />
-											<span
-												className={
-													'agentic-react-risk agentic-react-risk--' +
-													( r.risk_level || 'high' )
-												}
-											>
-												{ r.risk_level || 'high' }
-											</span>
-											<InfoTip
-												text={
-													RISK_EXPLANATIONS[
-														r.risk_level || 'high'
-													]
-												}
-											/>
+											<div className="agentic-react-approval-card__title-row">
+												<strong>{ r.title }</strong>
+												{ data.is_advanced && r.action && (
+													<code className="agentic-react-activity-item__raw">
+														{ r.action }
+													</code>
+												) }
+												<InfoTip text={ APPROVAL_ACTION_HINT } />
+												<span
+													className={
+														'agentic-react-risk agentic-react-risk--' +
+														( r.risk_level || 'high' )
+													}
+												>
+													{ r.risk_level || 'high' }
+												</span>
+												<InfoTip
+													text={
+														RISK_EXPLANATIONS[
+															r.risk_level || 'high'
+														]
+													}
+												/>
+											</div>
 											<div className="agentic-react-muted">
 												{ r.subtitle
 													? `${ r.subtitle } · `
