@@ -22,6 +22,7 @@ node_modules
 vendor
 tests
 screenshots
+.wordpress-org
 CLAUDE.md
 Claude.md
 SUBMISSION-NOTES.md
